@@ -16,23 +16,27 @@ namespace GUI
 {
     public partial class FormLogin : Form
     {
+        private UserBLL _userBLL;
+
         public FormLogin()
         {
             InitializeComponent();
-          
+            _userBLL = BLLFactory.CreateUserBLL();
             ActualizarTextos();
-
         }
+
         private bool EsCorreoValido(string email)
         {
             string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             return Regex.IsMatch(email, patron);
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMail.Text) || string.IsNullOrWhiteSpace(txtcontra.Text) || txtMail.Text == "Correo Electronico" || txtcontra.Text == "Contraseña")
             {
-                MessageBox.Show(Resources.CompletarDatos);
+                //MessageBox.Show(Resources.CompletarDatos);
+                MessageBox.Show("Por favor, complete todos los campos.");
                 return;
             }
 
@@ -46,7 +50,7 @@ namespace GUI
             
             try
             {
-                User user = UserBLL.Login(email, password);
+                User user = _userBLL.Login(email, password);
 
                 Service.SessionManager.SetCurrentUser(user);
 
@@ -75,7 +79,7 @@ namespace GUI
                 (
                     DateTime.Now,
                     "LoginFallido",
-                    email,                   // ponemos el intento
+                    email,                   
                     BE.TipoEvento.Advertencia,
                     "GUI"
                 );
@@ -99,6 +103,8 @@ namespace GUI
         {
             AbrirRegistro();
         }
+
+        /*
         private bool AbrirRegistro()
         {
             if (formseleccionado == null)
@@ -120,7 +126,7 @@ namespace GUI
             formseleccionado.Activate();
             return false;
         }
-
+        */
         #region FrontEnd
 
         private new void Enter(TextBox textbox, string txt)

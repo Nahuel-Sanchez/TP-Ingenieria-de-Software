@@ -13,9 +13,15 @@ namespace BLL
     public class UserBLL
     {
         private readonly IUserRepository userRepository;
-        public User Login(string email, string password)
+
+        public UserBLL(IUserRepository userRepository)
         {
-            User user = userRepository.GetByEmail(email) ?? throw new UserNoRegistradoException();
+            this.userRepository = userRepository;
+        }
+
+        public User Login(string username, string password)
+        {
+            User user = userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException();
 
             bool valido = Encriptador.Verificar(password, user.Hash, user.Salt);
 

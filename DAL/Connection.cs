@@ -12,7 +12,7 @@ namespace DAL
         private readonly string connectionString;
         public Connection()
         {
-            connectionString = "Server=RJCODEADVANCE;DataBase= MyCompany; integrated security= true";
+            connectionString = "";
         }
         protected SqlConnection GetConnection()
         {

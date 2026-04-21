@@ -3,8 +3,7 @@ using System.Runtime.Serialization;
 
 namespace BLL
 {
-    [Serializable]
-    internal class UserNoRegistradoException : Exception
+    public class UserNoRegistradoException : Exception
     {
         public UserNoRegistradoException()
         {
