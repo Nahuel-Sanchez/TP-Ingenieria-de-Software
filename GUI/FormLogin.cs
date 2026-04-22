@@ -22,14 +22,14 @@ namespace GUI
         {
             InitializeComponent();
             _userBLL = BLLFactory.CreateUserBLL();
-            ActualizarTextos();
+            //ActualizarTextos();
         }
 
-        private bool EsCorreoValido(string email)
-        {
-            string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            return Regex.IsMatch(email, patron);
-        }
+        //private bool EsCorreoValido(string email)
+        //{
+        //    string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        //    return Regex.IsMatch(email, patron);
+        //}
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -40,11 +40,11 @@ namespace GUI
                 return;
             }
 
-            if (!EsCorreoValido(txtMail.Text))
-            {
-                MessageBox.Show("Formato de correo electrónico inválido.");
-                return;
-            }
+            //if (!EsCorreoValido(txtMail.Text))
+            //{
+            //    MessageBox.Show("Formato de correo electrónico inválido.");
+            //    return;
+            //}
             string email = txtMail.Text?.Trim();
             string password = txtcontra.Text?.Trim();
             
@@ -52,44 +52,44 @@ namespace GUI
             {
                 User user = _userBLL.Login(email, password);
 
-                Service.SessionManager.SetCurrentUser(user);
+                Service.SessionManager.Instance.SetCurrentUser(user);
 
                 FormMDI formMDI = new FormMDI();
                 this.Hide();
-
-                formRegistro?.Close();
-                formRegistro = null;
+                
+                //formRegistro?.Close();
+                //formRegistro = null;
                 
                 formMDI.CerrarSesion += () =>
                 {
                     this.Show();
-                    Service.SessionManager.CerrarSesion();
+                    Service.SessionManager.Instance.CerrarSesion();
                 };
 
-                FormMisProyectos formMisProyectos = new FormMisProyectos(formMDI, false);
-                formMisProyectos.Show();
-                formMisProyectos.Activate();
+                formMDI.Show();
+                formMDI.Activate();
 
-                txtcontra.Text = Resources.Contraseña;
-                txtMail.Text = Resources.Correo_Electronico;
+                txtcontra.Text = "Contraseña";
+                txtMail.Text = "Username";
             }
             catch (UserNoRegistradoException)
             {
-                bllBitacora.RegistrarEvento
-                (
-                    DateTime.Now,
-                    "LoginFallido",
-                    email,                   
-                    BE.TipoEvento.Advertencia,
-                    "GUI"
-                );
-                if (
-                        MessageBox.Show($"{Resources.UsuarioNoEncontrado} \n\n {Resources.OfrecerRegistro}", $"{Resources.Advertencia}", MessageBoxButtons.YesNo)
-                        == DialogResult.Yes
-                    )
-                {
-                    AbrirRegistro();
-                }
+                //bllBitacora.RegistrarEvento
+                //(
+                //    DateTime.Now,
+                //    "LoginFallido",
+                //    email,                   
+                //    BE.TipoEvento.Advertencia,
+                //    "GUI"
+                //);
+                //if (
+                //        MessageBox.Show($"{Resources.UsuarioNoEncontrado} \n\n {Resources.OfrecerRegistro}", $"{Resources.Advertencia}", MessageBoxButtons.YesNo)
+                //        == DialogResult.Yes
+                //    )
+                //{
+                //    AbrirRegistro();
+                //}
+                MessageBox.Show("Usuario no encontrado. Por favor, verifique sus credenciales.");
                 return;
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace GUI
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            AbrirRegistro();
+            //AbrirRegistro();
         }
 
         /*
@@ -149,22 +149,22 @@ namespace GUI
 
         private void textBox1_Enter(object sender, EventArgs e)
         {
-            Enter(txtMail, Resources.Correo_Electronico);
+            Enter(txtMail, "Username");
         }
 
         private void textBox1_Leave(object sender, EventArgs e)
         {
-            Leave(txtMail, Resources.Correo_Electronico);
+            Leave(txtMail, "Username");
         }
 
         private void textBox2_Enter(object sender, EventArgs e)
         {
-            Enter(txtcontra, Resources.Contraseña);
+            Enter(txtcontra, "Contraseña");
         }
 
         private void textBox2_Leave(object sender, EventArgs e)
         {
-            Leave(txtcontra, Resources.Contraseña);
+            Leave(txtcontra, "Contraseña");
         }
 
         private void FormLogin_Load_1(object sender, EventArgs e)
@@ -194,42 +194,42 @@ namespace GUI
             // : "es";
 
             //     IdiomaService.CambiarIdioma(nuevoIdioma);
-            string actual = IdiomaService.Instancia.IdiomaActual;
-            string nuevo = actual.StartsWith("es") ? "en" : "es";
+            //string actual = IdiomaService.Instancia.IdiomaActual;
+            //string nuevo = actual.StartsWith("es") ? "en" : "es";
 
-            IdiomaService.Instancia.CambiarIdioma(nuevo);
+            //IdiomaService.Instancia.CambiarIdioma(nuevo);
 
 
         }
-        private void ActualizarTextos()
-        {
-            btnAccederLogin.Text = Resources.btnAccederLogin;
-            linkLabel1.Text = Resources.linkLabel1;
+        //private void ActualizarTextos()
+        //{
+        //    btnAccederLogin.Text = Resources.btnAccederLogin;
+        //    linkLabel1.Text = Resources.linkLabel1;
 
-            txtcontra.Text = Resources.Contraseña;
-            txtMail.Text = Resources.Correo_Electronico;
+        //    txtcontra.Text = Resources.Contraseña;
+        //    txtMail.Text = Resources.Correo_Electronico;
 
-            btnCambiarIdioma.Text =
-                IdiomaService.Instancia.IdiomaActual.StartsWith("es")
-                ? "Cambiar a idioma Inglés"
-                : "Switch to Spanish";
-        }
-        private void InicializarIdioma()
-        {
+        //    btnCambiarIdioma.Text =
+        //        IdiomaService.Instancia.IdiomaActual.StartsWith("es")
+        //        ? "Cambiar a idioma Inglés"
+        //        : "Switch to Spanish";
+        //}
+        //private void InicializarIdioma()
+        //{
 
-            btnAccederLogin.Text = Resources.btnAccederLogin;
-            linkLabel1.Text = Resources.linkLabel1;
-            txtcontra.Text = Resources.Contraseña;
-            txtMail.Text = Resources.Correo_Electronico;
-            btnCambiarIdioma.Text = Thread.CurrentThread.CurrentUICulture.Name.StartsWith("es")
-            ? "Cambiar a idioma Inglés"
-            : "Switch to Spanish";
-        }
+        //    btnAccederLogin.Text = Resources.btnAccederLogin;
+        //    linkLabel1.Text = Resources.linkLabel1;
+        //    txtcontra.Text = Resources.Contraseña;
+        //    txtMail.Text = Resources.Correo_Electronico;
+        //    btnCambiarIdioma.Text = Thread.CurrentThread.CurrentUICulture.Name.StartsWith("es")
+        //    ? "Cambiar a idioma Inglés"
+        //    : "Switch to Spanish";
+        //}
 
-        public void ActualizarIdioma()
-        {
-            ActualizarTextos();
-        }
+        //public void ActualizarIdioma()
+        //{
+        //    ActualizarTextos();
+        //}
         #endregion
     }
 }

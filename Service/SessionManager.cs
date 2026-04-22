@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BE.Usuarios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,23 @@ namespace Service
 
         public static SessionManager Instance { get { return lazy.Value; } }
 
-        private SessionManager()
+        private SessionManager() { }
+
+        public User Current { get; private set; }
+
+        public bool IsLogged => !(Current is null);
+
+        public void SetCurrentUser(User user)
         {
+            if (IsLogged)
+                throw new InvalidOperationException("Ya hay un usuario logueado. Cierre la sesión antes de iniciar otra.");
+
+            Current = user ?? throw new ArgumentNullException(nameof(user));
         }
+
+        public void CerrarSesion() => Current = null;
+
+        
+
     }
 }

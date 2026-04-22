@@ -57,7 +57,7 @@
             this.txtMail.Name = "txtMail";
             this.txtMail.Size = new System.Drawing.Size(228, 20);
             this.txtMail.TabIndex = 1;
-            this.txtMail.Text = "Correo Electronico";
+            this.txtMail.Text = "Username";
             this.txtMail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtMail.Enter += new System.EventHandler(this.textBox1_Enter);
             this.txtMail.Leave += new System.EventHandler(this.textBox1_Leave);
@@ -180,6 +180,7 @@
             // Cerrar
             // 
             this.Cerrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(15)))), ((int)(((byte)(15)))));
+            this.Cerrar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cerrar.Font = new System.Drawing.Font("MS Reference Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Cerrar.ForeColor = System.Drawing.Color.Silver;
             this.Cerrar.Location = new System.Drawing.Point(624, 0);
