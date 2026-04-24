@@ -31,5 +31,15 @@ namespace GUI
             //    e.Cancel = true;
             //}
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            dropdownMenuStrip1.Show(button1, button1.Width, 0);
+        }
+
+        private void FormMDI_Load(object sender, EventArgs e)
+        {
+            dropdownMenuStrip1.IsMainMenu = true;
+        }
     }
 }
