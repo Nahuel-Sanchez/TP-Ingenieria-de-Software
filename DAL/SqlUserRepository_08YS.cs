@@ -1,4 +1,5 @@
-﻿using Service_08YS;
+﻿using DAL;
+using Service_08YS;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,49 +12,40 @@ namespace DAL_08YS
 {
     public class SqlUserRepository_08YS : Connection_08YS, IUserRepository_08YS
     {
+        // Recibe el factory por DI — no sabe nada de SQL Server directamente.
+        public SqlUserRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
+
         public User GetByUsername(string username)
         {
-            using (SqlConnection conn = GetSQLConnection())
-            using (SqlCommand cmd = new SqlCommand("SELECT * FROM Users WHERE Username = @Username", conn))
-            {
-                cmd.Parameters.AddWithValue("@Username", username);
-                conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return new User
-                        {
-                            Username = reader["Username"].ToString(),
-                            DNI = Convert.ToInt32(reader["DNI"]),
-                            Nombre = reader["Nombre"].ToString(),
-                            Apellido = reader["Apellido"].ToString(),
-                            Hash = reader["Hash"].ToString(),
-                            Salt = reader["Salt"].ToString(),
-                            Email = reader["Email"].ToString(),
-                            Celular = reader["Celular"].ToString(),
-                            Direccion = reader["Direccion"].ToString(),
-                            Bloqueado = Convert.ToBoolean(reader["Bloqueado"])
-                        };
-                    }
-                }
-            }
+            DataTable dt = Leer(
+                "SELECT * FROM Users WHERE Username = @Username",
+                new[] { Param("@Username", username) }
+            );
 
-            return null;
+            if (dt.Rows.Count == 0) return null;
+
+            DataRow row = dt.Rows[0];
+            return new User
+            {
+                Username = row["Username"].ToString(),
+                DNI = Convert.ToInt32(row["DNI"]),
+                Nombre = row["Nombre"].ToString(),
+                Apellido = row["Apellido"].ToString(),
+                Hash = row["Hash"].ToString(),
+                Salt = row["Salt"].ToString(),
+                Email = row["Email"].ToString(),
+                Celular = row["Celular"].ToString(),
+                Direccion = row["Direccion"].ToString(),
+                Bloqueado = Convert.ToBoolean(row["Bloqueado"])
+            };
         }
 
         public void BloquearUsuario(string username)
         {
-            using (SqlConnection conn = GetSQLConnection())
-            using (SqlCommand cmd = new SqlCommand("UPDATE Users SET Bloqueado = 1 WHERE Username = @Username", conn))
-            {
-                cmd.Parameters.AddWithValue("@Username", username);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            Escribir(
+                "UPDATE Users SET Bloqueado = 1 WHERE Username = @Username",
+                new[] { Param("@Username", username) }
+            );
         }
-
-
-
     }
 }

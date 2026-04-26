@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -10,43 +11,47 @@ namespace DAL_08YS
 {
     public abstract class Connection_08YS
     {
-        private readonly string connectionString;
-        public Connection_08YS()
+        private readonly IDbFactory_08YS _factory;
+
+        protected Connection_08YS(IDbFactory_08YS factory)
         {
-            connectionString = "";
-        }
-        protected SqlConnection GetSQLConnection()
-        {
-            return new SqlConnection(connectionString);
+            _factory = factory;
         }
 
-        public DataTable Leer(string query, SqlParameter[] parameters = null, bool StoredProcedure = false)
+        // Helper para crear parametros de los repositorios concretos sin necesitar una referencia directa al factory
+        protected IDbDataParameter Param(string name, object value)
+            => _factory.CreateParameter(name, value);
+
+        public DataTable Leer(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (IDbConnection conn = _factory.CreateConnection())
+            using (IDbCommand cmd = _factory.CreateCommand(query, conn))
             {
-                if (StoredProcedure) cmd.CommandType = CommandType.StoredProcedure;
+                if (storedProcedure)
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                if (parameters != null) cmd.Parameters.AddRange(parameters);
+                if (parameters != null)
+                    foreach (var p in parameters)
+                        cmd.Parameters.Add(p);
 
-                DataTable dt = new DataTable();
-                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                    da.Fill(dt);
-
-                return dt;
+                // El factory llenara la tabla en funcion de la BD.
+                return _factory.FillDataTable(cmd);
             }
         }
 
-        public bool Escribir(string query, SqlParameter[] parameters = null, bool StoredProcedure = false)
+        public bool Escribir(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(query, connection))
+            using (IDbConnection conn = _factory.CreateConnection())
+            using (IDbCommand cmd = _factory.CreateCommand(query, conn))
             {
-                if (StoredProcedure) cmd.CommandType = CommandType.StoredProcedure;
+                if (storedProcedure)
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                if (parameters != null) cmd.Parameters.AddRange(parameters);
+                if (parameters != null)
+                    foreach (var p in parameters)
+                        cmd.Parameters.Add(p);
 
-                connection.Open();
+                conn.Open();
                 return cmd.ExecuteNonQuery() > 0;
             }
         }

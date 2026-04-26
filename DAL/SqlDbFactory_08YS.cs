@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DAL
+{
+    public class SqlDbFactory_08YS : IDbFactory_08YS
+    {
+        private readonly string _connectionString;
+
+        public SqlDbFactory_08YS()
+        {
+            _connectionString = "";
+        }
+
+        public IDbConnection CreateConnection()
+            => new SqlConnection(_connectionString);
+
+        public IDbCommand CreateCommand(string query, IDbConnection connection)
+            => new SqlCommand(query, (SqlConnection)connection);
+
+        public IDbDataParameter CreateParameter(string name, object value)
+            => new SqlParameter(name, value ?? DBNull.Value);
+
+        public DataTable FillDataTable(IDbCommand command)
+        {
+            var dt = new DataTable();
+            using (var adapter = new SqlDataAdapter((SqlCommand)command))
+                adapter.Fill(dt);
+            return dt;
+        }
+    }
+}

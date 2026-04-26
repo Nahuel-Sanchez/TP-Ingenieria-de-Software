@@ -42,8 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connection_08YS.cs" />
+    <Compile Include="IDbFactory_08YS.cs" />
     <Compile Include="IUserRepository_08YS.cs" />
+    <Compile Include="MockDbFactory_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlDbFactory_08YS.cs" />
     <Compile Include="SqlUserRepository_08YS.cs" />
   </ItemGroup>
   <ItemGroup>
