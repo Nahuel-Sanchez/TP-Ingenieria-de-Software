@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace GUI
+namespace GUI_08YS
 {
     public class MenuRenderer : ToolStripProfessionalRenderer
     {

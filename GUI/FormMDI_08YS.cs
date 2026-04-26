@@ -1,4 +1,4 @@
-﻿using GUI.Properties;
+﻿using GUI_08YS.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,12 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GUI
+namespace GUI_08YS
 {
-    public partial class FormMDI : Form
+    public partial class FormMDI_08YS : Form
     {
         public event Action CerrarSesion;
-        public FormMDI()
+        public FormMDI_08YS()
         {
             InitializeComponent();
         }
@@ -34,12 +34,12 @@ namespace GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            dropdownMenuStrip1.Show(button1, button1.Width, 0);
+            dropdownMenuStrip_08YS1.Show(button1, button1.Width, 0);
         }
 
         private void FormMDI_Load(object sender, EventArgs e)
         {
-            dropdownMenuStrip1.IsMainMenu = true;
+            dropdownMenuStrip_08YS1.IsMainMenu = true;
         }
     }
 }

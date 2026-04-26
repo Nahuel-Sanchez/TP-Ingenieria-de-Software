@@ -46,30 +46,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormMDI.cs">
+    <Compile Include="FormMDI_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormMDI.Designer.cs">
-      <DependentUpon>FormMDI.cs</DependentUpon>
+    <Compile Include="FormMDI_08YS.Designer.cs">
+      <DependentUpon>FormMDI_08YS.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormLogin.cs">
+    <Compile Include="FormLogin_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormLogin.Designer.cs">
-      <DependentUpon>FormLogin.cs</DependentUpon>
+    <Compile Include="FormLogin_08YS.Designer.cs">
+      <DependentUpon>FormLogin_08YS.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrontMDI\MenuColorTable.cs" />
-    <Compile Include="FrontMDI\MenuRenderer.cs" />
-    <Compile Include="FrontMDI\DropdownMenuStrip.cs">
+    <Compile Include="FrontMDI_08YS\MenuColorTable.cs" />
+    <Compile Include="FrontMDI_08YS\MenuRenderer.cs" />
+    <Compile Include="FrontMDI_08YS\DropdownMenuStrip_08YS.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FormMDI.resx">
-      <DependentUpon>FormMDI.cs</DependentUpon>
+    <EmbeddedResource Include="FormMDI_08YS.resx">
+      <DependentUpon>FormMDI_08YS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormLogin.resx">
-      <DependentUpon>FormLogin.cs</DependentUpon>
+    <EmbeddedResource Include="FormLogin_08YS.resx">
+      <DependentUpon>FormLogin_08YS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -94,17 +94,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BE\BE.csproj">
+    <ProjectReference Include="..\BE\BE_08YS.csproj">
       <Project>{611df768-0b94-4169-b272-cc6387cd884e}</Project>
-      <Name>BE</Name>
+      <Name>BE_08YS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BLL\BLL.csproj">
+    <ProjectReference Include="..\BLL\BLL_08YS.csproj">
       <Project>{578abc9f-0665-4b31-a9d1-2ae211cd4a43}</Project>
-      <Name>BLL</Name>
+      <Name>BLL_08YS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Service\Service.csproj">
+    <ProjectReference Include="..\Service\Service_08YS.csproj">
       <Project>{e9802816-aa13-4bf0-94a2-f92cbf365086}</Project>
-      <Name>Service</Name>
+      <Name>Service_08YS</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

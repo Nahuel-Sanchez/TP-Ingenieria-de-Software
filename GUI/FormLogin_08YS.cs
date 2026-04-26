@@ -8,88 +8,76 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BLL;
-using BE;
-using BE.Usuarios;
+using BLL_08YS;
+using BE_08YS;
+using Service_08YS;
+using System.Security.Authentication;
 
-namespace GUI
+namespace GUI_08YS
 {
-    public partial class FormLogin : Form
+    public partial class FormLogin_08YS : Form
     {
-        private UserBLL _userBLL;
+        private UserBLL_08YS _userBLL;
+        private int IntentosFallidos = 0;
 
-        public FormLogin()
+        public FormLogin_08YS()
         {
             InitializeComponent();
-            _userBLL = BLLFactory.CreateUserBLL();
-            //ActualizarTextos();
+            _userBLL = BLLFactory_08YS.CreateUserBLL();
         }
-
-        //private bool EsCorreoValido(string email)
-        //{
-        //    string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-        //    return Regex.IsMatch(email, patron);
-        //}
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtMail.Text) || string.IsNullOrWhiteSpace(txtcontra.Text) || txtMail.Text == "Correo Electronico" || txtcontra.Text == "Contraseña")
+            if (string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text) || txtUsername.Text == "Username" || txtPassword.Text == "Contraseña")
             {
-                //MessageBox.Show(Resources.CompletarDatos);
                 MessageBox.Show("Por favor, complete todos los campos.");
                 return;
             }
 
-            //if (!EsCorreoValido(txtMail.Text))
-            //{
-            //    MessageBox.Show("Formato de correo electrónico inválido.");
-            //    return;
-            //}
-            string email = txtMail.Text?.Trim();
-            string password = txtcontra.Text?.Trim();
+            string email = txtUsername.Text?.Trim();
+            string password = txtPassword.Text?.Trim();
             
             try
             {
                 User user = _userBLL.Login(email, password);
 
-                Service.SessionManager.Instance.SetCurrentUser(user);
+                Service_08YS.SessionManager.Instance.SetCurrentUser(user);
 
-                FormMDI formMDI = new FormMDI();
+                FormMDI_08YS formMDI = new FormMDI_08YS();
                 this.Hide();
-                
-                //formRegistro?.Close();
-                //formRegistro = null;
                 
                 formMDI.CerrarSesion += () =>
                 {
+                    SessionManager.Instance.CerrarSesion();
                     this.Show();
-                    Service.SessionManager.Instance.CerrarSesion();
                 };
 
                 formMDI.Show();
                 formMDI.Activate();
 
-                txtcontra.Text = "Contraseña";
-                txtMail.Text = "Username";
+                txtUsername.Text = UsernameFieldText;
+                txtPassword.Text = PasswordFieldText;
             }
-            catch (UserNoRegistradoException)
+            catch (UserNoRegistradoException_08YS)
             {
-                //bllBitacora.RegistrarEvento
-                //(
-                //    DateTime.Now,
-                //    "LoginFallido",
-                //    email,                   
-                //    BE.TipoEvento.Advertencia,
-                //    "GUI"
-                //);
-                //if (
-                //        MessageBox.Show($"{Resources.UsuarioNoEncontrado} \n\n {Resources.OfrecerRegistro}", $"{Resources.Advertencia}", MessageBoxButtons.YesNo)
-                //        == DialogResult.Yes
-                //    )
-                //{
-                //    AbrirRegistro();
-                //}
                 MessageBox.Show("Usuario no encontrado. Por favor, verifique sus credenciales.");
+                return;
+            }
+            catch(InvalidCredentialException)
+            {
+                IntentosFallidos++;
+                MessageBox.Show("La contraseña ingresada es incorrecta.");
+
+                if(IntentosFallidos == 3)
+                    {
+                        MessageBox.Show("Ha alcanzado el máximo de intentos fallidos. La cuenta ha sido bloqueada.");
+                        
+                    }
+                return;
+            }
+            catch(UserBloqueadoException_08YS)
+            {
+                MessageBox.Show("Su cuenta se encuentra bloqueada debido a múltiples intentos fallidos. Por favor, contacte al soporte.");
                 return;
             }
             catch (Exception ex)
@@ -99,35 +87,10 @@ namespace GUI
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            //AbrirRegistro();
-        }
-
-        /*
-        private bool AbrirRegistro()
-        {
-            if (formseleccionado == null)
-            {
-                FormSeleccionRol formSeleccion = new FormSeleccionRol();
-                formseleccionado = formSeleccion;
-                formSeleccion.Cierre += () =>
-                {
-                    this.Show();
-                    formseleccionado = null;
-                };
-                formSeleccion.Show();
-                formSeleccion.Activate();
-                this.Hide();
-                return true;
-            }
-
-            formseleccionado.BringToFront();
-            formseleccionado.Activate();
-            return false;
-        }
-        */
         #region FrontEnd
+
+        private const string UsernameFieldText = "Username";
+        private const string PasswordFieldText = "Contraseña";
 
         private new void Enter(TextBox textbox, string txt)
         {
@@ -149,22 +112,22 @@ namespace GUI
 
         private void textBox1_Enter(object sender, EventArgs e)
         {
-            Enter(txtMail, "Username");
+            Enter(txtUsername, UsernameFieldText);
         }
 
         private void textBox1_Leave(object sender, EventArgs e)
         {
-            Leave(txtMail, "Username");
+            Leave(txtUsername, UsernameFieldText);
         }
 
         private void textBox2_Enter(object sender, EventArgs e)
         {
-            Enter(txtcontra, "Contraseña");
+            Enter(txtPassword, PasswordFieldText);
         }
 
         private void textBox2_Leave(object sender, EventArgs e)
         {
-            Leave(txtcontra, "Contraseña");
+            Leave(txtPassword, PasswordFieldText);
         }
 
         private void FormLogin_Load_1(object sender, EventArgs e)
@@ -201,6 +164,7 @@ namespace GUI
 
 
         }
+
         //private void ActualizarTextos()
         //{
         //    btnAccederLogin.Text = Resources.btnAccederLogin;
@@ -214,9 +178,9 @@ namespace GUI
         //        ? "Cambiar a idioma Inglés"
         //        : "Switch to Spanish";
         //}
+
         //private void InicializarIdioma()
         //{
-
         //    btnAccederLogin.Text = Resources.btnAccederLogin;
         //    linkLabel1.Text = Resources.linkLabel1;
         //    txtcontra.Text = Resources.Contraseña;

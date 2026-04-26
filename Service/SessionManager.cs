@@ -1,11 +1,11 @@
-﻿using BE.Usuarios;
+﻿using BE_08YS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service
+namespace Service_08YS
 {
     public class SessionManager
     {

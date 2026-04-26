@@ -9,9 +9,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.ComponentModel;
 
-namespace GUI
+namespace GUI_08YS
 {
-    public class DropdownMenuStrip : ContextMenuStrip
+    public class DropdownMenuStrip_08YS : ContextMenuStrip
     {
         //Campos
         private bool isMainMenu;
@@ -22,7 +22,7 @@ namespace GUI
         private Bitmap menuItemHeaderSize;
 
         //Constructor
-        public DropdownMenuStrip(IContainer container)
+        public DropdownMenuStrip_08YS(IContainer container)
             : base(container)
         {
 

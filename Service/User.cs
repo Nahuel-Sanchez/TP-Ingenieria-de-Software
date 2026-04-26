@@ -5,10 +5,10 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
-using BE;
-namespace BE.Usuarios
-{
+using BE_08YS;
 
+namespace Service_08YS
+{
     public class User
     {
         private string _username;
@@ -20,9 +20,10 @@ namespace BE.Usuarios
         private string _email;
         private string _celular;
         private string _direccion;
+        private bool _bloqueado;
 
 
-        public User(string username, int dni, string nombre, string ape, string email, string hash, string salt)
+        public User(string username, int dni, string nombre, string ape, string email, string hash, string salt, string celular, string direccion, bool bloqueado = false)
         {
             this._username = username;
             this._dni = dni;
@@ -31,6 +32,9 @@ namespace BE.Usuarios
             this._hash = hash;  
             this._salt = salt;
             this._email = email;
+            this._celular = celular;
+            this._direccion = direccion;
+            this._bloqueado = bloqueado;
         }
 
         public User() { }
@@ -103,6 +107,12 @@ namespace BE.Usuarios
         {
             get { return _direccion; }
             set { _direccion = value; }
+        }
+
+        public bool Bloqueado
+        {
+            get { return _bloqueado; }
+            set { _bloqueado = value; }
         }
 
     }

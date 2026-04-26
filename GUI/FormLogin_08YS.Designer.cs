@@ -1,6 +1,6 @@
-﻿namespace GUI
+﻿namespace GUI_08YS
 {
-    partial class FormLogin
+    partial class FormLogin_08YS
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLogin));
-            this.txtMail = new System.Windows.Forms.TextBox();
-            this.txtcontra = new System.Windows.Forms.TextBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLogin_08YS));
+            this.txtUsername = new System.Windows.Forms.TextBox();
+            this.txtPassword = new System.Windows.Forms.TextBox();
             this.dummyFocusTarget = new System.Windows.Forms.Label();
             this.btnAccederLogin = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -41,42 +41,41 @@
             this.label4 = new System.Windows.Forms.Label();
             this.Cerrar = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // txtMail
+            // txtUsername
             // 
-            this.txtMail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(15)))), ((int)(((byte)(15)))));
-            this.txtMail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtMail.Font = new System.Drawing.Font("MS PGothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtMail.ForeColor = System.Drawing.Color.Gray;
-            this.txtMail.Location = new System.Drawing.Point(351, 81);
-            this.txtMail.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtMail.Name = "txtMail";
-            this.txtMail.Size = new System.Drawing.Size(228, 20);
-            this.txtMail.TabIndex = 1;
-            this.txtMail.Text = "Username";
-            this.txtMail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtMail.Enter += new System.EventHandler(this.textBox1_Enter);
-            this.txtMail.Leave += new System.EventHandler(this.textBox1_Leave);
+            this.txtUsername.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(15)))), ((int)(((byte)(15)))));
+            this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtUsername.Font = new System.Drawing.Font("MS PGothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUsername.ForeColor = System.Drawing.Color.Gray;
+            this.txtUsername.Location = new System.Drawing.Point(351, 81);
+            this.txtUsername.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(228, 20);
+            this.txtUsername.TabIndex = 1;
+            this.txtUsername.Text = "Username";
+            this.txtUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtUsername.Enter += new System.EventHandler(this.textBox1_Enter);
+            this.txtUsername.Leave += new System.EventHandler(this.textBox1_Leave);
             // 
-            // txtcontra
+            // txtPassword
             // 
-            this.txtcontra.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(15)))), ((int)(((byte)(15)))));
-            this.txtcontra.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtcontra.Font = new System.Drawing.Font("MS PGothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtcontra.ForeColor = System.Drawing.Color.Gray;
-            this.txtcontra.Location = new System.Drawing.Point(351, 135);
-            this.txtcontra.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtcontra.Name = "txtcontra";
-            this.txtcontra.Size = new System.Drawing.Size(228, 20);
-            this.txtcontra.TabIndex = 2;
-            this.txtcontra.Text = "Contraseña";
-            this.txtcontra.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtcontra.Enter += new System.EventHandler(this.textBox2_Enter);
-            this.txtcontra.Leave += new System.EventHandler(this.textBox2_Leave);
+            this.txtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(15)))), ((int)(((byte)(15)))));
+            this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPassword.Font = new System.Drawing.Font("MS PGothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPassword.ForeColor = System.Drawing.Color.Gray;
+            this.txtPassword.Location = new System.Drawing.Point(351, 135);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.Size = new System.Drawing.Size(228, 20);
+            this.txtPassword.TabIndex = 2;
+            this.txtPassword.Text = "Contraseña";
+            this.txtPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtPassword.Enter += new System.EventHandler(this.textBox2_Enter);
+            this.txtPassword.Leave += new System.EventHandler(this.textBox2_Leave);
             // 
             // dummyFocusTarget
             // 
@@ -203,19 +202,7 @@
             this.panel2.Size = new System.Drawing.Size(0, 256);
             this.panel2.TabIndex = 9;
             // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.LinkColor = System.Drawing.Color.Gray;
-            this.linkLabel1.Location = new System.Drawing.Point(365, 231);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(187, 16);
-            this.linkLabel1.TabIndex = 10;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "¿No tiene cuenta? Registrarse";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // FormLogin
+            // FormLogin_08YS
             // 
             this.AcceptButton = this.btnAccederLogin;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -223,7 +210,6 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(15)))), ((int)(((byte)(15)))));
             this.CancelButton = this.Cerrar;
             this.ClientSize = new System.Drawing.Size(661, 256);
-            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.Cerrar);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.label4);
@@ -232,11 +218,11 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnAccederLogin);
             this.Controls.Add(this.dummyFocusTarget);
-            this.Controls.Add(this.txtcontra);
-            this.Controls.Add(this.txtMail);
+            this.Controls.Add(this.txtPassword);
+            this.Controls.Add(this.txtUsername);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "FormLogin";
+            this.Name = "FormLogin_08YS";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormLogin";
             this.Load += new System.EventHandler(this.FormLogin_Load_1);
@@ -249,8 +235,8 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtMail;
-        private System.Windows.Forms.TextBox txtcontra;
+        private System.Windows.Forms.TextBox txtUsername;
+        private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Label dummyFocusTarget;
         private System.Windows.Forms.Button btnAccederLogin;
         private System.Windows.Forms.Panel panel1;
@@ -260,7 +246,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button Cerrar;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Button btnCambiarIdioma;
     }
 }

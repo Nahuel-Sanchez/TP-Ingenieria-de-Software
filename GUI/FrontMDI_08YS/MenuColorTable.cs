@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace GUI
+namespace GUI_08YS
 {
     public class MenuColorTable : ProfessionalColorTable
     {
@@ -30,7 +30,7 @@ namespace GUI
             }
             else
             {
-                backColor = Color.White;
+                backColor = Color.DarkGray;
                 leftColumnColor = Color.LightGray;
                 borderColor = Color.LightGray;
                 menuItemBorderColor = primaryColor;

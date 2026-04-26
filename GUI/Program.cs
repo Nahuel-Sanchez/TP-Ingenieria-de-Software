@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GUI
+namespace GUI_08YS
 {
     internal static class Program
     {
@@ -16,7 +16,7 @@ namespace GUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMDI());
+            Application.Run(new FormMDI_08YS());
         }
     }
 }
