@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connection_08YS.cs" />
+    <Compile Include="DALBitacora_08YS.cs" />
     <Compile Include="Factory\IDbFactory_08YS.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
