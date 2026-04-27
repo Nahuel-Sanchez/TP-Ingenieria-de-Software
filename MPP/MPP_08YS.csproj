@@ -41,13 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserMapper_08YS.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE_08YS.csproj">
       <Project>{611df768-0b94-4169-b272-cc6387cd884e}</Project>
       <Name>BE_08YS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Service\Service_08YS.csproj">
+      <Project>{e9802816-aa13-4bf0-94a2-f92cbf365086}</Project>
+      <Name>Service_08YS</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,14 +5,19 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
-using BE_08YS;
 
 namespace Service_08YS
 {
+    public enum UserRole
+    {
+        Admin,
+        Basico
+    }
     public class User
     {
         private string _username;
         private int _dni;
+        private UserRole _rol;
         private string _nombre;
         private string _apellido;
         private string _hash;
@@ -23,10 +28,11 @@ namespace Service_08YS
         private bool _bloqueado;
 
 
-        public User(string username, int dni, string nombre, string ape, string email, string hash, string salt, string celular, string direccion, bool bloqueado = false)
+        public User(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, string celular, string direccion, bool bloqueado = false)
         {
             this._username = username;
             this._dni = dni;
+            this._rol = rol;
             this._nombre = nombre;
             this._apellido = ape;
             this._hash = hash;  
@@ -67,6 +73,13 @@ namespace Service_08YS
             get { return _dni; }
             set { _dni = value; }
         }
+
+        public UserRole Rol
+        {
+            get { return _rol; }
+            set { _rol = value; }
+        }
+
         public string Nombre
         {
             get { return _nombre; }
