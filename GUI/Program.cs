@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,8 @@ namespace GUI_08YS
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMDI_08YS());
+            //Application.Run(new FormMDI_08YS());
+            Application.Run(new FormGestionUsuarios());
         }
     }
 }

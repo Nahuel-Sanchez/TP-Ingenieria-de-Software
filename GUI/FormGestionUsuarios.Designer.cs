@@ -45,7 +45,7 @@
             this.txtNombres = new System.Windows.Forms.TextBox();
             this.txtApellidos = new System.Windows.Forms.TextBox();
             this.txtDNI = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtMensaje = new System.Windows.Forms.TextBox();
             this.btnSalir = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnAplicar = new System.Windows.Forms.Button();
@@ -64,9 +64,6 @@
             // cmbRol
             // 
             this.cmbRol.FormattingEnabled = true;
-            this.cmbRol.Items.AddRange(new object[] {
-            "Admin",
-            "Basico"});
             this.cmbRol.Location = new System.Drawing.Point(222, 568);
             this.cmbRol.Name = "cmbRol";
             this.cmbRol.Size = new System.Drawing.Size(182, 21);
@@ -213,14 +210,14 @@
             this.txtDNI.Size = new System.Drawing.Size(182, 20);
             this.txtDNI.TabIndex = 45;
             // 
-            // textBox1
+            // txtMensaje
             // 
-            this.textBox1.Location = new System.Drawing.Point(540, 421);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(227, 185);
-            this.textBox1.TabIndex = 44;
-            this.textBox1.Text = "                            Mensaje:";
+            this.txtMensaje.Location = new System.Drawing.Point(540, 421);
+            this.txtMensaje.Multiline = true;
+            this.txtMensaje.Name = "txtMensaje";
+            this.txtMensaje.Size = new System.Drawing.Size(227, 185);
+            this.txtMensaje.TabIndex = 44;
+            this.txtMensaje.Text = "                            Mensaje:";
             // 
             // btnSalir
             // 
@@ -241,6 +238,7 @@
             this.btnCancelar.TabIndex = 42;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // btnAplicar
             // 
@@ -251,6 +249,7 @@
             this.btnAplicar.TabIndex = 41;
             this.btnAplicar.Text = "Aplicar";
             this.btnAplicar.UseVisualStyleBackColor = true;
+            this.btnAplicar.Click += new System.EventHandler(this.btnAplicar_Click);
             // 
             // btnActDes
             // 
@@ -281,6 +280,7 @@
             this.btnDesbloquear.TabIndex = 38;
             this.btnDesbloquear.Text = "Desbloquear";
             this.btnDesbloquear.UseVisualStyleBackColor = true;
+            this.btnDesbloquear.Click += new System.EventHandler(this.btnDesbloquear_Click);
             // 
             // btnCrear
             // 
@@ -322,8 +322,10 @@
             this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvUsuarios.Location = new System.Drawing.Point(93, 79);
             this.dgvUsuarios.Name = "dgvUsuarios";
+            this.dgvUsuarios.ReadOnly = true;
             this.dgvUsuarios.Size = new System.Drawing.Size(674, 307);
             this.dgvUsuarios.TabIndex = 34;
+            this.dgvUsuarios.SelectionChanged += new System.EventHandler(this.dgvUsuarios_SelectionChanged);
             // 
             // lblCantUsuarios
             // 
@@ -367,7 +369,7 @@
             this.Controls.Add(this.txtNombres);
             this.Controls.Add(this.txtApellidos);
             this.Controls.Add(this.txtDNI);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtMensaje);
             this.Controls.Add(this.btnSalir);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnAplicar);
@@ -382,6 +384,7 @@
             this.Controls.Add(this.lblTitulo);
             this.Name = "FormGestionUsuarios";
             this.Text = "FormGestionUsuarios";
+            this.Load += new System.EventHandler(this.FormGestionUsuarios_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsuarios)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -407,7 +410,7 @@
         private System.Windows.Forms.TextBox txtNombres;
         private System.Windows.Forms.TextBox txtApellidos;
         private System.Windows.Forms.TextBox txtDNI;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtMensaje;
         private System.Windows.Forms.Button btnSalir;
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnAplicar;

@@ -62,5 +62,19 @@ namespace DAL_08YS
                 Param("@Bloqueado", user.Bloqueado)
         };
         }
+        public List<User> GetAll()
+        {
+            DataTable dt = Leer("SELECT * FROM Users");
+            return UserMapper_08YS.FromDataTable(dt);
+        }
+
+        public void DesbloquearUsuario(int dni) 
+        {
+            Escribir
+            (
+                "UPDATE Users SET Bloqueado = 0 WHERE DNI = @dni",
+                new[] { Param("@dni", dni) }
+            );
+        }
     }
 }
