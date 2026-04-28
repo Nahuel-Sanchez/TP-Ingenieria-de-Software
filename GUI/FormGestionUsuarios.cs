@@ -27,6 +27,7 @@ namespace GUI
         {
             CargarGrilla();
             cmbRol.DataSource = Enum.GetValues(typeof(UserRole));
+            
             CambiarEstado(EstadoUI.Consulta); // Inicia en modo lectura
         }
         #region Manejo de Interfaz y Estados
@@ -56,6 +57,9 @@ namespace GUI
                     btnAplicar.Enabled = true;
                     btnCancelar.Enabled = true;
                     btnActDes.Enabled = false;
+                    txtLogin.Enabled = false;
+                    txtBloqueado.Enabled = false;
+                    txtActivo.Enabled = false;
                     txtMensaje.Text = "Modo Inserción: Complete los datos y presione Aplicar.";
                     txtDNI.Focus();
                     break;
@@ -119,35 +123,11 @@ namespace GUI
             dgvUsuarios.DataSource = null;
             //dgvUsuarios.DataSource = _bll.GetAll();
             dgvUsuarios.DataSource = UserBLL_08YS._usuariosLocal;
+            lblCantUsuarios.Text = "Cantidad de usuarios: "+ UserBLL_08YS._usuariosLocal.Count.ToString();
         }
         private void btnCrear_Click(object sender, EventArgs e)
         {
             CambiarEstado(EstadoUI.Insertando);
-            var validaciones = new (bool condicion, string mensaje)[]
-   {            
-                //Cambiar completar campos para que no se active al tocar el boton
-                (!ValidarCampos(), "Complete todos los campos."),
-                (!ValidarCorreo(txtEmail.Text), "Email inválido."),
-                (!ValidarDNI(txtDNI.Text), "DNI inválido.")
-   };
-
-            // Buscamos la primera que falle
-            var fallo = validaciones.FirstOrDefault(v => v.condicion);
-
-            if (fallo.mensaje != null)
-            {
-                MessageBox.Show(fallo.mensaje, "Error");
-                return;
-            }
-
-            int DNI = int.Parse(txtDNI.Text);
-            string apellido = txtApellidos.Text;
-            string nombre = txtNombres.Text;
-            string email = txtEmail.Text;
-            string rol = cmbRol.SelectedItem.ToString();
-
-
-            MessageBox.Show($"Usuario {nombre} creado");
         }
 
       
@@ -176,7 +156,11 @@ namespace GUI
         private void btnDesbloquear_Click(object sender, EventArgs e)
         {
 
-            if (dgvUsuarios.CurrentRow == null) return;
+            if (dgvUsuarios.CurrentRow == null)
+            {
+                MessageBox.Show("Error: Debe seleccionar un usuario de la grilla.");
+                return;
+            }
             var user = (User)dgvUsuarios.CurrentRow.DataBoundItem;
 
             DialogResult resp = MessageBox.Show($"¿Desea desbloquear a {user.Nombre}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -185,9 +169,9 @@ namespace GUI
             {
                 try
                 {
-                    _bll.DesbloquearUsuario(user.DNI);
+                    _bll.DesbloquearUsuario(user.Username);
 
-
+                
                     MessageBox.Show($"El usuario {user.Nombre} fue desbloqueado con exito");
                     CargarGrilla();
                     CambiarEstado(EstadoUI.Consulta);
@@ -203,10 +187,84 @@ namespace GUI
         {
             CambiarEstado(EstadoUI.Consulta);
         }
+        private void EjecutarAlta()
+        {
+            // 1. Obtener datos de los campos
+            int dni = int.Parse(txtDNI.Text);
+            string nombre = txtNombres.Text.Trim();
+            string apellido = txtApellidos.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            UserRole rol = (UserRole)cmbRol.SelectedItem;
 
+            // 2. Aplicar Reglas de Negocio para el nuevo usuario
+
+            // Regla: Login = DNI + Nombre
+            string nuevoLogin = dni.ToString() + nombre;
+
+            // Regla: Password Inicial = DNI + Apellido
+            string passwordDefault = dni.ToString() + apellido;
+
+            // 3. Generar Seguridad
+            string hashInicial, saltInicial;
+            Encriptador.CrearHash(passwordDefault, out hashInicial, out saltInicial);
+
+            // 4. Crear el objeto User 
+            // Usamos valores dummy para celular y dirección 
+            User nuevoUsuario = new User(
+                nuevoLogin,
+                dni,
+                rol,
+                nombre,
+                apellido,
+                email,
+                hashInicial,
+                saltInicial,
+                "000000",      // Celular provisorio
+                "Dirección",    // Dirección provisoria
+                false          // Bloqueado = false por defecto
+            );
+
+            // 5. Enviar a la BLL
+            _bll.CrearUsuario(nuevoUsuario);
+        }
         private void btnAplicar_Click(object sender, EventArgs e)
         {
-           
+            var validaciones = new (bool condicion, string mensaje)[]
+    {
+        (!ValidarCampos(), "Complete todos los campos."),
+        (!ValidarCorreo(txtEmail.Text), "Email inválido."),
+        (!ValidarDNI(txtDNI.Text), "DNI inválido.")
+    };
+
+            var fallo = validaciones.FirstOrDefault(v => v.condicion);
+
+            if (fallo.mensaje != null)
+            {
+                MessageBox.Show(fallo.mensaje, "Error de validación");
+                return; // Cortamos el flujo, el usuario sigue en Modo Inserción para corregir
+            }
+
+            // 2. PROCESAR: Si pasó las validaciones, ejecutamos la acción
+            try
+            {
+                if (_estadoActual == EstadoUI.Insertando)
+                {
+                    EjecutarAlta(); // Aquí creas el objeto User y lo mandas a la BLL
+                }
+                else if (_estadoActual == EstadoUI.Editando)
+                {
+                    // EjecutarModificacion(); 
+                }
+
+                // 3. FINALIZAR: Si todo salió bien, volvemos a consulta
+                CargarGrilla();
+                CambiarEstado(EstadoUI.Consulta);
+                MessageBox.Show("Operación realizada con éxito.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }

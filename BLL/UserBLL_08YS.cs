@@ -25,6 +25,19 @@ namespace BLL_08YS
             this.userRepository = userRepository;
             _bitacoraBll = bitacoraBll;
         }
+        public void CrearUsuario(User nuevo)
+        {
+            if (_usuariosLocal.Any(u => u.DNI == nuevo.DNI))
+            {
+                throw new Exception("Ya existe un usuario registrado con ese DNI.");
+            }
+
+            // 3. Persistencia (en tu caso, a la lista local)
+            _usuariosLocal.Add(nuevo);
+
+            //userRepository.AddUser(nuevo);
+            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Creacion exitosa", Criticidad.Alto);
+        }
 
         public User Login(string username, string password)
         {
@@ -42,7 +55,7 @@ namespace BLL_08YS
 
                 throw new InvalidCredentialException();
             }
-            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Inicio de sesión exitoso", Criticidad.Bajo);
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Inicio de sesión exitoso", Criticidad.Alto);
 
             return user;
         }
@@ -52,14 +65,27 @@ namespace BLL_08YS
             userRepository.BloquearUsuario(username);
         }
 
-        public void DesbloquearUsuario(int dni)
+        public void DesbloquearUsuario(string username)
         {
             //userRepository.DesbloquearUsuario(dni);
-            var user = _usuariosLocal.FirstOrDefault(u => u.DNI == dni);
-            if (user != null)
-            {
+            var user = _usuariosLocal.FirstOrDefault(u => u.Username==u.Username);
+            if (user == null)
+                throw new Exception("No se encontró el usuario con el login especificado.");
+            string passwordDefault = user.DNI.ToString() + user.Apellido.Trim();
+
+                // 3. Generar nuevas credenciales
+                string nuevoHash, nuevoSalt;
+                Encriptador.CrearHash(passwordDefault, out nuevoHash, out nuevoSalt);
+
+                // 4. Actualizar el estado del usuario
+                user.Hash = nuevoHash;
+                user.Salt = nuevoSalt;
                 user.Bloqueado = false;
-            }
+            
+            
+            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Desbloqueo exitoso", Criticidad.Alto);
+
+
         }
 
         public List<User> GetAll()

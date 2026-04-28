@@ -26,7 +26,7 @@ namespace DAL_08YS
             return dt.Rows.Count > 0 ? UserMapper_08YS.FromDataRow(dt.Rows[0]) : null;
         }
 
-        public void Add(User user)
+        public void AddUser(User user)
         {
             Escribir
             (
@@ -68,12 +68,12 @@ namespace DAL_08YS
             return UserMapper_08YS.FromDataTable(dt);
         }
 
-        public void DesbloquearUsuario(int dni) 
+        public void DesbloquearUsuario(string username) 
         {
             Escribir
             (
-                "UPDATE Users SET Bloqueado = 0 WHERE DNI = @dni",
-                new[] { Param("@dni", dni) }
+                "UPDATE Users SET Bloqueado = 1 WHERE Username = @Username",
+                new[] { Param("@Username", username) }
             );
         }
     }

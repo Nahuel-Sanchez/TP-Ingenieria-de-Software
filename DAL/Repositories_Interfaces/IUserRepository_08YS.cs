@@ -14,6 +14,8 @@ namespace DAL_08YS.Repositories_Interfaces
 
         List<User> GetAll();
 
-        void DesbloquearUsuario(int dni);
+        void DesbloquearUsuario(string username);
+
+        void AddUser(User user);
     }
 }
