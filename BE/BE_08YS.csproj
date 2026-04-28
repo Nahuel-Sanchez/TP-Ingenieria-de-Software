@@ -7,8 +7,8 @@
     <ProjectGuid>{611DF768-0B94-4169-B272-CC6387CD884E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BE</RootNamespace>
-    <AssemblyName>BE</AssemblyName>
+    <RootNamespace>BE_08YS</RootNamespace>
+    <AssemblyName>BE_08YS</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

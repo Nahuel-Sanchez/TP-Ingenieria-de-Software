@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace DAL_08YS.Repositories_Interfaces
 {
-    public interface IUserRepository_08YS
+    public interface IBitacoraRepository_08YS
     {
-        User GetByUsername(string username);
-        void BloquearUsuario(string username);
+        void RegistrarEvento(BitacoraEvento_08YS evento);
+
+        List<BitacoraEvento_08YS> GetAll();
+
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL
+namespace DAL_08YS
 {
     public class SqlDbFactory_08YS : IDbFactory_08YS
     {

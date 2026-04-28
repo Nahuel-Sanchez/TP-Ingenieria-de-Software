@@ -4,8 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL;
 using DAL_08YS;
+using DAL_08YS.Repositories_Interfaces;
+using Service_08YS;
 
 namespace BLL_08YS
 {
@@ -15,8 +16,16 @@ namespace BLL_08YS
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
             IUserRepository_08YS repo = new SqlUserRepository_08YS(factory);
-            return new UserBLL_08YS(repo);
+            BitacoraBLL_08YS bitacoraBll = CreateBitacoraBLL();
+            return new UserBLL_08YS(repo, bitacoraBll);
         }
-            
+
+        public static BitacoraBLL_08YS CreateBitacoraBLL()
+        {
+            IDbFactory_08YS factory = new SqlDbFactory_08YS();
+            IBitacoraRepository_08YS repo = new SqlBitacoraRepository(factory);
+            return new BitacoraBLL_08YS(repo);
+
+        }
     }
 }

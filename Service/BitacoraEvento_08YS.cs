@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service
+namespace Service_08YS
 {
     public enum Criticidad
     {
@@ -43,5 +43,5 @@ namespace Service
         {
 
         }
-
+    }
 }

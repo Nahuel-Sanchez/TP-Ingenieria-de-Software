@@ -7,8 +7,8 @@
     <ProjectGuid>{578ABC9F-0665-4B31-A9D1-2AE211CD4A43}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BLL</RootNamespace>
-    <AssemblyName>BLL</AssemblyName>
+    <RootNamespace>BLL_08YS</RootNamespace>
+    <AssemblyName>BLL_08YS</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BLLBitacora_08YS.cs" />
+    <Compile Include="BitacoraBLL_08YS.cs" />
     <Compile Include="BLLFactory_08YS.cs" />
     <Compile Include="UserBLL_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

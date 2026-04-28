@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Service_08YS;
 
-namespace MPP
+namespace MPP_08YS
 {
     public static class UserMapper_08YS
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{DC1A0F3F-FD0A-4339-8657-96C88431059E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DAL</RootNamespace>
-    <AssemblyName>DAL</AssemblyName>
+    <RootNamespace>DAL_08YS</RootNamespace>
+    <AssemblyName>DAL_08YS</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connection_08YS.cs" />
-    <Compile Include="DALBitacora_08YS.cs" />
+    <Compile Include="Repositories_Interfaces\IBitacoraRepository_08YS.cs" />
+    <Compile Include="SQL\SqlBitacoraRepository.cs" />
     <Compile Include="Factory\IDbFactory_08YS.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

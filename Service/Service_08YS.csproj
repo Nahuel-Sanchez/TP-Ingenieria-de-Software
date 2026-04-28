@@ -7,8 +7,8 @@
     <ProjectGuid>{E9802816-AA13-4BF0-94A2-F92CBF365086}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Service</RootNamespace>
-    <AssemblyName>Service</AssemblyName>
+    <RootNamespace>Service_08YS</RootNamespace>
+    <AssemblyName>Service_08YS</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

@@ -1,5 +1,5 @@
-﻿using DAL;
-using MPP;
+﻿using DAL_08YS.Repositories_Interfaces;
+using MPP_08YS;
 using Service_08YS;
 using System;
 using System.Collections.Generic;
@@ -18,10 +18,8 @@ namespace DAL_08YS
 
         public User GetByUsername(string username)
         {
-            DataTable dt = Leer(
-                "SELECT * FROM Users WHERE Username = @Username",
-                new[] { Param("@Username", username) }
-            );
+            DataTable dt = Leer( "SELECT * FROM Users WHERE Username = @Username",
+                                    new[] { Param("@Username", username) }          );
 
             if (dt.Rows.Count == 0) return null;
 
@@ -51,17 +49,17 @@ namespace DAL_08YS
         {
             return new[]
             {
-            Param("@Username",  user.Username),
-            Param("@DNI",       user.DNI),
-            Param("@Rol",       user.Rol.ToString()),
-            Param("@Nombre",    user.Nombre),
-            Param("@Apellido",  user.Apellido),
-            Param("@Hash",      user.Hash),
-            Param("@Salt",      user.Salt),
-            Param("@Email",     user.Email),
-            Param("@Celular",   (object)user.Celular   ?? DBNull.Value),
-            Param("@Direccion", (object)user.Direccion ?? DBNull.Value),
-            Param("@Bloqueado", user.Bloqueado),
+                Param("@Username",  user.Username),
+                Param("@DNI",       user.DNI),
+                Param("@Rol",       user.Rol.ToString()),
+                Param("@Nombre",    user.Nombre),
+                Param("@Apellido",  user.Apellido),
+                Param("@Hash",      user.Hash),
+                Param("@Salt",      user.Salt),
+                Param("@Email",     user.Email),
+                Param("@Celular",   (object)user.Celular   ?? DBNull.Value),
+                Param("@Direccion", (object)user.Direccion ?? DBNull.Value),
+                Param("@Bloqueado", user.Bloqueado)
         };
         }
     }

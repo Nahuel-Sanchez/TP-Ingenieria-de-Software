@@ -7,8 +7,8 @@
     <ProjectGuid>{4BCA8705-9B28-4EB5-A8D6-7E366F3A58E9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MPP</RootNamespace>
-    <AssemblyName>MPP</AssemblyName>
+    <RootNamespace>MPP_08YS</RootNamespace>
+    <AssemblyName>MPP_08YS</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitacoraMapper_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserMapper_08YS.cs" />
   </ItemGroup>

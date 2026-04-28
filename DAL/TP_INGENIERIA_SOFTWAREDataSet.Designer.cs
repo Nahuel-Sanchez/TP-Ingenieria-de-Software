@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace DAL {
+namespace DAL_08YS {
     
     
     /// <summary>

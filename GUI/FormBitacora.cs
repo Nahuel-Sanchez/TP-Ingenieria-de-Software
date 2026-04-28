@@ -1,4 +1,4 @@
-﻿using BLL;
+﻿using BLL_08YS;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +13,7 @@ namespace GUI
 {
     public partial class FormBitacora : Form
     {
-        private BLLBitacora_08YS _bll = new BLLBitacora_08YS();
+        private BitacoraBLL_08YS _bll = BLLFactory_08YS.CreateBitacoraBLL();
         public FormBitacora()
         {
             InitializeComponent();
@@ -29,11 +29,11 @@ namespace GUI
             try
             {
                 // Suponiendo que instanciaste tu BLL como _bitacoraBLL
-                dgvBitacora.DataSource = null; // Limpiamos
-                dgvBitacora.DataSource = _bitacoraBLL.ListarBitacora();
+                dgvEventos.DataSource = null; // Limpiamos
+                dgvEventos.DataSource = _bll.GetAll();
 
                 // Opcional: Ajustar el formato de las columnas
-                dgvBitacora.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
+                dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
             }
             catch (Exception ex)
             {

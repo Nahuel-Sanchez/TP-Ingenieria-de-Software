@@ -1,17 +1,23 @@
-﻿using DAL;
-using Service;
-using Service_08YS;
+﻿using Service_08YS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL_08YS;
+using DAL_08YS.Repositories_Interfaces;
 
-namespace BLL
+namespace BLL_08YS
 {
-    public class BLLBitacora_08YS
+    public class BitacoraBLL_08YS
     {
-        private DALBitacora_08YS repo = new DALBitacora_08YS();
+        private readonly IBitacoraRepository_08YS _repo;
+
+        public BitacoraBLL_08YS(IBitacoraRepository_08YS repo)
+        {
+            _repo = repo;
+        }
+
         public void RegistrarEvento(Modulo modulo, string descripcion, Criticidad criticidad)
         {
             string usuarioActual = SessionManager.Instance.IsLogged
@@ -30,8 +36,9 @@ namespace BLL
 
         }
 
-        public List<BitacoraEvento_08YS> ObtenerTodos()
+        public List<BitacoraEvento_08YS> GetAll()
         {
-            return repo.ObtenerTodos();
+            return _repo.GetAll();
         }
+    }
 }

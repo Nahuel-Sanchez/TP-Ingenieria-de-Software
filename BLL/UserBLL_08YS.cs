@@ -4,20 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL_08YS;
+using DAL_08YS.Repositories_Interfaces;
 using System.Security.Authentication;
 using Service_08YS;
-using Service;
-using BLL;
 
 namespace BLL_08YS
 {
     public class UserBLL_08YS
     {
         private readonly IUserRepository_08YS userRepository;
-        private readonly BLLBitacora_08YS _bitacoraBll;
-        public UserBLL_08YS(IUserRepository_08YS userRepository)
+        private readonly BitacoraBLL_08YS _bitacoraBll;
+        public UserBLL_08YS(IUserRepository_08YS userRepository, BitacoraBLL_08YS bitacoraBll)
         {
             this.userRepository = userRepository;
+            _bitacoraBll = bitacoraBll;
         }
 
         public User Login(string username, string password)
