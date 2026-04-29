@@ -28,9 +28,9 @@ namespace GUI
         {
             try
             {
-                // Suponiendo que instanciaste tu BLL como _bitacoraBLL
+               
                 dgvEventos.DataSource = null; // Limpiamos
-                dgvEventos.DataSource = _bll.GetAll();
+                //dgvEventos.DataSource = _bll.GetAll();
 
                 // Opcional: Ajustar el formato de las columnas
                 dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";

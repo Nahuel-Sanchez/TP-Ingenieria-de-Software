@@ -35,6 +35,16 @@ namespace DAL_08YS
                 ToParameters(user)
             );
         }
+        public void Modify(User user,string login)
+        {
+            Escribir
+            (
+                "UPDATE Users SET Email = @email AND Rol=@rol WHERE Username = @Username",
+                new[] { Param("@email", user.Email), 
+                        Param("@rol", user.Rol) ,
+                        Param("@Username",user.Username)}
+            );
+        }
 
         public void BloquearUsuario(string username)
         {

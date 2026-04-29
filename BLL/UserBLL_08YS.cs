@@ -1,12 +1,13 @@
-﻿using System;
+﻿using DAL_08YS;
+using DAL_08YS.Repositories_Interfaces;
+using Service_08YS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
-using DAL_08YS;
-using DAL_08YS.Repositories_Interfaces;
-using System.Security.Authentication;
-using Service_08YS;
 
 namespace BLL_08YS
 {
@@ -25,14 +26,36 @@ namespace BLL_08YS
             this.userRepository = userRepository;
             _bitacoraBll = bitacoraBll;
         }
-        public void CrearUsuario(User nuevo)
+        public void CrearUsuario(int dni, string nombre, string apellido, string email, UserRole rol)
         {
-            if (_usuariosLocal.Any(u => u.DNI == nuevo.DNI))
-            {
-                throw new Exception("Ya existe un usuario registrado con ese DNI.");
-            }
+            if (_usuariosLocal.Any(u => u.DNI == dni))
+                throw new Exception("El DNI ya existe.");
 
-            // 3. Persistencia (en tu caso, a la lista local)
+            // 2. Composición de Login y Password
+            string login = dni.ToString() + nombre.Trim();
+            string passwordDefault = dni.ToString() + apellido.Trim();
+
+            // 3. SEGURIDAD: Aquí es donde corresponde el Hash y Salt
+            string hash, salt;
+            Encriptador.CrearHash(passwordDefault, out hash, out salt);
+
+            // 4. Armado del objeto
+            User nuevo = new User(
+                login,
+                dni,
+                rol,
+                nombre,
+                apellido,
+                email,
+                hash,
+                salt,
+                "", // celular
+                "", // direccion
+                false // bloqueado
+            );
+
+           
+            // 5. Persistencia (a la lista local)
             _usuariosLocal.Add(nuevo);
 
             //userRepository.AddUser(nuevo);
@@ -68,7 +91,7 @@ namespace BLL_08YS
         public void DesbloquearUsuario(string username)
         {
             //userRepository.DesbloquearUsuario(dni);
-            var user = _usuariosLocal.FirstOrDefault(u => u.Username==u.Username);
+            var user = _usuariosLocal.FirstOrDefault(u => u.Username==username);
             if (user == null)
                 throw new Exception("No se encontró el usuario con el login especificado.");
             string passwordDefault = user.DNI.ToString() + user.Apellido.Trim();
@@ -87,7 +110,21 @@ namespace BLL_08YS
 
 
         }
+        public void ModificarUsuario(string username, string nuevoEmail, UserRole nuevoRol)
+        {
+            // 1. Buscar al usuario existente
+            var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
 
+            if (user == null)
+                throw new Exception("No se encontró el usuario para modificar.");
+
+            // 2. Aplicar los cambios (Solo Email y Rol)
+            user.Email = nuevoEmail;
+            user.Rol = nuevoRol;
+
+            // 3. Registrar en Bitácora
+            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Modificación de perfil (Email/Rol)",Criticidad.Alto);
+        }
         public List<User> GetAll()
         {
             return userRepository.GetAll();

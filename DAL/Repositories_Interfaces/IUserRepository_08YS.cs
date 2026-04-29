@@ -17,5 +17,7 @@ namespace DAL_08YS.Repositories_Interfaces
         void DesbloquearUsuario(string username);
 
         void AddUser(User user);
+
+        void Modify(User user, string login);
     }
 }

@@ -63,19 +63,46 @@ namespace GUI
                     txtMensaje.Text = "Modo Inserción: Complete los datos y presione Aplicar.";
                     txtDNI.Focus();
                     break;
+                case EstadoUI.Editando:
+                    SetCamposReadOnly(false);
+                    btnCrear.Enabled = false;
+                    btnModificar.Enabled = false;
+                    btnDesbloquear.Enabled = false;
+                    btnAplicar.Enabled = true;
+                    btnCancelar.Enabled = true;
+                    btnActDes.Enabled = false;
+                    txtLogin.Enabled = false;
+                    txtBloqueado.Enabled = false;
+                    txtActivo.Enabled = false;
+                    txtEmail.Enabled = true;
+                    cmbRol.Enabled = true;
+                    txtMensaje.Text = "Modo Edicion: Complete los datos y presione Aplicar.";
+                    txtEmail.Focus();
+                    break;
             }
         }
 
         private void SetCamposReadOnly(bool status)
         {
-            txtDNI.ReadOnly = status;
-            txtApellidos.ReadOnly = status;
-            txtNombres.ReadOnly = status;
+            // Si status es true (Consulta), todo bloqueado.
+            // Si status es false, depende de si es Inserción o Edición.
+            bool esEdicion = _estadoActual == EstadoUI.Editando;
+
+            // Campos que NUNCA se editan (DNI, Nombres, Apellidos, Login)
+            // Se bloquean si estamos en Consulta O si estamos en Edición.
+            txtDNI.ReadOnly = status || esEdicion;
+            txtNombres.ReadOnly = status || esEdicion;
+            txtApellidos.ReadOnly = status || esEdicion;
+            txtLogin.ReadOnly = status || esEdicion;
+
+            // Campos que SÍ se pueden editar (Email y Rol)
+            // Solo se bloquean si status es true (Consulta).
             txtEmail.ReadOnly = status;
-            txtLogin.ReadOnly = status;
             cmbRol.Enabled = !status;
-            txtActivo.Enabled = !status;
-            txtBloqueado.Enabled = !status;
+
+            // Campos de estado (Bloqueado/Activo) - Siempre solo lectura para el usuario
+            txtBloqueado.ReadOnly = true;
+            txtActivo.ReadOnly = true;
         }
 
         private void LimpiarCampos()
@@ -118,21 +145,40 @@ namespace GUI
                    cmbRol.SelectedIndex != -1;
         }
         #endregion
+        #region Grilla
         private void CargarGrilla()
         {
             dgvUsuarios.DataSource = null;
-            //dgvUsuarios.DataSource = _bll.GetAll();
-            dgvUsuarios.DataSource = UserBLL_08YS._usuariosLocal;
-            lblCantUsuarios.Text = "Cantidad de usuarios: "+ UserBLL_08YS._usuariosLocal.Count.ToString();
-        }
-        private void btnCrear_Click(object sender, EventArgs e)
-        {
-            CambiarEstado(EstadoUI.Insertando);
-        }
+            //var listaCompleta = _bll.GetAll();
+            var listaCompleta = UserBLL_08YS._usuariosLocal;
 
+            // 2. Aplicamos el filtro según el RadioButton seleccionado
+            if (rbBloqueados.Checked)
+            {
+                // Solo los que tienen Bloqueado == true
+                dgvUsuarios.DataSource = null;
+                dgvUsuarios.DataSource = listaCompleta.Where(u => u.Bloqueado == true).ToList();
+            }
+            else
+            {
+                // Todos los usuarios
+                dgvUsuarios.DataSource = null;
+                dgvUsuarios.DataSource = listaCompleta;
+            }
+
+            // Actualizamos el contador (opcional, para que coincida con lo que se ve)
+            int cantidadMostrada = dgvUsuarios.Rows.Count;
+            lblCantUsuarios.Text = $"Cantidad mostrada: {cantidadMostrada}";
+        }
+      
       
         private void dgvUsuarios_SelectionChanged(object sender, EventArgs e)
         {
+            if (_estadoActual != EstadoUI.Consulta)
+            {
+                return;
+            }
+
             if (dgvUsuarios.CurrentRow != null)
             {
          
@@ -148,9 +194,16 @@ namespace GUI
                 txtBloqueado.Text = user.Bloqueado.ToString();
                 //txtActivo.Text = user.Activo;
 
-                btnDesbloquear.Enabled = user.Bloqueado;
                 btnModificar.Enabled = true;
+                btnDesbloquear.Enabled = user.Bloqueado;
+                btnActDes.Enabled = true;
             }
+        }
+        #endregion
+        #region Botones
+        private void btnCrear_Click(object sender, EventArgs e)
+        {
+            CambiarEstado(EstadoUI.Insertando);
         }
 
         private void btnDesbloquear_Click(object sender, EventArgs e)
@@ -182,59 +235,18 @@ namespace GUI
                 }
             }
         }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
+        private void btnModificar_Click(object sender, EventArgs e)
         {
-            CambiarEstado(EstadoUI.Consulta);
-        }
-        private void EjecutarAlta()
-        {
-            // 1. Obtener datos de los campos
-            int dni = int.Parse(txtDNI.Text);
-            string nombre = txtNombres.Text.Trim();
-            string apellido = txtApellidos.Text.Trim();
-            string email = txtEmail.Text.Trim();
-            UserRole rol = (UserRole)cmbRol.SelectedItem;
-
-            // 2. Aplicar Reglas de Negocio para el nuevo usuario
-
-            // Regla: Login = DNI + Nombre
-            string nuevoLogin = dni.ToString() + nombre;
-
-            // Regla: Password Inicial = DNI + Apellido
-            string passwordDefault = dni.ToString() + apellido;
-
-            // 3. Generar Seguridad
-            string hashInicial, saltInicial;
-            Encriptador.CrearHash(passwordDefault, out hashInicial, out saltInicial);
-
-            // 4. Crear el objeto User 
-            // Usamos valores dummy para celular y dirección 
-            User nuevoUsuario = new User(
-                nuevoLogin,
-                dni,
-                rol,
-                nombre,
-                apellido,
-                email,
-                hashInicial,
-                saltInicial,
-                "000000",      // Celular provisorio
-                "Dirección",    // Dirección provisoria
-                false          // Bloqueado = false por defecto
-            );
-
-            // 5. Enviar a la BLL
-            _bll.CrearUsuario(nuevoUsuario);
+            CambiarEstado(EstadoUI.Editando);
         }
         private void btnAplicar_Click(object sender, EventArgs e)
         {
             var validaciones = new (bool condicion, string mensaje)[]
-    {
-        (!ValidarCampos(), "Complete todos los campos."),
-        (!ValidarCorreo(txtEmail.Text), "Email inválido."),
-        (!ValidarDNI(txtDNI.Text), "DNI inválido.")
-    };
+            {
+                (!ValidarCampos(), "Complete todos los campos."),
+                (!ValidarCorreo(txtEmail.Text), "Email inválido."),
+                (!ValidarDNI(txtDNI.Text), "DNI inválido.")
+            };
 
             var fallo = validaciones.FirstOrDefault(v => v.condicion);
 
@@ -244,19 +256,19 @@ namespace GUI
                 return; // Cortamos el flujo, el usuario sigue en Modo Inserción para corregir
             }
 
-            // 2. PROCESAR: Si pasó las validaciones, ejecutamos la acción
+            // PROCESAR: Si pasó las validaciones, ejecutamos la acción
             try
             {
                 if (_estadoActual == EstadoUI.Insertando)
                 {
-                    EjecutarAlta(); // Aquí creas el objeto User y lo mandas a la BLL
+                    EjecutarAlta(); // Aca se crea el objeto User y se manda a la BLL
                 }
                 else if (_estadoActual == EstadoUI.Editando)
                 {
-                    // EjecutarModificacion(); 
+                    EjecutarModificacion();
                 }
 
-                // 3. FINALIZAR: Si todo salió bien, volvemos a consulta
+                // FINALIZAR: Si todo salió bien, volvemos a consulta
                 CargarGrilla();
                 CambiarEstado(EstadoUI.Consulta);
                 MessageBox.Show("Operación realizada con éxito.");
@@ -266,5 +278,56 @@ namespace GUI
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            CambiarEstado(EstadoUI.Consulta);
+        }
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
+        private void EjecutarAlta()
+        {
+            // 1. Obtener datos de los campos
+            int dni = int.Parse(txtDNI.Text);
+            string nombre = txtNombres.Text.Trim();
+            string apellido = txtApellidos.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            UserRole rol = (UserRole)cmbRol.SelectedItem;
+
+             // 2. Enviar a la BLL
+            _bll.CrearUsuario(dni,nombre,apellido,email,rol);
+        }
+        private void EjecutarModificacion()
+        {
+            string username = txtLogin.Text; // Usamos el login como ID
+            string email = txtEmail.Text;
+            UserRole rol = (UserRole)cmbRol.SelectedItem;
+
+            // Llamada a la BLL
+            _bll.ModificarUsuario(username, email, rol);
+        }
+
+        #region Filtros
+        private void rbTodos_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbTodos.Checked)
+            {
+                CargarGrilla();
+            }
+        }
+
+        private void rbBloqueados_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbBloqueados.Checked)
+            {
+                CargarGrilla();
+            }
+        }
+
+        #endregion
+
+      
     }
 }
