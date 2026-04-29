@@ -21,7 +21,7 @@ namespace DAL_08YS
         protected IDbDataParameter Param(string name, object value)
             => _factory.CreateParameter(name, value);
 
-        public DataTable Leer(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
+        protected DataTable Leer(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
         {
             using (IDbConnection conn = _factory.CreateConnection())
             using (IDbCommand cmd = _factory.CreateCommand(query, conn))
@@ -38,7 +38,7 @@ namespace DAL_08YS
             }
         }
 
-        public bool Escribir(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
+        protected bool ExecuteNonQuery(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
         {
             using (IDbConnection conn = _factory.CreateConnection())
             using (IDbCommand cmd = _factory.CreateCommand(query, conn))
@@ -52,6 +52,28 @@ namespace DAL_08YS
 
                 conn.Open();
                 return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        protected T ExecuteScalar<T>(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
+        {
+            using (IDbConnection conn = _factory.CreateConnection())
+            using (IDbCommand cmd = _factory.CreateCommand(query, conn))
+            {
+                if (storedProcedure)
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                if (parameters != null)
+                    foreach (var p in parameters)
+                        cmd.Parameters.Add(p);
+
+                conn.Open();
+                object result = cmd.ExecuteScalar();
+
+                if (result == null || result == DBNull.Value)
+                    return default(T);
+
+                return (T)Convert.ChangeType(result, typeof(T));
             }
         }
     }

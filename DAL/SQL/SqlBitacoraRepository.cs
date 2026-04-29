@@ -29,7 +29,7 @@ namespace DAL_08YS
 
         public void RegistrarEvento(BitacoraEvento_08YS evento)
         {
-            Escribir(
+            ExecuteNonQuery(
                 "INSERT INTO Bitacora (Login, FechaHora, Modulo, Descripcion, Criticidad) " +
                 "VALUES (@login, @fecha_hora, @modulo, @descripcion, @criticidad)",
                 ToParameters(evento));

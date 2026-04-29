@@ -9,13 +9,16 @@ namespace DAL_08YS.Repositories_Interfaces
 {
     public interface IUserRepository_08YS
     {
-        User GetByUsername(string username);
-        void BloquearUsuario(string username);
-
         List<User> GetAll();
 
-        void DesbloquearUsuario(string username);
+        User GetByUsername(string username);
 
-        void AddUser(User user);
+        void LockOut(string username);
+
+        void Unlock(string username);
+
+        void Create(User user);
+
+        bool Exists(int DNI);
     }
 }

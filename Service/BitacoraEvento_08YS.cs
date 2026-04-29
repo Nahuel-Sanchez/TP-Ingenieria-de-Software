@@ -8,10 +8,12 @@ namespace Service_08YS
 {
     public enum Criticidad
     {
+        Critico,
         Alto,
         Medio,
         Bajo
     }
+
     public enum Modulo
     {
         Usuarios
