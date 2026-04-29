@@ -87,7 +87,7 @@ namespace DAL_08YS
 
         public void Modify(User user, string login)
         {
-            Escribir
+            ExecuteNonQuery
             (
                 "UPDATE Users SET Email = @email AND Rol=@rol WHERE Username = @Username",
                 new[] { Param("@email", user.Email),

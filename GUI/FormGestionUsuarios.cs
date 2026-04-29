@@ -240,65 +240,6 @@ namespace GUI
             CambiarEstado(EstadoUI.Editando);
         }
 
-            // Regla: Login = DNI + Nombre
-            string nuevoLogin = dni.ToString() + nombre;
-
-            // Regla: Password Inicial = DNI + Apellido
-            string passwordDefault = dni.ToString() + apellido;
-
-            // 3. Generar Seguridad
-            string hashInicial, saltInicial;
-            Encriptador.CrearHash(passwordDefault, out hashInicial, out saltInicial);
-
-            // 4. Crear el objeto User 
-            // Usamos valores dummy para celular y dirección 
-            User nuevoUsuario = new User(
-                nuevoLogin,
-                dni,
-                rol,
-                nombre,
-                apellido,
-                email,
-                hashInicial,
-                saltInicial,
-                "000000",      // Celular provisorio
-                "Dirección",    // Dirección provisoria
-                false          // Bloqueado = false por defecto
-            );
-
-            // 5. Enviar a la BLL
-            _bll.CrearUsuario(nuevoUsuario);
-        }
-
-            // Regla: Login = DNI + Nombre
-            string nuevoLogin = dni.ToString() + nombre;
-
-            // Regla: Password Inicial = DNI + Apellido
-            string passwordDefault = dni.ToString() + apellido;
-
-            // 3. Generar Seguridad
-            string hashInicial, saltInicial;
-            Encriptador.CrearHash(passwordDefault, out hashInicial, out saltInicial);
-
-            // 4. Crear el objeto User 
-            // Usamos valores dummy para celular y dirección 
-            User nuevoUsuario = new User(
-                nuevoLogin,
-                dni,
-                rol,
-                nombre,
-                apellido,
-                email,
-                hashInicial,
-                saltInicial,
-                "000000",      // Celular provisorio
-                "Dirección",    // Dirección provisoria
-                false          // Bloqueado = false por defecto
-            );
-
-            // 5. Enviar a la BLL
-            _bll.CrearUsuario(nuevoUsuario);
-        }
         private void btnAplicar_Click(object sender, EventArgs e)
         {
             var validaciones = new (bool condicion, string mensaje)[]
