@@ -20,5 +20,7 @@ namespace DAL_08YS.Repositories_Interfaces
         void Create(User user);
 
         bool Exists(int DNI);
+
+        void Modify(User user, string login);
     }
 }

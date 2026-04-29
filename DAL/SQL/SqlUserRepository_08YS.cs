@@ -84,5 +84,16 @@ namespace DAL_08YS
                                         new[] { Param("@DNI", dni) }
                                      ) > 0;
         }
+
+        public void Modify(User user, string login)
+        {
+            Escribir
+            (
+                "UPDATE Users SET Email = @email AND Rol=@rol WHERE Username = @Username",
+                new[] { Param("@email", user.Email),
+                        Param("@rol", user.Rol) ,
+                        Param("@Username",user.Username)}
+            );
+        }
     }
 }
