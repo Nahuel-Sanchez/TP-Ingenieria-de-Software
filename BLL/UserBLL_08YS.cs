@@ -45,27 +45,65 @@ namespace BLL_08YS
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Usuario creado", Criticidad.Alto);
         }
 
+        #region Login y Bloqueo
+        private readonly Dictionary<string, LoginAttempt_08YS> _loginAttempts = new Dictionary<string, LoginAttempt_08YS>();
+
         public User Login(string username, string password)
         {
-            User user = userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException_08YS();
+            var user = userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException_08YS();
 
             if (user.Bloqueado)
                 throw new UserBloqueadoException_08YS();
-            
-            bool valido = Encriptador.Verificar(password, user.Hash, user.Salt);
-            if (!valido)
-                throw new InvalidCredentialException();
-            
+
+            if ( ! Encriptador.Verificar(password, user.Hash, user.Salt) )
+            {
+                RegistrarIntentoFallido(username);
+                throw new AuthenticationException("Ha ingresado una contraseña incorrecta.");
+            }
+            _loginAttempts.Remove(username);
+
+            SessionManager.Instance.SetCurrentUser(user);
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Inicio de sesión exitoso", Criticidad.Medio);
 
             return user;
         }
 
-        public void BloquearUsuario(string username)
+        private void RegistrarIntentoFallido(string username)
+        {
+            if (!_loginAttempts.ContainsKey(username))
+            {
+                _loginAttempts[username] = new LoginAttempt_08YS
+                {
+                    Attempts = 1,
+                    LastAttempt = DateTime.Now
+                };
+                return;
+            }
+
+            var attempt = _loginAttempts[username];
+
+            if ( (DateTime.Now - attempt.LastAttempt).TotalHours >= 2)
+                attempt.Attempts = 1;
+            
+            else attempt.Attempts++;
+            
+
+            attempt.LastAttempt = DateTime.Now;
+
+            if (attempt.Attempts >= 3)
+            {
+                UserLockOut(username);
+                throw new AuthenticationException("Ha ingresado una contraseña incorrecta. Su cuenta ha sido bloqueada.");
+            }
+        }
+
+        public void UserLockOut(string username)
         {
             userRepository.LockOut(username);
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Bloqueo de usuario", Criticidad.Alto);
         }
+
+        #endregion
 
         public void DesbloquearUsuario(string username)
         {

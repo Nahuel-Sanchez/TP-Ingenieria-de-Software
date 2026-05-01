@@ -40,8 +40,6 @@ namespace GUI_08YS
             {
                 User user = _userBLL.Login(email, password);
 
-                Service_08YS.SessionManager.Instance.SetCurrentUser(user);
-
                 FormMDI_08YS formMDI = new FormMDI_08YS();
                 this.Hide();
                 
@@ -60,18 +58,6 @@ namespace GUI_08YS
             catch (UserNoRegistradoException_08YS)
             {
                 MessageBox.Show("Usuario no encontrado. Por favor, verifique sus credenciales.");
-                return;
-            }
-            catch(InvalidCredentialException)
-            {
-                IntentosFallidos++;
-                MessageBox.Show("La contraseña ingresada es incorrecta.");
-
-                if(IntentosFallidos == 3)
-                    {
-                        MessageBox.Show("Ha alcanzado el máximo de intentos fallidos. La cuenta ha sido bloqueada.");
-                        
-                    }
                 return;
             }
             catch(UserBloqueadoException_08YS)
