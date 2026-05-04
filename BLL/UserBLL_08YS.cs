@@ -45,7 +45,7 @@ namespace BLL_08YS
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Usuario creado", Criticidad.Alto);
         }
 
-        #region Login y Bloqueo
+        #region Login
         private readonly Dictionary<string, LoginAttempt_08YS> _loginAttempts = new Dictionary<string, LoginAttempt_08YS>();
 
         public User Login(string username, string password)
@@ -97,13 +97,13 @@ namespace BLL_08YS
             }
         }
 
+        #endregion
+
         public void UserLockOut(string username)
         {
             userRepository.LockOut(username);
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Bloqueo de usuario", Criticidad.Alto);
         }
-
-        #endregion
 
         public void DesbloquearUsuario(string username)
         {
@@ -113,6 +113,7 @@ namespace BLL_08YS
 
 
         }
+
         public void ModificarUsuario(string username, string nuevoEmail, UserRole nuevoRol)
         {
             // 1. Buscar al usuario existente
@@ -128,9 +129,7 @@ namespace BLL_08YS
             // 3. Registrar en Bitácora
             //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Modificación de perfil (Email/Rol)",Criticidad.Alto);
         }
-        public List<User> GetAll()
-        {
-            return userRepository.GetAll();
-        }
+
+        public List<User> GetAll() => userRepository.GetAll();
     }
 }

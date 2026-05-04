@@ -50,7 +50,7 @@
             this.txtUsername.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(15)))), ((int)(((byte)(15)))));
             this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtUsername.Font = new System.Drawing.Font("MS PGothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUsername.ForeColor = System.Drawing.Color.Gray;
+            this.txtUsername.ForeColor = System.Drawing.Color.Goldenrod;
             this.txtUsername.Location = new System.Drawing.Point(351, 81);
             this.txtUsername.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtUsername.Name = "txtUsername";
@@ -66,7 +66,7 @@
             this.txtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(15)))), ((int)(((byte)(15)))));
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtPassword.Font = new System.Drawing.Font("MS PGothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPassword.ForeColor = System.Drawing.Color.Gray;
+            this.txtPassword.ForeColor = System.Drawing.Color.Goldenrod;
             this.txtPassword.Location = new System.Drawing.Point(351, 135);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtPassword.Name = "txtPassword";
@@ -90,14 +90,14 @@
             // 
             // btnAccederLogin
             // 
-            this.btnAccederLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.btnAccederLogin.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnAccederLogin.Font = new System.Drawing.Font("MS PGothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAccederLogin.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.btnAccederLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(7)))), ((int)(((byte)(40)))));
+            this.btnAccederLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAccederLogin.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAccederLogin.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnAccederLogin.Location = new System.Drawing.Point(351, 186);
             this.btnAccederLogin.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAccederLogin.Name = "btnAccederLogin";
-            this.btnAccederLogin.Size = new System.Drawing.Size(229, 39);
+            this.btnAccederLogin.Size = new System.Drawing.Size(229, 45);
             this.btnAccederLogin.TabIndex = 3;
             this.btnAccederLogin.Text = " Acceder";
             this.btnAccederLogin.UseVisualStyleBackColor = false;
@@ -146,7 +146,7 @@
             // 
             this.lblLogin.AutoSize = true;
             this.lblLogin.Font = new System.Drawing.Font("MS PGothic", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLogin.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblLogin.ForeColor = System.Drawing.Color.Gold;
             this.lblLogin.Location = new System.Drawing.Point(416, 9);
             this.lblLogin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLogin.Name = "lblLogin";
