@@ -262,6 +262,7 @@
             this.btnActDes.TabIndex = 40;
             this.btnActDes.Text = "Act./Desact.";
             this.btnActDes.UseVisualStyleBackColor = true;
+            this.btnActDes.Click += new System.EventHandler(this.btnActDes_Click);
             // 
             // btnModificar
             // 
@@ -330,6 +331,7 @@
             this.dgvUsuarios.ReadOnly = true;
             this.dgvUsuarios.Size = new System.Drawing.Size(674, 307);
             this.dgvUsuarios.TabIndex = 34;
+        
             this.dgvUsuarios.SelectionChanged += new System.EventHandler(this.dgvUsuarios_SelectionChanged);
             // 
             // lblCantUsuarios

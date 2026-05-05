@@ -112,7 +112,7 @@ namespace BLL_08YS
 
             //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Desbloqueo de usuario", Criticidad.Alto);
             var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-
+            //var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
@@ -125,7 +125,7 @@ namespace BLL_08YS
         {
             // 1. Buscar al usuario existente
             var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-
+            //var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
@@ -137,6 +137,22 @@ namespace BLL_08YS
             //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Modificación de perfil (Email/Rol)",Criticidad.Alto);
         }
 
+        public void AlternarEstadoActivo(string username)
+        {
+            var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            //var user = userRepository.GetByUsername(username);
+            if (user == null)
+                throw new Exception("No se encontró el usuario para modificar.");
+
+            bool nuevoEstado = !user.Activo;
+            //userRepository.UpdateState(username, nuevoEstado);
+            
+            user.Activo = nuevoEstado;
+            // string accion = user.Activo ? "Activación" : "Desactivación";
+            // _bitacoraBll.Registrar(username, $"{accion}");
+        }
+
+       
         public List<User> GetAll() => userRepository.GetAll();
     }
 }

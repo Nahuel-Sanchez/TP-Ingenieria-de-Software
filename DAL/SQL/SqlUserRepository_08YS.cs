@@ -88,11 +88,22 @@ namespace DAL_08YS
         {
             ExecuteNonQuery
             (
-                "UPDATE Users SET Email = @email AND Rol=@rol WHERE Username = @Username",
-                new[] { Param("@email", user.Email),
-                        Param("@rol", user.Rol) ,
+                "UPDATE Users SET Email = @Email AND Rol=@Rol WHERE Username = @Username",
+                new[] { Param("@Email", user.Email),
+                        Param("@Rol", user.Rol) ,
                         Param("@Username",user.Username)}
             );
+        }
+
+        public void UpdateState(string username,bool estadoNuevo)
+        {
+            ExecuteNonQuery
+            ( 
+                "UPDATE Users SET Activo = @Activo WHERE Username=@Username",
+                new[] { Param("@Activo",estadoNuevo),
+                        Param("@Username",username)}
+            );
+            
         }
     }
 }

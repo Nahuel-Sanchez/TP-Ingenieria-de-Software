@@ -57,6 +57,8 @@ namespace GUI
                     btnAplicar.Enabled = true;
                     btnCancelar.Enabled = true;
                     btnActDes.Enabled = false;
+                    btnActDes.BackColor=Color.White;
+                    btnActDes.ForeColor = Color.Black;
                     txtLogin.Enabled = false;
                     txtBloqueado.Enabled = false;
                     txtActivo.Enabled = false;
@@ -71,6 +73,8 @@ namespace GUI
                     btnAplicar.Enabled = true;
                     btnCancelar.Enabled = true;
                     btnActDes.Enabled = false;
+                    btnActDes.BackColor = Color.White;
+                    btnActDes.ForeColor = Color.Black;
                     txtLogin.Enabled = false;
                     txtBloqueado.Enabled = false;
                     txtActivo.Enabled = false;
@@ -152,7 +156,7 @@ namespace GUI
             //var listaCompleta = _bll.GetAll();
             var listaCompleta = UserBLL_08YS._usuariosLocal;
 
-            // 2. Aplicamos el filtro según el RadioButton seleccionado
+            // Aplicamos el filtro según el RadioButton seleccionado
             if (rbBloqueados.Checked)
             {
                 // Solo los que tienen Bloqueado == true
@@ -173,7 +177,7 @@ namespace GUI
 
             }
 
-                // Actualizamos el contador (opcional, para que coincida con lo que se ve)
+                // Actualizamos el contador
                 int cantidadMostrada = dgvUsuarios.Rows.Count;
             lblCantUsuarios.Text = $"Cantidad mostrada: {cantidadMostrada}";
         }
@@ -203,6 +207,19 @@ namespace GUI
 
                 btnModificar.Enabled = true;
                 btnDesbloquear.Enabled = user.Bloqueado;
+
+                if (user.Activo)
+                {
+                    btnActDes.Text = "Desactivar Usuario";
+                    btnActDes.BackColor = Color.LightCoral; // Un tono rojo suave
+                    btnActDes.ForeColor = Color.White;      // Texto blanco para contraste
+                }
+                else
+                {
+                    btnActDes.Text = "Activar Usuario";
+                    btnActDes.BackColor = Color.MediumSeaGreen; // Un tono verde suave
+                    btnActDes.ForeColor = Color.White;
+                }
                 btnActDes.Enabled = true;
             }
         }
@@ -212,7 +229,10 @@ namespace GUI
         {
             CambiarEstado(EstadoUI.Insertando);
         }
-
+        private void btnModificar_Click(object sender, EventArgs e)
+        {
+            CambiarEstado(EstadoUI.Editando);
+        }
         private void btnDesbloquear_Click(object sender, EventArgs e)
         {
 
@@ -242,11 +262,35 @@ namespace GUI
                 }
             }
         }
-        private void btnModificar_Click(object sender, EventArgs e)
+        
+        private void btnActDes_Click(object sender, EventArgs e)
         {
-            CambiarEstado(EstadoUI.Editando);
-        }
+            if (dgvUsuarios.CurrentRow == null) return;
 
+            var user = (User)dgvUsuarios.CurrentRow.DataBoundItem;
+            string accion = user.Activo ? "desactivar" : "activar";
+
+            DialogResult resp = MessageBox.Show($"¿Está seguro que desea {accion} al usuario {user.Username}?",
+                                "Confirmar Cambio de Estado", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (resp == DialogResult.Yes)
+            {
+                try
+                {
+                  
+                    _bll.AlternarEstadoActivo(user.Username);
+
+                    MessageBox.Show($"Usuario {user.Username} actualizado correctamente.");
+
+                    CargarGrilla();
+                    CambiarEstado(EstadoUI.Consulta);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
         private void btnAplicar_Click(object sender, EventArgs e)
         {
             var validaciones = new (bool condicion, string mensaje)[]
@@ -333,10 +377,6 @@ namespace GUI
                 CargarGrilla();
             }
         }
-
-
-        #endregion
-
         private void rbActivos_CheckedChanged(object sender, EventArgs e)
         {
             if (rbActivos.Checked)
@@ -344,5 +384,12 @@ namespace GUI
                 CargarGrilla();
             }
         }
+
+
+
+
+        #endregion
+
+      
     }
 }

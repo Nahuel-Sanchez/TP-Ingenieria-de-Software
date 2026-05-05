@@ -22,5 +22,7 @@ namespace DAL_08YS.Repositories_Interfaces
         bool Exists(int DNI);
 
         void Modify(User user, string login);
+
+        void UpdateState(string username, bool nuevoEstado);
     }
 }
