@@ -18,7 +18,8 @@ namespace BLL_08YS
         public static List<User> _usuariosLocal = new List<User>()
         {
             new User("admin01", 12345678, UserRole.Admin, "Juan", "Perez", "juan@test.com", "h", "s", false,true),
-            new User("user88", 99999999, UserRole.Basico, "Marta", "Gomez", "marta@test.com", "h", "s",  true,true) // BLOQUEADO
+            new User("userBloqueado", 99999999, UserRole.Basico, "Marta", "Gomez", "marta@test.com", "h", "s",  true,true), // BLOQUEADO
+            new User("userDeshabilitado", 99999999, UserRole.Basico, "Alfredo", "Ortigoza", "Alfredo@test.com", "h", "s",  true,false)
         };
 
 
@@ -42,7 +43,7 @@ namespace BLL_08YS
             User nuevo = new User(username, dni, rol, nombre, apellido, email, hash, salt, false,true);
 
             userRepository.Create(nuevo);
-            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Usuario creado", Criticidad.Alto);
+            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Usuario creado", Criticidad.Alto);
         }
 
         #region Login
@@ -101,16 +102,22 @@ namespace BLL_08YS
 
         public void UserLockOut(string username)
         {
-            userRepository.LockOut(username);
-            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Bloqueo de usuario", Criticidad.Alto);
+            //userRepository.LockOut(username);
+            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Bloqueo de usuario", Criticidad.Alto);
         }
 
         public void DesbloquearUsuario(string username)
         {
-            userRepository.Unlock(username);
-            
-            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Desbloqueo de usuario", Criticidad.Alto);
+            //userRepository.Unlock(username);
 
+            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Desbloqueo de usuario", Criticidad.Alto);
+            var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+            if (user == null)
+                throw new Exception("No se encontró el usuario para modificar.");
+
+            // 2. Aplicar los cambios (Solo Email y Rol)
+            user.Bloqueado = false;
 
         }
 

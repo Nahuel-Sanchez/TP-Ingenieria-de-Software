@@ -307,6 +307,7 @@
             this.rbActivos.TabStop = true;
             this.rbActivos.Text = "Activos";
             this.rbActivos.UseVisualStyleBackColor = true;
+            this.rbActivos.CheckedChanged += new System.EventHandler(this.rbActivos_CheckedChanged);
             // 
             // rbTodos
             // 

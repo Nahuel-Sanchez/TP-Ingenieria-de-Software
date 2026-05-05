@@ -159,15 +159,22 @@ namespace GUI
                 dgvUsuarios.DataSource = null;
                 dgvUsuarios.DataSource = listaCompleta.Where(u => u.Bloqueado == true).ToList();
             }
-            else
+            else if (rbActivos.Checked)
             {
+                // Solo los que tienen Activo == true
+                dgvUsuarios.DataSource = null;
+                dgvUsuarios.DataSource = listaCompleta.Where(u => u.Activo == true).ToList();
+            }
+            else
+            { 
                 // Todos los usuarios
                 dgvUsuarios.DataSource = null;
                 dgvUsuarios.DataSource = listaCompleta;
+
             }
 
-            // Actualizamos el contador (opcional, para que coincida con lo que se ve)
-            int cantidadMostrada = dgvUsuarios.Rows.Count;
+                // Actualizamos el contador (opcional, para que coincida con lo que se ve)
+                int cantidadMostrada = dgvUsuarios.Rows.Count;
             lblCantUsuarios.Text = $"Cantidad mostrada: {cantidadMostrada}";
         }
       
@@ -192,7 +199,7 @@ namespace GUI
                 cmbRol.SelectedItem = user.Rol;
                 txtLogin.Text = user.Username;
                 txtBloqueado.Text = user.Bloqueado.ToString();
-                //txtActivo.Text = user.Activo;
+                txtActivo.Text = user.Activo.ToString();
 
                 btnModificar.Enabled = true;
                 btnDesbloquear.Enabled = user.Bloqueado;
@@ -327,8 +334,15 @@ namespace GUI
             }
         }
 
+
         #endregion
 
-      
+        private void rbActivos_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbActivos.Checked)
+            {
+                CargarGrilla();
+            }
+        }
     }
 }
