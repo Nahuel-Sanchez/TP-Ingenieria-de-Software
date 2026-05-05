@@ -30,9 +30,8 @@ namespace MPP_08YS
                 Hash = row["Hash"].ToString(),
                 Salt = row["Salt"].ToString(),
                 Email = row["Email"].ToString(),
-                Celular = row["Celular"] == DBNull.Value ? null : row["Celular"].ToString(),
-                Direccion = row["Direccion"] == DBNull.Value ? null : row["Direccion"].ToString(),
-                Bloqueado = Convert.ToBoolean(row["Bloqueado"])
+                Bloqueado = Convert.ToBoolean(row["Bloqueado"]),
+                Activo = Convert.ToBoolean(row["Activo"])
             };
         }
     }

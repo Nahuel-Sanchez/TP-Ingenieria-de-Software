@@ -27,9 +27,8 @@ namespace DAL_08YS
                 Param("@Hash",      user.Hash),
                 Param("@Salt",      user.Salt),
                 Param("@Email",     user.Email),
-                Param("@Celular",   (object)user.Celular   ?? DBNull.Value),
-                Param("@Direccion", (object)user.Direccion ?? DBNull.Value),
-                Param("@Bloqueado", user.Bloqueado)
+                Param("@Bloqueado", user.Bloqueado),
+                Param("@Activo",    user.Activo)
         };
         }
 
@@ -71,8 +70,8 @@ namespace DAL_08YS
         {
             ExecuteNonQuery
             (
-                "INSERT INTO Users (Username, DNI, Rol, Nombre, Apellido, Hash, Salt, Email, Celular, Direccion, Bloqueado) " +
-                "VALUES (@Username, @DNI, @Rol, @Nombre, @Apellido, @Hash, @Salt, @Email, @Celular, @Direccion, @Bloqueado)",
+                "INSERT INTO Users (Username, DNI, Rol, Nombre, Apellido, Hash, Salt, Email, Bloqueado, Activo) " +
+                "VALUES (@Username, @DNI, @Rol, @Nombre, @Apellido, @Hash, @Salt, @Email, @Bloqueado, @Activo)",
                 ToParameters(user)
             );
         }

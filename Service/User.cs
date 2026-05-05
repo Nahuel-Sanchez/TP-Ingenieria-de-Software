@@ -23,12 +23,11 @@ namespace Service_08YS
         private string _hash;
         private string _salt;
         private string _email;
-        private string _celular;
-        private string _direccion;
         private bool _bloqueado;
+        private bool _activo;
 
 
-        public User(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, string celular, string direccion, bool bloqueado = false)
+        public User(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo=true)
         {
             this._username = username;
             this._dni = dni;
@@ -38,9 +37,8 @@ namespace Service_08YS
             this._hash = hash;  
             this._salt = salt;
             this._email = email;
-            this._celular = celular;
-            this._direccion = direccion;
             this._bloqueado = bloqueado;
+            this._activo = activo;
         }
 
         public User() { }
@@ -111,21 +109,17 @@ namespace Service_08YS
             set { _email = value; }
         }
 
-        public string Celular
-        {
-            get { return _celular; }
-            set { _celular = value; }
-        }
-        public string Direccion
-        {
-            get { return _direccion; }
-            set { _direccion = value; }
-        }
-
+   
         public bool Bloqueado
         {
             get { return _bloqueado; }
             set { _bloqueado = value; }
+        }
+        
+        public bool Activo
+        {
+            get { return _activo; }
+            set { _activo = value; }
         }
 
     }

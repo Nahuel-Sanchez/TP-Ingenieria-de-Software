@@ -17,8 +17,8 @@ namespace BLL_08YS
         private readonly BitacoraBLL_08YS _bitacoraBll;
         public static List<User> _usuariosLocal = new List<User>()
         {
-            new User("admin01", 12345678, UserRole.Admin, "Juan", "Perez", "juan@test.com", "h", "s", "1122", "Calle 123", false),
-            new User("user88", 99999999, UserRole.Basico, "Marta", "Gomez", "marta@test.com", "h", "s", "3344", "Av. Siempreviva", true) // BLOQUEADO
+            new User("admin01", 12345678, UserRole.Admin, "Juan", "Perez", "juan@test.com", "h", "s", false,true),
+            new User("user88", 99999999, UserRole.Basico, "Marta", "Gomez", "marta@test.com", "h", "s",  true,true) // BLOQUEADO
         };
 
 
@@ -39,7 +39,7 @@ namespace BLL_08YS
             string passwordDefault = dni.ToString() + apellido;
             Encriptador.CrearHash(passwordDefault, out string hash, out string salt);
 
-            User nuevo = new User(username, dni, rol, nombre, apellido, email, hash, salt, "celular", "Direccion", false);
+            User nuevo = new User(username, dni, rol, nombre, apellido, email, hash, salt, false,true);
 
             userRepository.Create(nuevo);
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Usuario creado", Criticidad.Alto);
