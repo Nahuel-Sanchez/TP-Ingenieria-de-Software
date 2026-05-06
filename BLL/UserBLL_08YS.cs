@@ -43,7 +43,7 @@ namespace BLL_08YS
             User nuevo = new User(username, dni, rol, nombre, apellido, email, hash, salt, false,true);
 
             userRepository.Create(nuevo);
-            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Usuario creado", Criticidad.Alto);
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Usuario creado", Criticidad.Alto);
         }
 
         #region Login

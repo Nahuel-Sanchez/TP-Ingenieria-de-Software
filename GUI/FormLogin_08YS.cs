@@ -55,16 +55,6 @@ namespace GUI_08YS
                 txtUsername.Text = UsernameFieldText;
                 txtPassword.Text = PasswordFieldText;
             }
-            catch (UserNoRegistradoException_08YS)
-            {
-                MessageBox.Show("Usuario no encontrado. Por favor, verifique sus credenciales.");
-                return;
-            }
-            catch(UserBloqueadoException_08YS)
-            {
-                MessageBox.Show("Su cuenta se encuentra bloqueada debido a múltiples intentos fallidos. Por favor, contacte al soporte.");
-                return;
-            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

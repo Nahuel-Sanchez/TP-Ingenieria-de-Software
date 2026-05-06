@@ -5,7 +5,7 @@ namespace BLL_08YS
 {
     public class UserNoRegistradoException_08YS : Exception
     {
-        public UserNoRegistradoException_08YS()
+        public UserNoRegistradoException_08YS() : base("Usuario no encontrado. Por favor, verifique sus credenciales.")
         {
         }
 
