@@ -21,16 +21,16 @@ namespace DAL_08YS
             {
                 Param("@login", evento.Login),
                 Param("@fecha_hora", evento.FechaHora),
-                Param("@modulo", evento.Modulo.ToString()),
+                Param("@modulo", (int)evento.Modulo),
                 Param("@descripcion", evento.Descripcion),
-                Param("@criticidad", evento.Criticidad.ToString())
+                Param("@criticidad", (int)evento.Criticidad)
             };
         }
 
         public void RegistrarEvento(BitacoraEvento_08YS evento)
         {
             ExecuteNonQuery(
-                "INSERT INTO Bitacora (Login, FechaHora, Modulo, Descripcion, Criticidad) " +
+                "INSERT INTO Bitacora (Login_08YS, FechaHora, Modulo, Descripcion, Criticidad) " +
                 "VALUES (@login, @fecha_hora, @modulo, @descripcion, @criticidad)",
                 ToParameters(evento));
         }

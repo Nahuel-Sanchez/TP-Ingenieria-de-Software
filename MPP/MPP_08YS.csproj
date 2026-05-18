@@ -50,8 +50,8 @@
       <Project>{611df768-0b94-4169-b272-cc6387cd884e}</Project>
       <Name>BE_08YS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Service\Service_08YS.csproj">
-      <Project>{e9802816-aa13-4bf0-94a2-f92cbf365086}</Project>
+    <ProjectReference Include="..\Service_08YS\Service_08YS.csproj">
+      <Project>{6196a91d-881c-4563-b43c-5adcd13c0c14}</Project>
       <Name>Service_08YS</Name>
     </ProjectReference>
   </ItemGroup>

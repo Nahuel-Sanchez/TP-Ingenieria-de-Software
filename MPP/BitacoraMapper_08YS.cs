@@ -15,9 +15,10 @@ namespace MPP_08YS
             {
                 Login = row["Login"].ToString(),
                 FechaHora = Convert.ToDateTime(row["FechaHora"]),
-                Modulo = (Modulo)Enum.Parse(typeof(Modulo), row["Modulo"].ToString()),
+                Modulo = (Modulo)Convert.ToInt32(row["Modulo"]),
                 Descripcion = row["Descripcion"].ToString(),
-                Criticidad = (Criticidad)Enum.Parse(typeof(Criticidad), row["Criticidad"].ToString())
+                Criticidad = (Criticidad)Convert.ToInt32(row["Criticidad"])
+
             };
         }
 

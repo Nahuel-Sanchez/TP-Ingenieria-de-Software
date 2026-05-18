@@ -6,5 +6,5 @@
   <Project Path="MPP/MPP_08YS.csproj" Id="4bca8705-9b28-4eb5-a8d6-7e366f3a58e9">
     <Build Solution="Debug|*" Project="false" />
   </Project>
-  <Project Path="Service/Service_08YS.csproj" Id="e9802816-aa13-4bf0-94a2-f92cbf365086" />
+  <Project Path="Service_08YS/Service_08YS.csproj" Id="6196a91d-881c-4563-b43c-5adcd13c0c14" />
 </Solution>
