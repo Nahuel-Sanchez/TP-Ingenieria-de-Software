@@ -151,39 +151,17 @@ namespace BLL_08YS
             // string accion = user.Activo ? "Activación" : "Desactivación";
             // _bitacoraBll.Registrar(username, $"{accion}");
         }
-        public void CambiarContraseña(string username, string passwordActual, string passwordNueva)
+        public void CambiarContraseña(string passwordActual, string passwordNueva)
         {
-            // 1. Buscar al usuario en la lista local (o BD)
-            var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-            if (user == null)
-                throw new Exception("El usuario no existe en el sistema.");
-
-            // 2. VALIDACIÓN DE SEGURIDAD: Verificar si la contraseña actual ingresada es correcta
-            // Usamos el método Verificar de tu clase Encriptador
-            bool esValida = Encriptador.Verificar(passwordActual, user.Hash, user.Salt);
-
-            if (!esValida)
+            if(!Encriptador.Verificar(passwordActual, SessionManager.Instance.Current.Hash, SessionManager.Instance.Current.Salt))
                 throw new Exception("La contraseña actual ingresada es incorrecta.");
 
-            // 3. REGLA DE NEGOCIO (Opcional pero recomendada): Que la nueva no sea igual a la anterior
-            if (passwordActual == passwordNueva)
-                throw new Exception("La nueva contraseña no puede ser igual a la actual.");
-
-            // 4. ENCRIPTACIÓN: Generar un nuevo Hash y Salt para la nueva contraseña
-            string nuevoHash, nuevoSalt;
-            Encriptador.CrearHash(passwordNueva, out nuevoHash, out nuevoSalt);
-
-            // 5. PERSISTENCIA: Actualizamos el objeto
-            user.Hash = nuevoHash;
-            user.Salt = nuevoSalt;
-
-            // Si usaras Base de Datos SQL, aquí llamarías a la DAL:
-            // _userDal.ActualizarPassword(user.Username, nuevoHash, nuevoSalt);
-
-            // 6. Registro en Bitácora
-            // _bitacoraBll.Registrar(username, "Cambio de contraseña por el usuario");
+            Encriptador.CrearHash(passwordNueva, out string hashNuevo, out string saltNuevo);
+            userRepository.UpdatePassword(SessionManager.Instance.Current.Username, hashNuevo, saltNuevo);
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Cambio de contraseña", Criticidad.Alto);
         }
 
         public List<User> GetAll() => userRepository.GetAll();
+
     }
 }

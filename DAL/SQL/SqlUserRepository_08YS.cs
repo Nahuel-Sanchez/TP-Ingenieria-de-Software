@@ -78,10 +78,11 @@ namespace DAL_08YS
 
         public bool Exists(int dni)
         {
-            return ExecuteScalar<int>(   
-                                        "SELECT COUNT(1) FROM Users WHERE DNI = @DNI",
-                                        new[] { Param("@DNI", dni) }
-                                     ) > 0;
+            return ExecuteScalar<int>
+                (   
+                    "SELECT COUNT(1) FROM Users WHERE DNI = @DNI",
+                    new[] { Param("@DNI", dni) }
+                ) > 0;
         }
 
         public void Modify(User user, string login)
@@ -104,6 +105,17 @@ namespace DAL_08YS
                         Param("@Username",username)}
             );
             
+        }
+
+        public void UpdatePassword(string username, string hashNuevo, string saltNuevo)
+        {
+            ExecuteNonQuery
+            (
+                "UPDATE Users SET Hash = @Hash, Salt = @Salt WHERE Username = @Username",
+                new[] { Param("@Hash", hashNuevo),
+                        Param("@Salt", saltNuevo),
+                        Param("@Username", username) }
+            );
         }
     }
 }
