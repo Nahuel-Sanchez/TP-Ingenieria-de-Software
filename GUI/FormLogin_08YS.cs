@@ -33,12 +33,12 @@ namespace GUI_08YS
                 return;
             }
 
-            string email = txtUsername.Text?.Trim();
+            string username = txtUsername.Text?.Trim();
             string password = txtPassword.Text?.Trim();
             
             try
             {
-                User user = _userBLL.Login(email, password);
+                User user = _userBLL.Login(username, password);
 
                 FormMDI_08YS formMDI = new FormMDI_08YS();
                 this.Hide();

@@ -21,7 +21,7 @@ namespace DAL_08YS
             {
                 Param("@Username",  user.Username),
                 Param("@DNI",       user.DNI),
-                Param("@Rol",       user.Rol.ToString()),
+                Param("@Rol",       (int)user.Rol),
                 Param("@Nombre",    user.Nombre),
                 Param("@Apellido",  user.Apellido),
                 Param("@Hash",      user.Hash),
@@ -61,7 +61,7 @@ namespace DAL_08YS
         {
             ExecuteNonQuery
             (
-                "UPDATE Users SET Bloqueado = 1 WHERE Username = @Username",
+                "UPDATE Users SET Bloqueado = 0 WHERE Username = @Username",
                 new[] { Param("@Username", username) }
             );
         }
@@ -89,7 +89,7 @@ namespace DAL_08YS
         {
             ExecuteNonQuery
             (
-                "UPDATE Users SET Email = @Email AND Rol=@Rol WHERE Username = @Username",
+                "UPDATE Users SET Email = @Email , Rol=@Rol WHERE Username = @Username",
                 new[] { Param("@Email", user.Email),
                         Param("@Rol", user.Rol) ,
                         Param("@Username",user.Username)}
