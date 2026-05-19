@@ -30,7 +30,7 @@ namespace GUI
             {
                
                 dgvEventos.DataSource = null; // Limpiamos
-                //dgvEventos.DataSource = _bll.GetAll();
+                dgvEventos.DataSource = _bll.GetAll();
 
                 // Opcional: Ajustar el formato de las columnas
                 dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";

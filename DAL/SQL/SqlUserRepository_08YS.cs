@@ -91,7 +91,7 @@ namespace DAL_08YS
             (
                 "UPDATE Users SET Email = @Email , Rol=@Rol WHERE Username = @Username",
                 new[] { Param("@Email", user.Email),
-                        Param("@Rol", user.Rol) ,
+                        Param("@Rol", (int)user.Rol) ,
                         Param("@Username",user.Username)}
             );
         }

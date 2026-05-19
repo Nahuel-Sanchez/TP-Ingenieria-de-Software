@@ -25,21 +25,9 @@ namespace Service_08YS
         private bool _bloqueado;
         private bool _activo;
 
-        private string _celular;
+      
 
-        public string Celular
-        {
-            get { return _celular; }
-            set { _celular = value; }
-        }
-
-        private string _direccion;
-
-        public string Direccion
-        {
-            get { return _direccion; }
-            set { _direccion = value; }
-        }
+      
 
 
         public User(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true)

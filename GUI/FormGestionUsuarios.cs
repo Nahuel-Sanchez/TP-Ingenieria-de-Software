@@ -153,8 +153,8 @@ namespace GUI
         private void CargarGrilla()
         {
             dgvUsuarios.DataSource = null;
-            //var listaCompleta = _bll.GetAll();
-            var listaCompleta = UserBLL_08YS._usuariosLocal;
+            var listaCompleta = _bll.GetAll();
+            //var listaCompleta = UserBLL_08YS._usuariosLocal;
 
             // Aplicamos el filtro según el RadioButton seleccionado
             if (rbBloqueados.Checked)

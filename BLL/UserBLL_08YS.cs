@@ -102,54 +102,65 @@ namespace BLL_08YS
 
         public void UserLockOut(string username)
         {
-            //userRepository.LockOut(username);
-            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Bloqueo de usuario", Criticidad.Alto);
+            var user = userRepository.GetByUsername(username);
+            if (user == null)
+                throw new Exception("No se encontró el usuario para modificar.");
+            userRepository.LockOut(user.Username);
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Bloqueo de usuario", Criticidad.Alto);
         }
 
         public void DesbloquearUsuario(string username)
         {
-            //userRepository.Unlock(username);
-
-            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Desbloqueo de usuario", Criticidad.Alto);
-            var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-            //var user = userRepository.GetByUsername(username);
+            var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
             // 2. Aplicar los cambios (Solo Email y Rol)
-            user.Bloqueado = false;
+          
+            userRepository.Unlock(user.Username);
+
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Desbloqueo de usuario", Criticidad.Alto);
+            //var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            ////var user = userRepository.GetByUsername(username);
+            //if (user == null)
+            //    throw new Exception("No se encontró el usuario para modificar.");
+
+            // 2. Aplicar los cambios (Solo Email y Rol)
+            //user.Bloqueado = false;
 
         }
 
         public void ModificarUsuario(string username, string nuevoEmail, UserRole nuevoRol)
         {
             // 1. Buscar al usuario existente
-            var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-            //var user = userRepository.GetByUsername(username);
+            //var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
             // 2. Aplicar los cambios (Solo Email y Rol)
             user.Email = nuevoEmail;
             user.Rol = nuevoRol;
+            userRepository.Modify(user,user.Username);
+            
 
             // 3. Registrar en Bitácora
-            //_bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Modificación de perfil (Email/Rol)",Criticidad.Alto);
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, "Modificación de perfil (Email/Rol)", Criticidad.Alto);
         }
 
         public void AlternarEstadoActivo(string username)
         {
-            var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-            //var user = userRepository.GetByUsername(username);
+            //var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
             bool nuevoEstado = !user.Activo;
-            //userRepository.UpdateState(username, nuevoEstado);
-            
+            userRepository.UpdateState(username, nuevoEstado);
+
             user.Activo = nuevoEstado;
-            // string accion = user.Activo ? "Activación" : "Desactivación";
-            // _bitacoraBll.Registrar(username, $"{accion}");
+            string accion = user.Activo ? "Activación" : "Desactivación";
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, $"{accion}",Criticidad.Alto);
         }
         public void CambiarContraseña(string passwordActual, string passwordNueva)
         {

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using GUI;
 namespace GUI_08YS
 {
     public partial class FormMDI_08YS : Form
@@ -40,6 +40,18 @@ namespace GUI_08YS
         private void FormMDI_Load(object sender, EventArgs e)
         {
             dropdownMenuStrip_08YS1.IsMainMenu = true;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            FormGestionUsuarios form = new FormGestionUsuarios();
+            form.Show();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            FormBitacora form = new FormBitacora();
+            form.Show();
         }
     }
 }
