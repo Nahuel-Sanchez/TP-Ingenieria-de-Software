@@ -13,5 +13,6 @@ namespace DAL_08YS.Repositories_Interfaces
 
         List<BitacoraEvento_08YS> GetAll();
 
+        List<BitacoraEvento_08YS> Filtrar(BitacoraFiltro_08YS filtro);
     }
 }

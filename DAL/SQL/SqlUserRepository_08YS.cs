@@ -13,7 +13,6 @@ namespace DAL_08YS
 {
     public class SqlUserRepository_08YS : Connection_08YS, IUserRepository_08YS
     {
-        // Recibe el factory por inyeccion de dependencia
         public SqlUserRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
         private IDbDataParameter[] ToParameters(User user)
         {

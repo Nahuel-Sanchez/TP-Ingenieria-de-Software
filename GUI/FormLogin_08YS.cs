@@ -18,7 +18,6 @@ namespace GUI_08YS
     public partial class FormLogin_08YS : Form
     {
         private UserBLL_08YS _userBLL;
-        private int IntentosFallidos = 0;
 
         public FormLogin_08YS()
         {

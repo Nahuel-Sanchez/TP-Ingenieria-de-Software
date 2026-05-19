@@ -25,7 +25,6 @@ namespace BLL_08YS
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
             IBitacoraRepository_08YS repo = new SqlBitacoraRepository(factory);
             return new BitacoraBLL_08YS(repo);
-
         }
     }
 }

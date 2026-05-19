@@ -18,27 +18,41 @@ namespace BLL_08YS
             _repo = repo;
         }
 
-        public void RegistrarEvento(Modulo modulo, string descripcion, Criticidad criticidad)
+        public void RegistrarEvento(Modulo modulo, Evento evento, Criticidad criticidad)
         {
             string usuarioActual = SessionManager.Instance.IsLogged
             ? SessionManager.Instance.Current.Username
-            : "SISTEMA"; // Por si ocurre algo sin usuario logueado (como un login fallido)
+            : throw new Exception("Error de instancia de sesión: No hay un usuario actualmente logueado.");
 
-            BitacoraEvento_08YS evento = new BitacoraEvento_08YS(
+            BitacoraEvento_08YS bitacora = new BitacoraEvento_08YS(
                 usuarioActual,
                 DateTime.Now,
                 modulo,
-                descripcion,
+                evento,
                 criticidad
             );
 
-            _repo.RegistrarEvento(evento);
+            _repo.RegistrarEvento(bitacora);
+
+        }
+        public void RegistrarEvento(string Username, Modulo modulo, Evento evento, Criticidad criticidad)
+        {
+            BitacoraEvento_08YS bitacora = new BitacoraEvento_08YS(
+                Username,
+                DateTime.Now,
+                modulo,
+                evento,
+                criticidad
+            );
+
+            _repo.RegistrarEvento(bitacora);
 
         }
 
         public List<BitacoraEvento_08YS> GetAll()
-        {
-            return _repo.GetAll();
-        }
+            => _repo.GetAll();
+
+        public List<BitacoraEvento_08YS> Filtrar(BitacoraFiltro_08YS filtro)
+            => _repo.Filtrar(filtro);
     }
 }

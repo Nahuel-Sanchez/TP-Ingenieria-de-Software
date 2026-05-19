@@ -16,7 +16,7 @@ namespace MPP_08YS
                 Login = row["Login_08YS"].ToString(),
                 FechaHora = Convert.ToDateTime(row["FechaHora"]),
                 Modulo = (Modulo)Convert.ToInt32(row["Modulo"]),
-                Descripcion = row["Descripcion"].ToString(),
+                Evento = (Evento)Convert.ToInt32(row["Evento"]),
                 Criticidad = (Criticidad)Convert.ToInt32(row["Criticidad"])
 
             };
