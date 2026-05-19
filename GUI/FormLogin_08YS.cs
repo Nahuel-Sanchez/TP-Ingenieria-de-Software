@@ -55,9 +55,30 @@ namespace GUI_08YS
                 txtUsername.Text = UsernameFieldText;
                 txtPassword.Text = PasswordFieldText;
             }
+            catch (UserBloqueadoException_08YS ex)
+            {
+                MessageBox.Show(ex.Message, "Acceso Denegado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+            // CATCH 2: Captura específica si el usuario no existe
+            catch (UserNoRegistradoException_08YS ex)
+            {
+                MessageBox.Show(ex.Message, "Usuario Inválido", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            // CATCH 3: Captura específica si el usuario no esta activo
+            catch (UserInactivoException_08YS ex)
+            {
+                MessageBox.Show(ex.Message, "Usuario Suspendido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            // CATCH 4: Captura para errores de credenciales incorrectas (AuthenticationException)
+            catch (System.Security.Authentication.AuthenticationException ex)
+            {
+                MessageBox.Show(ex.Message, "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+            // CATCH 5: El colchón de seguridad por si salta cualquier otro problema imprevisto (BD, Red, etc.)
+         
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Ocurrió un error inesperado en el sistema:\n{ex.Message}", "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
@@ -98,11 +119,22 @@ namespace GUI_08YS
         private void textBox2_Enter(object sender, EventArgs e)
         {
             Enter(txtPassword, PasswordFieldText);
+
+            // Si el usuario borró el placeholder para empezar a escribir, ocultamos los caracteres
+            if (txtPassword.Text == "")
+            {
+                txtPassword.PasswordChar = '*'; // <--- ACTIVA LOS ASTERISCOS
+            }
         }
 
         private void textBox2_Leave(object sender, EventArgs e)
         {
             Leave(txtPassword, PasswordFieldText);
+
+            if (txtPassword.Text == PasswordFieldText)
+            {
+                txtPassword.PasswordChar = '\0'; // <--- QUITA LOS ASTERISCOS (Carácter nulo)
+            }
         }
 
         private void FormLogin_Load_1(object sender, EventArgs e)

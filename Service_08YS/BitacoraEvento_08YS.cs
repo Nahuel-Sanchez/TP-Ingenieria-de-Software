@@ -16,7 +16,8 @@ namespace Service_08YS
 
     public enum Modulo
     {
-        Usuarios
+        Usuarios,
+        Login
     }
 
     public enum Evento

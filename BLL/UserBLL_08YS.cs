@@ -15,16 +15,6 @@ namespace BLL_08YS
     {
         private readonly IUserRepository_08YS userRepository;
         private readonly BitacoraBLL_08YS _bitacoraBll;
-        public static List<User> _usuariosLocal = new List<User>()
-        {
-            new User("admin01", 12345678, UserRole.Admin, "Juan", "Perez", "juan@test.com", "h", "s", false,true),
-            new User("userBloqueado", 99999999, UserRole.Basico, "Marta", "Gomez", "marta@test.com", "h", "s",  true,true), // BLOQUEADO
-            new User("userDeshabilitado", 99999999, UserRole.Basico, "Alfredo", "Ortigoza", "Alfredo@test.com", "h", "s",  true,false)
-        };
-
-
-
-
         public UserBLL_08YS(IUserRepository_08YS userRepository, BitacoraBLL_08YS bitacoraBll)
         {
             this.userRepository = userRepository;
@@ -55,6 +45,8 @@ namespace BLL_08YS
 
             if (user.Bloqueado)
                 throw new UserBloqueadoException_08YS();
+            if (!user.Activo)
+                throw new UserInactivoException_08YS();
 
             if ( ! Encriptador.Verificar(password, user.Hash, user.Salt) )
             {
@@ -64,7 +56,7 @@ namespace BLL_08YS
             _loginAttempts.Remove(username);
 
             SessionManager.Instance.SetCurrentUser(user);
-            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, Evento.LoginExitoso, Criticidad.Medio);
+            _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.LoginExitoso, Criticidad.Medio);
 
             return user;
         }
@@ -99,7 +91,7 @@ namespace BLL_08YS
         }
 
         #endregion
-
+        #region Bloqueos
         public void UserLockOut(string username)
         {
             var user = userRepository.GetByUsername(username);
@@ -115,42 +107,40 @@ namespace BLL_08YS
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
-            // 2. Aplicar los cambios (Solo Email y Rol)
-          
             userRepository.Unlock(user.Username);
+            string passwordDefault = user.DNI.ToString() + user.Apellido;
+
+           
+            Encriptador.CrearHash(passwordDefault, out string nuevoHash, out string nuevoSalt);
+
+          
+            userRepository.UpdatePassword(user.Username, nuevoHash, nuevoSalt);
+
 
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, Evento.UsuarioDesbloqueado, Criticidad.Alto);
-            //var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-            ////var user = userRepository.GetByUsername(username);
-            //if (user == null)
-            //    throw new Exception("No se encontró el usuario para modificar.");
-
-            // 2. Aplicar los cambios (Solo Email y Rol)
-            //user.Bloqueado = false;
-
+            
         }
-
+        #endregion
         public void ModificarUsuario(string username, string nuevoEmail, UserRole nuevoRol)
         {
-            // 1. Buscar al usuario existente
-            //var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+         
             var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
-            // 2. Aplicar los cambios (Solo Email y Rol)
+           
             user.Email = nuevoEmail;
             user.Rol = nuevoRol;
             userRepository.Modify(user,user.Username);
             
 
-            // 3. Registrar en Bitácora
+       
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios,Evento.UsuarioModificado, Criticidad.Alto);
         }
 
         public void AlternarEstadoActivo(string username)
         {
-            //var user = _usuariosLocal.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+           
             var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
@@ -171,7 +161,7 @@ namespace BLL_08YS
             userRepository.UpdatePassword(SessionManager.Instance.Current.Username, hashNuevo, saltNuevo);
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, Evento.CambioContraseña, Criticidad.Alto);
         }
-
+      
         public List<User> GetAll() => userRepository.GetAll();
 
     }

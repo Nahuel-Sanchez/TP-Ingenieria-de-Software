@@ -52,7 +52,11 @@ namespace GUI_08YS
             FormBitacora form = new FormBitacora();
             form.Show();
         }
-
+        private void cambiarContraseñaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormCambiarContraseña form = new FormCambiarContraseña();
+            form.Show();
+        }
 
         #region BarraSuperior
 
@@ -92,5 +96,12 @@ namespace GUI_08YS
         {
             dropdownMenuStrip_08YS1.Show(button5, button5.Width, 0);
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            dropdownMenuStrip_08YS2.Show(button4, button4.Width, 0);
+        }
+
+       
     }
 }
