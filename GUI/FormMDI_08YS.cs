@@ -34,7 +34,6 @@ namespace GUI_08YS
 
         private void button1_Click(object sender, EventArgs e)
         {
-            dropdownMenuStrip_08YS1.Show(button1, button1.Width, 0);
         }
 
         private void FormMDI_Load(object sender, EventArgs e)
@@ -42,16 +41,23 @@ namespace GUI_08YS
             dropdownMenuStrip_08YS1.IsMainMenu = true;
         }
 
-        private void button4_Click(object sender, EventArgs e)
+
+        private void gestionUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
             FormGestionUsuarios form = new FormGestionUsuarios();
             form.Show();
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void bitacoraToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormBitacora form = new FormBitacora();
             form.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            dropdownMenuStrip_08YS1.Show(button1, button1.Width, 0);
         }
     }
 }

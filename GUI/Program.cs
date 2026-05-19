@@ -20,7 +20,7 @@ namespace GUI_08YS
             //Application.Run(new FormMDI_08YS());
             //Application.Run(new FormLogin_08YS());
             //Application.Run(new FormGestionUsuarios());
-            Application.Run(new FormBitacora());
+            Application.Run(new FormLogin_08YS());
         }
     }
 }

@@ -41,12 +41,12 @@
             this.crearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modificarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.desbloquearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button4 = new System.Windows.Forms.Button();
             this.dropdownMenuStrip_08YS1 = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.crearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.modificarToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.desbloquearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.button5 = new System.Windows.Forms.Button();
+            this.gestionUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelLateral.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.panelLogo.SuspendLayout();
@@ -62,8 +62,9 @@
             this.panelLateral.Controls.Add(this.panelLogo);
             this.panelLateral.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelLateral.Location = new System.Drawing.Point(0, 0);
+            this.panelLateral.Margin = new System.Windows.Forms.Padding(4);
             this.panelLateral.Name = "panelLateral";
-            this.panelLateral.Size = new System.Drawing.Size(189, 499);
+            this.panelLateral.Size = new System.Drawing.Size(252, 614);
             this.panelLateral.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -73,10 +74,10 @@
             this.flowLayoutPanel1.Controls.Add(this.button2);
             this.flowLayoutPanel1.Controls.Add(this.button3);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 57);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(189, 442);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(252, 544);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // button1
@@ -84,10 +85,10 @@
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(10)))), ((int)(((byte)(55)))));
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.Color.Gold;
-            this.button1.Location = new System.Drawing.Point(2, 2);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Location = new System.Drawing.Point(3, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(184, 34);
+            this.button1.Size = new System.Drawing.Size(245, 42);
             this.button1.TabIndex = 0;
             this.button1.Text = "Perfil";
             this.button1.UseVisualStyleBackColor = false;
@@ -98,23 +99,24 @@
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(10)))), ((int)(((byte)(55)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.ForeColor = System.Drawing.Color.Gold;
-            this.button2.Location = new System.Drawing.Point(2, 40);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Location = new System.Drawing.Point(3, 48);
+            this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(184, 34);
+            this.button2.Size = new System.Drawing.Size(245, 42);
             this.button2.TabIndex = 1;
             this.button2.Text = "Administrativo";
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(10)))), ((int)(((byte)(55)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.ForeColor = System.Drawing.Color.Gold;
-            this.button3.Location = new System.Drawing.Point(2, 78);
-            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button3.Location = new System.Drawing.Point(3, 94);
+            this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(184, 34);
+            this.button3.Size = new System.Drawing.Size(245, 42);
             this.button3.TabIndex = 2;
             this.button3.Text = "Reservar";
             this.button3.UseVisualStyleBackColor = false;
@@ -126,15 +128,17 @@
             this.panelLogo.Controls.Add(this.label2);
             this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelLogo.Location = new System.Drawing.Point(0, 0);
+            this.panelLogo.Margin = new System.Windows.Forms.Padding(4);
             this.panelLogo.Name = "panelLogo";
-            this.panelLogo.Size = new System.Drawing.Size(189, 57);
+            this.panelLogo.Size = new System.Drawing.Size(252, 70);
             this.panelLogo.TabIndex = 0;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(3, 4);
+            this.pictureBox1.Location = new System.Drawing.Point(4, 5);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(62, 46);
+            this.pictureBox1.Size = new System.Drawing.Size(83, 57);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -144,9 +148,10 @@
             this.lblNombreApellido.AutoSize = true;
             this.lblNombreApellido.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNombreApellido.ForeColor = System.Drawing.Color.LightGray;
-            this.lblNombreApellido.Location = new System.Drawing.Point(65, 9);
+            this.lblNombreApellido.Location = new System.Drawing.Point(87, 11);
+            this.lblNombreApellido.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNombreApellido.Name = "lblNombreApellido";
-            this.lblNombreApellido.Size = new System.Drawing.Size(109, 16);
+            this.lblNombreApellido.Size = new System.Drawing.Size(132, 20);
             this.lblNombreApellido.TabIndex = 1;
             this.lblNombreApellido.Text = "Nombre Apellido";
             // 
@@ -155,9 +160,10 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.LightGray;
-            this.label2.Location = new System.Drawing.Point(67, 32);
+            this.label2.Location = new System.Drawing.Point(89, 39);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 12);
+            this.label2.Size = new System.Drawing.Size(71, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "RolSistema";
             // 
@@ -179,16 +185,6 @@
             this.desbloquearToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
             this.desbloquearToolStripMenuItem.Text = "Desbloquear";
             // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(461, 137);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(111, 53);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "Mostrar Gestion Usuario";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // dropdownMenuStrip_08YS1
             // 
             this.dropdownMenuStrip_08YS1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -196,51 +192,55 @@
             this.dropdownMenuStrip_08YS1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.crearToolStripMenuItem1,
             this.modificarToolStripMenuItem1,
-            this.desbloquearToolStripMenuItem1});
+            this.desbloquearToolStripMenuItem1,
+            this.gestionUsuarioToolStripMenuItem,
+            this.bitacoraToolStripMenuItem});
             this.dropdownMenuStrip_08YS1.MenuItemHeight = 25;
             this.dropdownMenuStrip_08YS1.MenuItemTextColor = System.Drawing.Color.Empty;
             this.dropdownMenuStrip_08YS1.Name = "dropdownMenuStrip_08YS1";
             this.dropdownMenuStrip_08YS1.PrimaryColor = System.Drawing.Color.Empty;
-            this.dropdownMenuStrip_08YS1.Size = new System.Drawing.Size(141, 70);
+            this.dropdownMenuStrip_08YS1.Size = new System.Drawing.Size(179, 124);
             // 
             // crearToolStripMenuItem1
             // 
             this.crearToolStripMenuItem1.Name = "crearToolStripMenuItem1";
-            this.crearToolStripMenuItem1.Size = new System.Drawing.Size(140, 22);
+            this.crearToolStripMenuItem1.Size = new System.Drawing.Size(178, 24);
             this.crearToolStripMenuItem1.Text = "Crear";
             // 
             // modificarToolStripMenuItem1
             // 
             this.modificarToolStripMenuItem1.Name = "modificarToolStripMenuItem1";
-            this.modificarToolStripMenuItem1.Size = new System.Drawing.Size(140, 22);
+            this.modificarToolStripMenuItem1.Size = new System.Drawing.Size(178, 24);
             this.modificarToolStripMenuItem1.Text = "Modificar";
             // 
             // desbloquearToolStripMenuItem1
             // 
             this.desbloquearToolStripMenuItem1.Name = "desbloquearToolStripMenuItem1";
-            this.desbloquearToolStripMenuItem1.Size = new System.Drawing.Size(140, 22);
+            this.desbloquearToolStripMenuItem1.Size = new System.Drawing.Size(178, 24);
             this.desbloquearToolStripMenuItem1.Text = "Desbloquear";
             // 
-            // button5
+            // gestionUsuarioToolStripMenuItem
             // 
-            this.button5.Location = new System.Drawing.Point(461, 237);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(111, 53);
-            this.button5.TabIndex = 6;
-            this.button5.Text = "Mostrar Bitacora";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.gestionUsuarioToolStripMenuItem.Name = "gestionUsuarioToolStripMenuItem";
+            this.gestionUsuarioToolStripMenuItem.Size = new System.Drawing.Size(178, 24);
+            this.gestionUsuarioToolStripMenuItem.Text = "GestionUsuario";
+            this.gestionUsuarioToolStripMenuItem.Click += new System.EventHandler(this.gestionUsuarioToolStripMenuItem_Click);
+            // 
+            // bitacoraToolStripMenuItem
+            // 
+            this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
+            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(178, 24);
+            this.bitacoraToolStripMenuItem.Text = "Bitacora";
+            this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
             // 
             // FormMDI_08YS
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 499);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
+            this.ClientSize = new System.Drawing.Size(1333, 614);
             this.Controls.Add(this.panelLateral);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FormMDI_08YS";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMDI_FormClosing);
@@ -274,8 +274,8 @@
         private System.Windows.Forms.ToolStripMenuItem crearToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem modificarToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem desbloquearToolStripMenuItem1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ToolStripMenuItem gestionUsuarioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bitacoraToolStripMenuItem;
     }
 }
 
