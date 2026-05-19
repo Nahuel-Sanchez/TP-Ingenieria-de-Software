@@ -14,8 +14,8 @@ namespace DAL_08YS
 
         public SqlDbFactory_08YS()
         {
-            //_connectionString = "Data Source=DESKTOP-CRINK3R\\SQLEXPRESS;Initial Catalog=TP_INGENIERIA_SOFTWARE;Integrated Security=True;";
-            _connectionString = "Data Source=desktop-gciu8b0;Initial Catalog=GastroGest;Integrated Security=True;";
+            _connectionString = "Data Source=DESKTOP-CRINK3R\\SQLEXPRESS;Initial Catalog=TP_Ing_Soft;Integrated Security=True;";
+            //_connectionString = "Data Source=desktop-gciu8b0;Initial Catalog=GastroGest;Integrated Security=True;";
         }
 
         public IDbConnection CreateConnection()

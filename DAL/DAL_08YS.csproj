@@ -54,11 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Factory\SqlDbFactory_08YS.cs" />
     <Compile Include="SQL\SqlUserRepository_08YS.cs" />
-    <Compile Include="TP_INGENIERIA_SOFTWAREDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TP_INGENIERIA_SOFTWAREDataSet.xsd</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE_08YS.csproj">
@@ -79,17 +74,6 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="TP_INGENIERIA_SOFTWAREDataSet.xsc">
-      <DependentUpon>TP_INGENIERIA_SOFTWAREDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="TP_INGENIERIA_SOFTWAREDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>TP_INGENIERIA_SOFTWAREDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="TP_INGENIERIA_SOFTWAREDataSet.xss">
-      <DependentUpon>TP_INGENIERIA_SOFTWAREDataSet.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
