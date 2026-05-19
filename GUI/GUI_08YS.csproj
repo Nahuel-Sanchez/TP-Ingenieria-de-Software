@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormBaseTop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseTop.Designer.cs">
+      <DependentUpon>FormBaseTop.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormBitacora.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,6 +89,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormBaseTop.resx">
+      <DependentUpon>FormBaseTop.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormBitacora.resx">
       <DependentUpon>FormBitacora.cs</DependentUpon>
     </EmbeddedResource>
