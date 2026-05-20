@@ -16,6 +16,10 @@ namespace GUI
     public partial class FormBitacora_08YS : Form
     {
         private BitacoraBLL_08YS _bll = BLLFactory_08YS.CreateBitacoraBLL();
+
+        // NUEVA VARIABLE: Guarda el progreso de la fila actual entre páginas
+        private int _indiceFilaActual = 0;
+
         public FormBitacora_08YS()
         {
             InitializeComponent();
@@ -34,7 +38,7 @@ namespace GUI
         private void FormBitacora_Load(object sender, EventArgs e)
             => CargarGrid();
 
-        private void CargarGrid() 
+        private void CargarGrid()
         {
             try
             {
@@ -49,16 +53,18 @@ namespace GUI
             }
         }
 
-     
-  
-
         private void dgvEventos_SelectionChanged(object sender, EventArgs e)
         {
-            BitacoraEvento_08YS seleccionado = dgvEventos.CurrentRow.DataBoundItem as BitacoraEvento_08YS;
-            lblNombre.Text =  seleccionado.Login;
+            if (dgvEventos.CurrentRow != null)
+            {
+                BitacoraEvento_08YS seleccionado = dgvEventos.CurrentRow.DataBoundItem as BitacoraEvento_08YS;
+                if (seleccionado != null)
+                {
+                    lblNombre.Text = seleccionado.Login;
+                }
+            }
         }
 
-        
         private void pd_PrintPage(object sender, PrintPageEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -82,10 +88,10 @@ namespace GUI
 
             // 2. Dibujar Metadatos
             g.DrawString($"Generado el: {DateTime.Now:dd/MM/yyyy HH:mm:ss}", fuenteInfo, pincelNegro, x, y);
-            g.DrawString("Sistema: Horizon Hotel & Resort", fuenteInfo, pincelNegro, x + 600, y);
+            g.DrawString("Sistema: GastroGest", fuenteInfo, pincelNegro, x + 600, y);
             y += 40; // Espacio antes de la tabla
 
-            // 3. Definir el ancho fijo de cada columna (A4 Horizontal tiene aprox 1100 px de espacio total)
+            // 3. Definir el ancho fijo de cada columna
             int[] anchos = { 120, 180, 120, 300, 100 };
             string[] encabezados = { "Usuario", "Fecha y Hora", "Módulo", "Evento", "Criticidad" };
 
@@ -93,92 +99,71 @@ namespace GUI
             int xTemporal = x;
             for (int i = 0; i < encabezados.Length; i++)
             {
-                // Fondo gris para el encabezado
                 g.FillRectangle(Brushes.LightGray, xTemporal, y, anchos[i], 25);
-                // Borde del encabezado
                 g.DrawRectangle(Pens.Black, xTemporal, y, anchos[i], 25);
-                // Texto del encabezado
                 g.DrawString(encabezados[i], fuenteEncabezado, pincelNegro, xTemporal + 5, y + 5);
 
                 xTemporal += anchos[i];
             }
             y += 25; // Bajamos el cursor al cuerpo de la tabla
 
-            // 5. Recorrer las filas visibles del DataGridView y dibujarlas
-            foreach (DataGridViewRow fila in dgvEventos.Rows)
+            // 5. NUEVO: Recorrer con un bucle WHILE usando el puntero global para soportar múltiples páginas
+            while (_indiceFilaActual < dgvEventos.Rows.Count)
             {
+                DataGridViewRow fila = dgvEventos.Rows[_indiceFilaActual];
+
                 if (fila.DataBoundItem is BitacoraEvento_08YS ev)
                 {
                     xTemporal = x;
 
-                    // Extraemos los textos de las propiedades de tu objeto de negocio
                     string[] datosFila = {
-                ev.Login ?? "SISTEMA",
-                ev.FechaHora.ToString("dd/MM/yyyy HH:mm:ss"),
-                ev.Modulo.ToString(),
-                ev.Evento.ToString(), // Cambiado a tu propiedad 'Evento' en sintonía con la BD
-                ev.Criticidad.ToString()
-            };
+                        ev.Login ?? "SISTEMA",
+                        ev.FechaHora.ToString("dd/MM/yyyy HH:mm:ss"),
+                        ev.Modulo.ToString(),
+                        ev.Evento.ToString(),
+                        ev.Criticidad.ToString()
+                    };
 
                     // Dibujar cada celda de la fila actual
                     for (int i = 0; i < datosFila.Length; i++)
                     {
-                        // Dibujar el recuadro de la celda
                         g.DrawRectangle(lapizGris, xTemporal, y, anchos[i], 22);
-                        // Dibujar el texto adentro (con un pequeño margen de 5px para que no quede pegado al borde)
                         g.DrawString(datosFila[i], fuenteCuerpo, pincelNegro, xTemporal + 5, y + 4);
 
                         xTemporal += anchos[i];
                     }
 
                     y += 22; // Avanzamos a la siguiente fila hacia abajo
+                }
 
-                    // Control de salto de página (Por si hay demasiados registros y supera el margen de la hoja)
-                    if (y > e.MarginBounds.Bottom - 40)
-                    {
-                        e.HasMorePages = true; // Le avisa a Windows que genere otra hoja
-                        return; // Corta acá para pasar a la siguiente página
-                    }
+                _indiceFilaActual++; // Avanzamos el contador general de registros
+
+                // Control de salto de página
+                if (y > e.MarginBounds.Bottom - 40 && _indiceFilaActual < dgvEventos.Rows.Count)
+                {
+                    e.HasMorePages = true; // Le avisa a Windows que genere otra hoja
+                    return; // Sale del método guardando la posición en _indiceFilaActual
                 }
             }
 
-            e.HasMorePages = false; // Terminó de dibujar todo
+            e.HasMorePages = false; // Terminó de dibujar todo el set de datos
         }
 
-        private void lblLogin_Click(object sender, EventArgs e)
-        {
+        #region Métodos Vacíos Preservados (Para evitar que explote el Diseñador)
+        private void lblLogin_Click(object sender, EventArgs e) { }
 
-        }
+        private void lblNombre_Click(object sender, EventArgs e) { }
 
-        private void lblNombre_Click(object sender, EventArgs e)
-        {
+        private void lblEvento_Click(object sender, EventArgs e) { }
 
-        }
+        private void lblModulo_Click(object sender, EventArgs e) { }
 
-        private void lblEvento_Click(object sender, EventArgs e)
-        {
+        private void lblFechaIni_Click(object sender, EventArgs e) { }
 
-        }
+        private void lblCriticidad_Click(object sender, EventArgs e) { }
 
-        private void lblModulo_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblFechaIni_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblCriticidad_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblFechaFin_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void lblFechaFin_Click(object sender, EventArgs e) { }
+        #endregion
 
         private void dgvEventos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -187,12 +172,11 @@ namespace GUI
                 if (e.Value != null)
                 {
                     string valor = e.Value.ToString();
-                    if(valor == "Critico")
+                    if (valor == "Critico")
                     {
                         e.CellStyle.ForeColor = Color.Red;
                     }
-                    else
-                        if (valor == "Alto")
+                    else if (valor == "Alto")
                     {
                         e.CellStyle.ForeColor = Color.OrangeRed;
                     }
@@ -204,7 +188,6 @@ namespace GUI
                     {
                         e.CellStyle.ForeColor = Color.LimeGreen;
                     }
-
                 }
             }
         }
@@ -217,47 +200,35 @@ namespace GUI
                 return;
             }
 
-            // 2. Configurar el objeto de impresión nativo
+            // REINICIO CLAVE: Volvemos a cero el contador antes de mandar a imprimir
+            _indiceFilaActual = 0;
+
             PrintDocument pd = new PrintDocument();
-
-            // Configurar la página en Horizontal (Landscape) para que entren bien las columnas
             pd.DefaultPageSettings.Landscape = true;
-
-            // Asociar el evento que se encarga de "dibujar" el contenido
             pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
 
-            // 3. Abrir el cuadro de diálogo nativo de impresión de Windows
             PrintDialog printDialog = new PrintDialog();
             printDialog.Document = pd;
 
             if (printDialog.ShowDialog() == DialogResult.OK)
-                // Esto ejecuta el proceso. Si elegís "Microsoft Print to PDF", te pide dónde guardar el archivo.
                 pd.Print();
-
         }
 
         private void iconButton1_Click(object sender, EventArgs e)
         {
             try
             {
-                BitacoraFiltro_08YS filtro =
-                    new BitacoraFiltro_08YS
-                    {
-                        Username = txtUsername.Text,
-
-                        FechaDesde = dtpDesde.Checked ? (DateTime?)dtpDesde.Value : null,
-
-                        FechaHasta = dtpHasta.Checked ? (DateTime?)dtpHasta.Value : null,
-
-                        Modulo = comboBoxModulo.SelectedItem != null ? (Modulo?)comboBoxModulo.SelectedItem : null,
-
-                        Evento = comboBoxEvento.SelectedItem != null ? (Evento?)comboBoxEvento.SelectedItem : null,
-
-                        Criticidad = comboBoxCriticidad.SelectedItem != null ? (Criticidad?)comboBoxCriticidad.SelectedItem : null
-                    };
+                BitacoraFiltro_08YS filtro = new BitacoraFiltro_08YS
+                {
+                    Username = txtUsername.Text,
+                    FechaDesde = dtpDesde.Checked ? (DateTime?)dtpDesde.Value : null,
+                    FechaHasta = dtpHasta.Checked ? (DateTime?)dtpHasta.Value : null,
+                    Modulo = comboBoxModulo.SelectedItem != null ? (Modulo?)comboBoxModulo.SelectedItem : null,
+                    Evento = comboBoxEvento.SelectedItem != null ? (Evento?)comboBoxEvento.SelectedItem : null,
+                    Criticidad = comboBoxCriticidad.SelectedItem != null ? (Criticidad?)comboBoxCriticidad.SelectedItem : null
+                };
 
                 dgvEventos.DataSource = null;
-
                 dgvEventos.DataSource = _bll.Filtrar(filtro);
                 dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
             }
@@ -269,7 +240,6 @@ namespace GUI
 
         private void iconButton2_Click(object sender, EventArgs e)
         {
-
             txtUsername.Clear();
             comboBoxModulo.SelectedIndex = -1;
             comboBoxEvento.SelectedIndex = -1;
@@ -280,3 +250,4 @@ namespace GUI
         }
     }
 }
+
