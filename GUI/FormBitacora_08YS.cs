@@ -49,47 +49,8 @@ namespace GUI
             }
         }
 
-        private void btnFiltrar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                BitacoraFiltro_08YS filtro =
-                    new BitacoraFiltro_08YS
-                    {
-                        Username = txtUsername.Text,
-
-                        FechaDesde = dtpDesde.Checked ? (DateTime?)dtpDesde.Value : null,
-
-                        FechaHasta = dtpHasta.Checked ? (DateTime?)dtpHasta.Value : null,
-
-                        Modulo = comboBoxModulo.SelectedItem != null ? (Modulo?)comboBoxModulo.SelectedItem : null,
-
-                        Evento = comboBoxEvento.SelectedItem != null ? (Evento?)comboBoxEvento.SelectedItem : null,
-
-                        Criticidad = comboBoxCriticidad.SelectedItem != null ? (Criticidad?)comboBoxCriticidad.SelectedItem : null
-                    };
-
-                dgvEventos.DataSource = null;
-
-                dgvEventos.DataSource = _bll.Filtrar(filtro);
-                dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            txtUsername.Clear();
-            comboBoxModulo.SelectedIndex = -1;
-            comboBoxEvento.SelectedIndex = -1;
-            comboBoxCriticidad.SelectedIndex = -1;
-            dtpDesde.Checked = false;
-            dtpHasta.Checked = false;
-            CargarGrid();
-        }
+     
+  
 
         private void dgvEventos_SelectionChanged(object sender, EventArgs e)
         {
@@ -97,33 +58,7 @@ namespace GUI
             lblNombre.Text =  seleccionado.Login;
         }
 
-        private void btnImprimir_Click(object sender, EventArgs e)
-        {
-            if (dgvEventos.Rows.Count == 0)
-            {
-                MessageBox.Show("No hay datos en la grilla para exportar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // 2. Configurar el objeto de impresión nativo
-            PrintDocument pd = new PrintDocument();
-
-            // Configurar la página en Horizontal (Landscape) para que entren bien las columnas
-            pd.DefaultPageSettings.Landscape = true;
-
-            // Asociar el evento que se encarga de "dibujar" el contenido
-            pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
-
-            // 3. Abrir el cuadro de diálogo nativo de impresión de Windows
-            PrintDialog printDialog = new PrintDialog();
-            printDialog.Document = pd;
-
-            if (printDialog.ShowDialog() == DialogResult.OK)
-                // Esto ejecuta el proceso. Si elegís "Microsoft Print to PDF", te pide dónde guardar el archivo.
-                pd.Print();
-            
-        }
-
+        
         private void pd_PrintPage(object sender, PrintPageEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -272,6 +207,76 @@ namespace GUI
 
                 }
             }
+        }
+
+        private void iconButton3_Click(object sender, EventArgs e)
+        {
+            if (dgvEventos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos en la grilla para exportar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Configurar el objeto de impresión nativo
+            PrintDocument pd = new PrintDocument();
+
+            // Configurar la página en Horizontal (Landscape) para que entren bien las columnas
+            pd.DefaultPageSettings.Landscape = true;
+
+            // Asociar el evento que se encarga de "dibujar" el contenido
+            pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
+
+            // 3. Abrir el cuadro de diálogo nativo de impresión de Windows
+            PrintDialog printDialog = new PrintDialog();
+            printDialog.Document = pd;
+
+            if (printDialog.ShowDialog() == DialogResult.OK)
+                // Esto ejecuta el proceso. Si elegís "Microsoft Print to PDF", te pide dónde guardar el archivo.
+                pd.Print();
+
+        }
+
+        private void iconButton1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BitacoraFiltro_08YS filtro =
+                    new BitacoraFiltro_08YS
+                    {
+                        Username = txtUsername.Text,
+
+                        FechaDesde = dtpDesde.Checked ? (DateTime?)dtpDesde.Value : null,
+
+                        FechaHasta = dtpHasta.Checked ? (DateTime?)dtpHasta.Value : null,
+
+                        Modulo = comboBoxModulo.SelectedItem != null ? (Modulo?)comboBoxModulo.SelectedItem : null,
+
+                        Evento = comboBoxEvento.SelectedItem != null ? (Evento?)comboBoxEvento.SelectedItem : null,
+
+                        Criticidad = comboBoxCriticidad.SelectedItem != null ? (Criticidad?)comboBoxCriticidad.SelectedItem : null
+                    };
+
+                dgvEventos.DataSource = null;
+
+                dgvEventos.DataSource = _bll.Filtrar(filtro);
+                dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void iconButton2_Click(object sender, EventArgs e)
+        {
+
+            txtUsername.Clear();
+            comboBoxModulo.SelectedIndex = -1;
+            comboBoxEvento.SelectedIndex = -1;
+            comboBoxCriticidad.SelectedIndex = -1;
+            dtpDesde.Checked = false;
+            dtpHasta.Checked = false;
+            CargarGrid();
         }
     }
 }

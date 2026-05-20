@@ -21,11 +21,19 @@ namespace GUI_08YS
             InitializeComponent();
             lblRolSistema.Text = SessionManager.Instance.Current.Rol.ToString();
             lblNombreApellido.Text= SessionManager.Instance.Current.Nombre + " " + SessionManager.Instance.Current.Apellido;
+            GestionarRol();
         }
-
+        private void GestionarRol()
+        {
+            if (SessionManager.Instance.Current.Rol.ToString() == "Basico")
+            {
+                iconButton2.Visible = false;
+                iconButton2.Enabled = false;
+            }
+        }
         private void FormMDI_FormClosed(object sender, FormClosedEventArgs e)
         {
-            CerrarSesion?.Invoke();
+            //CerrarSesion?.Invoke();
         }
 
         private void FormMDI_FormClosing(object sender, FormClosingEventArgs e)
@@ -34,6 +42,10 @@ namespace GUI_08YS
             //{
             //    e.Cancel = true;
             //}
+            if (SessionManager.Instance.IsLogged)
+            {
+                CerrarSesion?.Invoke(); // Desoculta el Login y limpia Singleton
+            }
         }
 
 
@@ -67,9 +79,19 @@ namespace GUI_08YS
         private void cambiarContraseñaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormCambiarContraseña_08YS form = new FormCambiarContraseña_08YS();
+
+            form.FormClosed += (s, args) =>
+            {
+                if (form.DialogResult == DialogResult.OK)
+                {
+                    // Ejecutamos el cierre de sesión e invocamos el evento para desocultar el Login
+                    CerrarSesion?.Invoke();
+                    this.Close(); // Cerramos el MDI
+                }
+            };
             OpenChildForm(form);
-            if (form.DialogResult == DialogResult.OK)
-                CerrarSesion.Invoke();
+            //if (form.DialogResult == DialogResult.OK)
+            //    CerrarSesion.Invoke();
         }
 
         #region BarraSuperior

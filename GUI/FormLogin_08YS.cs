@@ -46,6 +46,26 @@ namespace GUI_08YS
 
                     FormCambiarContraseña_08YS formCambiarContraseña = new FormCambiarContraseña_08YS();
                     formCambiarContraseña.ShowDialog();
+
+                    if (formCambiarContraseña.DialogResult == DialogResult.OK)
+                    {
+                        // Limpiamos el Singleton para que la cuenta no quede tomada
+                        SessionManager.Instance.CerrarSesion();
+
+                        // Limpiamos los campos para obligarlo a escribir la nueva
+                        txtPassword.Text = PasswordFieldText;
+                        txtPassword.PasswordChar = '\0';
+                        dummyFocusTarget.Select();
+
+                        MessageBox.Show("Por favor, inicie sesión nuevamente con su nueva contraseña.", "Sesión Reiniciada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return; // Cortamos el flujo ACÁ para que NO intente abrir el MDI
+                    }
+                    else
+                    {
+                        // Si el usuario canceló o cerró la ventana de cambio obligatorio sin éxito, lo sacamos
+                        SessionManager.Instance.CerrarSesion();
+                        return;
+                    }
                 }
 
                 FormMDI_08YS formMDI = new FormMDI_08YS();
@@ -55,6 +75,7 @@ namespace GUI_08YS
                 {
                     SessionManager.Instance.CerrarSesion();
                     this.Show();
+                    
                 };
 
                 formMDI.Show();
