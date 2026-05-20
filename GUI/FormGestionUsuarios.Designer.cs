@@ -222,7 +222,7 @@
             // 
             // btnSalir
             // 
-            this.btnSalir.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnSalir.BackColor = System.Drawing.SystemColors.Control;
             this.btnSalir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalir.Location = new System.Drawing.Point(868, 601);
             this.btnSalir.Name = "btnSalir";
@@ -234,7 +234,7 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnCancelar.BackColor = System.Drawing.SystemColors.Control;
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelar.Location = new System.Drawing.Point(868, 513);
             this.btnCancelar.Name = "btnCancelar";
@@ -246,7 +246,7 @@
             // 
             // btnAplicar
             // 
-            this.btnAplicar.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnAplicar.BackColor = System.Drawing.SystemColors.Control;
             this.btnAplicar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAplicar.Location = new System.Drawing.Point(868, 421);
             this.btnAplicar.Name = "btnAplicar";
@@ -258,7 +258,7 @@
             // 
             // btnActDes
             // 
-            this.btnActDes.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnActDes.BackColor = System.Drawing.SystemColors.Control;
             this.btnActDes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnActDes.Location = new System.Drawing.Point(868, 328);
             this.btnActDes.Name = "btnActDes";
@@ -270,7 +270,7 @@
             // 
             // btnModificar
             // 
-            this.btnModificar.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnModificar.BackColor = System.Drawing.SystemColors.Control;
             this.btnModificar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnModificar.Location = new System.Drawing.Point(868, 237);
             this.btnModificar.Name = "btnModificar";
@@ -282,7 +282,7 @@
             // 
             // btnDesbloquear
             // 
-            this.btnDesbloquear.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnDesbloquear.BackColor = System.Drawing.SystemColors.Control;
             this.btnDesbloquear.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDesbloquear.Location = new System.Drawing.Point(868, 145);
             this.btnDesbloquear.Name = "btnDesbloquear";
@@ -294,7 +294,7 @@
             // 
             // btnCrear
             // 
-            this.btnCrear.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnCrear.BackColor = System.Drawing.SystemColors.Control;
             this.btnCrear.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCrear.Location = new System.Drawing.Point(868, 61);
             this.btnCrear.Name = "btnCrear";

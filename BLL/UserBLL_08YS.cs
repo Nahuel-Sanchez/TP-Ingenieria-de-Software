@@ -42,7 +42,10 @@ namespace BLL_08YS
         public User Login(string username, string password)
         {
             var user = userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException_08YS();
-
+            if (SessionManager.Instance.IsLogged)
+            {
+                throw new InvalidOperationException("Ya hay un usuario logueado. Cierre la sesión antes de iniciar otra.");
+            }
             if (user.Bloqueado)
                 throw new UserBloqueadoException_08YS();
             if (!user.Activo)

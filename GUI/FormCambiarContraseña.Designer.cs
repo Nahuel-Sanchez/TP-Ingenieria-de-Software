@@ -129,6 +129,7 @@
             this.Controls.Add(this.txtNuevaContraseña);
             this.Controls.Add(this.txtContraseñaActual);
             this.Name = "FormCambiarContraseña";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormCambiarContraseña";
             this.ResumeLayout(false);
             this.PerformLayout();

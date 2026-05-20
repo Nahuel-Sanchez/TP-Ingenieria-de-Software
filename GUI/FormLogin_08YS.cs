@@ -18,7 +18,7 @@ namespace GUI_08YS
     public partial class FormLogin_08YS : Form
     {
         private UserBLL_08YS _userBLL;
-
+        public bool ModoRelogin { get; set; } = false;
         public FormLogin_08YS()
         {
             InitializeComponent();
@@ -40,6 +40,13 @@ namespace GUI_08YS
             {
                 User user = _userBLL.Login(username, password);
 
+                // SI ESTAMOS EN MODO RELOGIN: Si el código llega acá, significa que falló el Singleton (MALO)
+                if (ModoRelogin)
+                {
+                    MessageBox.Show("ERROR: El sistema permitió loguear un usuario sin cerrar la sesión anterior. El Singleton falló.", "Error de Arquitectura", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 FormMDI_08YS formMDI = new FormMDI_08YS();
                 this.Hide();
                 
@@ -54,6 +61,21 @@ namespace GUI_08YS
 
                 txtUsername.Text = UsernameFieldText;
                 txtPassword.Text = PasswordFieldText;
+            }
+
+            catch (InvalidOperationException ex)
+            {
+                if (ModoRelogin)
+                {
+                    MessageBox.Show($"¡PRUEBA DE SINGLETON EXITOSA!\n\nLa arquitectura impidió el re-login.\nMensaje de la BLL: \"{ex.Message}\"",
+                                    "Verificación de Arquitectura", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Close(); // Se cierra solo el cuadrito de relogin
+                }
+                else
+                {
+                    // Por si acaso saltara en un flujo normal
+                    MessageBox.Show(ex.Message, "Error de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (UserBloqueadoException_08YS ex)
             {

@@ -1,5 +1,6 @@
 ﻿using GUI;
 using GUI_08YS.Properties;
+using Service_08YS;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,8 @@ namespace GUI_08YS
         public FormMDI_08YS()
         {
             InitializeComponent();
+            lblRolSistema.Text = SessionManager.Instance.Current.Rol.ToString();
+            lblNombreApellido.Text=SessionManager.Instance.Current.Username;
         }
 
         private void FormMDI_FormClosed(object sender, FormClosedEventArgs e)
@@ -101,7 +104,35 @@ namespace GUI_08YS
         {
             dropdownMenuStrip_08YS2.Show(button4, button4.Width, 0);
         }
-
        
+
+        private void cerrarSesionToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var respuesta = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
+                                        "Cerrar Sesión - GastroGest",
+                                        MessageBoxButtons.YesNo,
+                                        MessageBoxIcon.Question);
+
+            if (respuesta == DialogResult.Yes)
+            {
+              
+                CerrarSesion?.Invoke();
+
+               
+                this.Close();
+            }
+        }
+
+        private void ReLoginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+         
+            FormLogin_08YS frmRelogin = new FormLogin_08YS();
+
+            
+            frmRelogin.ModoRelogin = true;
+
+          
+            frmRelogin.ShowDialog();
+        }
     }
 }
