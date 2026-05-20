@@ -28,7 +28,7 @@ namespace DAL_08YS
             {
                 if (storedProcedure)
                     cmd.CommandType = CommandType.StoredProcedure;
-
+                
                 if (parameters != null)
                     foreach (var p in parameters)
                         cmd.Parameters.Add(p);

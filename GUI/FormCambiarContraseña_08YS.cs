@@ -12,11 +12,11 @@ using System.Windows.Forms;
 
 namespace GUI_08YS
 {
-    public partial class FormCambiarContraseña : Form
+    public partial class FormCambiarContraseña_08YS : Form
     {
         private UserBLL_08YS _userBLL;
 
-        public FormCambiarContraseña()
+        public FormCambiarContraseña_08YS()
         {
             InitializeComponent();
             _userBLL = BLLFactory_08YS.CreateUserBLL();
@@ -24,11 +24,12 @@ namespace GUI_08YS
 
         private void btnCambiarContraseña_Click(object sender, EventArgs e)
         {
-            if (ValidarCampos())return;
+            if (ValidarCampos()) return;
             try
             {
                 _userBLL.CambiarContraseña(txtContraseñaActual.Text, txtNuevaContraseña.Text);
                 MessageBox.Show("Contraseña cambiada exitosamente.");
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
@@ -47,6 +48,11 @@ namespace GUI_08YS
             if (txtNuevaContraseña.Text != txtConfirmarContraseña.Text)
             {
                 MessageBox.Show("La nueva contraseña y la confirmación no coinciden.");
+                return true; // Hubo un error, retornar true para que el botón corte
+            }
+            if(txtNuevaContraseña.Text == txtContraseñaActual.Text)
+            {
+                MessageBox.Show("La nueva contraseña no puede ser igual a la actual.");
                 return true; // Hubo un error, retornar true para que el botón corte
             }
             return false; // Todo impecable, no hay errores

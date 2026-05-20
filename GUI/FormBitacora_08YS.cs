@@ -13,10 +13,10 @@ using System.Windows.Forms;
 
 namespace GUI
 {
-    public partial class FormBitacora : Form
+    public partial class FormBitacora_08YS : Form
     {
         private BitacoraBLL_08YS _bll = BLLFactory_08YS.CreateBitacoraBLL();
-        public FormBitacora()
+        public FormBitacora_08YS()
         {
             InitializeComponent();
             comboBoxModulo.DataSource = Enum.GetValues(typeof(Modulo));
@@ -119,10 +119,9 @@ namespace GUI
             printDialog.Document = pd;
 
             if (printDialog.ShowDialog() == DialogResult.OK)
-            {
                 // Esto ejecuta el proceso. Si elegís "Microsoft Print to PDF", te pide dónde guardar el archivo.
                 pd.Print();
-            }
+            
         }
 
         private void pd_PrintPage(object sender, PrintPageEventArgs e)
@@ -148,7 +147,7 @@ namespace GUI
 
             // 2. Dibujar Metadatos
             g.DrawString($"Generado el: {DateTime.Now:dd/MM/yyyy HH:mm:ss}", fuenteInfo, pincelNegro, x, y);
-            g.DrawString("Sistema: GastroGest", fuenteInfo, pincelNegro, x + 600, y);
+            g.DrawString("Sistema: Horizon Hotel & Resort", fuenteInfo, pincelNegro, x + 600, y);
             y += 40; // Espacio antes de la tabla
 
             // 3. Definir el ancho fijo de cada columna (A4 Horizontal tiene aprox 1100 px de espacio total)
@@ -244,6 +243,35 @@ namespace GUI
         private void lblFechaFin_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dgvEventos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvEventos.Columns[e.ColumnIndex].Name == "Criticidad")
+            {
+                if (e.Value != null)
+                {
+                    string valor = e.Value.ToString();
+                    if(valor == "Critico")
+                    {
+                        e.CellStyle.ForeColor = Color.Red;
+                    }
+                    else
+                        if (valor == "Alto")
+                    {
+                        e.CellStyle.ForeColor = Color.OrangeRed;
+                    }
+                    else if (valor == "Medio")
+                    {
+                        e.CellStyle.ForeColor = Color.Gold;
+                    }
+                    else if (valor == "Bajo")
+                    {
+                        e.CellStyle.ForeColor = Color.LimeGreen;
+                    }
+
+                }
+            }
         }
     }
 }

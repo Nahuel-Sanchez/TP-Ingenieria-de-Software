@@ -38,13 +38,14 @@ namespace GUI_08YS
             
             try
             {
-                User user = _userBLL.Login(username, password);
+                User user = _userBLL.Login(username, password, out bool passwordDefault);
 
-                // SI ESTAMOS EN MODO RELOGIN: Si el código llega acá, significa que falló el Singleton (MALO)
-                if (ModoRelogin)
+                if (passwordDefault)
                 {
-                    MessageBox.Show("ERROR: El sistema permitió loguear un usuario sin cerrar la sesión anterior. El Singleton falló.", "Error de Arquitectura", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    MessageBox.Show("Debe cambiar su contraseña antes de continuar.", "Cambio de Contraseña Requerido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    FormCambiarContraseña_08YS formCambiarContraseña = new FormCambiarContraseña_08YS();
+                    formCambiarContraseña.ShowDialog();
                 }
 
                 FormMDI_08YS formMDI = new FormMDI_08YS();
@@ -65,17 +66,7 @@ namespace GUI_08YS
 
             catch (InvalidOperationException ex)
             {
-                if (ModoRelogin)
-                {
-                    MessageBox.Show($"¡PRUEBA DE SINGLETON EXITOSA!\n\nLa arquitectura impidió el re-login.\nMensaje de la BLL: \"{ex.Message}\"",
-                                    "Verificación de Arquitectura", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close(); // Se cierra solo el cuadrito de relogin
-                }
-                else
-                {
-                    // Por si acaso saltara en un flujo normal
-                    MessageBox.Show(ex.Message, "Error de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show(ex.Message, "Error de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (UserBloqueadoException_08YS ex)
             {

@@ -15,6 +15,7 @@ namespace BLL_08YS
     {
         private readonly IUserRepository_08YS userRepository;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
         public UserBLL_08YS(IUserRepository_08YS userRepository, BitacoraBLL_08YS bitacoraBll)
         {
             this.userRepository = userRepository;
@@ -37,60 +38,43 @@ namespace BLL_08YS
         }
 
         #region Login
-        private readonly Dictionary<string, LoginAttempt_08YS> _loginAttempts = new Dictionary<string, LoginAttempt_08YS>();
 
-        public User Login(string username, string password)
+        public User Login(string username, string password, out bool passwordDefault)
         {
             var user = userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException_08YS();
+
             if (SessionManager.Instance.IsLogged)
-            {
                 throw new InvalidOperationException("Ya hay un usuario logueado. Cierre la sesión antes de iniciar otra.");
-            }
-            if (user.Bloqueado)
-                throw new UserBloqueadoException_08YS();
-            if (!user.Activo)
-                throw new UserInactivoException_08YS();
+
+            if (user.Bloqueado) throw new UserBloqueadoException_08YS();
+            if (!user.Activo)   throw new UserInactivoException_08YS();
 
             if ( ! Encriptador.Verificar(password, user.Hash, user.Salt) )
             {
                 RegistrarIntentoFallido(username);
                 throw new AuthenticationException("Ha ingresado una contraseña incorrecta.");
             }
-            _loginAttempts.Remove(username);
 
             SessionManager.Instance.SetCurrentUser(user);
             _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.LoginExitoso, Criticidad.Medio);
+
+            passwordDefault = Encriptador.Verificar(user.DNI.ToString() + user.Apellido, user.Hash, user.Salt);
 
             return user;
         }
 
         private void RegistrarIntentoFallido(string username)
         {
-            if (!_loginAttempts.ContainsKey(username))
-            {
-                _loginAttempts[username] = new LoginAttempt_08YS
-                {
-                    Attempts = 1,
-                    LastAttempt = DateTime.Now
-                };
-                return;
-            }
+            _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.LoginFallido, Criticidad.Alto, username);
 
-            var attempt = _loginAttempts[username];
+            int intentos = _bitacoraBll.ContarIntentosFallidos(username, ventanaHoras: 2);
 
-            if ( (DateTime.Now - attempt.LastAttempt).TotalHours >= 2)
-                attempt.Attempts = 1;
-            
-            else attempt.Attempts++;
-            
-
-            attempt.LastAttempt = DateTime.Now;
-
-            if (attempt.Attempts >= 3)
+            if (intentos >= 3)
             {
                 UserLockOut(username);
-                throw new AuthenticationException("Ha ingresado una contraseña incorrecta. Su cuenta ha sido bloqueada.");
+                _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.UsuarioBloqueado, Criticidad.Critico, username);
             }
+            else throw new AuthenticationException("Ha ingresado una contraseña incorrecta. Después de 3 intentos fallidos, su cuenta será bloqueada.");
         }
 
         #endregion
@@ -101,7 +85,8 @@ namespace BLL_08YS
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
             userRepository.LockOut(user.Username);
-            _bitacoraBll.RegistrarEvento(username, Modulo.Usuarios, Evento.UsuarioBloqueado, Criticidad.Alto);
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, Evento.UsuarioBloqueado, Criticidad.Alto, username);
+            throw new Exception("Su cuenta ha sido bloqueada debido a múltiples intentos fallidos de inicio de sesión. Por favor, contacte al administrador para desbloquear su cuenta.");
         }
 
         public void DesbloquearUsuario(string username)
@@ -126,7 +111,9 @@ namespace BLL_08YS
         #endregion
         public void ModificarUsuario(string username, string nuevoEmail, UserRole nuevoRol)
         {
-         
+            if(username == SessionManager.Instance.Current.Username)
+                throw new InvalidOperationException("No puede modificar su propio rol o email.");
+
             var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
@@ -143,7 +130,9 @@ namespace BLL_08YS
 
         public void AlternarEstadoActivo(string username)
         {
-           
+            if(username == SessionManager.Instance.Current.Username)
+                throw new InvalidOperationException("No puede modificar su propio estado activo.");
+
             var user = userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");

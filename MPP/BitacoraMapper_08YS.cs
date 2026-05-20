@@ -13,7 +13,7 @@ namespace MPP_08YS
         {
             return new BitacoraEvento_08YS
             {
-                Login = row["Login_08YS"].ToString(),
+                Login = row["Username"].ToString(),
                 FechaHora = Convert.ToDateTime(row["FechaHora"]),
                 Modulo = (Modulo)Convert.ToInt32(row["Modulo"]),
                 Evento = (Evento)Convert.ToInt32(row["Evento"]),

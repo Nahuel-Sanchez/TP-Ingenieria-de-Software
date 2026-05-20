@@ -20,7 +20,7 @@ namespace GUI_08YS
         {
             InitializeComponent();
             lblRolSistema.Text = SessionManager.Instance.Current.Rol.ToString();
-            lblNombreApellido.Text=SessionManager.Instance.Current.Username;
+            lblNombreApellido.Text= SessionManager.Instance.Current.Nombre + " " + SessionManager.Instance.Current.Apellido;
         }
 
         private void FormMDI_FormClosed(object sender, FormClosedEventArgs e)
@@ -40,25 +40,36 @@ namespace GUI_08YS
         private void FormMDI_Load(object sender, EventArgs e)
         {
             dropdownMenuStrip_08YS1.IsMainMenu = true;
+            dropdownMenuStrip_08YS2.IsMainMenu = true;
         }
 
+        private void OpenChildForm(Form childForm)
+        {
+            panel2.Controls.Clear();
+            childForm.TopLevel = false;
+            childForm.FormBorderStyle = FormBorderStyle.None;
+            childForm.Dock = DockStyle.Fill;
+            panel2.Controls.Add(childForm);
+            panel2.Tag = childForm;
+            childForm.Show();
+        }
 
         private void gestionUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            FormGestionUsuarios form = new FormGestionUsuarios();
-            form.Show();
+            OpenChildForm(new FormGestionUsuarios_08YS());
         }
 
         private void bitacoraToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBitacora form = new FormBitacora();
-            form.Show();
+            OpenChildForm(new FormBitacora_08YS());
         }
+
         private void cambiarContraseñaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormCambiarContraseña form = new FormCambiarContraseña();
-            form.Show();
+            FormCambiarContraseña_08YS form = new FormCambiarContraseña_08YS();
+            OpenChildForm(form);
+            if (form.DialogResult == DialogResult.OK)
+                CerrarSesion.Invoke();
         }
 
         #region BarraSuperior
@@ -95,15 +106,6 @@ namespace GUI_08YS
 
         #endregion
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            dropdownMenuStrip_08YS1.Show(button5, button5.Width, 0);
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            dropdownMenuStrip_08YS2.Show(button4, button4.Width, 0);
-        }
        
 
         private void cerrarSesionToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -115,10 +117,7 @@ namespace GUI_08YS
 
             if (respuesta == DialogResult.Yes)
             {
-              
                 CerrarSesion?.Invoke();
-
-               
                 this.Close();
             }
         }
@@ -133,6 +132,30 @@ namespace GUI_08YS
 
           
             frmRelogin.ShowDialog();
+        }
+
+        private void iconButton1_Click(object sender, EventArgs e)
+        {
+            dropdownMenuStrip_08YS2.Show(iconButton1, iconButton1.Width, 0);
+        }
+
+        private void iconButton2_Click(object sender, EventArgs e)
+        {
+            dropdownMenuStrip_08YS1.Show(iconButton2, iconButton2.Width, 0);
+        }
+
+        private void iconButton4_Click(object sender, EventArgs e)
+        {
+            var respuesta = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
+                                        "Cerrar Sesión - GastroGest",
+                                        MessageBoxButtons.YesNo,
+                                        MessageBoxIcon.Question);
+
+            if (respuesta == DialogResult.Yes)
+            {
+                CerrarSesion?.Invoke();
+                this.Close();
+            }
         }
     }
 }

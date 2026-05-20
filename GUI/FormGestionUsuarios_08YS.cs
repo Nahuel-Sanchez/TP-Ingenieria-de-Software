@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 namespace GUI
 {
-    public partial class FormGestionUsuarios : Form
+    public partial class FormGestionUsuarios_08YS : Form
     {
         private UserBLL_08YS _bll = BLLFactory_08YS.CreateUserBLL();
         
-        public FormGestionUsuarios()
+        public FormGestionUsuarios_08YS()
         {
             InitializeComponent();
         }

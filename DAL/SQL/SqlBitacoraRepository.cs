@@ -19,10 +19,10 @@ namespace DAL_08YS
         {
             return new []
             {
-                Param("@login", bitacora.Login),
+                Param("@username",   bitacora.Login),
                 Param("@fecha_hora", bitacora.FechaHora),
-                Param("@modulo", (int)bitacora.Modulo),
-                Param("@evento", bitacora.Evento),
+                Param("@modulo",     (int)bitacora.Modulo),
+                Param("@evento",     (int)bitacora.Evento),
                 Param("@criticidad", (int)bitacora.Criticidad)
             };
         }
@@ -30,8 +30,8 @@ namespace DAL_08YS
         public void RegistrarEvento(BitacoraEvento_08YS evento)
         {
             ExecuteNonQuery(
-                "INSERT INTO Bitacora (Login_08YS, FechaHora, Modulo, Evento, Criticidad) " +
-                "VALUES (@login, @fecha_hora, @modulo, @evento, @criticidad)",
+                "INSERT INTO Bitacora (Username, FechaHora, Modulo, Evento, Criticidad) " +
+                "VALUES (@username, @fecha_hora, @modulo, @evento, @criticidad)",
                 ToParameters(evento));
         }
 
@@ -50,10 +50,10 @@ namespace DAL_08YS
 
             if (!string.IsNullOrWhiteSpace(filtro.Username))
             {
-                query.Append(" AND Login_08YS LIKE @login");
+                query.Append(" AND Username LIKE @username");
 
                 parametros.Add(
-                    Param("@login", $"%{filtro.Username}%"));
+                    Param("@username", $"%{filtro.Username}%"));
             }
 
             if (filtro.FechaDesde.HasValue && filtro.FechaHasta.HasValue)
@@ -96,6 +96,31 @@ namespace DAL_08YS
             DataTable dt = Leer( query.ToString(), parametros.ToArray());
 
             return BitacoraMapper_08YS.FromDataTable(dt);
+        }
+
+        public int ContarIntentosFallidos(string username, int ventanaHoras)
+        {
+            return ExecuteScalar<int>
+            (
+                @"SELECT COUNT(*) FROM Bitacora
+                WHERE Username = @username
+                AND Evento  = @evento
+                AND FechaHora   >= DATEADD(HOUR, -@horas, GETDATE())
+                AND FechaHora  >  ISNULL(
+                    (SELECT MAX(FechaHora) FROM Bitacora
+                     WHERE Username  = @username
+                       AND Evento IN (@desbloqueo, @loginExitoso)),
+                    CAST('1900-01-01' AS DATETIME))"
+                ,
+                new[]
+                {
+                    Param("@username",      username),
+                    Param("@evento",        (int)Evento.LoginFallido),
+                    Param("@horas",         ventanaHoras),
+                    Param("@desbloqueo",    (int)Evento.UsuarioDesbloqueado),
+                    Param("@loginExitoso",  (int)Evento.LoginExitoso)
+                }
+            );
         }
     }
 }

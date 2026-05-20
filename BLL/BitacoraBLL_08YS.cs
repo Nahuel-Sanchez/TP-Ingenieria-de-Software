@@ -13,41 +13,19 @@ namespace BLL_08YS
     {
         private readonly IBitacoraRepository_08YS _repo;
 
-        public BitacoraBLL_08YS(IBitacoraRepository_08YS repo)
+        public BitacoraBLL_08YS(IBitacoraRepository_08YS repo) => _repo = repo;
+
+        // login = null → toma el usuario de sesión (flujo normal post-login)
+        // login = "username" → se pasa explícitamente (flujo de intento fallido, sin sesión aún)
+        public void RegistrarEvento(Modulo modulo, Evento evento, Criticidad criticidad, string login = null)
         {
-            _repo = repo;
+            login = string.IsNullOrWhiteSpace(login) ? SessionManager.Instance.Current?.Username ?? "Desconocido" : login;
+
+            _repo.RegistrarEvento(new BitacoraEvento_08YS(login, DateTime.Now, modulo, evento, criticidad));
         }
 
-        public void RegistrarEvento(Modulo modulo, Evento evento, Criticidad criticidad)
-        {
-            string usuarioActual = SessionManager.Instance.IsLogged
-            ? SessionManager.Instance.Current.Username
-            : throw new Exception("Error de instancia de sesión: No hay un usuario actualmente logueado.");
-
-            BitacoraEvento_08YS bitacora = new BitacoraEvento_08YS(
-                usuarioActual,
-                DateTime.Now,
-                modulo,
-                evento,
-                criticidad
-            );
-
-            _repo.RegistrarEvento(bitacora);
-
-        }
-        public void RegistrarEvento(string Username, Modulo modulo, Evento evento, Criticidad criticidad)
-        {
-            BitacoraEvento_08YS bitacora = new BitacoraEvento_08YS(
-                Username,
-                DateTime.Now,
-                modulo,
-                evento,
-                criticidad
-            );
-
-            _repo.RegistrarEvento(bitacora);
-
-        }
+        public int ContarIntentosFallidos(string username, int ventanaHoras = 2)
+            => _repo.ContarIntentosFallidos(username, ventanaHoras);
 
         public List<BitacoraEvento_08YS> GetAll()
             => _repo.GetAll();

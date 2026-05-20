@@ -1,6 +1,6 @@
 ﻿namespace GUI_08YS
 {
-    partial class FormCambiarContraseña
+    partial class FormCambiarContraseña_08YS
     {
         /// <summary>
         /// Required designer variable.
