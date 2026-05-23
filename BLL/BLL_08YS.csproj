@@ -43,12 +43,11 @@
   <ItemGroup>
     <Compile Include="BitacoraBLL_08YS.cs" />
     <Compile Include="BLLFactory_08YS.cs" />
-    <Compile Include="LoginAttempt_08YS.cs" />
     <Compile Include="UserBLL_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserBloqueadoException_08YS.cs" />
-    <Compile Include="UserNoRegistradoException_08YS.cs" />
-    <Compile Include="UserInactivoException_08YS.cs" />
+    <Compile Include="Exceptions\UserBloqueadoException_08YS.cs" />
+    <Compile Include="Exceptions\UserNoRegistradoException_08YS.cs" />
+    <Compile Include="Exceptions\UserInactivoException_08YS.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE_08YS.csproj">

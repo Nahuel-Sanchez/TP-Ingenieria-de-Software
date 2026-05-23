@@ -86,7 +86,7 @@ namespace BLL_08YS
                 throw new Exception("No se encontró el usuario para modificar.");
             userRepository.LockOut(user.Username);
             _bitacoraBll.RegistrarEvento(Modulo.Usuarios, Evento.UsuarioBloqueado, Criticidad.Alto, username);
-            throw new Exception("Su cuenta ha sido bloqueada debido a múltiples intentos fallidos de inicio de sesión. Por favor, contacte al administrador para desbloquear su cuenta.");
+            throw new UserBloqueadoException_08YS("Su cuenta ha sido bloqueada debido a múltiples intentos fallidos de inicio de sesión. Por favor, contacte al administrador para desbloquear su cuenta.");
         }
 
         public void DesbloquearUsuario(string username)
@@ -101,14 +101,13 @@ namespace BLL_08YS
            
             Encriptador.CrearHash(passwordDefault, out string nuevoHash, out string nuevoSalt);
 
-          
             userRepository.UpdatePassword(user.Username, nuevoHash, nuevoSalt);
 
-
-            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, Evento.UsuarioDesbloqueado, Criticidad.Alto);
-            
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, Evento.AdminDesbloqueaUsuario, Criticidad.Alto);
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios, Evento.UsuarioDesbloqueado, Criticidad.Alto, username);
         }
         #endregion
+
         public void ModificarUsuario(string username, string nuevoEmail, UserRole nuevoRol)
         {
             if(username == SessionManager.Instance.Current.Username)

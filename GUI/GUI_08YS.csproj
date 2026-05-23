@@ -89,9 +89,18 @@
     <Compile Include="FormLogin_08YS.Designer.cs">
       <DependentUpon>FormLogin_08YS.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrontMDI_08YS\MenuColorTable.cs" />
-    <Compile Include="FrontMDI_08YS\MenuRenderer.cs" />
-    <Compile Include="FrontMDI_08YS\DropdownMenuStrip_08YS.cs">
+    <Compile Include="UserControls\IconDateTimePicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\IconPlaceholderTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\MenuColorTable.cs" />
+    <Compile Include="UserControls\MenuRenderer.cs" />
+    <Compile Include="UserControls\DropdownMenuStrip_08YS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\PlaceholderTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />

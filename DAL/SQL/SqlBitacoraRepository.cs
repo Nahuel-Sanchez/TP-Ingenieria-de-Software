@@ -64,7 +64,7 @@ namespace DAL_08YS
                     Param("@desde", filtro.FechaDesde.Value));
 
                 parametros.Add(
-                    Param("@hasta", filtro.FechaHasta.Value));
+                    Param("@hasta", filtro.FechaHasta.Value.Date.AddDays(1).AddTicks(-1)));
             }
 
             if (filtro.Modulo.HasValue)

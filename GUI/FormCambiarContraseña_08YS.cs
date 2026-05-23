@@ -24,7 +24,7 @@ namespace GUI_08YS
 
         private void btnCambiarContraseña_Click(object sender, EventArgs e)
         {
-            if (ValidarCampos()) return;
+            if (!ValidarCampos()) return;
             try
             {
                 _userBLL.CambiarContraseña(txtContraseñaActual.Text, txtNuevaContraseña.Text);
@@ -43,19 +43,19 @@ namespace GUI_08YS
             if (string.IsNullOrWhiteSpace(txtContraseñaActual.Text) || string.IsNullOrWhiteSpace(txtNuevaContraseña.Text) || string.IsNullOrWhiteSpace(txtConfirmarContraseña.Text))
             {
                 MessageBox.Show("Por favor, complete todos los campos.");
-                return true; // Hubo un error, retornar true para que el botón corte
+                return false;
             }
             if (txtNuevaContraseña.Text != txtConfirmarContraseña.Text)
             {
                 MessageBox.Show("La nueva contraseña y la confirmación no coinciden.");
-                return true; // Hubo un error, retornar true para que el botón corte
+                return false;
             }
             if(txtNuevaContraseña.Text == txtContraseñaActual.Text)
             {
                 MessageBox.Show("La nueva contraseña no puede ser igual a la actual.");
-                return true; // Hubo un error, retornar true para que el botón corte
+                return false; 
             }
-            return false; // Todo impecable, no hay errores
+            return true;
         }
     }
 }

@@ -17,7 +17,6 @@ namespace GUI
     {
         private BitacoraBLL_08YS _bll = BLLFactory_08YS.CreateBitacoraBLL();
 
-        // NUEVA VARIABLE: Guarda el progreso de la fila actual entre páginas
         private int _indiceFilaActual = 0;
 
         public FormBitacora_08YS()
@@ -192,7 +191,7 @@ namespace GUI
             }
         }
 
-        private void iconButton3_Click(object sender, EventArgs e)
+        private void btnExportar_Click(object sender, EventArgs e)
         {
             if (dgvEventos.Rows.Count == 0)
             {
@@ -214,15 +213,34 @@ namespace GUI
                 pd.Print();
         }
 
-        private void iconButton1_Click(object sender, EventArgs e)
+        private void btnFiltrar_Click(object sender, EventArgs e)
         {
+            DateTime? desde = dtpDesde.Value.HasValue ? dtpDesde.Value.Value.Date : (DateTime?)null;
+            DateTime? hasta = dtpHasta.Value.HasValue ? dtpHasta.Value.Value.Date : (DateTime?)null;
+
+            if (desde.HasValue && desde.Value > DateTime.Today)
+            {
+                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
+            {
+                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha de finalización.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (hasta.HasValue && hasta.Value > DateTime.Today)
+            {
+                MessageBox.Show("La fecha de finalización no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             try
             {
                 BitacoraFiltro_08YS filtro = new BitacoraFiltro_08YS
                 {
                     Username = txtUsername.Text,
-                    FechaDesde = dtpDesde.Checked ? (DateTime?)dtpDesde.Value : null,
-                    FechaHasta = dtpHasta.Checked ? (DateTime?)dtpHasta.Value : null,
+                    FechaDesde = dtpDesde.Value,
+                    FechaHasta = dtpHasta.Value,
                     Modulo = comboBoxModulo.SelectedItem != null ? (Modulo?)comboBoxModulo.SelectedItem : null,
                     Evento = comboBoxEvento.SelectedItem != null ? (Evento?)comboBoxEvento.SelectedItem : null,
                     Criticidad = comboBoxCriticidad.SelectedItem != null ? (Criticidad?)comboBoxCriticidad.SelectedItem : null
@@ -238,16 +256,33 @@ namespace GUI
             }
         }
 
-        private void iconButton2_Click(object sender, EventArgs e)
+        private void btnLimpiar_Click(object sender, EventArgs e)
         {
-            txtUsername.Clear();
+            txtUsername.Text = "";
             comboBoxModulo.SelectedIndex = -1;
             comboBoxEvento.SelectedIndex = -1;
             comboBoxCriticidad.SelectedIndex = -1;
-            dtpDesde.Checked = false;
-            dtpHasta.Checked = false;
+            dtpDesde.Value = null;
+            dtpHasta.Value = null;
             CargarGrid();
         }
+
+        private void comboBoxModulo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Modulo? moduloSeleccionado = comboBoxModulo.SelectedItem as Modulo?;
+            RefreshComboEventos(moduloSeleccionado);
+        }
+        private void RefreshComboEventos(Modulo? modulo)
+        {
+            comboBoxEvento.SelectedIndexChanged -= comboBoxEvento_SelectedIndexChanged; // evita disparos en cascada
+
+            comboBoxEvento.DataSource = BitacoraEvento_08YS.GetEventsByModule(modulo);
+            comboBoxEvento.SelectedIndex = -1;
+
+            comboBoxEvento.SelectedIndexChanged += comboBoxEvento_SelectedIndexChanged;
+        }
+
+        private void comboBoxEvento_SelectedIndexChanged(object sender, EventArgs e) { }
     }
 }
 

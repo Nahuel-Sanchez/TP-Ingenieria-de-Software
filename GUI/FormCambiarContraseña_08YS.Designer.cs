@@ -28,107 +28,169 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtContraseñaActual = new System.Windows.Forms.TextBox();
-            this.txtNuevaContraseña = new System.Windows.Forms.TextBox();
-            this.txtConfirmarContraseña = new System.Windows.Forms.TextBox();
             this.lblContraseñaActual = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblConfirmarContraseña = new System.Windows.Forms.Label();
             this.lblUsuario = new System.Windows.Forms.Label();
-            this.btnCambiarContraseña = new System.Windows.Forms.Button();
+            this.txtContraseñaActual = new CustomControls.IconPlaceholderTextBox();
+            this.txtNuevaContraseña = new CustomControls.IconPlaceholderTextBox();
+            this.txtConfirmarContraseña = new CustomControls.IconPlaceholderTextBox();
+            this.btnCambiarContraseña = new FontAwesome.Sharp.IconButton();
             this.SuspendLayout();
-            // 
-            // txtContraseñaActual
-            // 
-            this.txtContraseñaActual.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtContraseñaActual.Location = new System.Drawing.Point(37, 103);
-            this.txtContraseñaActual.Name = "txtContraseñaActual";
-            this.txtContraseñaActual.Size = new System.Drawing.Size(148, 23);
-            this.txtContraseñaActual.TabIndex = 0;
-            // 
-            // txtNuevaContraseña
-            // 
-            this.txtNuevaContraseña.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNuevaContraseña.Location = new System.Drawing.Point(37, 196);
-            this.txtNuevaContraseña.Name = "txtNuevaContraseña";
-            this.txtNuevaContraseña.Size = new System.Drawing.Size(148, 23);
-            this.txtNuevaContraseña.TabIndex = 1;
-            // 
-            // txtConfirmarContraseña
-            // 
-            this.txtConfirmarContraseña.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtConfirmarContraseña.Location = new System.Drawing.Point(37, 288);
-            this.txtConfirmarContraseña.Name = "txtConfirmarContraseña";
-            this.txtConfirmarContraseña.Size = new System.Drawing.Size(148, 23);
-            this.txtConfirmarContraseña.TabIndex = 2;
             // 
             // lblContraseñaActual
             // 
             this.lblContraseñaActual.AutoSize = true;
+            this.lblContraseñaActual.BackColor = System.Drawing.Color.Transparent;
             this.lblContraseñaActual.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblContraseñaActual.Location = new System.Drawing.Point(34, 75);
+            this.lblContraseñaActual.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblContraseñaActual.Location = new System.Drawing.Point(123, 89);
+            this.lblContraseñaActual.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblContraseñaActual.Name = "lblContraseñaActual";
-            this.lblContraseñaActual.Size = new System.Drawing.Size(104, 15);
+            this.lblContraseñaActual.Size = new System.Drawing.Size(129, 20);
             this.lblContraseñaActual.TabIndex = 3;
             this.lblContraseñaActual.Text = "Contraseña Actual";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(34, 169);
+            this.label2.ForeColor = System.Drawing.Color.Goldenrod;
+            this.label2.Location = new System.Drawing.Point(123, 205);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 15);
+            this.label2.Size = new System.Drawing.Size(129, 20);
             this.label2.TabIndex = 4;
             this.label2.Text = "Nueva Contraseña";
             // 
             // lblConfirmarContraseña
             // 
             this.lblConfirmarContraseña.AutoSize = true;
+            this.lblConfirmarContraseña.BackColor = System.Drawing.Color.Transparent;
             this.lblConfirmarContraseña.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblConfirmarContraseña.Location = new System.Drawing.Point(34, 263);
+            this.lblConfirmarContraseña.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblConfirmarContraseña.Location = new System.Drawing.Point(123, 321);
+            this.lblConfirmarContraseña.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblConfirmarContraseña.Name = "lblConfirmarContraseña";
-            this.lblConfirmarContraseña.Size = new System.Drawing.Size(124, 15);
+            this.lblConfirmarContraseña.Size = new System.Drawing.Size(153, 20);
             this.lblConfirmarContraseña.TabIndex = 5;
             this.lblConfirmarContraseña.Text = "Confirmar Contraseña";
             // 
             // lblUsuario
             // 
             this.lblUsuario.AutoSize = true;
+            this.lblUsuario.BackColor = System.Drawing.Color.Transparent;
             this.lblUsuario.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUsuario.Location = new System.Drawing.Point(34, 44);
+            this.lblUsuario.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblUsuario.Location = new System.Drawing.Point(123, 51);
+            this.lblUsuario.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUsuario.Name = "lblUsuario";
-            this.lblUsuario.Size = new System.Drawing.Size(50, 15);
+            this.lblUsuario.Size = new System.Drawing.Size(62, 20);
             this.lblUsuario.TabIndex = 6;
             this.lblUsuario.Text = "Usuario:";
             // 
+            // txtContraseñaActual
+            // 
+            this.txtContraseñaActual.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtContraseñaActual.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtContraseñaActual.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtContraseñaActual.BorderWidth = 2;
+            this.txtContraseñaActual.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtContraseñaActual.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
+            this.txtContraseñaActual.IconChar = FontAwesome.Sharp.IconChar.EyeSlash;
+            this.txtContraseñaActual.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtContraseñaActual.IconSize = 25;
+            this.txtContraseñaActual.Location = new System.Drawing.Point(127, 112);
+            this.txtContraseñaActual.MaskedInput = true;
+            this.txtContraseñaActual.Name = "txtContraseñaActual";
+            this.txtContraseñaActual.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtContraseñaActual.PlaceholderText = "Ingrese su contraseña actual";
+            this.txtContraseñaActual.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtContraseñaActual.Size = new System.Drawing.Size(222, 35);
+            this.txtContraseñaActual.TabIndex = 8;
+            // 
+            // txtNuevaContraseña
+            // 
+            this.txtNuevaContraseña.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtNuevaContraseña.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtNuevaContraseña.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtNuevaContraseña.BorderWidth = 2;
+            this.txtNuevaContraseña.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtNuevaContraseña.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
+            this.txtNuevaContraseña.IconChar = FontAwesome.Sharp.IconChar.EyeSlash;
+            this.txtNuevaContraseña.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtNuevaContraseña.IconSize = 25;
+            this.txtNuevaContraseña.Location = new System.Drawing.Point(127, 228);
+            this.txtNuevaContraseña.MaskedInput = true;
+            this.txtNuevaContraseña.Name = "txtNuevaContraseña";
+            this.txtNuevaContraseña.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtNuevaContraseña.PlaceholderText = "Ingrese su nueva contraseña";
+            this.txtNuevaContraseña.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtNuevaContraseña.Size = new System.Drawing.Size(222, 35);
+            this.txtNuevaContraseña.TabIndex = 9;
+            // 
+            // txtConfirmarContraseña
+            // 
+            this.txtConfirmarContraseña.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtConfirmarContraseña.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtConfirmarContraseña.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtConfirmarContraseña.BorderWidth = 2;
+            this.txtConfirmarContraseña.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtConfirmarContraseña.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
+            this.txtConfirmarContraseña.IconChar = FontAwesome.Sharp.IconChar.EyeSlash;
+            this.txtConfirmarContraseña.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtConfirmarContraseña.IconSize = 25;
+            this.txtConfirmarContraseña.Location = new System.Drawing.Point(127, 344);
+            this.txtConfirmarContraseña.MaskedInput = true;
+            this.txtConfirmarContraseña.Name = "txtConfirmarContraseña";
+            this.txtConfirmarContraseña.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtConfirmarContraseña.PlaceholderText = "Ingrese su nueva contraseña";
+            this.txtConfirmarContraseña.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtConfirmarContraseña.Size = new System.Drawing.Size(222, 35);
+            this.txtConfirmarContraseña.TabIndex = 10;
+            // 
             // btnCambiarContraseña
             // 
-            this.btnCambiarContraseña.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.btnCambiarContraseña.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCambiarContraseña.Location = new System.Drawing.Point(37, 347);
+            this.btnCambiarContraseña.BackColor = System.Drawing.Color.Transparent;
+            this.btnCambiarContraseña.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCambiarContraseña.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCambiarContraseña.ForeColor = System.Drawing.Color.Goldenrod;
+            this.btnCambiarContraseña.IconChar = FontAwesome.Sharp.IconChar.FloppyDisk;
+            this.btnCambiarContraseña.IconColor = System.Drawing.Color.Gold;
+            this.btnCambiarContraseña.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnCambiarContraseña.IconSize = 30;
+            this.btnCambiarContraseña.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCambiarContraseña.Location = new System.Drawing.Point(127, 416);
+            this.btnCambiarContraseña.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCambiarContraseña.Name = "btnCambiarContraseña";
-            this.btnCambiarContraseña.Size = new System.Drawing.Size(128, 41);
-            this.btnCambiarContraseña.TabIndex = 7;
-            this.btnCambiarContraseña.Text = "Cambiar Contraseña";
+            this.btnCambiarContraseña.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnCambiarContraseña.Size = new System.Drawing.Size(222, 42);
+            this.btnCambiarContraseña.TabIndex = 60;
+            this.btnCambiarContraseña.Text = "Cambiar contraseña";
+            this.btnCambiarContraseña.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCambiarContraseña.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnCambiarContraseña.UseVisualStyleBackColor = false;
-            this.btnCambiarContraseña.Click += new System.EventHandler(this.btnCambiarContraseña_Click);
             // 
-            // FormCambiarContraseña
+            // FormCambiarContraseña_08YS
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(209, 414);
+            this.BackgroundImage = global::GUI_08YS.Properties.Resources.ChatGPT_Image_19_may_2026__22_23_23;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClientSize = new System.Drawing.Size(463, 510);
             this.Controls.Add(this.btnCambiarContraseña);
+            this.Controls.Add(this.txtConfirmarContraseña);
+            this.Controls.Add(this.txtNuevaContraseña);
+            this.Controls.Add(this.txtContraseñaActual);
             this.Controls.Add(this.lblUsuario);
             this.Controls.Add(this.lblConfirmarContraseña);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblContraseñaActual);
-            this.Controls.Add(this.txtConfirmarContraseña);
-            this.Controls.Add(this.txtNuevaContraseña);
-            this.Controls.Add(this.txtContraseñaActual);
-            this.Name = "FormCambiarContraseña";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Name = "FormCambiarContraseña_08YS";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormCambiarContraseña";
             this.ResumeLayout(false);
@@ -137,14 +199,13 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox txtContraseñaActual;
-        private System.Windows.Forms.TextBox txtNuevaContraseña;
-        private System.Windows.Forms.TextBox txtConfirmarContraseña;
         private System.Windows.Forms.Label lblContraseñaActual;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblConfirmarContraseña;
         private System.Windows.Forms.Label lblUsuario;
-        private System.Windows.Forms.Button btnCambiarContraseña;
+        private CustomControls.IconPlaceholderTextBox txtContraseñaActual;
+        private CustomControls.IconPlaceholderTextBox txtNuevaContraseña;
+        private CustomControls.IconPlaceholderTextBox txtConfirmarContraseña;
+        private FontAwesome.Sharp.IconButton btnCambiarContraseña;
     }
 }

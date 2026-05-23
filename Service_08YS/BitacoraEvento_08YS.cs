@@ -30,11 +30,36 @@ namespace Service_08YS
         UsuarioDeshabilitado,
         UsuarioHabilitado,
         UsuarioModificado,
-        CambioContraseña
+        CambioContraseña,
+        AdminDesbloqueaUsuario
     }
 
     public class BitacoraEvento_08YS
     {
+        private static readonly Dictionary<Modulo, List<Evento>> _eventosPorModulo =
+        new Dictionary<Modulo, List<Evento>>
+        {
+            {
+                Modulo.Login, new List<Evento>
+                {
+                    Evento.LoginExitoso,
+                    Evento.LoginFallido,
+                    Evento.UsuarioBloqueado
+                }
+            },
+            {
+                Modulo.Usuarios, new List<Evento>
+                {
+                    Evento.UsuarioCreado,
+                    Evento.UsuarioDesbloqueado,
+                    Evento.UsuarioDeshabilitado,
+                    Evento.UsuarioHabilitado,
+                    Evento.UsuarioModificado,
+                    Evento.CambioContraseña
+                }
+            }
+        };
+
         private string _login_08YS;
         private DateTime _fechaHora_08YS;
         private Modulo _modulo_08YS;
@@ -59,6 +84,15 @@ namespace Service_08YS
         public BitacoraEvento_08YS()
         {
 
+        }
+        public static List<Evento> GetEventsByModule(Modulo? modulo)
+        {
+            if (modulo == null)
+                return Enum.GetValues(typeof(Evento)).Cast<Evento>().ToList();
+
+            return _eventosPorModulo.TryGetValue(modulo.Value, out var eventos)
+                ? eventos
+                : new List<Evento>();
         }
     }
 
