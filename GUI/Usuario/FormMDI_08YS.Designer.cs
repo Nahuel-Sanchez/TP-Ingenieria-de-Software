@@ -96,7 +96,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1800, 39);
+            this.panel1.Size = new System.Drawing.Size(1800, 45);
             this.panel1.TabIndex = 2;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             // 
@@ -107,7 +107,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(82, 39);
+            this.pictureBox1.Size = new System.Drawing.Size(82, 45);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
@@ -125,7 +125,7 @@
             this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button3.Name = "button3";
             this.button3.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.button3.Size = new System.Drawing.Size(60, 39);
+            this.button3.Size = new System.Drawing.Size(60, 45);
             this.button3.TabIndex = 3;
             this.button3.Text = "—";
             this.button3.UseVisualStyleBackColor = false;
@@ -144,7 +144,7 @@
             this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
             this.button2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 7);
-            this.button2.Size = new System.Drawing.Size(60, 39);
+            this.button2.Size = new System.Drawing.Size(60, 45);
             this.button2.TabIndex = 2;
             this.button2.Text = "□";
             this.button2.UseVisualStyleBackColor = false;
@@ -163,7 +163,7 @@
             this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 0);
-            this.button1.Size = new System.Drawing.Size(60, 39);
+            this.button1.Size = new System.Drawing.Size(60, 45);
             this.button1.TabIndex = 1;
             this.button1.Text = "X";
             this.button1.UseVisualStyleBackColor = false;
@@ -186,7 +186,7 @@
             this.panelLateral.Controls.Add(this.flowLayoutPanel1);
             this.panelLateral.Controls.Add(this.panelLogo);
             this.panelLateral.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelLateral.Location = new System.Drawing.Point(0, 39);
+            this.panelLateral.Location = new System.Drawing.Point(0, 45);
             this.panelLateral.Margin = new System.Windows.Forms.Padding(4);
             this.panelLateral.Name = "panelLateral";
             this.panelLateral.Size = new System.Drawing.Size(330, 961);
@@ -344,7 +344,7 @@
             this.panel2.BackgroundImage = global::GUI_08YS.Properties.Resources.ChatGPT_Image_19_may_2026__22_23_23;
             this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(330, 39);
+            this.panel2.Location = new System.Drawing.Point(330, 45);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1470, 961);
             this.panel2.TabIndex = 5;
@@ -415,7 +415,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1800, 1000);
+            this.ClientSize = new System.Drawing.Size(1800, 1006);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelLateral);
             this.Controls.Add(this.panel1);

@@ -236,7 +236,10 @@ namespace CustomControls
                     break;
 
                 case WM_PAINT:
-                    if (!_maskedInput && !Focused
+                    // Solo dibujar placeholder si tiene borde propio
+                    // Con BorderStyle.None lo maneja el UserControl padre
+                    if (BorderStyle != BorderStyle.None
+                        && !_maskedInput && !Focused
                         && string.IsNullOrEmpty(base.Text)
                         && !string.IsNullOrEmpty(_placeholderText))
                     {
@@ -300,19 +303,30 @@ namespace CustomControls
             {
                 if (Multiline)
                 {
-                    // En multilínea el texto empieza en la esquina superior izquierda
-                    var rect  = new Rectangle(2, 2, ClientSize.Width - 3, ClientSize.Height - 3);
+                    var rect = new Rectangle(2, 2, ClientSize.Width - 3, ClientSize.Height - 3);
                     var flags = TextFormatFlags.Top | TextFormatFlags.Left
                               | TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis;
                     TextRenderer.DrawText(g, _placeholderText, Font, rect, _placeholderColor, flags);
                 }
                 else
                 {
-                    // En una línea: VerticalCenter replica exactamente el comportamiento
-                    // del TextBox nativo. Left + 1px de indent para alinear con el cursor.
-                    var rect  = new Rectangle(1, 0, ClientSize.Width - 2, ClientSize.Height);
-                    var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left
-                              | TextFormatFlags.EndEllipsis     | TextFormatFlags.NoPadding;
+                    Size textSize = TextRenderer.MeasureText(g, "Agpqyj|", Font,
+                        new Size(int.MaxValue, int.MaxValue),
+                        TextFormatFlags.NoPadding);
+
+                    // ✅ Ignorar ClientSize — usar el alto medido directamente
+                    // textY = 0 dibuja desde arriba del área cliente
+                    // Si textSize > ClientSize, parte del texto queda fuera del clip
+                    // Necesitamos deshabilitar el clip de la ventana
+                    g.ResetClip();
+                    g.SetClip(new Rectangle(0, -10, ClientSize.Width, textSize.Height + 10));
+
+                    int textY = (ClientSize.Height - textSize.Height) / 2; // será negativo: OK
+
+                    var rect = new Rectangle(1, textY, ClientSize.Width - 2, textSize.Height);
+                    var flags = TextFormatFlags.Left | TextFormatFlags.NoPadding
+                              | TextFormatFlags.EndEllipsis;
+
                     TextRenderer.DrawText(g, _placeholderText, Font, rect, _placeholderColor, flags);
                 }
             }

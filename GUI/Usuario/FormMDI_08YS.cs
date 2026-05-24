@@ -61,10 +61,61 @@ namespace GUI_08YS
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
             childForm.Dock = DockStyle.Fill;
+            childForm.AutoScaleMode = AutoScaleMode.None;
             panel2.Controls.Add(childForm);
             panel2.Tag = childForm;
             childForm.Show();
+
+            // ← reemplazar la llamada directa por esto:
+            childForm.BeginInvoke(new Action(() =>
+            {
+                childForm.BeginInvoke(new Action(() =>
+                {
+                    ForceCustomControlsLayout(childForm);
+                }));
+            }));
         }
+
+        private void ForceCustomControlsLayout(Control parent)
+        {
+            foreach (Control ctrl in parent.Controls)
+            {
+                if (ctrl.HasChildren)
+                    ForceCustomControlsLayout(ctrl);
+
+                var onResize = ctrl.GetType().GetMethod("OnResize",
+                    System.Reflection.BindingFlags.NonPublic |
+                    System.Reflection.BindingFlags.Instance);
+                onResize?.Invoke(ctrl, new object[] { EventArgs.Empty });
+
+                if (ctrl is FontAwesome.Sharp.IconButton iconBtn)
+                {
+                    var updateImage = iconBtn.GetType()
+                        .GetMethod("UpdateImage",
+                            System.Reflection.BindingFlags.NonPublic |
+                            System.Reflection.BindingFlags.Instance |
+                            System.Reflection.BindingFlags.FlattenHierarchy);
+                    updateImage?.Invoke(iconBtn, null);
+                    iconBtn.Invalidate();
+                    iconBtn.Update();
+                }
+
+                if (ctrl is Label lbl && lbl.AutoSize)
+                {
+                    lbl.MaximumSize = Size.Empty;  // elimina cualquier límite
+                    lbl.Size = Size.Empty;         // fuerza recálculo desde cero
+                    lbl.Refresh();
+                }
+                if (ctrl is CustomControls.IconPlaceholderTextBox txt)
+                {
+                    // Forzar estado visual correcto
+                    bool hasText = !string.IsNullOrEmpty(txt.RealText);
+                    txt.InnerTextBox.Visible = hasText || txt.InnerTextBox.Focused;
+                    txt.Invalidate();
+                }
+            }
+        }
+        
 
         private void gestionUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
         {

@@ -18,9 +18,9 @@ namespace GUI_08YS
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new FormMDI_08YS());
-            //Application.Run(new FormLogin_08YS());
-            //Application.Run(new FormGestionUsuarios());
             Application.Run(new FormLogin_08YS());
+            //Application.Run(new FormGestionUsuarios());
+            //Application.Run(new FormBitacora_08YS());
         }
     }
 }

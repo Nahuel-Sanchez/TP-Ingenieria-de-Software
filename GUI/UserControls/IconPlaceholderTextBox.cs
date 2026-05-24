@@ -91,9 +91,31 @@ namespace CustomControls
                 BorderStyle = BorderStyle.None,
                 BackColor   = SystemColors.Window
             };
-            _innerTextBox.GotFocus    += (_, e) => { _isFocused = true;  Invalidate(); OnGotFocus(e); };
-            _innerTextBox.LostFocus   += (_, e) => { _isFocused = false; Invalidate(); OnLostFocus(e); };
-            _innerTextBox.TextChanged += (_, e) => OnTextChanged(e);
+            _innerTextBox.GotFocus += (_, e) =>
+            {
+                _isFocused = true;
+                _innerTextBox.Visible = true; // mostrar al ganar foco
+                Invalidate();
+                OnGotFocus(e);
+            };
+
+            _innerTextBox.LostFocus += (_, e) =>
+            {
+                _isFocused = false;
+                // Ocultar si está vacío para que el placeholder del UserControl se vea completo
+                if (string.IsNullOrEmpty(_innerTextBox.RealText))
+                    _innerTextBox.Visible = false;
+                Invalidate();
+                OnLostFocus(e);
+            };
+
+            _innerTextBox.TextChanged += (_, e) =>
+            {
+                // Mostrar/ocultar según si hay texto
+                _innerTextBox.Visible = !string.IsNullOrEmpty(_innerTextBox.RealText) || _innerTextBox.Focused;
+                Invalidate();
+                OnTextChanged(e);
+            };
             _innerTextBox.KeyDown     += (_, e) => OnKeyDown(e);
             _innerTextBox.KeyPress    += (_, e) => OnKeyPress(e);
             _innerTextBox.KeyUp       += (_, e) => OnKeyUp(e);
@@ -106,6 +128,7 @@ namespace CustomControls
             TabStop   = true;
 
             UpdateLayout();
+            _innerTextBox.Visible = false;
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -347,6 +370,7 @@ namespace CustomControls
 
         protected override void OnEnter(EventArgs e)
         {
+            _innerTextBox.Visible = true;
             _innerTextBox.Focus();
             base.OnEnter(e);
         }
@@ -360,18 +384,43 @@ namespace CustomControls
             var g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // 1. Rellenar fondo
             using (var bgBrush = new SolidBrush(BackColor))
                 g.FillRectangle(bgBrush, ClientRectangle);
 
-            // 2. Borde (cuadrado o redondeado)
-            Color border = _isFocused ? _borderFocusColor : _borderColor;
-            var   rect   = new Rectangle(0, 0, Width - 1, Height - 1);
+            // ✅ Pintar placeholder desde el UserControl si el TextBox está vacío
+            if (!_innerTextBox.Multiline
+                && !_innerTextBox.Focused
+                && string.IsNullOrEmpty(_innerTextBox.RealText)
+                && !string.IsNullOrEmpty(_innerTextBox.PlaceholderText))
+            {
+                PaintPlaceholder(g);
+            }
 
+            Color border = _isFocused ? _borderFocusColor : _borderColor;
+            var rect = new Rectangle(0, 0, Width - 1, Height - 1);
             if (_cornerRadius > 0)
                 PaintRoundedBorder(g, rect, border);
             else
                 PaintSquareBorder(g, rect, border);
+        }
+
+        private void PaintPlaceholder(Graphics g)
+        {
+            int bw = _borderWidth;
+            int padX = bw + 3;
+            bool hasIcon = _iconChar != IconChar.None;
+            int iconW = hasIcon ? (_iconSize + _iconPadding * 2) : 0;
+            int leftOffset = (_iconAlign == IconTextBoxAlignment.Left) ? iconW : 0;
+
+            int textX = padX + leftOffset;
+            int textW = Width - textX - padX;
+
+            var rect = new Rectangle(textX, 0, textW, Height);
+            var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left
+                      | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding;
+
+            TextRenderer.DrawText(g, _innerTextBox.PlaceholderText, _innerTextBox.Font,
+                                  rect, _innerTextBox.PlaceholderColor, flags);
         }
 
         private void PaintSquareBorder(Graphics g, Rectangle rect, Color color)
@@ -477,11 +526,14 @@ namespace CustomControls
             // Centramos el TextBox dentro del UserControl usando esa altura real.
             int tbH = _innerTextBox.Multiline
                 ? availH
-                : _innerTextBox.Font.Height + 2;   // +2: margen interno mínimo del TextBox
+                : TextRenderer.MeasureText("Ag", _innerTextBox.Font).Height + 4;
 
             int tbTop = _innerTextBox.Multiline
                 ? padY
-                : (Height - tbH) / 2;              // centrado exacto sin clamping artificial
+                : Math.Max(padY, (Height - tbH) / 2);
+
+            if (!_innerTextBox.Multiline)
+                _innerTextBox.Height = tbH; // ← forzar alto explícitamente
 
             // ── Tamaño del PictureBox: ocupa toda la altura del UserControl ─
             // CenterImage centra el bitmap dentro; así el ícono queda

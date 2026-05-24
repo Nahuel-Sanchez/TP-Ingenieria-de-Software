@@ -1,4 +1,5 @@
 ﻿using BLL_08YS;
+using FontAwesome.Sharp;
 using Service_08YS;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,11 @@ namespace GUI
         public FormBitacora_08YS()
         {
             InitializeComponent();
+
+            ConfigurarBoton(btnLimpiar);
+            ConfigurarBoton(btnFiltrar);
+            ConfigurarBoton(btnExportar);
+
             comboBoxModulo.DataSource = Enum.GetValues(typeof(Modulo));
             comboBoxEvento.DataSource = Enum.GetValues(typeof(Evento));
             comboBoxCriticidad.DataSource = Enum.GetValues(typeof(Criticidad));
@@ -239,8 +245,8 @@ namespace GUI
                 BitacoraFiltro_08YS filtro = new BitacoraFiltro_08YS
                 {
                     Username = txtUsername.Text,
-                    FechaDesde = dtpDesde.Value,
-                    FechaHasta = dtpHasta.Value,
+                    FechaDesde = desde?.Date,
+                    FechaHasta = hasta?.Date.AddDays(1).AddTicks(-1),
                     Modulo = comboBoxModulo.SelectedItem != null ? (Modulo?)comboBoxModulo.SelectedItem : null,
                     Evento = comboBoxEvento.SelectedItem != null ? (Evento?)comboBoxEvento.SelectedItem : null,
                     Criticidad = comboBoxCriticidad.SelectedItem != null ? (Criticidad?)comboBoxCriticidad.SelectedItem : null
@@ -266,12 +272,12 @@ namespace GUI
             dtpHasta.Value = null;
             CargarGrid();
         }
-
-        private void comboBoxModulo_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxModulo_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             Modulo? moduloSeleccionado = comboBoxModulo.SelectedItem as Modulo?;
             RefreshComboEventos(moduloSeleccionado);
         }
+
         private void RefreshComboEventos(Modulo? modulo)
         {
             comboBoxEvento.SelectedIndexChanged -= comboBoxEvento_SelectedIndexChanged; // evita disparos en cascada
@@ -283,6 +289,41 @@ namespace GUI
         }
 
         private void comboBoxEvento_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        private Color btnBackNormal = Color.FromArgb(5, 15, 45);
+        private Color btnBackHover = Color.Goldenrod;
+
+        private Color btnForeNormal = Color.Goldenrod;
+        private Color btnForeHover = Color.FromArgb(5, 15, 45);
+
+        private void ConfigurarBoton(IconButton btn)
+        {
+            btn.BackColor = btnBackNormal;
+            btn.ForeColor = btnForeNormal;
+            btn.IconColor = btnForeNormal;
+
+            btn.MouseEnter += Boton_MouseEnter;
+            btn.MouseLeave += Boton_MouseLeave;
+        }
+
+        private void Boton_MouseEnter(object sender, EventArgs e)
+        {
+            IconButton btn = (IconButton)sender;
+
+            btn.BackColor = btnBackHover;
+            btn.ForeColor = btnForeHover;
+            btn.IconColor = btnForeHover;
+        }
+
+        private void Boton_MouseLeave(object sender, EventArgs e)
+        {
+            IconButton btn = (IconButton)sender;
+
+            btn.BackColor = btnBackNormal;
+            btn.ForeColor = btnForeNormal;
+            btn.IconColor = btnForeNormal;
+        }
+
     }
 }
 

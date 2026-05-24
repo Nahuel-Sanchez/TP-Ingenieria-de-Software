@@ -53,40 +53,37 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormBaseTop.cs">
+    <Compile Include="Admin\FormBitacora_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormBaseTop.Designer.cs">
-      <DependentUpon>FormBaseTop.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormBitacora_08YS.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormBitacora_08YS.Designer.cs">
+    <Compile Include="Admin\FormBitacora_08YS.Designer.cs">
       <DependentUpon>FormBitacora_08YS.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCambiarContraseña_08YS.cs">
+    <Compile Include="UserControls\IconComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Usuario\FormCambiarContraseña_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCambiarContraseña_08YS.Designer.cs">
+    <Compile Include="Usuario\FormCambiarContraseña_08YS.Designer.cs">
       <DependentUpon>FormCambiarContraseña_08YS.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormGestionUsuarios_08YS.cs">
+    <Compile Include="Admin\FormGestionUsuarios_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormGestionUsuarios_08YS.Designer.cs">
+    <Compile Include="Admin\FormGestionUsuarios_08YS.Designer.cs">
       <DependentUpon>FormGestionUsuarios_08YS.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormMDI_08YS.cs">
+    <Compile Include="Usuario\FormMDI_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormMDI_08YS.Designer.cs">
+    <Compile Include="Usuario\FormMDI_08YS.Designer.cs">
       <DependentUpon>FormMDI_08YS.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormLogin_08YS.cs">
+    <Compile Include="Usuario\FormLogin_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormLogin_08YS.Designer.cs">
+    <Compile Include="Usuario\FormLogin_08YS.Designer.cs">
       <DependentUpon>FormLogin_08YS.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\IconDateTimePicker.cs">
@@ -103,24 +100,21 @@
     <Compile Include="UserControls\PlaceholderTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Config\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FormBaseTop.resx">
-      <DependentUpon>FormBaseTop.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormBitacora_08YS.resx">
+    <EmbeddedResource Include="Admin\FormBitacora_08YS.resx">
       <DependentUpon>FormBitacora_08YS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCambiarContraseña_08YS.resx">
+    <EmbeddedResource Include="Usuario\FormCambiarContraseña_08YS.resx">
       <DependentUpon>FormCambiarContraseña_08YS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormGestionUsuarios_08YS.resx">
+    <EmbeddedResource Include="Admin\FormGestionUsuarios_08YS.resx">
       <DependentUpon>FormGestionUsuarios_08YS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMDI_08YS.resx">
+    <EmbeddedResource Include="Usuario\FormMDI_08YS.resx">
       <DependentUpon>FormMDI_08YS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormLogin_08YS.resx">
+    <EmbeddedResource Include="Usuario\FormLogin_08YS.resx">
       <DependentUpon>FormLogin_08YS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -133,7 +127,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="packages.config" />
+    <None Include="Config\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -145,7 +139,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Config\App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE_08YS.csproj">
@@ -172,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ChatGPT Image 19 may 2026, 22_23_23.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BackGroundHorizon1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

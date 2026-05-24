@@ -63,6 +63,16 @@ namespace GUI_08YS.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BackGroundHorizon {
+            get {
+                object obj = ResourceManager.GetObject("BackGroundHorizon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ChatGPT_Image_19_may_2026__21_58_41 {
             get {
                 object obj = ResourceManager.GetObject("ChatGPT Image 19 may 2026, 21_58_41", resourceCulture);

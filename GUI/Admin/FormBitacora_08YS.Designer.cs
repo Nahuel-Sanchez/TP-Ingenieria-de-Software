@@ -38,15 +38,16 @@
             this.lblFechaIni = new System.Windows.Forms.Label();
             this.lblLogin = new System.Windows.Forms.Label();
             this.lblNombre = new System.Windows.Forms.Label();
-            this.comboBoxModulo = new System.Windows.Forms.ComboBox();
-            this.comboBoxEvento = new System.Windows.Forms.ComboBox();
-            this.comboBoxCriticidad = new System.Windows.Forms.ComboBox();
             this.iconPictureBox1 = new FontAwesome.Sharp.IconPictureBox();
             this.lblTitulo = new System.Windows.Forms.Label();
             this.dgvEventos = new System.Windows.Forms.DataGridView();
             this.btnLimpiar = new FontAwesome.Sharp.IconButton();
             this.btnFiltrar = new FontAwesome.Sharp.IconButton();
             this.btnExportar = new FontAwesome.Sharp.IconButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxEvento = new CustomControls.IconComboBox();
+            this.comboBoxCriticidad = new CustomControls.IconComboBox();
+            this.comboBoxModulo = new CustomControls.IconComboBox();
             this.dtpHasta = new CustomControls.IconDateTimePicker();
             this.dtpDesde = new CustomControls.IconDateTimePicker();
             this.txtUsername = new CustomControls.IconPlaceholderTextBox();
@@ -58,40 +59,39 @@
             // 
             this.lblCriticidad.AutoSize = true;
             this.lblCriticidad.BackColor = System.Drawing.Color.Transparent;
-            this.lblCriticidad.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCriticidad.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCriticidad.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblCriticidad.Location = new System.Drawing.Point(901, 729);
+            this.lblCriticidad.Location = new System.Drawing.Point(934, 615);
             this.lblCriticidad.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCriticidad.Name = "lblCriticidad";
-            this.lblCriticidad.Size = new System.Drawing.Size(85, 20);
+            this.lblCriticidad.Size = new System.Drawing.Size(142, 32);
             this.lblCriticidad.TabIndex = 43;
             this.lblCriticidad.Text = "Criticidad:";
             this.lblCriticidad.Click += new System.EventHandler(this.lblCriticidad_Click);
             // 
             // lblFechaFin
             // 
-            this.lblFechaFin.AutoSize = true;
             this.lblFechaFin.BackColor = System.Drawing.Color.Transparent;
-            this.lblFechaFin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFechaFin.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFechaFin.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblFechaFin.Location = new System.Drawing.Point(901, 663);
+            this.lblFechaFin.Location = new System.Drawing.Point(20, 732);
             this.lblFechaFin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFechaFin.Name = "lblFechaFin";
-            this.lblFechaFin.Size = new System.Drawing.Size(110, 20);
+            this.lblFechaFin.Size = new System.Drawing.Size(151, 29);
             this.lblFechaFin.TabIndex = 42;
-            this.lblFechaFin.Text = "Fecha Hasta:";
+            this.lblFechaFin.Text = "Hasta:";
             this.lblFechaFin.Click += new System.EventHandler(this.lblFechaFin_Click);
             // 
             // lblEvento
             // 
             this.lblEvento.AutoSize = true;
             this.lblEvento.BackColor = System.Drawing.Color.Transparent;
-            this.lblEvento.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEvento.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEvento.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblEvento.Location = new System.Drawing.Point(405, 730);
+            this.lblEvento.Location = new System.Drawing.Point(934, 729);
             this.lblEvento.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblEvento.Name = "lblEvento";
-            this.lblEvento.Size = new System.Drawing.Size(65, 20);
+            this.lblEvento.Size = new System.Drawing.Size(111, 32);
             this.lblEvento.TabIndex = 41;
             this.lblEvento.Text = "Evento:";
             this.lblEvento.Click += new System.EventHandler(this.lblEvento_Click);
@@ -100,40 +100,39 @@
             // 
             this.lblModulo.AutoSize = true;
             this.lblModulo.BackColor = System.Drawing.Color.Transparent;
-            this.lblModulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblModulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblModulo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblModulo.Location = new System.Drawing.Point(68, 729);
+            this.lblModulo.Location = new System.Drawing.Point(413, 729);
             this.lblModulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblModulo.Name = "lblModulo";
-            this.lblModulo.Size = new System.Drawing.Size(68, 20);
+            this.lblModulo.Size = new System.Drawing.Size(116, 32);
             this.lblModulo.TabIndex = 40;
             this.lblModulo.Text = "Modulo:";
             this.lblModulo.Click += new System.EventHandler(this.lblModulo_Click);
             // 
             // lblFechaIni
             // 
-            this.lblFechaIni.AutoSize = true;
             this.lblFechaIni.BackColor = System.Drawing.Color.Transparent;
-            this.lblFechaIni.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFechaIni.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFechaIni.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblFechaIni.Location = new System.Drawing.Point(405, 665);
+            this.lblFechaIni.Location = new System.Drawing.Point(20, 649);
             this.lblFechaIni.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFechaIni.Name = "lblFechaIni";
-            this.lblFechaIni.Size = new System.Drawing.Size(114, 20);
+            this.lblFechaIni.Size = new System.Drawing.Size(224, 29);
             this.lblFechaIni.TabIndex = 39;
-            this.lblFechaIni.Text = "Fecha Desde:";
+            this.lblFechaIni.Text = "Desde:";
             this.lblFechaIni.Click += new System.EventHandler(this.lblFechaIni_Click);
             // 
             // lblLogin
             // 
             this.lblLogin.AutoSize = true;
             this.lblLogin.BackColor = System.Drawing.Color.Transparent;
-            this.lblLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLogin.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblLogin.Location = new System.Drawing.Point(68, 663);
+            this.lblLogin.Location = new System.Drawing.Point(413, 615);
             this.lblLogin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLogin.Name = "lblLogin";
-            this.lblLogin.Size = new System.Drawing.Size(91, 20);
+            this.lblLogin.Size = new System.Drawing.Size(152, 32);
             this.lblLogin.TabIndex = 38;
             this.lblLogin.Text = "Username:";
             this.lblLogin.Click += new System.EventHandler(this.lblLogin_Click);
@@ -144,44 +143,13 @@
             this.lblNombre.BackColor = System.Drawing.Color.Transparent;
             this.lblNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNombre.ForeColor = System.Drawing.Color.LightYellow;
-            this.lblNombre.Location = new System.Drawing.Point(237, 607);
+            this.lblNombre.Location = new System.Drawing.Point(395, 885);
             this.lblNombre.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(73, 20);
             this.lblNombre.TabIndex = 36;
             this.lblNombre.Text = "Nombre:";
             this.lblNombre.Click += new System.EventHandler(this.lblNombre_Click);
-            // 
-            // comboBoxModulo
-            // 
-            this.comboBoxModulo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.comboBoxModulo.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.comboBoxModulo.FormattingEnabled = true;
-            this.comboBoxModulo.Location = new System.Drawing.Point(184, 729);
-            this.comboBoxModulo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.comboBoxModulo.Name = "comboBoxModulo";
-            this.comboBoxModulo.Size = new System.Drawing.Size(172, 24);
-            this.comboBoxModulo.TabIndex = 50;
-            this.comboBoxModulo.SelectedIndexChanged += new System.EventHandler(this.comboBoxModulo_SelectedIndexChanged);
-            // 
-            // comboBoxEvento
-            // 
-            this.comboBoxEvento.FormattingEnabled = true;
-            this.comboBoxEvento.Location = new System.Drawing.Point(603, 730);
-            this.comboBoxEvento.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.comboBoxEvento.Name = "comboBoxEvento";
-            this.comboBoxEvento.Size = new System.Drawing.Size(256, 24);
-            this.comboBoxEvento.TabIndex = 51;
-            this.comboBoxEvento.SelectedIndexChanged += new System.EventHandler(this.comboBoxEvento_SelectedIndexChanged);
-            // 
-            // comboBoxCriticidad
-            // 
-            this.comboBoxCriticidad.FormattingEnabled = true;
-            this.comboBoxCriticidad.Location = new System.Drawing.Point(1125, 726);
-            this.comboBoxCriticidad.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.comboBoxCriticidad.Name = "comboBoxCriticidad";
-            this.comboBoxCriticidad.Size = new System.Drawing.Size(261, 24);
-            this.comboBoxCriticidad.TabIndex = 52;
             // 
             // iconPictureBox1
             // 
@@ -202,12 +170,12 @@
             // 
             this.lblTitulo.AutoSize = true;
             this.lblTitulo.BackColor = System.Drawing.Color.Transparent;
-            this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 22.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 45F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblTitulo.Location = new System.Drawing.Point(177, 44);
+            this.lblTitulo.Location = new System.Drawing.Point(175, 27);
             this.lblTitulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(359, 42);
+            this.lblTitulo.Size = new System.Drawing.Size(724, 85);
             this.lblTitulo.TabIndex = 54;
             this.lblTitulo.Text = "Auditoria de eventos";
             // 
@@ -258,20 +226,20 @@
             // 
             // btnLimpiar
             // 
-            this.btnLimpiar.BackColor = System.Drawing.Color.Transparent;
+            this.btnLimpiar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.btnLimpiar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLimpiar.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnLimpiar.IconChar = FontAwesome.Sharp.IconChar.Broom;
             this.btnLimpiar.IconColor = System.Drawing.Color.Gold;
             this.btnLimpiar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnLimpiar.IconSize = 30;
+            this.btnLimpiar.IconSize = 40;
             this.btnLimpiar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLimpiar.Location = new System.Drawing.Point(748, 817);
+            this.btnLimpiar.Location = new System.Drawing.Point(940, 885);
             this.btnLimpiar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnLimpiar.Size = new System.Drawing.Size(165, 60);
+            this.btnLimpiar.Size = new System.Drawing.Size(250, 65);
             this.btnLimpiar.TabIndex = 57;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -281,20 +249,20 @@
             // 
             // btnFiltrar
             // 
-            this.btnFiltrar.BackColor = System.Drawing.Color.Transparent;
+            this.btnFiltrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFiltrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFiltrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFiltrar.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnFiltrar.IconChar = FontAwesome.Sharp.IconChar.Filter;
             this.btnFiltrar.IconColor = System.Drawing.Color.Gold;
             this.btnFiltrar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnFiltrar.IconSize = 30;
+            this.btnFiltrar.IconSize = 40;
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(995, 817);
+            this.btnFiltrar.Location = new System.Drawing.Point(1208, 885);
             this.btnFiltrar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnFiltrar.Size = new System.Drawing.Size(165, 60);
+            this.btnFiltrar.Size = new System.Drawing.Size(250, 65);
             this.btnFiltrar.TabIndex = 58;
             this.btnFiltrar.Text = "Filtrar";
             this.btnFiltrar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -304,20 +272,20 @@
             // 
             // btnExportar
             // 
-            this.btnExportar.BackColor = System.Drawing.Color.Transparent;
+            this.btnExportar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.btnExportar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportar.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportar.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnExportar.IconChar = FontAwesome.Sharp.IconChar.FilePdf;
             this.btnExportar.IconColor = System.Drawing.Color.Gold;
             this.btnExportar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnExportar.IconSize = 30;
+            this.btnExportar.IconSize = 38;
             this.btnExportar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExportar.Location = new System.Drawing.Point(1221, 817);
+            this.btnExportar.Location = new System.Drawing.Point(639, 885);
             this.btnExportar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExportar.Name = "btnExportar";
             this.btnExportar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnExportar.Size = new System.Drawing.Size(165, 60);
+            this.btnExportar.Size = new System.Drawing.Size(280, 65);
             this.btnExportar.TabIndex = 59;
             this.btnExportar.Text = "Exportar";
             this.btnExportar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -325,27 +293,120 @@
             this.btnExportar.UseVisualStyleBackColor = false;
             this.btnExportar.Click += new System.EventHandler(this.btnExportar_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Goldenrod;
+            this.label1.Location = new System.Drawing.Point(19, 600);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(225, 36);
+            this.label1.TabIndex = 64;
+            this.label1.Text = "Rango de fecha";
+            // 
+            // comboBoxEvento
+            // 
+            this.comboBoxEvento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.comboBoxEvento.BorderColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxEvento.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxEvento.BorderWidth = 2;
+            this.comboBoxEvento.Cursor = System.Windows.Forms.Cursors.PanSouth;
+            this.comboBoxEvento.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.comboBoxEvento.DropDownBorderColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxEvento.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxEvento.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
+            this.comboBoxEvento.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxEvento.DropDownItemHeight = 32;
+            this.comboBoxEvento.DropDownMaxHeight = 160;
+            this.comboBoxEvento.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxEvento.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxEvento.IconChar = FontAwesome.Sharp.IconChar.ScrewdriverWrench;
+            this.comboBoxEvento.IconColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxEvento.IconSize = 25;
+            this.comboBoxEvento.Location = new System.Drawing.Point(940, 768);
+            this.comboBoxEvento.Name = "comboBoxEvento";
+            this.comboBoxEvento.SelectedItem = null;
+            this.comboBoxEvento.SelectedValue = null;
+            this.comboBoxEvento.Size = new System.Drawing.Size(518, 45);
+            this.comboBoxEvento.TabIndex = 66;
+            this.comboBoxEvento.SelectedIndexChanged += new System.EventHandler(this.comboBoxEvento_SelectedIndexChanged);
+            // 
+            // comboBoxCriticidad
+            // 
+            this.comboBoxCriticidad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.comboBoxCriticidad.BorderColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxCriticidad.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxCriticidad.BorderWidth = 2;
+            this.comboBoxCriticidad.Cursor = System.Windows.Forms.Cursors.PanSouth;
+            this.comboBoxCriticidad.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.comboBoxCriticidad.DropDownBorderColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxCriticidad.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxCriticidad.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
+            this.comboBoxCriticidad.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxCriticidad.DropDownItemHeight = 32;
+            this.comboBoxCriticidad.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxCriticidad.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxCriticidad.IconChar = FontAwesome.Sharp.IconChar.ExclamationTriangle;
+            this.comboBoxCriticidad.IconColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxCriticidad.IconSize = 25;
+            this.comboBoxCriticidad.Location = new System.Drawing.Point(940, 655);
+            this.comboBoxCriticidad.Name = "comboBoxCriticidad";
+            this.comboBoxCriticidad.SelectedItem = null;
+            this.comboBoxCriticidad.SelectedValue = null;
+            this.comboBoxCriticidad.Size = new System.Drawing.Size(518, 45);
+            this.comboBoxCriticidad.TabIndex = 65;
+            // 
+            // comboBoxModulo
+            // 
+            this.comboBoxModulo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.comboBoxModulo.BorderColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxModulo.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxModulo.BorderWidth = 2;
+            this.comboBoxModulo.Cursor = System.Windows.Forms.Cursors.PanSouth;
+            this.comboBoxModulo.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.comboBoxModulo.DropDownBorderColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxModulo.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxModulo.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
+            this.comboBoxModulo.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxModulo.DropDownItemHeight = 32;
+            this.comboBoxModulo.DropDownMaxHeight = 175;
+            this.comboBoxModulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxModulo.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.comboBoxModulo.IconChar = FontAwesome.Sharp.IconChar.Kaaba;
+            this.comboBoxModulo.IconColor = System.Drawing.Color.Goldenrod;
+            this.comboBoxModulo.IconSize = 30;
+            this.comboBoxModulo.Location = new System.Drawing.Point(419, 768);
+            this.comboBoxModulo.Name = "comboBoxModulo";
+            this.comboBoxModulo.SelectedItem = null;
+            this.comboBoxModulo.SelectedValue = null;
+            this.comboBoxModulo.Size = new System.Drawing.Size(500, 45);
+            this.comboBoxModulo.TabIndex = 63;
+            this.comboBoxModulo.SelectedIndexChanged += new System.EventHandler(this.comboBoxModulo_SelectedIndexChanged_1);
+            // 
             // dtpHasta
             // 
             this.dtpHasta.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.dtpHasta.BorderColor = System.Drawing.Color.Goldenrod;
             this.dtpHasta.BorderFocusColor = System.Drawing.Color.Goldenrod;
             this.dtpHasta.BorderWidth = 2;
-            this.dtpHasta.CalendarBackColor = System.Drawing.SystemColors.Window;
-            this.dtpHasta.CalendarForeColor = System.Drawing.SystemColors.WindowText;
-            this.dtpHasta.CalendarTitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.dtpHasta.CalendarTitleForeColor = System.Drawing.Color.White;
-            this.dtpHasta.CalendarTrailingForeColor = System.Drawing.Color.Silver;
+            this.dtpHasta.CalendarBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.dtpHasta.CalendarForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.dtpHasta.CalendarTitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.dtpHasta.CalendarTitleForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.dtpHasta.CalendarTrailingForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.dtpHasta.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.dtpHasta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpHasta.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.dtpHasta.IconChar = FontAwesome.Sharp.IconChar.CalendarDay;
             this.dtpHasta.IconColor = System.Drawing.Color.Goldenrod;
             this.dtpHasta.IconSize = 19;
-            this.dtpHasta.Location = new System.Drawing.Point(1125, 657);
+            this.dtpHasta.Location = new System.Drawing.Point(25, 768);
             this.dtpHasta.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpHasta.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpHasta.Name = "dtpHasta";
-            this.dtpHasta.Size = new System.Drawing.Size(261, 35);
+            this.dtpHasta.Size = new System.Drawing.Size(332, 45);
             this.dtpHasta.TabIndex = 62;
             this.dtpHasta.Value = new System.DateTime(2026, 5, 23, 15, 11, 1, 374);
             // 
@@ -355,21 +416,22 @@
             this.dtpDesde.BorderColor = System.Drawing.Color.Goldenrod;
             this.dtpDesde.BorderFocusColor = System.Drawing.Color.Goldenrod;
             this.dtpDesde.BorderWidth = 2;
-            this.dtpDesde.CalendarBackColor = System.Drawing.SystemColors.Window;
-            this.dtpDesde.CalendarForeColor = System.Drawing.SystemColors.WindowText;
+            this.dtpDesde.CalendarBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.dtpDesde.CalendarForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.dtpDesde.CalendarTitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.dtpDesde.CalendarTitleForeColor = System.Drawing.Color.White;
             this.dtpDesde.CalendarTrailingForeColor = System.Drawing.Color.Silver;
             this.dtpDesde.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.dtpDesde.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpDesde.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.dtpDesde.IconChar = FontAwesome.Sharp.IconChar.CalendarDay;
             this.dtpDesde.IconColor = System.Drawing.Color.Goldenrod;
             this.dtpDesde.IconSize = 19;
-            this.dtpDesde.Location = new System.Drawing.Point(603, 657);
+            this.dtpDesde.Location = new System.Drawing.Point(25, 681);
             this.dtpDesde.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpDesde.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpDesde.Name = "dtpDesde";
-            this.dtpDesde.Size = new System.Drawing.Size(256, 35);
+            this.dtpDesde.Size = new System.Drawing.Size(332, 45);
             this.dtpDesde.TabIndex = 61;
             this.dtpDesde.Value = new System.DateTime(2026, 5, 23, 15, 11, 1, 374);
             // 
@@ -379,16 +441,18 @@
             this.txtUsername.BorderColor = System.Drawing.Color.Goldenrod;
             this.txtUsername.BorderFocusColor = System.Drawing.Color.Goldenrod;
             this.txtUsername.BorderWidth = 2;
+            this.txtUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsername.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.txtUsername.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
+            this.txtUsername.IconChar = FontAwesome.Sharp.IconChar.User;
             this.txtUsername.IconColor = System.Drawing.Color.Goldenrod;
-            this.txtUsername.IconSize = 25;
-            this.txtUsername.Location = new System.Drawing.Point(184, 657);
+            this.txtUsername.IconPadding = 4;
+            this.txtUsername.IconSize = 30;
+            this.txtUsername.Location = new System.Drawing.Point(419, 655);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.PlaceholderColor = System.Drawing.Color.LightGray;
-            this.txtUsername.PlaceholderText = "Ingrese un username";
+            this.txtUsername.PlaceholderText = "Ingrese un username o parte de él";
             this.txtUsername.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtUsername.Size = new System.Drawing.Size(203, 35);
+            this.txtUsername.Size = new System.Drawing.Size(500, 45);
             this.txtUsername.TabIndex = 60;
             // 
             // FormBitacora_08YS
@@ -396,9 +460,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.BackgroundImage = global::GUI_08YS.Properties.Resources.ChatGPT_Image_19_may_2026__22_23_23;
+            this.BackgroundImage = global::GUI_08YS.Properties.Resources.BackGroundHorizon;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1452, 914);
+            this.ClientSize = new System.Drawing.Size(1470, 961);
+            this.Controls.Add(this.comboBoxEvento);
+            this.Controls.Add(this.comboBoxCriticidad);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.comboBoxModulo);
             this.Controls.Add(this.dtpHasta);
             this.Controls.Add(this.dtpDesde);
             this.Controls.Add(this.txtUsername);
@@ -408,9 +476,6 @@
             this.Controls.Add(this.dgvEventos);
             this.Controls.Add(this.lblTitulo);
             this.Controls.Add(this.iconPictureBox1);
-            this.Controls.Add(this.comboBoxCriticidad);
-            this.Controls.Add(this.comboBoxEvento);
-            this.Controls.Add(this.comboBoxModulo);
             this.Controls.Add(this.lblCriticidad);
             this.Controls.Add(this.lblFechaFin);
             this.Controls.Add(this.lblEvento);
@@ -438,9 +503,6 @@
         private System.Windows.Forms.Label lblFechaIni;
         private System.Windows.Forms.Label lblLogin;
         private System.Windows.Forms.Label lblNombre;
-        private System.Windows.Forms.ComboBox comboBoxModulo;
-        private System.Windows.Forms.ComboBox comboBoxEvento;
-        private System.Windows.Forms.ComboBox comboBoxCriticidad;
         private FontAwesome.Sharp.IconPictureBox iconPictureBox1;
         private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.DataGridView dgvEventos;
@@ -450,5 +512,9 @@
         private CustomControls.IconPlaceholderTextBox txtUsername;
         private CustomControls.IconDateTimePicker dtpDesde;
         private CustomControls.IconDateTimePicker dtpHasta;
+        private CustomControls.IconComboBox comboBoxModulo;
+        private System.Windows.Forms.Label label1;
+        private CustomControls.IconComboBox comboBoxCriticidad;
+        private CustomControls.IconComboBox comboBoxEvento;
     }
 }

@@ -128,6 +128,14 @@ namespace CustomControls
             UpdateLayout();
         }
 
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            UpdateLayout();
+            UpdateRegion();
+            Invalidate();
+        }
+
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES: VALOR ────────────────────────────────────────────
         // ══════════════════════════════════════════════════════════════════
@@ -572,6 +580,7 @@ namespace CustomControls
                 Region = new Region(clip);
             }
         }
+
         // ══════════════════════════════════════════════════════════════════
         // ── POPUP DEL CALENDARIO ──────────────────────────────────────────
         // ══════════════════════════════════════════════════════════════════
@@ -685,8 +694,9 @@ namespace CustomControls
                 return;
             }
 
-            int iconH = _iconSize + _iconPadding * 2;
-            int iconY = (Height - iconH) / 2;  
+            int innerHeight = Height - bw * 2;          // espacio interior real
+            int iconH = Math.Min(_iconSize + _iconPadding * 2, innerHeight); // no puede superar el interior
+            int iconY = bw + (innerHeight - iconH) / 2; // centrado dentro del área interior
 
             _iconPicture.Size = new Size(iconW, iconH);
 

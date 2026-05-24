@@ -1,4 +1,6 @@
 ﻿using BLL_08YS;
+using CustomControls;
+using FontAwesome.Sharp;
 using Service_08YS;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,44 @@ namespace GUI_08YS
     public partial class FormCambiarContraseña_08YS : Form
     {
         private UserBLL_08YS _userBLL;
+        private bool _syncingPasswords = false;
 
         public FormCambiarContraseña_08YS()
         {
             InitializeComponent();
             _userBLL = BLLFactory_08YS.CreateUserBLL();
+
+            txtContraseñaActual.IconClick += (s, e) =>
+            {
+                var tb = (IconPlaceholderTextBox)s;
+                ApplyPasswordToggle(tb, !tb.MaskedInput);
+            };
+
+            txtNuevaContraseña.IconClick += OnLinkedPasswordToggle;
+            txtConfirmarContraseña.IconClick += OnLinkedPasswordToggle;
+        }
+
+        private void OnLinkedPasswordToggle(object sender, EventArgs e)
+        {
+            if (_syncingPasswords) return;
+
+            _syncingPasswords = true;
+            try
+            {
+                bool nowMasked = !((IconPlaceholderTextBox)sender).MaskedInput;
+                ApplyPasswordToggle(txtNuevaContraseña, nowMasked);
+                ApplyPasswordToggle(txtConfirmarContraseña, nowMasked);
+            }
+            finally
+            {
+                _syncingPasswords = false;
+            }
+        }
+
+        private static void ApplyPasswordToggle(IconPlaceholderTextBox tb, bool masked)
+        {
+            tb.MaskedInput = masked;
+            tb.IconChar = masked ? IconChar.EyeSlash : IconChar.Eye;
         }
 
         private void btnCambiarContraseña_Click(object sender, EventArgs e)

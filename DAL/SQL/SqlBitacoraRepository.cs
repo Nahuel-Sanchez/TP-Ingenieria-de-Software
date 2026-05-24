@@ -52,43 +52,36 @@ namespace DAL_08YS
             {
                 query.Append(" AND Username LIKE @username");
 
-                parametros.Add(
-                    Param("@username", $"%{filtro.Username}%"));
+                parametros.Add( Param("@username", $"%{filtro.Username}%"));
             }
 
             if (filtro.FechaDesde.HasValue && filtro.FechaHasta.HasValue)
             {
                 query.Append(" AND FechaHora >= @desde AND FechaHora <= @hasta");
 
-                parametros.Add(
-                    Param("@desde", filtro.FechaDesde.Value));
-
-                parametros.Add(
-                    Param("@hasta", filtro.FechaHasta.Value.Date.AddDays(1).AddTicks(-1)));
+                parametros.Add( Param("@desde", filtro.FechaDesde.Value));
+                parametros.Add( Param("@hasta", filtro.FechaHasta.Value));
             }
 
             if (filtro.Modulo.HasValue)
             {
                 query.Append(" AND Modulo = @modulo");
 
-                parametros.Add(
-                    Param("@modulo", (int)filtro.Modulo.Value));
+                parametros.Add( Param("@modulo", (int)filtro.Modulo.Value));
             }
 
             if (filtro.Evento.HasValue)
             {
                 query.Append(" AND Evento = @evento");
 
-                parametros.Add(
-                    Param("@evento", (int)filtro.Evento.Value));
+                parametros.Add( Param("@evento", (int)filtro.Evento.Value));
             }
 
             if (filtro.Criticidad.HasValue)
             {
                 query.Append(" AND Criticidad = @criticidad");
 
-                parametros.Add(
-                    Param("@criticidad", (int)filtro.Criticidad.Value));
+                parametros.Add( Param("@criticidad", (int)filtro.Criticidad.Value));
             }
 
             query.Append(" ORDER BY FechaHora DESC");
