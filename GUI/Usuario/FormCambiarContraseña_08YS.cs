@@ -56,7 +56,6 @@ namespace GUI_08YS
             tb.MaskedInput = masked;
             tb.IconChar = masked ? IconChar.EyeSlash : IconChar.Eye;
         }
-
         private void btnCambiarContraseña_Click(object sender, EventArgs e)
         {
             if (!ValidarCampos()) return;
@@ -92,5 +91,7 @@ namespace GUI_08YS
             }
             return true;
         }
+
+        
     }
 }

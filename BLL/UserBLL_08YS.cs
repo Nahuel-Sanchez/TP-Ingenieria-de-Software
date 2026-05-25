@@ -56,7 +56,7 @@ namespace BLL_08YS
             }
 
             SessionManager.Instance.SetCurrentUser(user);
-            _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.LoginExitoso, Criticidad.Medio);
+            _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.LoginExitoso, Criticidad.Bajo);
 
             passwordDefault = Encriptador.Verificar(user.DNI.ToString() + user.Apellido, user.Hash, user.Salt);
 
@@ -65,14 +65,14 @@ namespace BLL_08YS
 
         private void RegistrarIntentoFallido(string username)
         {
-            _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.LoginFallido, Criticidad.Alto, username);
+            _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.LoginFallido, Criticidad.Medio, username);
 
             int intentos = _bitacoraBll.ContarIntentosFallidos(username, ventanaHoras: 2);
 
             if (intentos >= 3)
             {
                 UserLockOut(username);
-                _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.UsuarioBloqueado, Criticidad.Critico, username);
+                _bitacoraBll.RegistrarEvento(Modulo.Login, Evento.UsuarioBloqueado, Criticidad.Alto, username);
             }
             else throw new AuthenticationException("Ha ingresado una contraseña incorrecta. Después de 3 intentos fallidos, su cuenta será bloqueada.");
         }
@@ -124,7 +124,7 @@ namespace BLL_08YS
             
 
        
-            _bitacoraBll.RegistrarEvento(Modulo.Usuarios,Evento.UsuarioModificado, Criticidad.Alto);
+            _bitacoraBll.RegistrarEvento(Modulo.Usuarios,Evento.UsuarioModificado, Criticidad.Medio);
         }
 
         public void AlternarEstadoActivo(string username)

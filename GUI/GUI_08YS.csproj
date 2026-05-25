@@ -59,6 +59,9 @@
     <Compile Include="Admin\FormBitacora_08YS.Designer.cs">
       <DependentUpon>FormBitacora_08YS.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CustomCalendarPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UserControls\IconComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -1,4 +1,6 @@
 ﻿using BLL_08YS;
+using CustomControls;
+using FontAwesome.Sharp;
 using Service_08YS;
 using System;
 using System.Collections.Generic;
@@ -25,17 +27,17 @@ namespace GUI_08YS
             _userBLL = BLLFactory_08YS.CreateUserBLL();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnAcceder_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text) || txtUsername.Text == "Username" || txtPassword.Text == "Contraseña")
+            if (string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
             {
                 MessageBox.Show("Por favor, complete todos los campos.");
                 return;
             }
 
-            string username = txtUsername.Text?.Trim();
-            string password = txtPassword.Text?.Trim();
-            
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text.Trim();
+
             try
             {
                 User user = _userBLL.Login(username, password, out bool passwordDefault);
@@ -53,9 +55,8 @@ namespace GUI_08YS
                         SessionManager.Instance.CerrarSesion();
 
                         // Limpiamos los campos para obligarlo a escribir la nueva
-                        txtPassword.Text = PasswordFieldText;
-                        txtPassword.PasswordChar = '\0';
-                        dummyFocusTarget.Select();
+                        txtUsername.Text = "";
+                        txtPassword.Text = "";
 
                         MessageBox.Show("Por favor, inicie sesión nuevamente con su nueva contraseña.", "Sesión Reiniciada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return; // Cortamos el flujo ACÁ para que NO intente abrir el MDI
@@ -81,8 +82,6 @@ namespace GUI_08YS
                 formMDI.Show();
                 formMDI.Activate();
 
-                txtUsername.Text = UsernameFieldText;
-                txtPassword.Text = PasswordFieldText;
             }
 
             catch (InvalidOperationException ex)
@@ -104,7 +103,7 @@ namespace GUI_08YS
                 MessageBox.Show(ex.Message, "Usuario Suspendido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             // CATCH 4: Captura para errores de credenciales incorrectas (AuthenticationException)
-            catch (System.Security.Authentication.AuthenticationException ex)
+            catch (AuthenticationException ex)
             {
                 MessageBox.Show(ex.Message, "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
@@ -117,125 +116,6 @@ namespace GUI_08YS
             }
         }
 
-        #region FrontEnd
-
-        private const string UsernameFieldText = "Username";
-        private const string PasswordFieldText = "Contraseña";
-
-        private new void Enter(TextBox textbox, string txt)
-        {
-            if (textbox.Text == txt)
-            {
-                textbox.Text = "";
-                textbox.ForeColor = Color.LightGray;
-            }
-        }
-
-        private new void Leave(TextBox textbox, string txt)
-        {
-            if (textbox.Text == "")
-            {
-                textbox.Text = txt;
-                textbox.ForeColor = Color.Gray;
-            }
-        }
-
-        private void textBox1_Enter(object sender, EventArgs e)
-        {
-            Enter(txtUsername, UsernameFieldText);
-        }
-
-        private void textBox1_Leave(object sender, EventArgs e)
-        {
-            Leave(txtUsername, UsernameFieldText);
-        }
-
-        private void textBox2_Enter(object sender, EventArgs e)
-        {
-            Enter(txtPassword, PasswordFieldText);
-
-            // Si el usuario borró el placeholder para empezar a escribir, ocultamos los caracteres
-            if (txtPassword.Text == "")
-            {
-                txtPassword.PasswordChar = '*'; // <--- ACTIVA LOS ASTERISCOS
-            }
-        }
-
-        private void textBox2_Leave(object sender, EventArgs e)
-        {
-            Leave(txtPassword, PasswordFieldText);
-
-            if (txtPassword.Text == PasswordFieldText)
-            {
-                txtPassword.PasswordChar = '\0'; // <--- QUITA LOS ASTERISCOS (Carácter nulo)
-            }
-        }
-
-        private void FormLogin_Load_1(object sender, EventArgs e)
-        {
-
-            this.BeginInvoke(new Action(() =>
-            {
-                dummyFocusTarget.Select();
-            }));
-
-
-        }
-
-        private void Cerrar_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void btnCambiarIdioma_Click(object sender, EventArgs e)
-        {
-            //    string nuevoIdioma = Thread.CurrentThread.CurrentUICulture.Name.StartsWith("es") ? "en" : "es";
-            //    Service.Traductor.CambiarIdioma(nuevoIdioma);
-            //InicializarIdioma();
-            //      string nuevoIdioma =
-            //IdiomaService.IdiomaActual.StartsWith("es")
-            // ? "en"
-            // : "es";
-
-            //     IdiomaService.CambiarIdioma(nuevoIdioma);
-            //string actual = IdiomaService.Instancia.IdiomaActual;
-            //string nuevo = actual.StartsWith("es") ? "en" : "es";
-
-            //IdiomaService.Instancia.CambiarIdioma(nuevo);
-
-
-        }
-
-        //private void ActualizarTextos()
-        //{
-        //    btnAccederLogin.Text = Resources.btnAccederLogin;
-        //    linkLabel1.Text = Resources.linkLabel1;
-
-        //    txtcontra.Text = Resources.Contraseña;
-        //    txtMail.Text = Resources.Correo_Electronico;
-
-        //    btnCambiarIdioma.Text =
-        //        IdiomaService.Instancia.IdiomaActual.StartsWith("es")
-        //        ? "Cambiar a idioma Inglés"
-        //        : "Switch to Spanish";
-        //}
-
-        //private void InicializarIdioma()
-        //{
-        //    btnAccederLogin.Text = Resources.btnAccederLogin;
-        //    linkLabel1.Text = Resources.linkLabel1;
-        //    txtcontra.Text = Resources.Contraseña;
-        //    txtMail.Text = Resources.Correo_Electronico;
-        //    btnCambiarIdioma.Text = Thread.CurrentThread.CurrentUICulture.Name.StartsWith("es")
-        //    ? "Cambiar a idioma Inglés"
-        //    : "Switch to Spanish";
-        //}
-
-        //public void ActualizarIdioma()
-        //{
-        //    ActualizarTextos();
-        //}
-        #endregion
         #region BarraSuperior
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -269,5 +149,12 @@ namespace GUI_08YS
         }
 
         #endregion
+
+        private void txtPassword_IconRightClick(object sender, EventArgs e)
+        {
+            var tb = (IconPlaceholderTextBox)sender;
+            tb.MaskedInput = !tb.MaskedInput;
+            tb.IconCharRight = tb.MaskedInput ? IconChar.EyeSlash : IconChar.Eye;
+        }
     }
 }

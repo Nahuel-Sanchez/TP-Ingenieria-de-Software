@@ -58,18 +58,6 @@ namespace GUI
             }
         }
 
-        private void dgvEventos_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dgvEventos.CurrentRow != null)
-            {
-                BitacoraEvento_08YS seleccionado = dgvEventos.CurrentRow.DataBoundItem as BitacoraEvento_08YS;
-                if (seleccionado != null)
-                {
-                    lblNombre.Text = seleccionado.Login;
-                }
-            }
-        }
-
         private void pd_PrintPage(object sender, PrintPageEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -229,14 +217,14 @@ namespace GUI
                 MessageBox.Show("La fecha de partida no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
-            {
-                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha de finalización.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
             if (hasta.HasValue && hasta.Value > DateTime.Today)
             {
                 MessageBox.Show("La fecha de finalización no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
+            {
+                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha de finalización.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

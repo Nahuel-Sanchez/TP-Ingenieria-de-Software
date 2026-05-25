@@ -129,13 +129,28 @@ namespace CustomControls
             set
             {
                 _maskedInput = value;
-                if (!_maskedInput && _showingPlaceholder)
+
+                if (_maskedInput)
                 {
-                    _showingPlaceholder = false;
-                    base.Text           = string.Empty;
-                    base.ForeColor      = _realForeColor;
-                    base.PasswordChar   = '\0';
+                    // Activar modo oculto
+                    if (!_showingPlaceholder)
+                    {
+                        base.PasswordChar = MaskChar;
+                    }
                 }
+                else
+                {
+                    // Desactivar modo oculto
+                    if (_showingPlaceholder)
+                    {
+                        _showingPlaceholder = false;
+                        base.Text = string.Empty;
+                        base.ForeColor = _realForeColor;
+                    }
+
+                    base.PasswordChar = '\0';
+                }
+
                 ApplyPlaceholder();
             }
         }

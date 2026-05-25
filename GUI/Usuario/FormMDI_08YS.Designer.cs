@@ -189,7 +189,7 @@
             this.panelLateral.Location = new System.Drawing.Point(0, 45);
             this.panelLateral.Margin = new System.Windows.Forms.Padding(4);
             this.panelLateral.Name = "panelLateral";
-            this.panelLateral.Size = new System.Drawing.Size(330, 961);
+            this.panelLateral.Size = new System.Drawing.Size(330, 920);
             this.panelLateral.TabIndex = 4;
             // 
             // flowLayoutPanel1
@@ -203,7 +203,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(330, 891);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(330, 850);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // iconButton1
@@ -346,7 +346,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(330, 45);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1470, 961);
+            this.panel2.Size = new System.Drawing.Size(1470, 920);
             this.panel2.TabIndex = 5;
             // 
             // dropdownMenuStrip_08YS1
@@ -415,7 +415,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1800, 1006);
+            this.ClientSize = new System.Drawing.Size(1800, 965);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelLateral);
             this.Controls.Add(this.panel1);

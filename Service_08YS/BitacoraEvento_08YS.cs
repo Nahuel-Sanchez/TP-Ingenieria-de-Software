@@ -55,7 +55,8 @@ namespace Service_08YS
                     Evento.UsuarioDeshabilitado,
                     Evento.UsuarioHabilitado,
                     Evento.UsuarioModificado,
-                    Evento.CambioContraseña
+                    Evento.CambioContraseña,
+                    Evento.AdminDesbloqueaUsuario
                 }
             }
         };

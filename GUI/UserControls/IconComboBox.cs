@@ -82,6 +82,7 @@ namespace CustomControls
         private Color _dropBorderColor = Color.FromArgb(140, 140, 140);
         private int _dropMaxHeight = 200;
         private int _dropItemHeight = 0;   // 0 = automático (Font.Height + 6)
+        private Font _dropDownFont = null;
 
         // ──────────────────────────────────────────────────────────────────
         // Campos — DataSource
@@ -341,6 +342,26 @@ namespace CustomControls
         {
             get => _dropItemHeight;
             set { _dropItemHeight = Math.Max(0, value); }
+        }
+
+        [Category("DropDown")]
+        [Description("Fuente de los ítems desplegados. Null = usa la fuente del control.")]
+        [DefaultValue(null)]
+        public Font DropDownFont
+        {
+            get => _dropDownFont;
+            set
+            {
+                _dropDownFont = value;
+                if (_listBox != null)
+                {
+                    _listBox.Font = _dropDownFont ?? Font;
+                    _listBox.ItemHeight = _dropItemHeight > 0
+                        ? _dropItemHeight
+                        : (_dropDownFont ?? Font).Height + 6;
+                    _listBox.Invalidate();
+                }
+            }
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -623,7 +644,8 @@ namespace CustomControls
 
         private void BuildPopup()
         {
-            int itemH = _dropItemHeight > 0 ? _dropItemHeight : Font.Height + 6;
+            Font dropFont = _dropDownFont ?? Font;
+            int itemH = _dropItemHeight > 0 ? _dropItemHeight : dropFont.Height + 6;
 
             _listBox = new ListBox
             {
@@ -632,6 +654,7 @@ namespace CustomControls
                 BorderStyle = BorderStyle.None,
                 BackColor = _dropBackColor,
                 ForeColor = _dropForeColor,
+                Font = dropFont,
                 IntegralHeight = false
             };
 
@@ -765,9 +788,8 @@ namespace CustomControls
         {
             if (e.Index < 0 || e.Index >= _listBox.Items.Count) return;
 
-            bool isSelected = e.Index == _selectedIndex;
             bool isHover = e.Index == _hoverIndex;
-            bool highlight = isSelected || isHover;
+            bool highlight = isHover;
 
             Color back = highlight ? _dropHighlightBackColor : _dropBackColor;
             Color fore = highlight ? _dropHighlightForeColor : _dropForeColor;
@@ -961,7 +983,8 @@ namespace CustomControls
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);
-            if (_listBox != null) _listBox.Font = Font;
+            if (_listBox != null && _dropDownFont == null)
+                _listBox.Font = Font;
         }
 
         // ══════════════════════════════════════════════════════════════════

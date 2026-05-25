@@ -285,6 +285,10 @@ namespace GUI
                     CargarGrilla();
                     CambiarEstado(EstadoUI.Consulta);
                 }
+                catch(InvalidOperationException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error: " + ex.Message);

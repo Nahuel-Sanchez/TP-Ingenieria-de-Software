@@ -1,54 +1,36 @@
 ﻿using FontAwesome.Sharp;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CustomControls
 {
     // ══════════════════════════════════════════════════════════════════════
-    //  IconDateTimePicker
+    //  IconDateTimePicker  (v2 — calendario pintado a mano)
     //
-    //  DateTimePicker personalizado que soluciona las limitaciones del control
-    //  nativo de WinForms:
-    //    • El DateTimePicker estándar NO permite cambiar el color de fondo
-    //      ni el color de texto de la parte visible (la "cara") antes de
-    //      abrir el calendario. Solo expone propiedades de color para el
-    //      calendario desplegado. Este control pinta toda la cara a mano.
-    //
-    //  CARACTERÍSTICAS:
-    //    1. Ícono FontAwesome.Sharp (izquierda o derecha, sin evento de clic)
-    //    2. Borde personalizable: color normal / color con foco / grosor / esquinas
-    //    3. BackColor y ForeColor efectivos sobre la cara del control
-    //    4. Colores completos del calendario desplegado
-    //    5. Value, MinDate, MaxDate, Format, CustomFormat
-    //    6. Evento ValueChanged
-    //    7. Soporte de teclado: F4 / Enter / Space abren el calendario
+    //  Igual que la versión anterior pero usa CustomCalendarPanel en lugar
+    //  de MonthCalendar, resolviendo el problema de colores en Windows 10/11
+    //  con EnableVisualStyles activo.
     // ══════════════════════════════════════════════════════════════════════
     [ToolboxItem(true)]
     [DefaultProperty(nameof(Value))]
     [DefaultEvent("ValueChanged")]
     public class IconDateTimePicker : UserControl
     {
-        // ──────────────────────────────────────────────────────────────────
-        // Constantes de layout
-        // ──────────────────────────────────────────────────────────────────
-        private const int ArrowAreaWidth = 20;  // ancho del área del botón ▼
+        private const int ArrowAreaWidth = 20;
+        private const int CheckBoxAreaWidth = 20;
 
         // ──────────────────────────────────────────────────────────────────
         // Controles internos
         // ──────────────────────────────────────────────────────────────────
         private PictureBox _iconPicture;
-        private MonthCalendar _calendar;
+        private CustomCalendarPanel _calendar;    // ← reemplaza MonthCalendar
         private ToolStripDropDown _popup;
 
         // ──────────────────────────────────────────────────────────────────
-        // Campos — valor
+        // Valor
         // ──────────────────────────────────────────────────────────────────
         private DateTime? _value = null;
         private DateTime _minDate = new DateTime(1753, 1, 1);
@@ -57,7 +39,7 @@ namespace CustomControls
         private string _customFormat = "dd/MM/yyyy";
 
         // ──────────────────────────────────────────────────────────────────
-        // Campos — ícono
+        // Ícono
         // ──────────────────────────────────────────────────────────────────
         private IconChar _iconChar = IconChar.None;
         private IconFont _iconFont = IconFont.Auto;
@@ -67,16 +49,23 @@ namespace CustomControls
         private int _iconPadding = 6;
 
         // ──────────────────────────────────────────────────────────────────
-        // Campos — borde
+        // Borde
         // ──────────────────────────────────────────────────────────────────
         private Color _borderColor = Color.FromArgb(180, 180, 180);
         private Color _borderFocusColor = Color.FromArgb(100, 149, 237);
         private int _borderWidth = 1;
         private int _cornerRadius = 0;
         private bool _isFocused = false;
+        private bool _calendarOpen = false;
 
         // ──────────────────────────────────────────────────────────────────
-        // Campos — colores del calendario
+        // Checked
+        // ──────────────────────────────────────────────────────────────────
+        private bool _showCheckBox = false;
+        private bool _checked = true;
+
+        // ──────────────────────────────────────────────────────────────────
+        // Colores del calendario — ahora sí funcionan porque pintamos a mano
         // ──────────────────────────────────────────────────────────────────
         private Color _calBackColor = SystemColors.Window;
         private Color _calForeColor = SystemColors.WindowText;
@@ -84,17 +73,9 @@ namespace CustomControls
         private Color _calTitleForeColor = Color.White;
         private Color _calTrailingForeColor = Color.Silver;
 
-        // ──────────────────────────────────────────────────────────────────
-        // Campos — checked
-        // ──────────────────────────────────────────────────────────────────
-        private bool _showCheckBox = false;
-        private bool _checked = true;
-        private const int CheckBoxAreaWidth = 20;
-
         // ══════════════════════════════════════════════════════════════════
         // Eventos
         // ══════════════════════════════════════════════════════════════════
-        /// <summary>Se dispara cuando el usuario selecciona una fecha en el calendario.</summary>
         public event EventHandler ValueChanged;
         public event EventHandler CheckedChanged;
 
@@ -112,10 +93,10 @@ namespace CustomControls
             {
                 SizeMode = PictureBoxSizeMode.CenterImage,
                 BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
                 Visible = false
             };
             _iconPicture.Click += (s, e) => ToggleCalendar();
-            _iconPicture.Cursor = Cursors.Hand;
             Controls.Add(_iconPicture);
 
             BackColor = SystemColors.Window;
@@ -147,7 +128,9 @@ namespace CustomControls
             get => _value;
             set
             {
-                DateTime? clamped = value.HasValue ? Clamp(value.Value, _minDate, _maxDate) : (DateTime?)null;
+                DateTime? clamped = value.HasValue
+                    ? Clamp(value.Value, _minDate, _maxDate)
+                    : (DateTime?)null;
                 if (clamped == _value) return;
                 _value = clamped;
                 _checked = _value.HasValue;
@@ -157,7 +140,6 @@ namespace CustomControls
         }
 
         [Category("Data")]
-        [Description("Fecha mínima seleccionable.")]
         public DateTime MinDate
         {
             get => _minDate;
@@ -171,7 +153,6 @@ namespace CustomControls
         }
 
         [Category("Data")]
-        [Description("Fecha máxima seleccionable.")]
         public DateTime MaxDate
         {
             get => _maxDate;
@@ -185,7 +166,6 @@ namespace CustomControls
         }
 
         [Category("Data")]
-        [Description("Formato de visualización de la fecha.")]
         [DefaultValue(DateTimePickerFormat.Short)]
         public DateTimePickerFormat Format
         {
@@ -194,7 +174,6 @@ namespace CustomControls
         }
 
         [Category("Data")]
-        [Description("Formato personalizado cuando Format = Custom.")]
         [DefaultValue("dd/MM/yyyy")]
         public string CustomFormat
         {
@@ -207,7 +186,6 @@ namespace CustomControls
         // ══════════════════════════════════════════════════════════════════
 
         [Category("Icon")]
-        [Description("Ícono de FontAwesome.Sharp.")]
         [DefaultValue(IconChar.None)]
         public IconChar IconChar
         {
@@ -216,7 +194,6 @@ namespace CustomControls
         }
 
         [Category("Icon")]
-        [Description("Estilo FontAwesome: Auto, Solid, Regular, Brands…")]
         [DefaultValue(IconFont.Auto)]
         public IconFont IconFont
         {
@@ -225,7 +202,6 @@ namespace CustomControls
         }
 
         [Category("Icon")]
-        [Description("Color del ícono.")]
         public Color IconColor
         {
             get => _iconColor;
@@ -233,7 +209,6 @@ namespace CustomControls
         }
 
         [Category("Icon")]
-        [Description("Tamaño del ícono en píxeles.")]
         [DefaultValue(16)]
         public int IconSize
         {
@@ -242,7 +217,6 @@ namespace CustomControls
         }
 
         [Category("Icon")]
-        [Description("Posición del ícono: Left o Right.")]
         [DefaultValue(IconTextBoxAlignment.Left)]
         public IconTextBoxAlignment IconAlignment
         {
@@ -251,7 +225,6 @@ namespace CustomControls
         }
 
         [Category("Icon")]
-        [Description("Espacio a cada lado del ícono en píxeles.")]
         [DefaultValue(6)]
         public int IconPadding
         {
@@ -264,7 +237,6 @@ namespace CustomControls
         // ══════════════════════════════════════════════════════════════════
 
         [Category("Border")]
-        [Description("Color del borde sin foco.")]
         public Color BorderColor
         {
             get => _borderColor;
@@ -272,7 +244,6 @@ namespace CustomControls
         }
 
         [Category("Border")]
-        [Description("Color del borde con foco / desplegado.")]
         public Color BorderFocusColor
         {
             get => _borderFocusColor;
@@ -280,7 +251,6 @@ namespace CustomControls
         }
 
         [Category("Border")]
-        [Description("Grosor del borde en píxeles.")]
         [DefaultValue(1)]
         public int BorderWidth
         {
@@ -289,7 +259,6 @@ namespace CustomControls
         }
 
         [Category("Border")]
-        [Description("Radio de las esquinas (0 = cuadradas).")]
         [DefaultValue(0)]
         public int CornerRadius
         {
@@ -300,8 +269,8 @@ namespace CustomControls
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES: CHECKED ──────────────────────────────────────────
         // ══════════════════════════════════════════════════════════════════
+
         [Category("Behavior")]
-        [Description("Muestra un checkbox que habilita o deshabilita la fecha.")]
         [DefaultValue(false)]
         public bool ShowCheckBox
         {
@@ -310,7 +279,6 @@ namespace CustomControls
         }
 
         [Category("Behavior")]
-        [Description("Indica si el control está habilitado (solo cuando ShowCheckBox = true).")]
         [DefaultValue(true)]
         [Bindable(true)]
         public bool Checked
@@ -321,9 +289,9 @@ namespace CustomControls
                 if (_checked == value) return;
                 _checked = value;
                 if (!value)
-                    _value = null;      // limpiar valor al desmarcar
+                    _value = null;
                 else if (_value == null)
-                    _value = DateTime.Now; // valor por defecto al marcar
+                    _value = DateTime.Now;
                 Invalidate();
                 CheckedChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -331,14 +299,9 @@ namespace CustomControls
 
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES: COLORES DEL CALENDARIO ───────────────────────────
-        //
-        //  El DateTimePicker nativo solo expone estos colores para el
-        //  calendario desplegado. Nosotros los replicamos en el MonthCalendar
-        //  interno y además exponemos BackColor/ForeColor para la cara.
         // ══════════════════════════════════════════════════════════════════
 
         [Category("Calendar")]
-        [Description("Color de fondo del calendario desplegado.")]
         public Color CalendarBackColor
         {
             get => _calBackColor;
@@ -346,7 +309,6 @@ namespace CustomControls
         }
 
         [Category("Calendar")]
-        [Description("Color de texto del calendario desplegado.")]
         public Color CalendarForeColor
         {
             get => _calForeColor;
@@ -354,7 +316,6 @@ namespace CustomControls
         }
 
         [Category("Calendar")]
-        [Description("Color de fondo de la barra de título del calendario.")]
         public Color CalendarTitleBackColor
         {
             get => _calTitleBackColor;
@@ -362,7 +323,6 @@ namespace CustomControls
         }
 
         [Category("Calendar")]
-        [Description("Color de texto de la barra de título del calendario.")]
         public Color CalendarTitleForeColor
         {
             get => _calTitleForeColor;
@@ -370,7 +330,6 @@ namespace CustomControls
         }
 
         [Category("Calendar")]
-        [Description("Color de los días del mes anterior/siguiente.")]
         public Color CalendarTrailingForeColor
         {
             get => _calTrailingForeColor;
@@ -378,7 +337,7 @@ namespace CustomControls
         }
 
         // ══════════════════════════════════════════════════════════════════
-        // ── PINTURA ───────────────────────────────────────────────────────
+        // ── PINTURA ───────────────────────────════════════════════════════
         // ══════════════════════════════════════════════════════════════════
 
         protected override void OnPaint(PaintEventArgs e)
@@ -410,42 +369,35 @@ namespace CustomControls
             int y = (Height - size) / 2;
             var rect = new Rectangle(x, y, size, size);
 
-            // Caja del checkbox
             using (var pen = new Pen(_borderColor))
                 g.DrawRectangle(pen, rect);
 
-            // Tilde si está checked
             if (_checked)
             {
                 using (var pen = new Pen(ForeColor, 2f) { LineJoin = LineJoin.Round })
                 {
-                    var pts = new[]
+                    g.DrawLines(pen, new[]
                     {
-                new Point(x + 2,  y + 6),
-                new Point(x + 5,  y + 10),
-                new Point(x + 11, y + 3)
-            };
-                    g.DrawLines(pen, pts);
+                        new Point(x + 2,  y + 6),
+                        new Point(x + 5,  y + 10),
+                        new Point(x + 11, y + 3)
+                    });
                 }
             }
         }
 
         private void PaintDateText(Graphics g)
         {
-            int bw = _borderWidth;
-            int padX = bw + 3;
+            int padX = _borderWidth + 3;
             int iconW = _iconChar != IconChar.None ? (_iconSize + _iconPadding * 2) : 0;
-            int checkW = _showCheckBox ? CheckBoxAreaWidth : 0;   // ← nuevo
-
+            int checkW = _showCheckBox ? CheckBoxAreaWidth : 0;
             int leftOffset = (_iconAlign == IconTextBoxAlignment.Left) ? iconW : 0;
             int rightOffset = (_iconAlign == IconTextBoxAlignment.Right) ? iconW : 0;
 
-            int textX = padX + checkW + leftOffset;               // ← checkW sumado
+            int textX = padX + checkW + leftOffset;
             int textW = Width - textX - ArrowAreaWidth - rightOffset - padX;
 
-            // Si no está checked, el texto se pinta grisado
-            Color textColor = Checked ? ForeColor : Color.Gray;   // ← nuevo
-
+            Color textColor = Checked ? ForeColor : Color.Gray;
             var rect = new Rectangle(textX, 0, textW, Height);
             var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left
                       | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding;
@@ -455,25 +407,20 @@ namespace CustomControls
 
         private void PaintArrow(Graphics g)
         {
-            int bw = _borderWidth;
-            int arrowX = Width - ArrowAreaWidth - bw;
+            int arrowX = Width - ArrowAreaWidth - _borderWidth;
+            Color sepColor = (_isFocused || _calendarOpen) ? _borderFocusColor : _borderColor;
 
-            // Línea separadora (usa el color de borde activo)
-            Color sepColor = _isFocused ? _borderFocusColor : _borderColor;
             using (var pen = new Pen(sepColor))
-                g.DrawLine(pen, arrowX, bw + 2, arrowX, Height - bw - 3);
+                g.DrawLine(pen, arrowX, _borderWidth + 2, arrowX, Height - _borderWidth - 3);
 
-            // Triángulo ▼ centrado en el área del botón
             int cx = arrowX + ArrowAreaWidth / 2;
             int cy = Height / 2;
             int s = 4;
-
             var pts = new[] {
                 new Point(cx - s, cy - 2),
                 new Point(cx + s, cy - 2),
                 new Point(cx,     cy + s - 1)
             };
-
             using (var brush = new SolidBrush(ForeColor))
                 g.FillPolygon(brush, pts);
         }
@@ -520,15 +467,14 @@ namespace CustomControls
             {
                 int checkX = _borderWidth + 4;
                 int checkSize = 13;
-                var checkRect = new Rectangle(checkX, (Height - checkSize) / 2, checkSize + 4, Height);
-
+                var checkRect = new Rectangle(checkX, (Height - checkSize) / 2,
+                                              checkSize + 4, Height);
                 if (checkRect.Contains(me.Location))
                 {
-                    Checked = !_checked;   // toggle, NO abre calendario
+                    Checked = !_checked;
                     return;
                 }
             }
-
             ToggleCalendar();
         }
 
@@ -563,28 +509,11 @@ namespace CustomControls
             UpdateRegion();
             Invalidate();
         }
-        private void UpdateRegion()
-        {
-            if (_cornerRadius <= 0) { Region = null; return; }
-
-            float r2 = Math.Max(0, _cornerRadius - _borderWidth);
-            float d2 = r2 * 2f;
-            int bw = _borderWidth;
-            using (var clip = new GraphicsPath())
-            {
-                clip.AddArc(bw, bw, d2, d2, 180, 90);
-                clip.AddArc(Width - bw - d2, bw, d2, d2, 270, 90);
-                clip.AddArc(Width - bw - d2, Height - bw - d2, d2, d2, 0, 90);
-                clip.AddArc(bw, Height - bw - d2, d2, d2, 90, 90);
-                clip.CloseFigure();
-                Region = new Region(clip);
-            }
-        }
 
         // ══════════════════════════════════════════════════════════════════
-        // ── POPUP DEL CALENDARIO ──────────────────────────────────────────
+        // ── POPUP ─────────────────────────────────────────────────────────
         // ══════════════════════════════════════════════════════════════════
-        private bool _calendarOpen = false;
+
         private void ToggleCalendar()
         {
             if (_showCheckBox && !_checked) return;
@@ -598,17 +527,22 @@ namespace CustomControls
             }
             else
             {
-                // Si no hay valor, usar DateTime.Now como punto de partida
-                DateTime safeDate = Clamp(_value.HasValue ? _value.Value : DateTime.Now, _minDate, _maxDate);
+                // Sincronizar fecha antes de abrir
+                DateTime safeDate = Clamp(
+                    _value.HasValue ? _value.Value : DateTime.Today,
+                    _minDate, _maxDate);
                 _calendar.SetDate(safeDate);
-                _calendar.SelectionStart = safeDate;
+                if (_value.HasValue)
+                    _calendar.SelectedDate = _value;
 
+                // Posición: debajo; si no cabe, arriba
                 Point showAt = PointToScreen(new Point(0, Height));
                 int calH = _calendar.Height + 4;
                 if (showAt.Y + calH > Screen.FromControl(this).WorkingArea.Bottom)
                     showAt = PointToScreen(new Point(0, -calH));
 
                 _popup.Show(showAt);
+                _calendar.Focus();
                 _calendarOpen = true;
                 _isFocused = true;
                 Invalidate();
@@ -617,18 +551,18 @@ namespace CustomControls
 
         private void BuildPopup()
         {
-            _calendar = new MonthCalendar
+            _calendar = new CustomCalendarPanel
             {
-                MaxSelectionCount = 1,
                 MinDate = _minDate,
-                MaxDate = _maxDate
+                MaxDate = _maxDate,
+                Font = new Font("Segoe UI", 9f)
             };
             ApplyCalendarColors();
 
             _calendar.DateSelected += (s, e) =>
             {
                 _value = e.Start;
-                _checked = true;        // ← seleccionar una fecha lo marca automáticamente
+                _checked = true;
                 _popup.Close();
                 Invalidate();
                 ValueChanged?.Invoke(this, EventArgs.Empty);
@@ -638,11 +572,19 @@ namespace CustomControls
             {
                 Padding = Padding.Empty,
                 Margin = Padding.Empty,
-                AutoSize = true
+                AutoSize = false,
+                Size = _calendar.PreferredSize
             };
 
-            _popup = new ToolStripDropDown { Padding = Padding.Empty, AutoSize = true };
+            _popup = new ToolStripDropDown
+            {
+                Padding = Padding.Empty,
+                AutoSize = false,
+                Size = _calendar.PreferredSize,
+                BackColor = _calBackColor
+            };
             _popup.Items.Add(host);
+
             _popup.Closed += (s, e) =>
             {
                 _calendarOpen = false;
@@ -659,6 +601,19 @@ namespace CustomControls
             _calendar.TitleBackColor = _calTitleBackColor;
             _calendar.TitleForeColor = _calTitleForeColor;
             _calendar.TrailingForeColor = _calTrailingForeColor;
+            _calendar.DayForeColor = _calForeColor;
+            _calendar.FooterForeColor = _calForeColor;
+            _calendar.DayNameForeColor = Color.FromArgb(
+                Math.Max(0, _calForeColor.R - 40),
+                Math.Max(0, _calForeColor.G - 40),
+                Math.Max(0, _calForeColor.B - 40));
+            _calendar.SeparatorColor = Color.FromArgb(
+                Math.Min(255, _calBackColor.R + 30),
+                Math.Min(255, _calBackColor.G + 30),
+                Math.Min(255, _calBackColor.B + 30));
+
+            if (_popup != null)
+                _popup.BackColor = _calBackColor;
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -694,16 +649,32 @@ namespace CustomControls
                 return;
             }
 
-            int innerHeight = Height - bw * 2;          // espacio interior real
-            int iconH = Math.Min(_iconSize + _iconPadding * 2, innerHeight); // no puede superar el interior
-            int iconY = bw + (innerHeight - iconH) / 2; // centrado dentro del área interior
+            int innerHeight = Height - bw * 2;
+            int iconH = Math.Min(_iconSize + _iconPadding * 2, innerHeight);
+            int iconY = bw + (innerHeight - iconH) / 2;
 
             _iconPicture.Size = new Size(iconW, iconH);
+            _iconPicture.Location = _iconAlign == IconTextBoxAlignment.Left
+                ? new Point(padX - 2, iconY)
+                : new Point(Width - padX - iconW - ArrowAreaWidth + 2, iconY);
+        }
 
-            if (_iconAlign == IconTextBoxAlignment.Left)
-                _iconPicture.Location = new Point(padX - 2, iconY);
-            else
-                _iconPicture.Location = new Point(Width - padX - iconW - ArrowAreaWidth + 2, iconY);
+        private void UpdateRegion()
+        {
+            if (_cornerRadius <= 0) { Region = null; return; }
+
+            float r2 = Math.Max(0, _cornerRadius - _borderWidth);
+            float d2 = r2 * 2f;
+            int bw = _borderWidth;
+            using (var clip = new GraphicsPath())
+            {
+                clip.AddArc(bw, bw, d2, d2, 180, 90);
+                clip.AddArc(Width - bw - d2, bw, d2, d2, 270, 90);
+                clip.AddArc(Width - bw - d2, Height - bw - d2, d2, d2, 0, 90);
+                clip.AddArc(bw, Height - bw - d2, d2, d2, 90, 90);
+                clip.CloseFigure();
+                Region = new Region(clip);
+            }
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -712,8 +683,7 @@ namespace CustomControls
 
         private string GetDisplayText()
         {
-            if (!_value.HasValue) return string.Empty; // ← sin valor, sin texto
-
+            if (!_value.HasValue) return string.Empty;
             switch (_format)
             {
                 case DateTimePickerFormat.Long: return _value.Value.ToLongDateString();
