@@ -51,6 +51,7 @@ namespace CustomControls
         private readonly ComboBoxItemCollection _items;
         private int _selectedIndex = -1;
         private int _hoverIndex = -1;
+        private bool _allowDeselect = false;
         private string _displayMember = string.Empty;
 
         // ──────────────────────────────────────────────────────────────────
@@ -172,6 +173,15 @@ namespace CustomControls
                 int idx = _items.IndexOf(value);
                 SelectedIndex = idx; // -1 si no encontrado → deselecciona
             }
+        }
+
+        [Category("Behavior")]
+        [Description("Permite deseleccionar mostrando una opción vacía al inicio de la lista.")]
+        [DefaultValue(false)]
+        public bool AllowDeselect
+        {
+            get => _allowDeselect;
+            set { _allowDeselect = value; RefreshListBoxItems(); }
         }
 
         /// <summary>
@@ -584,6 +594,12 @@ namespace CustomControls
                     if (_items.Count > 0) SelectedIndex = _items.Count - 1;
                     e.Handled = true;
                     break;
+
+                case Keys.Delete:
+                case Keys.Back:
+                    SelectedIndex = -1;
+                    e.Handled = true;
+                    break;
             }
         }
 
@@ -665,11 +681,17 @@ namespace CustomControls
             _listBox.MouseClick += (_, e) =>
             {
                 int idx = _listBox.IndexFromPoint(e.Location);
-                if (idx >= 0)
+                if (idx < 0) return;
+
+                if (_allowDeselect && idx == 0)
                 {
-                    SelectedIndex = idx;
+                    SelectedIndex = -1;
                     _popup.Close();
+                    return;
                 }
+
+                SelectedIndex = _allowDeselect ? idx - 1 : idx;
+                _popup.Close();
             };
 
             _listBox.KeyDown += (_, e) =>
@@ -726,6 +748,10 @@ namespace CustomControls
         {
             if (_listBox == null) return;
             _listBox.Items.Clear();
+
+            if (_allowDeselect)
+                _listBox.Items.Add(""); // ← entrada vacía como primer ítem
+
             foreach (var item in _items)
                 _listBox.Items.Add(GetDisplayText(item));
         }

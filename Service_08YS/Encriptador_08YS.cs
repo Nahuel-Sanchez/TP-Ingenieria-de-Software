@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service_08YS
 {
-    public static class Encriptador
+    public static class Encriptador_08YS
     {
         public static void CrearHash(string password, out string hash, out string salt)
         {

@@ -105,6 +105,7 @@ namespace CustomControls
         // Evento
         // ══════════════════════════════════════════════════════════════════
         public event DateRangeEventHandler DateSelected;
+        public event EventHandler SizeChanged2;
 
         // ══════════════════════════════════════════════════════════════════
         // Constructor
@@ -184,9 +185,21 @@ namespace CustomControls
             get
             {
                 RecalcLayout();
-                int w = _cellW * Cols;
-                int h = _headerH + _dayNameH + _cellH * MaxDayRows + _footerH;
-                return new Size(w, h);
+                switch (_view)
+                {
+                    case CalView.Days:
+                        return new Size(_cellW * Cols,
+                                        _headerH + _dayNameH + _cellH * MaxDayRows + _footerH);
+
+                    case CalView.Months:
+                    case CalView.Years:
+                        return new Size(_cellW * Cols,
+                                        _headerH + 4 + _bigCellH * GridRows + 4);
+
+                    default:
+                        return new Size(_cellW * Cols,
+                                        _headerH + _dayNameH + _cellH * MaxDayRows + _footerH);
+                }
             }
         }
 
@@ -541,6 +554,8 @@ namespace CustomControls
                 {
                     _view = CalView.Months;
                     _hoverCell = -1;
+                    Size = PreferredSize;
+                    SizeChanged2?.Invoke(this, EventArgs.Empty);
                     Invalidate();
                 }
                 else if (_view == CalView.Months)
@@ -548,6 +563,8 @@ namespace CustomControls
                     _yearRangeStart = _viewDate.Year - 5;
                     _view = CalView.Years;
                     _hoverCell = -1;
+                    Size = PreferredSize;
+                    SizeChanged2?.Invoke(this, EventArgs.Empty);
                     Invalidate();
                 }
                 return;
@@ -571,6 +588,8 @@ namespace CustomControls
                         _viewDate = new DateTime(_viewDate.Year, month, 1);
                         _view = CalView.Days;
                         _hoverCell = -1;
+                        Size = PreferredSize;
+                        SizeChanged2?.Invoke(this, EventArgs.Empty);
                         Invalidate();
                     }
                     break;
@@ -582,6 +601,8 @@ namespace CustomControls
                         _viewDate = new DateTime(year, _viewDate.Month, 1);
                         _view = CalView.Months;
                         _hoverCell = -1;
+                        Size = PreferredSize;
+                        SizeChanged2?.Invoke(this, EventArgs.Empty);
                         Invalidate();
                     }
                     break;

@@ -41,10 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitacoraEvento_08YS.cs" />
-    <Compile Include="Encriptador.cs" />
-    <Compile Include="SessionManager.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Bitacora\BitacoraEvento_08YS.cs" />
+    <Compile Include="Bitacora\EventCatalog_08YS.cs" />
+    <Compile Include="Encriptador_08YS.cs" />
+    <Compile Include="SessionManager_08YS.cs" />
+    <Compile Include="User_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

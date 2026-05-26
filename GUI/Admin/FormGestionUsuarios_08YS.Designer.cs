@@ -129,7 +129,7 @@ namespace GUI
             this.lblLogin.Name = "lblLogin";
             this.lblLogin.Size = new System.Drawing.Size(50, 20);
             this.lblLogin.TabIndex = 57;
-            this.lblLogin.Text = "Login";
+            this.lblLogin.Text = "Username";
             // 
             // lblRol
             // 

@@ -92,7 +92,7 @@ namespace GUI
             // Si status es false, depende de si es Inserción o Edición.
             bool esEdicion = _estadoActual == EstadoUI.Editando;
 
-            // Campos que NUNCA se editan (DNI, Nombres, Apellidos, Login)
+            // Campos que NUNCA se editan (DNI, Nombres, Apellidos, Username)
             // Se bloquean si estamos en Consulta O si estamos en Edición.
             txtDNI.ReadOnly = status || esEdicion;
             txtNombres.ReadOnly = status || esEdicion;
@@ -124,7 +124,7 @@ namespace GUI
         private bool ValidarSiEstaBloqueado()
         {
             if (dgvUsuarios.CurrentRow == null) return false;
-            var user = (User)dgvUsuarios.CurrentRow.DataBoundItem;
+            var user = (User_08YS)dgvUsuarios.CurrentRow.DataBoundItem;
             return user.Bloqueado;
         }
 
@@ -194,7 +194,7 @@ namespace GUI
             {
          
                 // Obtenemos el objeto vinculado a la fila
-                var user = (User)dgvUsuarios.CurrentRow.DataBoundItem;
+                var user = (User_08YS)dgvUsuarios.CurrentRow.DataBoundItem;
 
                 txtDNI.Text = user.DNI.ToString();
                 txtApellidos.Text = user.Apellido;
@@ -241,7 +241,7 @@ namespace GUI
                 MessageBox.Show("Error: Debe seleccionar un usuario de la grilla.");
                 return;
             }
-            var user = (User)dgvUsuarios.CurrentRow.DataBoundItem;
+            var user = (User_08YS)dgvUsuarios.CurrentRow.DataBoundItem;
 
             DialogResult resp = MessageBox.Show($"¿Desea desbloquear a {user.Nombre}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -267,7 +267,7 @@ namespace GUI
         {
             if (dgvUsuarios.CurrentRow == null) return;
 
-            var user = (User)dgvUsuarios.CurrentRow.DataBoundItem;
+            var user = (User_08YS)dgvUsuarios.CurrentRow.DataBoundItem;
             string accion = user.Activo ? "desactivar" : "activar";
 
             DialogResult resp = MessageBox.Show($"¿Está seguro que desea {accion} al usuario {user.Username}?",

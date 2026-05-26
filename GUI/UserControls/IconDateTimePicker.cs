@@ -568,6 +568,20 @@ namespace CustomControls
                 ValueChanged?.Invoke(this, EventArgs.Empty);
             };
 
+            _calendar.SizeChanged2 += (s, e) =>
+            {
+                var newSize = _calendar.PreferredSize;
+                _calendar.Size = newSize;
+
+                var calHost = _popup.Items[0] as ToolStripControlHost; // ← renombrado
+                if (calHost != null)
+                {
+                    calHost.Size = newSize;
+                    calHost.Control.Size = newSize;
+                }
+                _popup.Size = newSize;
+            };
+
             var host = new ToolStripControlHost(_calendar)
             {
                 Padding = Padding.Empty,

@@ -1,6 +1,8 @@
 ﻿using BLL_08YS;
 using FontAwesome.Sharp;
+using CustomControls;
 using Service_08YS;
+using Service_08YS.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,12 +38,11 @@ namespace GUI
             comboBoxEvento.SelectedIndex = -1;
             comboBoxCriticidad.SelectedIndex = -1;
 
-            dtpDesde.Checked = false;
-            dtpHasta.Checked = false;
+            dtpDesde.Value = null;
+            dtpHasta.Value = null;
         }
 
-        private void FormBitacora_Load(object sender, EventArgs e)
-            => CargarGrid();
+        private void FormBitacora_Load(object sender, EventArgs e) => CargarGrid();
 
         private void CargarGrid()
         {
@@ -110,7 +111,7 @@ namespace GUI
                     xTemporal = x;
 
                     string[] datosFila = {
-                        ev.Login ?? "SISTEMA",
+                        ev.Username ?? "SISTEMA",
                         ev.FechaHora.ToString("dd/MM/yyyy HH:mm:ss"),
                         ev.Modulo.ToString(),
                         ev.Evento.ToString(),
@@ -142,21 +143,177 @@ namespace GUI
             e.HasMorePages = false; // Terminó de dibujar todo el set de datos
         }
 
-        #region Métodos Vacíos Preservados (Para evitar que explote el Diseñador)
-        private void lblLogin_Click(object sender, EventArgs e) { }
+        private void btnExportar_Click(object sender, EventArgs e)
+        {
+            if (dgvEventos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos en la grilla para exportar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-        private void lblNombre_Click(object sender, EventArgs e) { }
+            // REINICIO CLAVE: Volvemos a cero el contador antes de mandar a imprimir
+            _indiceFilaActual = 0;
 
-        private void lblEvento_Click(object sender, EventArgs e) { }
+            PrintDocument pd = new PrintDocument();
+            pd.DefaultPageSettings.Landscape = true;
+            pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
 
-        private void lblModulo_Click(object sender, EventArgs e) { }
+            PrintDialog printDialog = new PrintDialog();
+            printDialog.Document = pd;
 
-        private void lblFechaIni_Click(object sender, EventArgs e) { }
+            if (printDialog.ShowDialog() == DialogResult.OK)
+                pd.Print();
+        }
 
-        private void lblCriticidad_Click(object sender, EventArgs e) { }
+        private void btnFiltrar_Click(object sender, EventArgs e)
+        {
+            if(!ValidarFechas()) return;
 
-        private void lblFechaFin_Click(object sender, EventArgs e) { }
-        #endregion
+            try
+            {
+                BitacoraFiltro_08YS filtro = new BitacoraFiltro_08YS
+                {
+                    Username = txtUsername.Text,
+                    TargetUsername = txtTargetUsername.Text,
+                    FechaDesde = dtpDesde.Value.HasValue ? dtpDesde.Value.Value.Date : (DateTime?)null,
+                    FechaHasta = dtpHasta.Value.HasValue ? dtpHasta.Value.Value.Date.AddDays(1).AddTicks(-1) : (DateTime?)null,
+                    Modulo = comboBoxModulo.SelectedItem != null ? (Modulo?)comboBoxModulo.SelectedItem : null,
+                    Evento = comboBoxEvento.SelectedItem != null ? (Evento?)comboBoxEvento.SelectedItem : null,
+                    Criticidad = comboBoxCriticidad.SelectedItem != null ? (Criticidad?)comboBoxCriticidad.SelectedItem : null
+                };
+
+                dgvEventos.DataSource = null;
+                dgvEventos.DataSource = _bll.Filtrar(filtro);
+                dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private bool ValidarFechas()
+        {
+            DateTime? desde = dtpDesde.Value.HasValue ? dtpDesde.Value.Value.Date : (DateTime?)null;
+            DateTime? hasta = dtpHasta.Value.HasValue ? dtpHasta.Value.Value.Date : (DateTime?)null;
+            if (!desde.HasValue && hasta.HasValue)
+            {
+                MessageBox.Show("Debe ingresar una fecha de partida para usar la fecha de finalización.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (desde.HasValue && !hasta.HasValue)
+            {
+                MessageBox.Show("Debe ingresar una fecha de finalización para usar la fecha de partida.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (desde.HasValue && desde.Value > DateTime.Today)
+            {
+                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (hasta.HasValue && hasta.Value > DateTime.Today)
+            {
+                MessageBox.Show("La fecha de finalización no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
+            {
+                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha de finalización.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            txtUsername.Text = "";
+            txtTargetUsername.Text = "";
+            comboBoxModulo.SelectedIndex = -1;
+            comboBoxEvento.SelectedIndex = -1;
+            comboBoxCriticidad.SelectedIndex = -1;
+            dtpDesde.Value = null;
+            dtpHasta.Value = null;
+            CargarGrid();
+        }
+
+        private void comboBoxModulo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Modulo? moduloSeleccionado = comboBoxModulo.SelectedItem as Modulo?;
+            RefreshComboEventos(moduloSeleccionado);
+        }
+
+        private void RefreshComboEventos(Modulo? modulo)
+        {
+            comboBoxEvento.SelectedIndexChanged -= comboBoxEvento_SelectedIndexChanged;
+
+            Evento? eventoAnterior = comboBoxEvento.SelectedItem as Evento?;
+
+            Criticidad? criticidadActual = comboBoxCriticidad.SelectedItem as Criticidad?;
+
+            var eventos = modulo.HasValue
+                ? EventCatalog_08YS.GetEventsByModule(modulo.Value)
+                : Enum.GetValues(typeof(Evento)).Cast<Evento>().ToList();
+
+            if (criticidadActual.HasValue)
+                eventos = eventos
+                    .Where(ev => EventCatalog_08YS.GetMetadata(ev).Criticidad == criticidadActual.Value)
+                    .ToList();
+
+            comboBoxEvento.DataSource = eventos;
+
+            if (!eventoAnterior.HasValue || !eventos.Contains(eventoAnterior.Value))
+                comboBoxEvento.SelectedIndex = -1;
+            else
+                comboBoxEvento.SelectedItem = eventoAnterior.Value;
+
+            comboBoxEvento.SelectedIndexChanged += comboBoxEvento_SelectedIndexChanged;
+        }
+
+        private void comboBoxEvento_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Evento? eventoSeleccionado = comboBoxEvento.SelectedItem as Evento?;
+            if (!eventoSeleccionado.HasValue) return;
+
+            var metadata = EventCatalog_08YS.GetMetadata(eventoSeleccionado.Value);
+
+            // Protege módulo contra cascada
+            comboBoxModulo.SelectedIndexChanged -= comboBoxModulo_SelectedIndexChanged;
+            if ((Modulo?)comboBoxModulo.SelectedItem != metadata.Modulo)
+                comboBoxModulo.SelectedItem = metadata.Modulo;
+            comboBoxModulo.SelectedIndexChanged += comboBoxModulo_SelectedIndexChanged;
+
+            // Protege criticidad contra cascada
+            comboBoxCriticidad.SelectedIndexChanged -= comboBoxCriticidad_SelectedIndexChanged;
+            comboBoxCriticidad.SelectedItem = metadata.Criticidad;
+            comboBoxCriticidad.SelectedIndexChanged += comboBoxCriticidad_SelectedIndexChanged;
+        }
+
+        private void comboBoxCriticidad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Criticidad? criticidadSeleccionada = comboBoxCriticidad.SelectedItem as Criticidad?;
+            if (!criticidadSeleccionada.HasValue) return;
+
+            // Respeta el módulo actualmente seleccionado al filtrar por criticidad
+            Modulo? moduloActual = comboBoxModulo.SelectedItem as Modulo?;
+
+            var eventos = EventCatalog_08YS.GetEventsByCriticidad(criticidadSeleccionada.Value);
+
+            if (moduloActual.HasValue)
+                eventos = eventos.Where(ev =>
+                    EventCatalog_08YS.GetMetadata(ev).Modulo == moduloActual.Value).ToList();
+
+            comboBoxEvento.SelectedIndexChanged -= comboBoxEvento_SelectedIndexChanged;
+
+            comboBoxEvento.DataSource = eventos;
+
+            var eventoActual = comboBoxEvento.SelectedItem as Evento?;
+            if (!eventoActual.HasValue || !eventos.Contains(eventoActual.Value))
+                comboBoxEvento.SelectedIndex = -1;
+
+            comboBoxEvento.SelectedIndexChanged += comboBoxEvento_SelectedIndexChanged;
+        }
+
+        #region FrontEnd
 
         private void dgvEventos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -184,99 +341,6 @@ namespace GUI
                 }
             }
         }
-
-        private void btnExportar_Click(object sender, EventArgs e)
-        {
-            if (dgvEventos.Rows.Count == 0)
-            {
-                MessageBox.Show("No hay datos en la grilla para exportar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // REINICIO CLAVE: Volvemos a cero el contador antes de mandar a imprimir
-            _indiceFilaActual = 0;
-
-            PrintDocument pd = new PrintDocument();
-            pd.DefaultPageSettings.Landscape = true;
-            pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
-
-            PrintDialog printDialog = new PrintDialog();
-            printDialog.Document = pd;
-
-            if (printDialog.ShowDialog() == DialogResult.OK)
-                pd.Print();
-        }
-
-        private void btnFiltrar_Click(object sender, EventArgs e)
-        {
-            DateTime? desde = dtpDesde.Value.HasValue ? dtpDesde.Value.Value.Date : (DateTime?)null;
-            DateTime? hasta = dtpHasta.Value.HasValue ? dtpHasta.Value.Value.Date : (DateTime?)null;
-
-            if (desde.HasValue && desde.Value > DateTime.Today)
-            {
-                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (hasta.HasValue && hasta.Value > DateTime.Today)
-            {
-                MessageBox.Show("La fecha de finalización no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
-            {
-                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha de finalización.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            try
-            {
-                BitacoraFiltro_08YS filtro = new BitacoraFiltro_08YS
-                {
-                    Username = txtUsername.Text,
-                    FechaDesde = desde?.Date,
-                    FechaHasta = hasta?.Date.AddDays(1).AddTicks(-1),
-                    Modulo = comboBoxModulo.SelectedItem != null ? (Modulo?)comboBoxModulo.SelectedItem : null,
-                    Evento = comboBoxEvento.SelectedItem != null ? (Evento?)comboBoxEvento.SelectedItem : null,
-                    Criticidad = comboBoxCriticidad.SelectedItem != null ? (Criticidad?)comboBoxCriticidad.SelectedItem : null
-                };
-
-                dgvEventos.DataSource = null;
-                dgvEventos.DataSource = _bll.Filtrar(filtro);
-                dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            txtUsername.Text = "";
-            comboBoxModulo.SelectedIndex = -1;
-            comboBoxEvento.SelectedIndex = -1;
-            comboBoxCriticidad.SelectedIndex = -1;
-            dtpDesde.Value = null;
-            dtpHasta.Value = null;
-            CargarGrid();
-        }
-        private void comboBoxModulo_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-            Modulo? moduloSeleccionado = comboBoxModulo.SelectedItem as Modulo?;
-            RefreshComboEventos(moduloSeleccionado);
-        }
-
-        private void RefreshComboEventos(Modulo? modulo)
-        {
-            comboBoxEvento.SelectedIndexChanged -= comboBoxEvento_SelectedIndexChanged; // evita disparos en cascada
-
-            comboBoxEvento.DataSource = BitacoraEvento_08YS.GetEventsByModule(modulo);
-            comboBoxEvento.SelectedIndex = -1;
-
-            comboBoxEvento.SelectedIndexChanged += comboBoxEvento_SelectedIndexChanged;
-        }
-
-        private void comboBoxEvento_SelectedIndexChanged(object sender, EventArgs e) { }
 
         private Color btnBackNormal = Color.FromArgb(5, 15, 45);
         private Color btnBackHover = Color.Goldenrod;
@@ -311,7 +375,7 @@ namespace GUI
             btn.ForeColor = btnForeNormal;
             btn.IconColor = btnForeNormal;
         }
-
+        #endregion
     }
 }
 

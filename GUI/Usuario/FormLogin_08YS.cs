@@ -40,7 +40,7 @@ namespace GUI_08YS
 
             try
             {
-                User user = _userBLL.Login(username, password, out bool passwordDefault);
+                User_08YS user = _userBLL.Login(username, password, out bool passwordDefault);
 
                 if (passwordDefault)
                 {
@@ -52,7 +52,7 @@ namespace GUI_08YS
                     if (formCambiarContraseña.DialogResult == DialogResult.OK)
                     {
                         // Limpiamos el Singleton para que la cuenta no quede tomada
-                        SessionManager.Instance.CerrarSesion();
+                        SessionManager_08YS.Instance.CerrarSesion();
 
                         // Limpiamos los campos para obligarlo a escribir la nueva
                         txtUsername.Text = "";
@@ -64,7 +64,7 @@ namespace GUI_08YS
                     else
                     {
                         // Si el usuario canceló o cerró la ventana de cambio obligatorio sin éxito, lo sacamos
-                        SessionManager.Instance.CerrarSesion();
+                        SessionManager_08YS.Instance.CerrarSesion();
                         return;
                     }
                 }
@@ -74,7 +74,7 @@ namespace GUI_08YS
                 
                 formMDI.CerrarSesion += () =>
                 {
-                    SessionManager.Instance.CerrarSesion();
+                    SessionManager_08YS.Instance.CerrarSesion();
                     this.Show();
                     
                 };
@@ -107,8 +107,6 @@ namespace GUI_08YS
             {
                 MessageBox.Show(ex.Message, "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
-            // CATCH 5: El colchón de seguridad por si salta cualquier otro problema imprevisto (BD, Red, etc.)
-         
             catch (Exception ex)
             {
                 MessageBox.Show($"Ocurrió un error inesperado en el sistema:\n{ex.Message}", "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);

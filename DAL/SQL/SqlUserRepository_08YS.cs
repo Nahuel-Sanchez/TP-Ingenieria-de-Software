@@ -14,7 +14,7 @@ namespace DAL_08YS
     public class SqlUserRepository_08YS : Connection_08YS, IUserRepository_08YS
     {
         public SqlUserRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
-        private IDbDataParameter[] ToParameters(User user)
+        private IDbDataParameter[] ToParameters(User_08YS user)
         {
             return new[]
             {
@@ -31,13 +31,13 @@ namespace DAL_08YS
         };
         }
 
-        public List<User> GetAll()
+        public List<User_08YS> GetAll()
         {
             DataTable dt = Leer("SELECT * FROM Users");
             return UserMapper_08YS.FromDataTable(dt);
         }
 
-        public User GetByUsername(string username)
+        public User_08YS GetByUsername(string username)
         {
             DataTable dt = Leer("SELECT * FROM Users WHERE Username = @Username",
                                     new[] { Param("@Username", username) });
@@ -65,7 +65,7 @@ namespace DAL_08YS
             );
         }
 
-        public void Create(User user)
+        public void Create(User_08YS user)
         {
             ExecuteNonQuery
             (
@@ -84,7 +84,7 @@ namespace DAL_08YS
                 ) > 0;
         }
 
-        public void Modify(User user, string login)
+        public void Modify(User_08YS user, string login)
         {
             ExecuteNonQuery
             (

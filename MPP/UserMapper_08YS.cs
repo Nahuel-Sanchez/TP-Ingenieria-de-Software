@@ -10,17 +10,17 @@ namespace MPP_08YS
 {
     public static class UserMapper_08YS
     {
-        public static List<User> FromDataTable(DataTable dt)
+        public static List<User_08YS> FromDataTable(DataTable dt)
         {
-            var users = new List<User>();
+            var users = new List<User_08YS>();
             foreach (DataRow row in dt.Rows)
                 users.Add(FromDataRow(row));
             return users;
         }
 
-        public static User FromDataRow(DataRow row)
+        public static User_08YS FromDataRow(DataRow row)
         {
-            return new User
+            return new User_08YS
             {
                 Username = row["Username"].ToString(),
                 DNI = Convert.ToInt32(row["DNI"]),

@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Service_08YS
 {
-    public class SessionManager
+    public class SessionManager_08YS
     {
-        private static readonly Lazy<SessionManager> lazy =
-            new Lazy<SessionManager>(() => new SessionManager());
+        private static readonly Lazy<SessionManager_08YS> lazy =
+            new Lazy<SessionManager_08YS>(() => new SessionManager_08YS());
 
-        public static SessionManager Instance { get { return lazy.Value; } }
+        public static SessionManager_08YS Instance { get { return lazy.Value; } }
 
-        private SessionManager() { }
+        private SessionManager_08YS() { }
 
-        public User Current { get; private set; }
+        public User_08YS Current { get; private set; }
 
         public bool IsLogged => !(Current is null);
 
-        public void SetCurrentUser(User user)
+        public void SetCurrentUser(User_08YS user)
         {
             if (IsLogged)
                 throw new InvalidOperationException("Ya hay un usuario logueado. Cierre la sesión antes de iniciar otra.");

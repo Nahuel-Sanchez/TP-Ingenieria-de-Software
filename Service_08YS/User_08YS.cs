@@ -12,7 +12,7 @@ namespace Service_08YS
         Admin,
         Basico
     }
-    public class User
+    public class User_08YS
     {
         private string _username;
         private int _dni;
@@ -30,7 +30,7 @@ namespace Service_08YS
       
 
 
-        public User(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true)
+        public User_08YS(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true)
         {
             this._username = username;
             this._dni = dni;
@@ -44,25 +44,25 @@ namespace Service_08YS
             this._activo = activo;
         }
 
-        public User() { }
+        public User_08YS() { }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is User other)) return false;
+            if (!(obj is User_08YS other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return DNI == other.DNI;
         }
 
         public override int GetHashCode() => DNI.GetHashCode();
 
-        public static bool operator ==(User a, User b)
+        public static bool operator ==(User_08YS a, User_08YS b)
         {
             if (a is null && b is null) return true;
             if (a is null || b is null) return false;
             return a.Equals(b);
         }
 
-        public static bool operator !=(User a, User b) => !(a == b);
+        public static bool operator !=(User_08YS a, User_08YS b) => !(a == b);
 
         public string Username
         {

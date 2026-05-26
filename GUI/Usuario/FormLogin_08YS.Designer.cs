@@ -36,6 +36,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.Titulo = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.lblContraseñaActual = new System.Windows.Forms.Label();
             this.iconPictureBox2 = new FontAwesome.Sharp.IconPictureBox();
             this.btnAcceder = new FontAwesome.Sharp.IconButton();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -43,7 +44,6 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.txtPassword = new CustomControls.IconPlaceholderTextBox();
             this.txtUsername = new CustomControls.IconPlaceholderTextBox();
-            this.lblContraseñaActual = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
@@ -152,9 +152,9 @@
             this.Titulo.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.Titulo.Location = new System.Drawing.Point(88, 13);
             this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(186, 16);
+            this.Titulo.Size = new System.Drawing.Size(200, 15);
             this.Titulo.TabIndex = 0;
-            this.Titulo.Text = "Login - Horizon Hotel && Resort";
+            this.Titulo.Text = "Username - Horizon Hotel && Resort";
             // 
             // panel3
             // 
@@ -166,6 +166,19 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(700, 62);
             this.panel3.TabIndex = 10;
+            // 
+            // lblContraseñaActual
+            // 
+            this.lblContraseñaActual.AutoSize = true;
+            this.lblContraseñaActual.BackColor = System.Drawing.Color.Transparent;
+            this.lblContraseñaActual.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblContraseñaActual.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblContraseñaActual.Location = new System.Drawing.Point(267, 40);
+            this.lblContraseñaActual.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblContraseñaActual.Name = "lblContraseñaActual";
+            this.lblContraseñaActual.Size = new System.Drawing.Size(167, 19);
+            this.lblContraseñaActual.TabIndex = 4;
+            this.lblContraseñaActual.Text = "Excelencia en cada estadía";
             // 
             // iconPictureBox2
             // 
@@ -286,19 +299,6 @@
             this.txtUsername.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtUsername.Size = new System.Drawing.Size(300, 41);
             this.txtUsername.TabIndex = 1;
-            // 
-            // lblContraseñaActual
-            // 
-            this.lblContraseñaActual.AutoSize = true;
-            this.lblContraseñaActual.BackColor = System.Drawing.Color.Transparent;
-            this.lblContraseñaActual.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblContraseñaActual.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblContraseñaActual.Location = new System.Drawing.Point(267, 40);
-            this.lblContraseñaActual.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblContraseñaActual.Name = "lblContraseñaActual";
-            this.lblContraseñaActual.Size = new System.Drawing.Size(167, 19);
-            this.lblContraseñaActual.TabIndex = 4;
-            this.lblContraseñaActual.Text = "Excelencia en cada estadía";
             // 
             // FormLogin_08YS
             // 

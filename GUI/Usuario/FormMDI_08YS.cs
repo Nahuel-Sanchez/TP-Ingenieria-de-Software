@@ -19,13 +19,13 @@ namespace GUI_08YS
         public FormMDI_08YS()
         {
             InitializeComponent();
-            lblRolSistema.Text = SessionManager.Instance.Current.Rol.ToString();
-            lblNombreApellido.Text= SessionManager.Instance.Current.Nombre + " " + SessionManager.Instance.Current.Apellido;
+            lblRolSistema.Text = SessionManager_08YS.Instance.Current.Rol.ToString();
+            lblNombreApellido.Text= SessionManager_08YS.Instance.Current.Nombre + " " + SessionManager_08YS.Instance.Current.Apellido;
             GestionarRol();
         }
         private void GestionarRol()
         {
-            if (SessionManager.Instance.Current.Rol.ToString() == "Basico")
+            if (SessionManager_08YS.Instance.Current.Rol.ToString() == "Basico")
             {
                 iconButton2.Visible = false;
                 iconButton2.Enabled = false;
@@ -42,9 +42,9 @@ namespace GUI_08YS
             //{
             //    e.Cancel = true;
             //}
-            if (SessionManager.Instance.IsLogged)
+            if (SessionManager_08YS.Instance.IsLogged)
             {
-                CerrarSesion?.Invoke(); // Desoculta el Login y limpia Singleton
+                CerrarSesion?.Invoke(); // Desoculta el Username y limpia Singleton
             }
         }
 
@@ -135,7 +135,7 @@ namespace GUI_08YS
             {
                 if (form.DialogResult == DialogResult.OK)
                 {
-                    // Ejecutamos el cierre de sesión e invocamos el evento para desocultar el Login
+                    // Ejecutamos el cierre de sesión e invocamos el evento para desocultar el Username
                     CerrarSesion?.Invoke();
                     this.Close(); // Cerramos el MDI
                 }

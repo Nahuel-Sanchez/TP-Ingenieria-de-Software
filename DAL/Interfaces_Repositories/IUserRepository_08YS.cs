@@ -9,19 +9,19 @@ namespace DAL_08YS.Repositories_Interfaces
 {
     public interface IUserRepository_08YS
     {
-        List<User> GetAll();
+        List<User_08YS> GetAll();
 
-        User GetByUsername(string username);
+        User_08YS GetByUsername(string username);
 
         void LockOut(string username);
 
         void Unlock(string username);
 
-        void Create(User user);
+        void Create(User_08YS user);
 
         bool Exists(int DNI);
 
-        void Modify(User user, string login);
+        void Modify(User_08YS user, string login);
 
         void UpdateState(string username, bool nuevoEstado);
 
