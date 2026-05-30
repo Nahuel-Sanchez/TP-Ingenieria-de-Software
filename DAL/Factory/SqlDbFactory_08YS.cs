@@ -27,12 +27,25 @@ namespace DAL_08YS
         public IDbDataParameter CreateParameter(string name, object value)
             => new SqlParameter(name, value ?? DBNull.Value);
 
+        public IDbDataParameter CreateOutputParameter(string name)
+       => new SqlParameter(name, SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+        public IDbDataParameter CreateTableValuedParameter(string name, DataTable value, string typeName)
+            => new SqlParameter(name, SqlDbType.Structured) { TypeName = typeName, Value = value };
+
         public DataTable FillDataTable(IDbCommand command)
         {
             var dt = new DataTable();
             using (var adapter = new SqlDataAdapter((SqlCommand)command))
                 adapter.Fill(dt);
             return dt;
+        }
+        public DataSet FillDataSet(IDbCommand command)
+        {
+            var ds = new DataSet();
+            using (var adapter = new SqlDataAdapter((SqlCommand)command))
+                adapter.Fill(ds);
+            return ds;
         }
     }
 }

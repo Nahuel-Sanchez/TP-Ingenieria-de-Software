@@ -1,0 +1,28 @@
+﻿using Service_08YS.Entities.Comparers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Service_08YS.Entities.Acceso
+{
+    public class Rol
+    {
+        public int RolID { get; set; }
+        public string Nombre { get; set; }
+
+        private readonly List<AccessComponent> _componentes = new List<AccessComponent>();
+        public IReadOnlyList<AccessComponent> Componentes => _componentes.AsReadOnly();
+
+        public void Agregar(AccessComponent c) => _componentes.Add(c);
+
+        public HashSet<Permiso> ObtenerPermisos()
+        {
+            var resultado = new HashSet<Permiso>(PermisoComparer.Instance);
+            foreach (var c in _componentes)
+                resultado.UnionWith(c.GetPermisos());
+            return resultado;
+        }
+    }
+}

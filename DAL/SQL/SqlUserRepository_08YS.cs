@@ -33,13 +33,13 @@ namespace DAL_08YS
 
         public List<User_08YS> GetAll()
         {
-            DataTable dt = Leer("SELECT * FROM Users");
+            DataTable dt = GetDataTable("SELECT * FROM Users");
             return UserMapper_08YS.FromDataTable(dt);
         }
 
         public User_08YS GetByUsername(string username)
         {
-            DataTable dt = Leer("SELECT * FROM Users WHERE Username = @Username",
+            DataTable dt = GetDataTable("SELECT * FROM Users WHERE Username = @Username",
                                     new[] { Param("@Username", username) });
 
             if (dt.Rows.Count == 0) return null;

@@ -39,7 +39,7 @@ namespace DAL_08YS
 
         public List<BitacoraEvento_08YS> GetAll()
         {
-            DataTable dt = Leer("SELECT * FROM Bitacora ORDER BY FechaHora DESC");
+            DataTable dt = GetDataTable("SELECT * FROM Bitacora ORDER BY FechaHora DESC");
             return BitacoraMapper_08YS.FromDataTable(dt);
         }
 
@@ -87,7 +87,7 @@ namespace DAL_08YS
 
             query.Append(" ORDER BY FechaHora DESC");
 
-            return BitacoraMapper_08YS.FromDataTable(Leer(query.ToString(), parametros.ToArray()));
+            return BitacoraMapper_08YS.FromDataTable(GetDataTable(query.ToString(), parametros.ToArray()));
         }
 
         public int ContarIntentosFallidos(string username, int ventanaHoras)

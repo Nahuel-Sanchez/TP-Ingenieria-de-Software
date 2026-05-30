@@ -41,12 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bitacora\BitacoraEvento_08YS.cs" />
-    <Compile Include="Bitacora\EventCatalog_08YS.cs" />
+    <Compile Include="Entities\Acceso\AccessComponent.cs" />
+    <Compile Include="Entities\Acceso\Familia.cs" />
+    <Compile Include="Entities\Acceso\Permiso.cs" />
+    <Compile Include="Entities\Acceso\Rol.cs" />
+    <Compile Include="Entities\Bitacora\BitacoraEvento_08YS.cs" />
+    <Compile Include="Entities\Bitacora\EventCatalog_08YS.cs" />
     <Compile Include="Encriptador_08YS.cs" />
+    <Compile Include="Entities\Comparers\PermisoComparer.cs" />
     <Compile Include="SessionManager_08YS.cs" />
-    <Compile Include="User_08YS.cs" />
+    <Compile Include="Entities\User_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -21,7 +21,13 @@ namespace DAL_08YS
         protected IDbDataParameter Param(string name, object value)
             => _factory.CreateParameter(name, value);
 
-        protected DataTable Leer(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
+        protected IDbDataParameter ParamOutput(string name)
+            => _factory.CreateOutputParameter(name);
+
+        protected IDbDataParameter ParamTVP(string name, DataTable value, string typeName = "dbo.IntList")
+            => _factory.CreateTableValuedParameter(name, value, typeName);
+
+        protected DataTable GetDataTable(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
         {
             using (IDbConnection conn = _factory.CreateConnection())
             using (IDbCommand cmd = _factory.CreateCommand(query, conn))
@@ -33,8 +39,22 @@ namespace DAL_08YS
                     foreach (var p in parameters)
                         cmd.Parameters.Add(p);
 
-                // El factory llenara la tabla en funcion de la BD.
                 return _factory.FillDataTable(cmd);
+            }
+        }
+
+        protected DataSet GetDataSet(string query, IDbDataParameter[] parameters = null, bool storedProcedure = false)
+        {
+            using (IDbConnection conn = _factory.CreateConnection())
+            using (IDbCommand cmd = _factory.CreateCommand(query, conn))
+            {
+                if (storedProcedure) 
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                if (parameters != null)
+                    foreach (var p in parameters) cmd.Parameters.Add(p);
+
+                return _factory.FillDataSet(cmd);
             }
         }
 

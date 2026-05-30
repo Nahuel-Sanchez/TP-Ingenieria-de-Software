@@ -12,9 +12,12 @@ namespace DAL_08YS
         IDbConnection CreateConnection();
         IDbCommand CreateCommand(string query, IDbConnection connection);
         IDbDataParameter CreateParameter(string name, object value);
+        IDbDataParameter CreateOutputParameter(string name);
+        IDbDataParameter CreateTableValuedParameter(string name, DataTable value, string typeName);
 
-        // DataAdapter no tiene Fill(DataTable) en IDataAdapter de visual studio general
-        // por lo que el factory encargara de llenar el DataTable
+        // DataAdapter no tiene Fill(DataTable) en IDataAdapter de visual studio 
+        // por lo que el factory se va a encargar de llenar el DataTable
         DataTable FillDataTable(IDbCommand command);
+        DataSet FillDataSet(IDbCommand command);
     }
 }
