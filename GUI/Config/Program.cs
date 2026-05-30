@@ -1,4 +1,5 @@
 ﻿using GUI;
+using Service_08YS.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,10 @@ namespace GUI_08YS
         [STAThread]
         static void Main()
         {
+            EventCatalog_08YS.ValidarCatalogo();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new FormMDI_08YS());
             Application.Run(new FormLogin_08YS());
-            //Application.Run(new FormGestionUsuarios());
-            //Application.Run(new FormBitacora_08YS());
         }
     }
 }

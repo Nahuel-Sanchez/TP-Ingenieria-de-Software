@@ -51,5 +51,26 @@ namespace Service_08YS.Bitacora
                 .Select(kvp => kvp.Key)
                 .ToList();
         }
+
+        /// <summary>
+        /// Llamar una sola vez al iniciar la aplicación.
+        /// Lanza NotImplementedException si algún valor del enum Evento
+        /// no tiene entrada en el catálogo, forzando al desarrollador a registrarlo.
+        /// </summary>
+        public static void ValidarCatalogo()
+        {
+            var eventosFaltantes = Enum.GetValues(typeof(Evento))
+                .Cast<Evento>()
+                .Where(ev => !_catalogo.ContainsKey(ev))
+                .ToList();
+
+            if (eventosFaltantes.Any())
+            {
+                string lista = string.Join(", ", eventosFaltantes);
+                throw new NotImplementedException(
+                    $"Los siguientes valores del enum Evento no están registrados en EventCatalog_08YS: {lista}. " +
+                    $"Agregá su Modulo y Criticidad correspondiente antes de continuar.");
+            }
+        }
     }
 }
