@@ -49,10 +49,13 @@
             this.lblNombreApellido = new System.Windows.Forms.Label();
             this.lblRolSistema = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.dropdownMenuStrip_08YS1 = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
+            this.AdministrativoDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.gestionUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dropdownMenuStrip_08YS2 = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
+            this.gestionAccesosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rolesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.familiasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PerfilDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.cambiarContraseñaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,8 +65,8 @@
             this.flowLayoutPanel1.SuspendLayout();
             this.panelLogo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.dropdownMenuStrip_08YS1.SuspendLayout();
-            this.dropdownMenuStrip_08YS2.SuspendLayout();
+            this.AdministrativoDropDownMenu.SuspendLayout();
+            this.PerfilDropDownMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // crearToolStripMenuItem
@@ -349,46 +352,70 @@
             this.panel2.Size = new System.Drawing.Size(1470, 920);
             this.panel2.TabIndex = 5;
             // 
-            // dropdownMenuStrip_08YS1
+            // AdministrativoDropDownMenu
             // 
-            this.dropdownMenuStrip_08YS1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.dropdownMenuStrip_08YS1.IsMainMenu = false;
-            this.dropdownMenuStrip_08YS1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AdministrativoDropDownMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.AdministrativoDropDownMenu.IsMainMenu = false;
+            this.AdministrativoDropDownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gestionUsuarioToolStripMenuItem,
-            this.bitacoraToolStripMenuItem});
-            this.dropdownMenuStrip_08YS1.MenuItemHeight = 25;
-            this.dropdownMenuStrip_08YS1.MenuItemTextColor = System.Drawing.Color.Empty;
-            this.dropdownMenuStrip_08YS1.Name = "dropdownMenuStrip_08YS1";
-            this.dropdownMenuStrip_08YS1.PrimaryColor = System.Drawing.Color.Empty;
-            this.dropdownMenuStrip_08YS1.Size = new System.Drawing.Size(179, 52);
+            this.bitacoraToolStripMenuItem,
+            this.gestionAccesosToolStripMenuItem});
+            this.AdministrativoDropDownMenu.MenuItemHeight = 25;
+            this.AdministrativoDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
+            this.AdministrativoDropDownMenu.Name = "dropdownMenuStrip_08YS1";
+            this.AdministrativoDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
+            this.AdministrativoDropDownMenu.Size = new System.Drawing.Size(211, 104);
             // 
             // gestionUsuarioToolStripMenuItem
             // 
             this.gestionUsuarioToolStripMenuItem.Name = "gestionUsuarioToolStripMenuItem";
-            this.gestionUsuarioToolStripMenuItem.Size = new System.Drawing.Size(178, 24);
+            this.gestionUsuarioToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.gestionUsuarioToolStripMenuItem.Text = "GestionUsuario";
             this.gestionUsuarioToolStripMenuItem.Click += new System.EventHandler(this.gestionUsuarioToolStripMenuItem_Click);
             // 
             // bitacoraToolStripMenuItem
             // 
             this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
-            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(178, 24);
+            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
             // 
-            // dropdownMenuStrip_08YS2
+            // gestionAccesosToolStripMenuItem
             // 
-            this.dropdownMenuStrip_08YS2.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.dropdownMenuStrip_08YS2.IsMainMenu = false;
-            this.dropdownMenuStrip_08YS2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gestionAccesosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.rolesToolStripMenuItem,
+            this.familiasToolStripMenuItem});
+            this.gestionAccesosToolStripMenuItem.Name = "gestionAccesosToolStripMenuItem";
+            this.gestionAccesosToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.gestionAccesosToolStripMenuItem.Text = "Gestion Accesos";
+            // 
+            // rolesToolStripMenuItem
+            // 
+            this.rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
+            this.rolesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.rolesToolStripMenuItem.Text = "Roles";
+            this.rolesToolStripMenuItem.Click += new System.EventHandler(this.rolesToolStripMenuItem_Click);
+            // 
+            // familiasToolStripMenuItem
+            // 
+            this.familiasToolStripMenuItem.Name = "familiasToolStripMenuItem";
+            this.familiasToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.familiasToolStripMenuItem.Text = "Familias";
+            this.familiasToolStripMenuItem.Click += new System.EventHandler(this.familiasToolStripMenuItem_Click);
+            // 
+            // PerfilDropDownMenu
+            // 
+            this.PerfilDropDownMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.PerfilDropDownMenu.IsMainMenu = false;
+            this.PerfilDropDownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cambiarContraseñaToolStripMenuItem,
             this.ReLoginToolStripMenuItem,
             this.cerrarSesionToolStripMenuItem1});
-            this.dropdownMenuStrip_08YS2.MenuItemHeight = 25;
-            this.dropdownMenuStrip_08YS2.MenuItemTextColor = System.Drawing.Color.Empty;
-            this.dropdownMenuStrip_08YS2.Name = "dropdownMenuStrip_08YS2";
-            this.dropdownMenuStrip_08YS2.PrimaryColor = System.Drawing.Color.Empty;
-            this.dropdownMenuStrip_08YS2.Size = new System.Drawing.Size(213, 76);
+            this.PerfilDropDownMenu.MenuItemHeight = 25;
+            this.PerfilDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
+            this.PerfilDropDownMenu.Name = "dropdownMenuStrip_08YS2";
+            this.PerfilDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
+            this.PerfilDropDownMenu.Size = new System.Drawing.Size(213, 76);
             // 
             // cambiarContraseñaToolStripMenuItem
             // 
@@ -435,8 +462,8 @@
             this.panelLogo.ResumeLayout(false);
             this.panelLogo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.dropdownMenuStrip_08YS1.ResumeLayout(false);
-            this.dropdownMenuStrip_08YS2.ResumeLayout(false);
+            this.AdministrativoDropDownMenu.ResumeLayout(false);
+            this.PerfilDropDownMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -445,7 +472,7 @@
         private System.Windows.Forms.ToolStripMenuItem crearToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem modificarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem desbloquearToolStripMenuItem;
-        private DropdownMenuStrip_08YS dropdownMenuStrip_08YS1;
+        private DropdownMenuStrip_08YS AdministrativoDropDownMenu;
         private System.Windows.Forms.ToolStripMenuItem gestionUsuarioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bitacoraToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
@@ -460,7 +487,7 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label lblNombreApellido;
         private System.Windows.Forms.Label lblRolSistema;
-        private DropdownMenuStrip_08YS dropdownMenuStrip_08YS2;
+        private DropdownMenuStrip_08YS PerfilDropDownMenu;
         private System.Windows.Forms.ToolStripMenuItem cambiarContraseñaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ReLoginToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cerrarSesionToolStripMenuItem1;
@@ -469,6 +496,9 @@
         private FontAwesome.Sharp.IconButton iconButton2;
         private FontAwesome.Sharp.IconButton iconButton3;
         private FontAwesome.Sharp.IconButton iconButton4;
+        private System.Windows.Forms.ToolStripMenuItem gestionAccesosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rolesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem familiasToolStripMenuItem;
     }
 }
 

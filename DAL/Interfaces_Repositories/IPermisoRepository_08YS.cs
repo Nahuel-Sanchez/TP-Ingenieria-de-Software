@@ -8,14 +8,8 @@ using System.Threading.Tasks;
 
 namespace DAL_08YS.Interfaces_Repositories
 {
-    public interface IPermisoRepository
+    public interface IPermisoRepository_08YS
     {
-        List<Permiso> GetAll();
-
-        void Create(Permiso permiso);
-
-        bool IsInUse(int permisoId);
-
-        void Delete(int permisoId);
+        List<Permiso_08YS> GetAll();
     }
 }

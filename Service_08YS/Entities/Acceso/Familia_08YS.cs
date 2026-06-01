@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Acceso
 {
-    public class Familia : AccessComponent
+    public class Familia_08YS : AccessComponent
     {
         public int FamiliaID { get => ID; set => ID = value; }
 
@@ -19,9 +19,9 @@ namespace Service_08YS.Entities.Acceso
         public void Agregar(AccessComponent c) => _hijos.Add(c);
         public void Quitar(AccessComponent c) => _hijos.Remove(c);
 
-        public override HashSet<Permiso> GetPermisos()
+        public override HashSet<Permiso_08YS> GetPermisos()
         {
-            var resultado = new HashSet<Permiso>(PermisoComparer.Instance);
+            var resultado = new HashSet<Permiso_08YS>(PermisoComparer.Instance);
             foreach (var hijo in _hijos)
                 resultado.UnionWith(hijo.GetPermisos()); // UnionWith ignora duplicados
             return resultado;

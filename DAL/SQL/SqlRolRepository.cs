@@ -14,7 +14,7 @@ namespace DAL_08YS.SQL
     {
         public SqlRolRepository(IDbFactory_08YS factory) : base(factory) { }
 
-        public List<Rol> GetAll()
+        public List<Rol_08YS> GetAll()
         {
             DataSet ds = GetDataSet("sp_GetAllRolesConEstructura", storedProcedure: true);
 
@@ -43,7 +43,7 @@ namespace DAL_08YS.SQL
             var roles = ds.Tables[0].AsEnumerable()
                 .ToDictionary(
                     r => Convert.ToInt32(r["RolID"]),
-                    r => new Rol { RolID = Convert.ToInt32(r["RolID"]), Nombre = r["Nombre"].ToString() });
+                    r => new Rol_08YS { RolID = Convert.ToInt32(r["RolID"]), Nombre = r["Nombre"].ToString() });
 
             // RS1 → familias completas al rol
             foreach (DataRow row in ds.Tables[1].Rows)
@@ -68,8 +68,8 @@ namespace DAL_08YS.SQL
 
         public void Create(string nombre, List<AccessComponent> componentes)
         {
-            var familiasIds = componentes.OfType<Familia>().Select(f => f.FamiliaID).ToList();
-            var permisosIds = componentes.OfType<Permiso>().Select(p => p.PermisoID).ToList();
+            var familiasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
+            var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
 
             var outputParam = ParamOutput("@NuevoRolID");
 
@@ -80,6 +80,22 @@ namespace DAL_08YS.SQL
                 ParamTVP("@Familias", AccessMapper_08YS.ToIdTable(familiasIds)),
                 ParamTVP("@Permisos", AccessMapper_08YS.ToIdTable(permisosIds)),
                 outputParam
+                },
+                storedProcedure: true);
+        }
+
+        public void Modify(int rolId, string nombre, List<AccessComponent> componentes)
+        {
+            var familiasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
+            var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
+
+            ExecuteNonQuery("sp_ModifyRol",
+                new IDbDataParameter[]
+                {
+                    Param("@RolID",   rolId),
+                    Param("@Nombre",  nombre),
+                    ParamTVP("@Familias", AccessMapper_08YS.ToIdTable(familiasIds)),
+                    ParamTVP("@Permisos", AccessMapper_08YS.ToIdTable(permisosIds))
                 },
                 storedProcedure: true);
         }

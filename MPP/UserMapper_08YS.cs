@@ -24,7 +24,7 @@ namespace MPP_08YS
             {
                 Username = row["Username"].ToString(),
                 DNI = Convert.ToInt32(row["DNI"]),
-                Rol = (UserRole)Convert.ToInt32(row["Rol"]),
+                Rol = (UserRole)Convert.ToInt32(row["RolID"]),
                 Nombre = row["Nombre"].ToString(),
                 Apellido = row["Apellido"].ToString(),
                 Hash = row["Hash"].ToString(),

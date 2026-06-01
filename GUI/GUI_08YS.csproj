@@ -53,11 +53,23 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\FormAccesoAM.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormAccesoAM.Designer.cs">
+      <DependentUpon>FormAccesoAM.cs</DependentUpon>
+    </Compile>
     <Compile Include="Admin\FormBitacora_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Admin\FormBitacora_08YS.Designer.cs">
       <DependentUpon>FormBitacora_08YS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormGestionAcceso.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormGestionAcceso.Designer.cs">
+      <DependentUpon>FormGestionAcceso.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\CustomCalendarPanel.cs">
       <SubType>Component</SubType>
@@ -105,8 +117,14 @@
     </Compile>
     <Compile Include="Config\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Admin\FormAccesoAM.resx">
+      <DependentUpon>FormAccesoAM.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Admin\FormBitacora_08YS.resx">
       <DependentUpon>FormBitacora_08YS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormGestionAcceso.resx">
+      <DependentUpon>FormGestionAcceso.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Usuario\FormCambiarContraseña_08YS.resx">
       <DependentUpon>FormCambiarContraseña_08YS.cs</DependentUpon>

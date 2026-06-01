@@ -9,10 +9,13 @@ namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IFamiliaRepository_08YS
     {
+        List<Familia_08YS> GetAll();
+
         void Create(string nombre, List<AccessComponent> componentes);
 
         bool IsInUse(int familiaId);
 
         void Delete(int familiaId);
+        void Modify(int familiaId, string nombre, List<AccessComponent> componentes);
     }
 }

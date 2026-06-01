@@ -44,7 +44,7 @@
     <Compile Include="Connection_08YS.cs" />
     <Compile Include="Interfaces_Repositories\IBitacoraRepository_08YS.cs" />
     <Compile Include="Interfaces_Repositories\IFamiliaRepository_08YS.cs" />
-    <Compile Include="Interfaces_Repositories\IPermisoRepository.cs" />
+    <Compile Include="Interfaces_Repositories\IPermisoRepository_08YS.cs" />
     <Compile Include="Interfaces_Repositories\IRolRepository_08YS.cs" />
     <Compile Include="SQL\SqlBitacoraRepository.cs" />
     <Compile Include="Factory\IDbFactory_08YS.cs" />

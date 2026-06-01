@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Acceso
 {
-    public class Rol
+    public class Rol_08YS
     {
         public int RolID { get; set; }
         public string Nombre { get; set; }
@@ -17,9 +17,9 @@ namespace Service_08YS.Entities.Acceso
 
         public void Agregar(AccessComponent c) => _componentes.Add(c);
 
-        public HashSet<Permiso> ObtenerPermisos()
+        public HashSet<Permiso_08YS> ObtenerPermisos()
         {
-            var resultado = new HashSet<Permiso>(PermisoComparer.Instance);
+            var resultado = new HashSet<Permiso_08YS>(PermisoComparer.Instance);
             foreach (var c in _componentes)
                 resultado.UnionWith(c.GetPermisos());
             return resultado;

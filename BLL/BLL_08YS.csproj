@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccesoBLL.cs" />
     <Compile Include="BitacoraBLL_08YS.cs" />
     <Compile Include="BLLFactory_08YS.cs" />
+    <Compile Include="FamiliaBLL_08YS.cs" />
+    <Compile Include="RolBLL_08YS.cs" />
     <Compile Include="UserBLL_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Exceptions\UserBloqueadoException_08YS.cs" />

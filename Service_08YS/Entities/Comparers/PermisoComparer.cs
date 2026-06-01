@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Comparers
 {
-    public class PermisoComparer : IEqualityComparer<Permiso>
+    public class PermisoComparer : IEqualityComparer<Permiso_08YS>
     {
         public static readonly PermisoComparer Instance = new PermisoComparer();
         private PermisoComparer() { }
 
-        public bool Equals(Permiso x, Permiso y)
+        public bool Equals(Permiso_08YS x, Permiso_08YS y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (x is null || y is null) return false;
             return x.PermisoID == y.PermisoID;
         }
 
-        public int GetHashCode(Permiso obj) => obj.PermisoID.GetHashCode();
+        public int GetHashCode(Permiso_08YS obj) => obj.PermisoID.GetHashCode();
     }
 }

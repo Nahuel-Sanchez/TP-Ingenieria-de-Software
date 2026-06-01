@@ -20,7 +20,7 @@ namespace DAL_08YS
             {
                 Param("@Username",  user.Username),
                 Param("@DNI",       user.DNI),
-                Param("@Rol",       (int)user.Rol),
+                Param("@RolID",       (int)user.Rol),
                 Param("@Nombre",    user.Nombre),
                 Param("@Apellido",  user.Apellido),
                 Param("@Hash",      user.Hash),
@@ -69,8 +69,8 @@ namespace DAL_08YS
         {
             ExecuteNonQuery
             (
-                "INSERT INTO Users (Username, DNI, Rol, Nombre, Apellido, Hash, Salt, Email, Bloqueado, Activo) " +
-                "VALUES (@Username, @DNI, @Rol, @Nombre, @Apellido, @Hash, @Salt, @Email, @Bloqueado, @Activo)",
+                "INSERT INTO Users (Username, DNI, RolID, Nombre, Apellido, Hash, Salt, Email, Bloqueado, Activo) " +
+                "VALUES (@Username, @DNI, @RolID, @Nombre, @Apellido, @Hash, @Salt, @Email, @Bloqueado, @Activo)",
                 ToParameters(user)
             );
         }
@@ -88,9 +88,9 @@ namespace DAL_08YS
         {
             ExecuteNonQuery
             (
-                "UPDATE Users SET Email = @Email , Rol=@Rol WHERE Username = @Username",
+                "UPDATE Users SET Email = @Email , RolID=@RolID WHERE Username = @Username",
                 new[] { Param("@Email", user.Email),
-                        Param("@Rol", (int)user.Rol) ,
+                        Param("@RolID", (int)user.Rol) ,
                         Param("@Username",user.Username)}
             );
         }

@@ -14,10 +14,15 @@ namespace DAL_08YS.SQL
     {
         public SqlFamiliaRepository(IDbFactory_08YS factory) : base(factory) { }
 
+        public List<Familia_08YS> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Create(string nombre, List<AccessComponent> componentes)
         {
-            var permisosIds = componentes.OfType<Permiso>().Select(p => p.PermisoID).ToList();
-            var subFamiliasIds = componentes.OfType<Familia>().Select(f => f.FamiliaID).ToList();
+            var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
+            var subFamiliasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
 
             var outputParam = ParamOutput("@NuevoFamiliaID");
 
@@ -31,6 +36,22 @@ namespace DAL_08YS.SQL
                 },
                 storedProcedure: true);
             // outputParam.Value contiene el ID generado por SCOPE_IDENTITY()
+        }
+
+        public void Modify(int familiaId, string nombre, List<AccessComponent> componentes)
+        {
+            var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
+            var subFamiliasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
+
+            ExecuteNonQuery("sp_ModifyFamilia",
+                new IDbDataParameter[]
+                {
+                    Param("@FamiliaID",   familiaId),
+                    Param("@Nombre",      nombre),
+                    ParamTVP("@Permisos",    AccessMapper_08YS.ToIdTable(permisosIds)),
+                    ParamTVP("@SubFamilias", AccessMapper_08YS.ToIdTable(subFamiliasIds))
+                },
+                storedProcedure: true);
         }
 
         public bool IsInUse(int familiaId)

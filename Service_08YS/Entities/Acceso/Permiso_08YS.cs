@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Acceso
 {
-    public class Permiso : AccessComponent
+    public class Permiso_08YS : AccessComponent
     {
         public int PermisoID { get => ID; set => ID = value; }
         public string Descripcion { get; set; }
@@ -15,7 +15,7 @@ namespace Service_08YS.Entities.Acceso
         public override bool EsCompuesto => false;
 
         // El leaf devuelve un HashSet con sí mismo — ya usa el comparer correcto
-        public override HashSet<Permiso> GetPermisos()
-            => new HashSet<Permiso>(new[] { this }, PermisoComparer.Instance);
+        public override HashSet<Permiso_08YS> GetPermisos()
+            => new HashSet<Permiso_08YS>(new[] { this }, PermisoComparer.Instance);
     }
 }

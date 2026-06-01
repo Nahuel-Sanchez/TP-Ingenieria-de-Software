@@ -1,4 +1,5 @@
 ﻿using GUI;
+using GUI_08YS.Admin;
 using GUI_08YS.Properties;
 using Service_08YS;
 using System;
@@ -51,11 +52,11 @@ namespace GUI_08YS
 
         private void FormMDI_Load(object sender, EventArgs e)
         {
-            dropdownMenuStrip_08YS1.IsMainMenu = true;
-            dropdownMenuStrip_08YS2.IsMainMenu = true;
+            AdministrativoDropDownMenu.IsMainMenu = true;
+            PerfilDropDownMenu.IsMainMenu = true;
         }
 
-        private void OpenChildForm(Form childForm)
+        public void OpenChildForm(Form childForm)
         {
             panel2.Controls.Clear();
             childForm.TopLevel = false;
@@ -66,7 +67,6 @@ namespace GUI_08YS
             panel2.Tag = childForm;
             childForm.Show();
 
-            // ← reemplazar la llamada directa por esto:
             childForm.BeginInvoke(new Action(() =>
             {
                 childForm.BeginInvoke(new Action(() =>
@@ -141,8 +141,6 @@ namespace GUI_08YS
                 }
             };
             OpenChildForm(form);
-            //if (form.DialogResult == DialogResult.OK)
-            //    CerrarSesion.Invoke();
         }
 
         #region BarraSuperior
@@ -209,12 +207,12 @@ namespace GUI_08YS
 
         private void iconButton1_Click(object sender, EventArgs e)
         {
-            dropdownMenuStrip_08YS2.Show(iconButton1, iconButton1.Width, 0);
+            PerfilDropDownMenu.Show(iconButton1, iconButton1.Width, 0);
         }
 
         private void iconButton2_Click(object sender, EventArgs e)
         {
-            dropdownMenuStrip_08YS1.Show(iconButton2, iconButton2.Width, 0);
+            AdministrativoDropDownMenu.Show(iconButton2, iconButton2.Width, 0);
         }
 
         private void iconButton4_Click(object sender, EventArgs e)
@@ -230,5 +228,17 @@ namespace GUI_08YS
                 this.Close();
             }
         }
+
+
+        private void familiasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormGestionAcceso(TipoEntidad.Familia, OpenChildForm));
+        }
+
+        private void rolesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormGestionAcceso(TipoEntidad.Rol, OpenChildForm));
+        }
+
     }
 }

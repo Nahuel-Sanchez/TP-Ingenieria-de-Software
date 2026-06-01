@@ -11,12 +11,13 @@ namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IRolRepository_08YS
     {
-        List<Rol> GetAll();
+        List<Rol_08YS> GetAll();
 
         void Create(string nombre, List<AccessComponent> componentes);
 
         bool IsInUse(int rolId);
 
         void Delete(int rolId);
+        void Modify(int rolId, string nombre, List<AccessComponent> componentes);
     }
 }
