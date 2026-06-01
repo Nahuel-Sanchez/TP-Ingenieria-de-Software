@@ -46,6 +46,8 @@
             this.splitContenido = new System.Windows.Forms.SplitContainer();
             this.pnlDerecha = new System.Windows.Forms.Panel();
             this.dgvDisponibles = new System.Windows.Forms.DataGridView();
+            this.colTipoDisp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNombreDisp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblDisponibles = new System.Windows.Forms.Label();
             this.pnlCentro = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -54,10 +56,12 @@
             this.btnEliminar = new FontAwesome.Sharp.IconButton();
             this.pnlIzquierda = new System.Windows.Forms.Panel();
             this.dgvSeleccionados = new System.Windows.Forms.DataGridView();
+            this.ColTipoCel = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNombreSel = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblSeleccionados = new System.Windows.Forms.Label();
-            this.lblDetalle = new System.Windows.Forms.Label();
-            this.lblDescripcion = new System.Windows.Forms.Label();
             this.trvDetalle = new System.Windows.Forms.TreeView();
+            this.lblDescripcion = new System.Windows.Forms.Label();
+            this.lblDetalle = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.pnlBottom.SuspendLayout();
@@ -205,7 +209,7 @@
             this.txtNombre.Location = new System.Drawing.Point(145, 10);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.PlaceholderColor = System.Drawing.Color.LightGray;
-            this.txtNombre.PlaceholderText = "Ingrese el nuevo nombre";
+            this.txtNombre.PlaceholderText = "Ingrese el nombre";
             this.txtNombre.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtNombre.Size = new System.Drawing.Size(1305, 50);
             this.txtNombre.TabIndex = 69;
@@ -278,6 +282,9 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvDisponibles.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDisponibles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDisponibles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colTipoDisp,
+            this.colNombreDisp});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -306,6 +313,27 @@
             this.dgvDisponibles.Size = new System.Drawing.Size(717, 351);
             this.dgvDisponibles.TabIndex = 58;
             this.dgvDisponibles.SelectionChanged += new System.EventHandler(this.dgvDisponibles_SelectionChanged);
+            // 
+            // colTipoDisp
+            // 
+            this.colTipoDisp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colTipoDisp.DataPropertyName = "TipoDisplay";
+            this.colTipoDisp.FillWeight = 106.9519F;
+            this.colTipoDisp.HeaderText = "Tipo";
+            this.colTipoDisp.MinimumWidth = 6;
+            this.colTipoDisp.Name = "colTipoDisp";
+            this.colTipoDisp.ReadOnly = true;
+            this.colTipoDisp.Width = 125;
+            // 
+            // colNombreDisp
+            // 
+            this.colNombreDisp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colNombreDisp.DataPropertyName = "Nombre";
+            this.colNombreDisp.FillWeight = 93.04813F;
+            this.colNombreDisp.HeaderText = "Nombre";
+            this.colNombreDisp.MinimumWidth = 6;
+            this.colNombreDisp.Name = "colNombreDisp";
+            this.colNombreDisp.ReadOnly = true;
             // 
             // lblDisponibles
             // 
@@ -432,6 +460,9 @@
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvSeleccionados.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvSeleccionados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvSeleccionados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColTipoCel,
+            this.colNombreSel});
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -461,6 +492,27 @@
             this.dgvSeleccionados.TabIndex = 57;
             this.dgvSeleccionados.SelectionChanged += new System.EventHandler(this.dgvSeleccionados_SelectionChanged);
             // 
+            // ColTipoCel
+            // 
+            this.ColTipoCel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ColTipoCel.DataPropertyName = "TipoDisplay";
+            this.ColTipoCel.FillWeight = 106.9519F;
+            this.ColTipoCel.HeaderText = "Tipo";
+            this.ColTipoCel.MinimumWidth = 6;
+            this.ColTipoCel.Name = "ColTipoCel";
+            this.ColTipoCel.ReadOnly = true;
+            this.ColTipoCel.Width = 125;
+            // 
+            // colNombreSel
+            // 
+            this.colNombreSel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colNombreSel.DataPropertyName = "Nombre";
+            this.colNombreSel.FillWeight = 93.04813F;
+            this.colNombreSel.HeaderText = "Nombre";
+            this.colNombreSel.MinimumWidth = 6;
+            this.colNombreSel.Name = "colNombreSel";
+            this.colNombreSel.ReadOnly = true;
+            // 
             // lblSeleccionados
             // 
             this.lblSeleccionados.AutoSize = true;
@@ -475,19 +527,24 @@
             this.lblSeleccionados.Text = "Composicion";
             this.lblSeleccionados.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // lblDetalle
+            // trvDetalle
             // 
-            this.lblDetalle.AutoSize = true;
-            this.lblDetalle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblDetalle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDetalle.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblDetalle.Location = new System.Drawing.Point(15, 5);
-            this.lblDetalle.Name = "lblDetalle";
-            this.lblDetalle.Padding = new System.Windows.Forms.Padding(2, 0, 0, 2);
-            this.lblDetalle.Size = new System.Drawing.Size(300, 37);
-            this.lblDetalle.TabIndex = 5;
-            this.lblDetalle.Text = "Detalle del seleccionado";
-            this.lblDetalle.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.trvDetalle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
+            this.trvDetalle.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.trvDetalle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trvDetalle.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+            this.trvDetalle.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.trvDetalle.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trvDetalle.FullRowSelect = true;
+            this.trvDetalle.HideSelection = false;
+            this.trvDetalle.ItemHeight = 28;
+            this.trvDetalle.LineColor = System.Drawing.Color.Goldenrod;
+            this.trvDetalle.Location = new System.Drawing.Point(15, 83);
+            this.trvDetalle.Name = "trvDetalle";
+            this.trvDetalle.Size = new System.Drawing.Size(1440, 163);
+            this.trvDetalle.TabIndex = 9;
+            this.trvDetalle.Visible = false;
+            this.trvDetalle.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.trvDetalle_DrawNode);
             // 
             // lblDescripcion
             // 
@@ -504,20 +561,19 @@
             this.lblDescripcion.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.lblDescripcion.Visible = false;
             // 
-            // trvDetalle
+            // lblDetalle
             // 
-            this.trvDetalle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
-            this.trvDetalle.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.trvDetalle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trvDetalle.FullRowSelect = true;
-            this.trvDetalle.HideSelection = false;
-            this.trvDetalle.ItemHeight = 28;
-            this.trvDetalle.LineColor = System.Drawing.Color.Goldenrod;
-            this.trvDetalle.Location = new System.Drawing.Point(15, 83);
-            this.trvDetalle.Name = "trvDetalle";
-            this.trvDetalle.Size = new System.Drawing.Size(1440, 163);
-            this.trvDetalle.TabIndex = 9;
-            this.trvDetalle.Visible = false;
+            this.lblDetalle.AutoSize = true;
+            this.lblDetalle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblDetalle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDetalle.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblDetalle.Location = new System.Drawing.Point(15, 5);
+            this.lblDetalle.Name = "lblDetalle";
+            this.lblDetalle.Padding = new System.Windows.Forms.Padding(2, 0, 0, 2);
+            this.lblDetalle.Size = new System.Drawing.Size(300, 37);
+            this.lblDetalle.TabIndex = 5;
+            this.lblDetalle.Text = "Detalle del seleccionado";
+            this.lblDetalle.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // FormAccesoAM_08YS
             // 
@@ -584,5 +640,9 @@
         private System.Windows.Forms.Label lblDetalle;
         private System.Windows.Forms.TreeView trvDetalle;
         private System.Windows.Forms.Label lblDescripcion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTipoDisp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNombreDisp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColTipoCel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNombreSel;
     }
 }

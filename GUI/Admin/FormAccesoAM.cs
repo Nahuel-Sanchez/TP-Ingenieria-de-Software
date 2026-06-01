@@ -15,7 +15,7 @@ namespace GUI_08YS.Admin
     public partial class FormAccesoAM_08YS : Form
     {
         private readonly TipoEntidad _tipo;
-        private readonly OperacionABM _operacion;
+        private readonly OperacionAM _operacion;
         private readonly FamiliaBLL_08YS _familiaBLL;
         private readonly RolBLL_08YS _rolBLL;
         private readonly Familia_08YS _familiaAEditar;
@@ -34,7 +34,7 @@ namespace GUI_08YS.Admin
 
         public FormAccesoAM_08YS(
             TipoEntidad tipo,
-            OperacionABM operacion,
+            OperacionAM operacion,
             FamiliaBLL_08YS familiaBLL,
             RolBLL_08YS rolBLL,
             Familia_08YS familiaAEditar,
@@ -51,8 +51,10 @@ namespace GUI_08YS.Admin
             _rolAEditar = rolAEditar;
             _onGuardado = onGuardado;
             _onCancelado = onCancelado;
-        }
 
+            dgvDisponibles.AutoGenerateColumns = false;
+            dgvSeleccionados.AutoGenerateColumns = false;
+        }
 
         private void FormAccesoAM_08YS_Load(object sender, EventArgs e)
         {
@@ -70,17 +72,17 @@ namespace GUI_08YS.Admin
                 : FontAwesome.Sharp.IconChar.UserShield;
 
             string entidad = esFamilia ? "Familia" : "Rol";
-            string operacion = _operacion == OperacionABM.Alta ? "Nueva" : "Modificar";
+            string operacion = _operacion == OperacionAM.Alta ? "Nueva" : "Modificar";
             lblTitulo.Text = $"{operacion} {entidad}";
 
-            if (_operacion == OperacionABM.Modificacion)
+            if (_operacion == OperacionAM.Modificacion)
                 txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;
         }
 
         private void CargarDatos()
         {
             // Precargar seleccionados en Modificacion
-            if (_operacion == OperacionABM.Modificacion)
+            if (_operacion == OperacionAM.Modificacion)
             {
                 _seleccionados = _tipo == TipoEntidad.Familia
                     ? _familiaAEditar.Hijos.ToList()
@@ -89,7 +91,7 @@ namespace GUI_08YS.Admin
 
             int? familiaId = null;
 
-            if (_operacion == OperacionABM.Modificacion)
+            if (_operacion == OperacionAM.Modificacion)
                 familiaId = _familiaAEditar.FamiliaID;
 
             var todos = _tipo == TipoEntidad.Familia
@@ -171,10 +173,20 @@ namespace GUI_08YS.Admin
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (dgvDisponibles.CurrentRow == null) return;
+            if (dgvDisponibles.CurrentRow == null)
+            {
+                MessageBox.Show("Seleccione un componente para agregar.", "Sin selección",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             var candidato = (dgvDisponibles.CurrentRow.DataBoundItem as ComponenteRow)?.Componente;
-            if (candidato == null) return;
+            if (candidato == null)
+            {
+                MessageBox.Show("Error al obtener el componente seleccionado.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             var resultado = BLL.EvaluarAgregarComponente(_seleccionados, candidato);
 
@@ -225,10 +237,20 @@ namespace GUI_08YS.Admin
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            if (dgvSeleccionados.CurrentRow == null) return;
+            if (dgvSeleccionados.CurrentRow == null)
+            {
+                MessageBox.Show("Seleccione un componente para eliminar.", "Sin selección",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             var componente = (dgvSeleccionados.CurrentRow.DataBoundItem as ComponenteRow)?.Componente;
-            if (componente == null) return;
+            if (componente == null)
+            {
+                MessageBox.Show("Error al obtener el componente seleccionado.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             _seleccionados.Remove(componente);
 
@@ -249,14 +271,14 @@ namespace GUI_08YS.Admin
 
                 if (_tipo == TipoEntidad.Familia)
                 {
-                    if (_operacion == OperacionABM.Alta)
+                    if (_operacion == OperacionAM.Alta)
                         _familiaBLL.Crear(nombre, _seleccionados);
                     else
                         _familiaBLL.Modificar(_familiaAEditar.FamiliaID, nombre, _seleccionados);
                 }
                 else
                 {
-                    if (_operacion == OperacionABM.Alta)
+                    if (_operacion == OperacionAM.Alta)
                         _rolBLL.Crear(nombre, _seleccionados);
                     else
                         _rolBLL.Modificar(_rolAEditar.RolID, nombre, _seleccionados);
@@ -317,6 +339,28 @@ namespace GUI_08YS.Admin
             public string TipoDisplay => Componente is Familia_08YS ? "Familia" : "Permiso";
 
             public ComponenteRow(AccessComponent_08YS c) => Componente = c;
+        }
+
+        private void trvDetalle_DrawNode(object sender, DrawTreeNodeEventArgs e)
+        {
+            bool seleccionado = (e.State & TreeNodeStates.Selected) != 0;
+
+            Color colorFondo = seleccionado
+                ? Color.FromArgb(5, 5, 100)
+                : Color.FromArgb(5, 10, 30);
+
+            Color colorTexto = seleccionado ? Color.Goldenrod : Color.White;
+
+            using (var brush = new SolidBrush(colorFondo))
+                e.Graphics.FillRectangle(brush, e.Bounds);
+
+            TextRenderer.DrawText(
+                e.Graphics,
+                e.Node.Text,
+                trvDetalle.Font,
+                e.Bounds,
+                colorTexto,
+                TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
         }
     }
 }

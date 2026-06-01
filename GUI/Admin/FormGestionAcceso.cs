@@ -13,7 +13,7 @@ using System.Windows.Forms;
 namespace GUI_08YS.Admin
 {
     public enum TipoEntidad { Familia, Rol }
-    public enum OperacionABM { Alta, Modificacion }
+    public enum OperacionAM { Alta, Modificacion }
 
     public partial class FormGestionAcceso : Form
     {
@@ -33,23 +33,25 @@ namespace GUI_08YS.Admin
             string entidad = _tipo == TipoEntidad.Familia ? "Familias" : "Roles";
             Text = $"Gestión de {entidad}";
             lblTitulo.Text = $"Gestión de {entidad}";
+
+            dgvEntidades.AutoGenerateColumns = false;
         }
 
-        private void AbrirABM(
-        OperacionABM operacion,
-        Familia_08YS familiaAEditar = null,
-        Rol_08YS rolAEditar = null)
+        private void AbrirAM(
+            OperacionAM operacion,
+            Familia_08YS familiaAEditar = null,
+            Rol_08YS rolAEditar = null)
         {
             // Captura referencia a este form antes de que el panel lo reemplace
             var formGestion = this;
 
-            Action onGuardado = () =>
+            Action onSave = () =>
             {
                 formGestion.CargarGrid();
                 _openChildForm(formGestion);   // vuelve a mostrar FormGestion actualizado
             };
 
-            Action onCancelado = () =>
+            Action onCancel = () =>
             {
                 _openChildForm(formGestion);   // vuelve a FormGestion sin cambios
             };
@@ -61,15 +63,15 @@ namespace GUI_08YS.Admin
                 _rolBLL,
                 familiaAEditar,
                 rolAEditar,
-                onGuardado,
-                onCancelado);
+                onSave,
+                onCancel);
 
-            _openChildForm(formABM);           // reemplaza FormGestion con FormABM en el panel
+            _openChildForm(formABM);           // reemplaza FormGestion por FormAM en el panel del MDI
         }
 
         #region Buttons
 
-        private void btnCrear_Click(object sender, EventArgs e) => AbrirABM(OperacionABM.Alta);
+        private void btnCrear_Click(object sender, EventArgs e) => AbrirAM(OperacionAM.Alta);
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
@@ -77,10 +79,11 @@ namespace GUI_08YS.Admin
 
             dynamic row = dgvEntidades.CurrentRow.DataBoundItem;
 
+            //infiero el dynamic en funcion del tipo de entidad que se esta gestionando
             if (_tipo == TipoEntidad.Familia)
-                AbrirABM(OperacionABM.Modificacion, familiaAEditar: (Familia_08YS)row.Entidad);
+                AbrirAM(OperacionAM.Modificacion, familiaAEditar: (Familia_08YS)row.Entidad);
             else
-                AbrirABM(OperacionABM.Modificacion, rolAEditar: (Rol_08YS)row.Entidad);
+                AbrirAM(OperacionAM.Modificacion, rolAEditar: (Rol_08YS)row.Entidad);
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -116,7 +119,7 @@ namespace GUI_08YS.Admin
             }
             catch (Exception ex)
             {
-                // Error técnico inesperado
+                // Error inesperado
                 MessageBox.Show(ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -151,14 +154,14 @@ namespace GUI_08YS.Admin
             TreeNode raiz;
             if (_tipo == TipoEntidad.Familia)
             {
-                var f = (Familia_08YS)entidad;
-                raiz = CrearNodo(f);
+                var familia = (Familia_08YS)entidad;
+                raiz = CrearNodo(familia);
             }
             else
             {
-                var r = (Rol_08YS)entidad;
-                raiz = new TreeNode(r.Nombre);
-                PopularNodos(r.Componentes, raiz.Nodes);
+                var rol = (Rol_08YS)entidad;
+                raiz = new TreeNode(rol.Nombre);
+                PopularNodos(rol.Componentes, raiz.Nodes);
             }
 
             raiz.Expand();
@@ -228,6 +231,28 @@ namespace GUI_08YS.Admin
             {
                 MessageBox.Show(ex.Message, "Error al cargar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void trvDetalle_DrawNode(object sender, DrawTreeNodeEventArgs e)
+        {
+            bool seleccionado = (e.State & TreeNodeStates.Selected) != 0;
+
+            Color colorFondo = seleccionado
+                ? Color.FromArgb(5, 5, 50)
+                : Color.FromArgb(5, 10, 30);
+
+            Color colorTexto = seleccionado ? Color.Goldenrod : Color.White;
+
+            using (var brush = new SolidBrush(colorFondo))
+                e.Graphics.FillRectangle(brush, e.Bounds);
+
+            TextRenderer.DrawText(
+                e.Graphics,
+                e.Node.Text,
+                trvDetalle.Font,
+                e.Bounds,
+                colorTexto,
+                TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
         }
     }
 }
