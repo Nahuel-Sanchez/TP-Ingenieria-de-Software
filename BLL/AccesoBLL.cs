@@ -27,8 +27,8 @@ namespace BLL_08YS
         ///   completamente → error, no se puede resolver.
         /// </summary>
         public ResultadoEvaluacion_08YS EvaluarAgregarComponente(
-            IEnumerable<AccessComponent> listaActual,
-            AccessComponent candidato)
+            IEnumerable<AccessComponent_08YS> listaActual,
+            AccessComponent_08YS candidato)
         {
             var permsCandidato = candidato.GetPermisos()
                 .Select(p => p.PermisoID).ToHashSet();
@@ -79,7 +79,7 @@ namespace BLL_08YS
             return new ResultadoEvaluacion_08YS { Resultado = ResultadoEvaluacion_08YS.Tipo.Valido };
         }
 
-        protected void ValidarDatosEntrada(string nombre, List<AccessComponent> componentes)
+        protected void ValidarDatosEntrada(string nombre, List<AccessComponent_08YS> componentes)
         {
             if (string.IsNullOrWhiteSpace(nombre))
                 throw new InvalidOperationException("El nombre no puede estar vacío.");

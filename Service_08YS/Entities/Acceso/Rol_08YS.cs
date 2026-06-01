@@ -12,10 +12,10 @@ namespace Service_08YS.Entities.Acceso
         public int RolID { get; set; }
         public string Nombre { get; set; }
 
-        private readonly List<AccessComponent> _componentes = new List<AccessComponent>();
-        public IReadOnlyList<AccessComponent> Componentes => _componentes.AsReadOnly();
+        private readonly List<AccessComponent_08YS> _componentes = new List<AccessComponent_08YS>();
+        public IReadOnlyList<AccessComponent_08YS> Componentes => _componentes.AsReadOnly();
 
-        public void Agregar(AccessComponent c) => _componentes.Add(c);
+        public void Agregar(AccessComponent_08YS c) => _componentes.Add(c);
 
         public HashSet<Permiso_08YS> ObtenerPermisos()
         {

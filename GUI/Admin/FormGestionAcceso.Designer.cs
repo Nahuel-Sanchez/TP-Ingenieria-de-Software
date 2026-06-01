@@ -28,25 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.lblTitulo = new System.Windows.Forms.Label();
             this.iconPictureBox = new FontAwesome.Sharp.IconPictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pnlBottom = new System.Windows.Forms.Panel();
             this.btnEliminar = new FontAwesome.Sharp.IconButton();
             this.btnModificar = new FontAwesome.Sharp.IconButton();
             this.btnCrear = new FontAwesome.Sharp.IconButton();
             this.pnlContent = new System.Windows.Forms.Panel();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.label1 = new System.Windows.Forms.Label();
             this.dgvEntidades = new System.Windows.Forms.DataGridView();
-            this.lblDetalle = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.trvDetalle = new System.Windows.Forms.TreeView();
+            this.lblDetalle = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
-            this.panel2.SuspendLayout();
+            this.pnlBottom.SuspendLayout();
             this.pnlContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -95,18 +95,18 @@
             this.iconPictureBox.TabIndex = 0;
             this.iconPictureBox.TabStop = false;
             // 
-            // panel2
+            // pnlBottom
             // 
-            this.panel2.BackColor = System.Drawing.Color.Transparent;
-            this.panel2.Controls.Add(this.btnEliminar);
-            this.panel2.Controls.Add(this.btnModificar);
-            this.panel2.Controls.Add(this.btnCrear);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 840);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(0, 10, 25, 10);
-            this.panel2.Size = new System.Drawing.Size(1470, 80);
-            this.panel2.TabIndex = 59;
+            this.pnlBottom.BackColor = System.Drawing.Color.Transparent;
+            this.pnlBottom.Controls.Add(this.btnEliminar);
+            this.pnlBottom.Controls.Add(this.btnModificar);
+            this.pnlBottom.Controls.Add(this.btnCrear);
+            this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottom.Location = new System.Drawing.Point(0, 840);
+            this.pnlBottom.Name = "pnlBottom";
+            this.pnlBottom.Padding = new System.Windows.Forms.Padding(0, 10, 25, 10);
+            this.pnlBottom.Size = new System.Drawing.Size(1470, 80);
+            this.pnlBottom.TabIndex = 59;
             // 
             // btnEliminar
             // 
@@ -214,6 +214,52 @@
             this.splitMain.SplitterDistance = 560;
             this.splitMain.TabIndex = 0;
             // 
+            // dgvEntidades
+            // 
+            this.dgvEntidades.AllowUserToAddRows = false;
+            this.dgvEntidades.AllowUserToDeleteRows = false;
+            this.dgvEntidades.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvEntidades.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
+            this.dgvEntidades.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvEntidades.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvEntidades.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.dgvEntidades.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvEntidades.DefaultCellStyle = dataGridViewCellStyle5;
+            this.dgvEntidades.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvEntidades.EnableHeadersVisualStyles = false;
+            this.dgvEntidades.GridColor = System.Drawing.Color.Goldenrod;
+            this.dgvEntidades.Location = new System.Drawing.Point(0, 40);
+            this.dgvEntidades.Margin = new System.Windows.Forms.Padding(4);
+            this.dgvEntidades.MultiSelect = false;
+            this.dgvEntidades.Name = "dgvEntidades";
+            this.dgvEntidades.ReadOnly = true;
+            this.dgvEntidades.RowHeadersVisible = false;
+            this.dgvEntidades.RowHeadersWidth = 51;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
+            this.dgvEntidades.RowsDefaultCellStyle = dataGridViewCellStyle6;
+            this.dgvEntidades.RowTemplate.Height = 30;
+            this.dgvEntidades.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvEntidades.Size = new System.Drawing.Size(558, 640);
+            this.dgvEntidades.TabIndex = 56;
+            this.dgvEntidades.SelectionChanged += new System.EventHandler(this.dgvEntidades_SelectionChanged);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -228,51 +274,19 @@
             this.label1.Text = "Listado";
             this.label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // dgvEntidades
+            // trvDetalle
             // 
-            this.dgvEntidades.AllowUserToAddRows = false;
-            this.dgvEntidades.AllowUserToDeleteRows = false;
-            this.dgvEntidades.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvEntidades.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
-            this.dgvEntidades.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvEntidades.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvEntidades.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
-            this.dgvEntidades.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvEntidades.DefaultCellStyle = dataGridViewCellStyle11;
-            this.dgvEntidades.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvEntidades.EnableHeadersVisualStyles = false;
-            this.dgvEntidades.GridColor = System.Drawing.Color.Goldenrod;
-            this.dgvEntidades.Location = new System.Drawing.Point(0, 40);
-            this.dgvEntidades.Margin = new System.Windows.Forms.Padding(4);
-            this.dgvEntidades.MultiSelect = false;
-            this.dgvEntidades.Name = "dgvEntidades";
-            this.dgvEntidades.ReadOnly = true;
-            this.dgvEntidades.RowHeadersVisible = false;
-            this.dgvEntidades.RowHeadersWidth = 51;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
-            this.dgvEntidades.RowsDefaultCellStyle = dataGridViewCellStyle12;
-            this.dgvEntidades.RowTemplate.Height = 30;
-            this.dgvEntidades.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEntidades.Size = new System.Drawing.Size(558, 640);
-            this.dgvEntidades.TabIndex = 56;
-            this.dgvEntidades.SelectionChanged += new System.EventHandler(this.dgvEntidades_SelectionChanged);
+            this.trvDetalle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
+            this.trvDetalle.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.trvDetalle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trvDetalle.FullRowSelect = true;
+            this.trvDetalle.HideSelection = false;
+            this.trvDetalle.ItemHeight = 28;
+            this.trvDetalle.LineColor = System.Drawing.Color.Goldenrod;
+            this.trvDetalle.Location = new System.Drawing.Point(2, 40);
+            this.trvDetalle.Name = "trvDetalle";
+            this.trvDetalle.Size = new System.Drawing.Size(874, 640);
+            this.trvDetalle.TabIndex = 4;
             // 
             // lblDetalle
             // 
@@ -288,19 +302,6 @@
             this.lblDetalle.Text = "Detalle";
             this.lblDetalle.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // trvDetalle
-            // 
-            this.trvDetalle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
-            this.trvDetalle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trvDetalle.FullRowSelect = true;
-            this.trvDetalle.HideSelection = false;
-            this.trvDetalle.ItemHeight = 28;
-            this.trvDetalle.LineColor = System.Drawing.Color.Goldenrod;
-            this.trvDetalle.Location = new System.Drawing.Point(2, 40);
-            this.trvDetalle.Name = "trvDetalle";
-            this.trvDetalle.Size = new System.Drawing.Size(874, 640);
-            this.trvDetalle.TabIndex = 4;
-            // 
             // FormGestionAcceso
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -309,7 +310,7 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1470, 920);
             this.Controls.Add(this.pnlContent);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormGestionAcceso";
@@ -318,7 +319,7 @@
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).EndInit();
-            this.panel2.ResumeLayout(false);
+            this.pnlBottom.ResumeLayout(false);
             this.pnlContent.ResumeLayout(false);
             this.splitMain.Panel1.ResumeLayout(false);
             this.splitMain.Panel1.PerformLayout();
@@ -333,7 +334,7 @@
 
         #endregion
         private System.Windows.Forms.Panel pnlHeader;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlBottom;
         private FontAwesome.Sharp.IconButton btnModificar;
         private FontAwesome.Sharp.IconButton btnCrear;
         private FontAwesome.Sharp.IconButton btnEliminar;

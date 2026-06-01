@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace GUI_08YS.Admin
 {
-    public partial class FormAccesoAM : Form
+    public partial class FormAccesoAM_08YS : Form
     {
         private readonly TipoEntidad _tipo;
         private readonly OperacionABM _operacion;
@@ -23,9 +23,16 @@ namespace GUI_08YS.Admin
         private readonly Action _onGuardado;
         private readonly Action _onCancelado;
 
-        private List<AccessComponent> _componentesSeleccionados = new List<AccessComponent>();
+        private List<AccessComponent_08YS> _seleccionados = new List<AccessComponent_08YS>();
+        private List<AccessComponent_08YS> _disponibles = new List<AccessComponent_08YS>();
 
-        public FormAccesoAM(
+        // Evita cascada de eventos entre los dos dgv durante refreshes
+        private bool _actualizandoSeleccion = false;
+        private AccesoBLL BLL => _tipo == TipoEntidad.Familia
+       ? (AccesoBLL)_familiaBLL
+       : _rolBLL;
+
+        public FormAccesoAM_08YS(
             TipoEntidad tipo,
             OperacionABM operacion,
             FamiliaBLL_08YS familiaBLL,
@@ -46,6 +53,194 @@ namespace GUI_08YS.Admin
             _onCancelado = onCancelado;
         }
 
+
+        private void FormAccesoAM_08YS_Load(object sender, EventArgs e)
+        {
+            ConfigurarSegunTipo();
+            //ConfigurarBotones();
+            CargarDatos();
+        }
+
+        private void ConfigurarSegunTipo()
+        {
+            bool esFamilia = _tipo == TipoEntidad.Familia;
+
+            iconPictureBox.IconChar = esFamilia
+                ? FontAwesome.Sharp.IconChar.LayerGroup
+                : FontAwesome.Sharp.IconChar.UserShield;
+
+            string entidad = esFamilia ? "Familia" : "Rol";
+            string operacion = _operacion == OperacionABM.Alta ? "Nueva" : "Modificar";
+            lblTitulo.Text = $"{operacion} {entidad}";
+
+            if (_operacion == OperacionABM.Modificacion)
+                txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;
+        }
+
+        private void CargarDatos()
+        {
+            // Precargar seleccionados en Modificacion
+            if (_operacion == OperacionABM.Modificacion)
+            {
+                _seleccionados = _tipo == TipoEntidad.Familia
+                    ? _familiaAEditar.Hijos.ToList()
+                    : _rolAEditar.Componentes.ToList();
+            }
+
+            int? familiaId = null;
+
+            if (_operacion == OperacionABM.Modificacion)
+                familiaId = _familiaAEditar.FamiliaID;
+
+            var todos = _tipo == TipoEntidad.Familia
+                ? _familiaBLL.GetComponentesDisponibles(familiaId)
+                : _rolBLL.GetComponentesDisponibles();
+            _disponibles = todos
+                .Where(c => !_seleccionados.Any(s => MismoComponente(s, c)))
+                .ToList();
+
+            RefrescarDGVSeleccionados();
+            RefrescarDGVDisponibles();
+        }
+
+        private void dgvSeleccionados_SelectionChanged(object sender, EventArgs e)
+        {
+            if (_actualizandoSeleccion) return;
+
+            _actualizandoSeleccion = true;
+            dgvDisponibles.ClearSelection();
+            _actualizandoSeleccion = false;
+
+            var row = dgvSeleccionados.CurrentRow?.DataBoundItem as ComponenteRow;
+            if (row != null) ActualizarDetalle(row.Componente);
+            else LimpiarDetalle();
+        }
+
+        private void dgvDisponibles_SelectionChanged(object sender, EventArgs e)
+        {
+            if (_actualizandoSeleccion) return;
+
+            _actualizandoSeleccion = true;
+            dgvSeleccionados.ClearSelection();
+            _actualizandoSeleccion = false;
+
+            var row = dgvDisponibles.CurrentRow?.DataBoundItem as ComponenteRow;
+            if (row != null) ActualizarDetalle(row.Componente);
+            else LimpiarDetalle();
+        }
+
+        private void ActualizarDetalle(AccessComponent_08YS componente)
+        {
+            if (componente is Permiso_08YS permiso)
+            {
+                lblDescripcion.Text = string.IsNullOrWhiteSpace(permiso.Descripcion)
+                    ? "(Sin descripción)"
+                    : permiso.Descripcion;
+                lblDescripcion.Visible = true;
+                trvDetalle.Visible = false;
+            }
+            else if (componente is Familia_08YS familia)
+            {
+                trvDetalle.Nodes.Clear();
+                var raiz = CrearNodo(familia);
+                raiz.Expand();
+                trvDetalle.Nodes.Add(raiz);
+                trvDetalle.Visible = true;
+                lblDescripcion.Visible = false;
+            }
+        }
+
+        private void LimpiarDetalle()
+        {
+            lblDescripcion.Visible = false;
+            trvDetalle.Visible = false;
+            trvDetalle.Nodes.Clear();
+        }
+
+        private TreeNode CrearNodo(AccessComponent_08YS componente)
+        {
+            var nodo = new TreeNode(
+                componente is Familia_08YS ? $"📁 {componente.Nombre}" : $"🔑 {componente.Nombre}");
+
+            if (componente is Familia_08YS f)
+                foreach (var hijo in f.Hijos)
+                    nodo.Nodes.Add(CrearNodo(hijo));
+
+            return nodo;
+        }
+
+        private void btnAgregar_Click(object sender, EventArgs e)
+        {
+            if (dgvDisponibles.CurrentRow == null) return;
+
+            var candidato = (dgvDisponibles.CurrentRow.DataBoundItem as ComponenteRow)?.Componente;
+            if (candidato == null) return;
+
+            var resultado = BLL.EvaluarAgregarComponente(_seleccionados, candidato);
+
+            switch (resultado.Resultado)
+            {
+                case ResultadoEvaluacion_08YS.Tipo.Valido:
+                    EjecutarAgregado(candidato);
+                    break;
+
+                case ResultadoEvaluacion_08YS.Tipo.SugerenciaReemplazo:
+                    var confirm = MessageBox.Show(
+                        resultado.Mensaje,
+                        "Reemplazo sugerido",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Question);
+
+                    if (confirm == DialogResult.OK)
+                    {
+                        // Devuelve los reemplazados a disponibles antes de agregar el candidato
+                        foreach (var reemplazar in resultado.ComponentesAReemplazar)
+                        {
+                            _seleccionados.Remove(reemplazar);
+                            if (!_disponibles.Any(d => MismoComponente(d, reemplazar)))
+                                _disponibles.Add(reemplazar);
+                        }
+                        EjecutarAgregado(candidato);
+                    }
+                    break;
+
+                case ResultadoEvaluacion_08YS.Tipo.ConflictoIrresoluble:
+                    MessageBox.Show(resultado.Mensaje, "No se puede agregar",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+            }
+        }
+
+        private void EjecutarAgregado(AccessComponent_08YS componente)
+        {
+            _seleccionados.Add(componente);
+
+            var aQuitar = _disponibles.FirstOrDefault(d => MismoComponente(d, componente));
+            if (aQuitar != null) _disponibles.Remove(aQuitar);
+
+            LimpiarDetalle();
+            RefrescarDGVSeleccionados();
+            RefrescarDGVDisponibles();
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (dgvSeleccionados.CurrentRow == null) return;
+
+            var componente = (dgvSeleccionados.CurrentRow.DataBoundItem as ComponenteRow)?.Componente;
+            if (componente == null) return;
+
+            _seleccionados.Remove(componente);
+
+            // Devuelve a disponibles si no está ya
+            if (!_disponibles.Any(d => MismoComponente(d, componente)))
+                _disponibles.Add(componente);
+
+            LimpiarDetalle();
+            RefrescarDGVSeleccionados();
+            RefrescarDGVDisponibles();
+        }
+
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             try
@@ -55,16 +250,16 @@ namespace GUI_08YS.Admin
                 if (_tipo == TipoEntidad.Familia)
                 {
                     if (_operacion == OperacionABM.Alta)
-                        _familiaBLL.Crear(nombre, _componentesSeleccionados);
+                        _familiaBLL.Crear(nombre, _seleccionados);
                     else
-                        _familiaBLL.Modificar(_familiaAEditar.FamiliaID, nombre, _componentesSeleccionados);
+                        _familiaBLL.Modificar(_familiaAEditar.FamiliaID, nombre, _seleccionados);
                 }
                 else
                 {
                     if (_operacion == OperacionABM.Alta)
-                        _rolBLL.Crear(nombre, _componentesSeleccionados);
+                        _rolBLL.Crear(nombre, _seleccionados);
                     else
-                        _rolBLL.Modificar(_rolAEditar.RolID, nombre, _componentesSeleccionados);
+                        _rolBLL.Modificar(_rolAEditar.RolID, nombre, _seleccionados);
                 }
 
                 _onGuardado?.Invoke();
@@ -83,5 +278,45 @@ namespace GUI_08YS.Admin
 
         private void btnCancelar_Click(object sender, EventArgs e)
             => _onCancelado?.Invoke();
+
+        private void RefrescarDGVSeleccionados()
+        {
+            _actualizandoSeleccion = true;
+            dgvSeleccionados.DataSource = null;
+            dgvSeleccionados.DataSource = _seleccionados
+                .OrderBy(c => c is Familia_08YS ? 1 : 0)
+                .ThenBy(c => c.Nombre)
+                .Select(c => new ComponenteRow(c))
+                .ToList();
+            _actualizandoSeleccion = false;
+        }
+
+        private void RefrescarDGVDisponibles()
+        {
+            _actualizandoSeleccion = true;
+            dgvDisponibles.DataSource = null;
+            dgvDisponibles.DataSource = _disponibles
+                .OrderBy(c => c is Familia_08YS ? 1 : 0)
+                .ThenBy(c => c.Nombre)
+                .Select(c => new ComponenteRow(c))
+                .ToList();
+            _actualizandoSeleccion = false;
+        }
+
+        private bool MismoComponente(AccessComponent_08YS a, AccessComponent_08YS b)
+        {
+            if (a is Familia_08YS fa && b is Familia_08YS fb) return fa.FamiliaID == fb.FamiliaID;
+            if (a is Permiso_08YS pa && b is Permiso_08YS pb) return pa.PermisoID == pb.PermisoID;
+            return false;
+        }
+
+        private class ComponenteRow
+        {
+            public AccessComponent_08YS Componente { get; }
+            public string Nombre => Componente.Nombre;
+            public string TipoDisplay => Componente is Familia_08YS ? "Familia" : "Permiso";
+
+            public ComponenteRow(AccessComponent_08YS c) => Componente = c;
+        }
     }
 }

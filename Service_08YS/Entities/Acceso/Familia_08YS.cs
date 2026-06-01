@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Acceso
 {
-    public class Familia_08YS : AccessComponent
+    public class Familia_08YS : AccessComponent_08YS
     {
         public int FamiliaID { get => ID; set => ID = value; }
 
-        private readonly List<AccessComponent> _hijos = new List<AccessComponent>();
-        public IReadOnlyList<AccessComponent> Hijos => _hijos.AsReadOnly();
+        private readonly List<AccessComponent_08YS> _hijos = new List<AccessComponent_08YS>();
+        public IReadOnlyList<AccessComponent_08YS> Hijos => _hijos.AsReadOnly();
 
         public override bool EsCompuesto => true;
 
-        public void Agregar(AccessComponent c) => _hijos.Add(c);
-        public void Quitar(AccessComponent c) => _hijos.Remove(c);
+        public void Agregar(AccessComponent_08YS c) => _hijos.Add(c);
+        public void Quitar(AccessComponent_08YS c) => _hijos.Remove(c);
 
         public override HashSet<Permiso_08YS> GetPermisos()
         {

@@ -11,7 +11,7 @@ namespace Service_08YS.Entities.Acceso
         public enum Tipo { Valido, ConflictoIrresoluble, SugerenciaReemplazo }
 
         public Tipo Resultado { get; set; }
-        public List<AccessComponent> ComponentesAReemplazar { get; set; } = new List<AccessComponent>();
+        public List<AccessComponent_08YS> ComponentesAReemplazar { get; set; } = new List<AccessComponent_08YS>();
         public string Mensaje { get; set; }
     }
 }

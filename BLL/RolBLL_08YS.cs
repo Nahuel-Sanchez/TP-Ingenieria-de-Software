@@ -8,17 +8,15 @@ using System.Threading.Tasks;
 
 namespace BLL_08YS
 {
-    public class RolBLL_08YS
+    public class RolBLL_08YS : AccesoBLL
     {
         private readonly IRolRepository_08YS _rolRepo;
         private readonly IFamiliaRepository_08YS _familiaRepo;
-        private readonly IPermisoRepository_08YS _permisoRepo;
 
-        public RolBLL_08YS(IRolRepository_08YS rolRepo, IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo)
+        public RolBLL_08YS(IRolRepository_08YS rolRepo, IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo) : base(permisoRepo)
         {
             _rolRepo = rolRepo;
             _familiaRepo = familiaRepo;
-            _permisoRepo = permisoRepo;
         }
 
         // FormGestion: listado principal
@@ -26,20 +24,20 @@ namespace BLL_08YS
 
         // FormABM lado derecho: todos los permisos + todas las familias
         // Los ya seleccionados los filtra la GUI igual que en Familia
-        public List<AccessComponent> GetComponentesDisponibles()
+        public List<AccessComponent_08YS> GetComponentesDisponibles()
         {
-            var permisos = _permisoRepo.GetAll().Cast<AccessComponent>();
-            var familias = _familiaRepo.GetAll().Cast<AccessComponent>();
+            var permisos = _permisoRepo.GetAll().Cast<AccessComponent_08YS>();
+            var familias = _familiaRepo.GetAll().Cast<AccessComponent_08YS>();
             return permisos.Concat(familias).ToList();
         }
 
-        public void Crear(string nombre, List<AccessComponent> componentes)
+        public void Crear(string nombre, List<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
             _rolRepo.Create(nombre, componentes);
         }
 
-        public void Modificar(int rolId, string nombre, List<AccessComponent> componentes)
+        public void Modificar(int rolId, string nombre, List<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
             _rolRepo.Modify(rolId, nombre, componentes);
@@ -54,12 +52,5 @@ namespace BLL_08YS
             _rolRepo.Delete(rolId);
         }
 
-        private void ValidarDatosEntrada(string nombre, List<AccessComponent> componentes)
-        {
-            if (string.IsNullOrWhiteSpace(nombre))
-                throw new InvalidOperationException("El nombre del rol no puede estar vacío.");
-            if (!componentes.Any())
-                throw new InvalidOperationException("El rol debe contener al menos un permiso o familia.");
-        }
     }
 }

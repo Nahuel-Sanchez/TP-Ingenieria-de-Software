@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Acceso
 {
-    public class Permiso_08YS : AccessComponent
+    public class Permiso_08YS : AccessComponent_08YS
     {
         public int PermisoID { get => ID; set => ID = value; }
         public string Descripcion { get; set; }

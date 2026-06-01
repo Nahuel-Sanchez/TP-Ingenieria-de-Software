@@ -66,7 +66,7 @@ namespace DAL_08YS.SQL
             return roles.Values.ToList();
         }
 
-        public void Create(string nombre, List<AccessComponent> componentes)
+        public void Create(string nombre, List<AccessComponent_08YS> componentes)
         {
             var familiasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
             var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
@@ -84,7 +84,7 @@ namespace DAL_08YS.SQL
                 storedProcedure: true);
         }
 
-        public void Modify(int rolId, string nombre, List<AccessComponent> componentes)
+        public void Modify(int rolId, string nombre, List<AccessComponent_08YS> componentes)
         {
             var familiasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
             var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();

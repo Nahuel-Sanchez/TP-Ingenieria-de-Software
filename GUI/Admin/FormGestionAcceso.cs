@@ -54,7 +54,7 @@ namespace GUI_08YS.Admin
                 _openChildForm(formGestion);   // vuelve a FormGestion sin cambios
             };
 
-            var formABM = new FormAccesoAM(
+            var formABM = new FormAccesoAM_08YS(
                 _tipo,
                 operacion,
                 _familiaBLL,
@@ -165,7 +165,7 @@ namespace GUI_08YS.Admin
             trvDetalle.Nodes.Add(raiz);
         }
 
-        private TreeNode CrearNodo(AccessComponent componente)
+        private TreeNode CrearNodo(AccessComponent_08YS componente)
         {
             var nodo = new TreeNode(
                 componente is Familia_08YS ? $"📁 {componente.Nombre}" : $"🔑 {componente.Nombre}");
@@ -176,7 +176,7 @@ namespace GUI_08YS.Admin
             return nodo;
         }
 
-        private void PopularNodos(IEnumerable<AccessComponent> componentes, TreeNodeCollection destino)
+        private void PopularNodos(IEnumerable<AccessComponent_08YS> componentes, TreeNodeCollection destino)
         {
             foreach (var c in componentes)
                 destino.Add(CrearNodo(c));

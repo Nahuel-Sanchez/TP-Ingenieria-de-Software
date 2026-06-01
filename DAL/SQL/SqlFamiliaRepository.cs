@@ -16,10 +16,55 @@ namespace DAL_08YS.SQL
 
         public List<Familia_08YS> GetAll()
         {
-            throw new NotImplementedException();
+            DataSet ds = GetDataSet("sp_GetAllFamilias", storedProcedure: true);
+
+            // RS0 → diccionario de familias por ID
+            var familias = ds.Tables[0].AsEnumerable()
+                .ToDictionary(
+                    r => Convert.ToInt32(r["FamiliaID"]),
+                    r => new Familia_08YS
+                    {
+                        FamiliaID = Convert.ToInt32(r["FamiliaID"]),
+                        Nombre = r["Nombre"].ToString()
+                    });
+
+            // RS2 → permisos directos: se agregan antes que las subfamilias
+            // para que ObtenerPermisos() los encuentre al reconstruir
+            foreach (DataRow row in ds.Tables[2].Rows)
+            {
+                int fid = Convert.ToInt32(row["FamiliaID"]);
+                if (familias.TryGetValue(fid, out var familia))
+                    familia.Agregar(new Permiso_08YS
+                    {
+                        PermisoID = Convert.ToInt32(row["PermisoID"]),
+                        Nombre = row["PermisoNombre"].ToString(),
+                        Descripcion = row["Descripcion"] == DBNull.Value
+                            ? null
+                            : row["Descripcion"].ToString()
+                    });
+            }
+
+            // RS1 → subfamilias: los hijos se agregan a sus padres
+            foreach (DataRow row in ds.Tables[1].Rows)
+            {
+                int hijoID = Convert.ToInt32(row["FamiliaID"]);
+                int padreID = Convert.ToInt32(row["FamiliaPadreID"]);
+                if (familias.TryGetValue(padreID, out var padre) &&
+                    familias.TryGetValue(hijoID, out var hijo))
+                    padre.Agregar(hijo);
+            }
+
+            // Solo retorna raíces (familias que no son hijas de nadie)
+            var hijosIds = ds.Tables[1].AsEnumerable()
+                .Select(r => Convert.ToInt32(r["FamiliaID"]))
+                .ToHashSet();
+
+            return familias.Values
+                .Where(f => !hijosIds.Contains(f.FamiliaID))
+                .ToList();
         }
 
-        public void Create(string nombre, List<AccessComponent> componentes)
+        public void Create(string nombre, List<AccessComponent_08YS> componentes)
         {
             var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
             var subFamiliasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
@@ -38,7 +83,7 @@ namespace DAL_08YS.SQL
             // outputParam.Value contiene el ID generado por SCOPE_IDENTITY()
         }
 
-        public void Modify(int familiaId, string nombre, List<AccessComponent> componentes)
+        public void Modify(int familiaId, string nombre, List<AccessComponent_08YS> componentes)
         {
             var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
             var subFamiliasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();

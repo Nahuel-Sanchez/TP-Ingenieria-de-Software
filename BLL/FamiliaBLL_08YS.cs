@@ -24,10 +24,10 @@ namespace BLL_08YS
         // familiaIdExcluir null  → Alta: sin exclusiones por ciclos
         // familiaIdExcluir int   → Modificacion: excluye la familia actual + sus contenedoras
         // Los ya seleccionados (DGV izquierdo) los filtra la GUI quitándolos del DGV derecho
-        public List<AccessComponent> GetComponentesDisponibles(int? familiaIdExcluir = null)
+        public List<AccessComponent_08YS> GetComponentesDisponibles(int? familiaIdExcluir = null)
         {
-            var permisos = _permisoRepo.GetAll().Cast<AccessComponent>();
-            var familias = _familiaRepo.GetAll().Cast<AccessComponent>().ToList();
+            var permisos = _permisoRepo.GetAll().Cast<AccessComponent_08YS>();
+            var familias = _familiaRepo.GetAll().Cast<AccessComponent_08YS>().ToList();
 
             if (familiaIdExcluir.HasValue)
             {
@@ -75,14 +75,14 @@ namespace BLL_08YS
 
         // Las validaciones de negocio (nombre vacío, sin componentes) viven acá,
         // no en la GUI. La GUI solo arma la lista y llama.
-        public void Crear(string nombre, List<AccessComponent> componentes)
+        public void Crear(string nombre, List<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(componentes, null);
             _familiaRepo.Create(nombre, componentes);
         }
 
-        public void Modificar(int familiaId, string nombre, List<AccessComponent> componentes)
+        public void Modificar(int familiaId, string nombre, List<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(componentes, familiaId);
@@ -98,7 +98,7 @@ namespace BLL_08YS
             _familiaRepo.Delete(familiaId);
         }
 
-        private void ValidarFamiliaNoExistente(List<AccessComponent> componentes, int? excluirId)
+        private void ValidarFamiliaNoExistente(List<AccessComponent_08YS> componentes, int? excluirId)
         {
             var permsNuevos = componentes
                 .SelectMany(c => c.GetPermisos())

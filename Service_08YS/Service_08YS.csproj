@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Acceso\AccessComponent.cs" />
+    <Compile Include="Entities\Acceso\AccessComponent_08YS.cs" />
     <Compile Include="Entities\Acceso\Familia_08YS.cs" />
     <Compile Include="Entities\Acceso\Permiso_08YS.cs" />
     <Compile Include="Entities\Acceso\ResultadoEvaluacion_08YS.cs" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Acceso
 {
-    public abstract class AccessComponent
+    public abstract class AccessComponent_08YS
     {
         public int ID { get; set; }
         public string Nombre { get; set; }

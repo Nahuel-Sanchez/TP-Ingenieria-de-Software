@@ -11,11 +11,11 @@ namespace DAL_08YS.Interfaces_Repositories
     {
         List<Familia_08YS> GetAll();
 
-        void Create(string nombre, List<AccessComponent> componentes);
+        void Create(string nombre, List<AccessComponent_08YS> componentes);
 
         bool IsInUse(int familiaId);
 
         void Delete(int familiaId);
-        void Modify(int familiaId, string nombre, List<AccessComponent> componentes);
+        void Modify(int familiaId, string nombre, List<AccessComponent_08YS> componentes);
     }
 }
