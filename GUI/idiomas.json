@@ -1,0 +1,26 @@
+{
+    "es": {
+        "btn_Aceptar": "Aceptar",
+        "btn_Cancelar": "Cancelar",
+        "lbl_Usuario": "Usuario:",
+        "lbl_Password": "Contraseña:",
+        "msg_ErrorLogin": "Credenciales incorrectas. Intente nuevamente.",
+        "msg_CambioContraseña Requerido": "Debe cambiar su contraseña antes de continuar.",
+        "btn_Acceder": "Acceder",
+        "lblDescripcionLogin": "Excelencia en cada estadía",
+        "txtUsername": "Usuario"
+        
+    },
+    "en": {
+        "btn_Aceptar": "Accept",
+        "btn_Cancelar": "Cancel",
+        "lbl_Usuario": "Username:",
+        "lbl_Password": "Password:",
+        "msg_ErrorLogin": "Incorrect credentials. Please try again.",
+        "msg_CambioContraseña Requerido": "You must change your password before continuing.",
+        "btn_Acceder": "Access",
+        "lblDescripcionLogin": "Excellence in every stay",
+        "txtUsername": "Username"
+        
+    }
+}
