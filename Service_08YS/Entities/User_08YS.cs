@@ -24,13 +24,13 @@ namespace Service_08YS
         private string _email;
         private bool _bloqueado;
         private bool _activo;
-
+        private string _idioma;
       
 
       
 
 
-        public User_08YS(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true)
+        public User_08YS(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true,string idioma="es")
         {
             this._username = username;
             this._dni = dni;
@@ -42,6 +42,7 @@ namespace Service_08YS
             this._email = email;
             this._bloqueado = bloqueado;
             this._activo = activo;
+            this.Idioma = idioma;
         }
 
         public User_08YS() { }
@@ -124,6 +125,11 @@ namespace Service_08YS
             get { return _activo; }
             set { _activo = value; }
         }
-
+        [Browsable(false)]
+        public string Idioma
+        {
+            get { return _idioma; }
+            set { _idioma = value; }
+        }
     }
 }

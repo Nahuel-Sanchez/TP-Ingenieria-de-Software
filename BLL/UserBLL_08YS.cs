@@ -42,6 +42,8 @@ namespace BLL_08YS
             }
 
             SessionManager_08YS.Instance.SetCurrentUser(user);
+
+            //TraductorManager_08YS.Instance.CambiarIdioma(user.Idioma);
             _bitacoraBll.RegistrarEvento(Evento.LoginExitoso);
 
             passwordDefault = Encriptador_08YS.Verificar(user.DNI.ToString() + user.Apellido, user.Hash, user.Salt);
@@ -152,7 +154,16 @@ namespace BLL_08YS
             userRepository.UpdatePassword(SessionManager_08YS.Instance.Current.Username, hashNuevo, saltNuevo);
             _bitacoraBll.RegistrarEvento(Evento.CambioContraseña);
         }
-      
+        public void CambiarIdiomaUsuario(User_08YS usuario, string nuevoIdioma)
+        {
+            if (usuario == null) return;
+
+            // 1. Guardamos en la base de datos a través de la DAL
+            userRepository.UpdateLanguage(usuario.Username, nuevoIdioma);
+
+            // 2. Modificamos el objeto local en memoria de la sesión actual
+            usuario.Idioma = nuevoIdioma;
+        }
         public List<User_08YS> GetAll() => userRepository.GetAll();
 
     }

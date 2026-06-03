@@ -26,5 +26,7 @@ namespace DAL_08YS.Repositories_Interfaces
         void UpdateState(string username, bool nuevoEstado);
 
         void UpdatePassword(string username, string hashNuevo, string saltNuevo);
+
+        void UpdateLanguage(string username, string language);
     }
 }

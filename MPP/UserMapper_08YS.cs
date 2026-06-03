@@ -31,7 +31,8 @@ namespace MPP_08YS
                 Salt = row["Salt"].ToString(),
                 Email = row["Email"].ToString(),
                 Bloqueado = Convert.ToBoolean(row["Bloqueado"]),
-                Activo = Convert.ToBoolean(row["Activo"])
+                Activo = Convert.ToBoolean(row["Activo"]),
+                Idioma = row["Idioma"].ToString() 
             };
         }
     }

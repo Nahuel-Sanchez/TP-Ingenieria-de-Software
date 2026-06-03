@@ -27,7 +27,8 @@ namespace DAL_08YS
                 Param("@Salt",      user.Salt),
                 Param("@Email",     user.Email),
                 Param("@Bloqueado", user.Bloqueado),
-                Param("@Activo",    user.Activo)
+                Param("@Activo",    user.Activo),
+                Param("@Idioma",    user.Idioma)
         };
         }
 
@@ -69,8 +70,8 @@ namespace DAL_08YS
         {
             ExecuteNonQuery
             (
-                "INSERT INTO Users (Username, DNI, RolID, Nombre, Apellido, Hash, Salt, Email, Bloqueado, Activo) " +
-                "VALUES (@Username, @DNI, @RolID, @Nombre, @Apellido, @Hash, @Salt, @Email, @Bloqueado, @Activo)",
+                "INSERT INTO Users (Username, DNI, RolID, Nombre, Apellido, Hash, Salt, Email, Bloqueado, Activo,Idioma) " +
+                "VALUES (@Username, @DNI, @RolID, @Nombre, @Apellido, @Hash, @Salt, @Email, @Bloqueado, @Activo,@Idioma)",
                 ToParameters(user)
             );
         }
@@ -115,6 +116,14 @@ namespace DAL_08YS
                         Param("@Salt", saltNuevo),
                         Param("@Username", username) }
             );
+        }
+        public void UpdateLanguage(string username, string codigoIdioma)
+        {
+            ExecuteNonQuery("UPDATE Users SET Idioma = @idioma WHERE Username = @Username",
+                new[] {
+                    Param("@idioma", codigoIdioma),
+                     Param("@Username", username)
+                });
         }
     }
 }

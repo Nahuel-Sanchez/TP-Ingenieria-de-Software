@@ -110,7 +110,7 @@ namespace GUI_08YS
                     this.Show();
                     
                 };
-
+                _userBLL.CambiarIdiomaUsuario(user, TraductorManager_08YS.Instance.IdiomaActual);
                 formMDI.Show();
                 formMDI.Activate();
 
@@ -191,11 +191,17 @@ namespace GUI_08YS
 
         private void IdiomaComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (IdiomaCombobox.SelectedIndex == 0)
-                TraductorManager_08YS.Instance.CambiarIdioma("es");
+            string idiomaSeleccionado = IdiomaCombobox.SelectedIndex == 1 ? "en" : "es";
 
-            if (IdiomaCombobox.SelectedIndex == 1)
-                TraductorManager_08YS.Instance.CambiarIdioma("en");
+            // 1. Le avisamos al Manager para que muten todas las pantallas abiertas por el Observer
+            TraductorManager_08YS.Instance.CambiarIdioma(idiomaSeleccionado);
+
+            // 2. Si hay un usuario logueado en el SessionManager, impactamos su perfil en la BD
+            if (SessionManager_08YS.Instance.IsLogged)
+            {
+                User_08YS usuarioActual = SessionManager_08YS.Instance.Current;
+                _userBLL.CambiarIdiomaUsuario(usuarioActual, idiomaSeleccionado);
+            }
         }
     }
 }
