@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace GUI_08YS
 {
-    public partial class FormCambiarContraseña_08YS : Form
+    public partial class FormCambiarContraseña_08YS : Form,IIdiomaObserver_08YS
     {
         private UserBLL_08YS _userBLL;
         private bool _syncingPasswords = false;
@@ -32,8 +32,30 @@ namespace GUI_08YS
 
             txtNuevaContraseña.IconClick += OnLinkedPasswordToggle;
             txtConfirmarContraseña.IconClick += OnLinkedPasswordToggle;
+            TraductorManager_08YS.Instance.Suscribir(this);
+            UpdateIdioma(); 
         }
+        public void UpdateIdioma()
+        {
+            TraducirControles(this);
+        }
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                // Si el control tiene un Tag asignado, buscamos su traducción
+                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                {
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
+                }
 
+                // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
+                if (c.HasChildren)
+                {
+                    TraducirControles(c);
+                }
+            }
+        }
         private void OnLinkedPasswordToggle(object sender, EventArgs e)
         {
             if (_syncingPasswords) return;
@@ -92,6 +114,6 @@ namespace GUI_08YS
             return true;
         }
 
-        
+    
     }
 }

@@ -16,7 +16,7 @@ using System.Windows.Forms;
 
 namespace GUI
 {
-    public partial class FormBitacora_08YS : Form
+    public partial class FormBitacora_08YS : Form,IIdiomaObserver_08YS
     {
         private BitacoraBLL_08YS _bll = BLLFactory_08YS.CreateBitacoraBLL();
 
@@ -40,8 +40,31 @@ namespace GUI
 
             dtpDesde.Value = null;
             dtpHasta.Value = null;
-        }
 
+            TraductorManager_08YS.Instance.Suscribir(this);
+            UpdateIdioma();
+        }
+        public void UpdateIdioma()
+        {
+            TraducirControles(this);
+        }
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                // Si el control tiene un Tag asignado, buscamos su traducción
+                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                {
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
+                }
+
+                // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
+                if (c.HasChildren)
+                {
+                    TraducirControles(c);
+                }
+            }
+        }
         private void FormBitacora_Load(object sender, EventArgs e) => CargarGrid();
 
         private void CargarGrid()

@@ -30,8 +30,8 @@ namespace GUI
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cmbRol = new System.Windows.Forms.ComboBox();
             this.rbBloqueados = new System.Windows.Forms.RadioButton();
             this.lblActivo = new System.Windows.Forms.Label();
@@ -70,10 +70,9 @@ namespace GUI
             // cmbRol
             // 
             this.cmbRol.FormattingEnabled = true;
-            this.cmbRol.Location = new System.Drawing.Point(149, 701);
-            this.cmbRol.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbRol.Location = new System.Drawing.Point(112, 570);
             this.cmbRol.Name = "cmbRol";
-            this.cmbRol.Size = new System.Drawing.Size(241, 24);
+            this.cmbRol.Size = new System.Drawing.Size(182, 21);
             this.cmbRol.TabIndex = 61;
             // 
             // rbBloqueados
@@ -82,12 +81,12 @@ namespace GUI
             this.rbBloqueados.BackColor = System.Drawing.Color.Transparent;
             this.rbBloqueados.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbBloqueados.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.rbBloqueados.Location = new System.Drawing.Point(720, 34);
-            this.rbBloqueados.Margin = new System.Windows.Forms.Padding(4);
+            this.rbBloqueados.Location = new System.Drawing.Point(540, 28);
             this.rbBloqueados.Name = "rbBloqueados";
-            this.rbBloqueados.Size = new System.Drawing.Size(118, 24);
+            this.rbBloqueados.Size = new System.Drawing.Size(99, 20);
             this.rbBloqueados.TabIndex = 60;
             this.rbBloqueados.TabStop = true;
+            this.rbBloqueados.Tag = "rbBloqueados";
             this.rbBloqueados.Text = "Bloqueados";
             this.rbBloqueados.UseVisualStyleBackColor = false;
             this.rbBloqueados.CheckedChanged += new System.EventHandler(this.rbBloqueados_CheckedChanged);
@@ -98,11 +97,11 @@ namespace GUI
             this.lblActivo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.lblActivo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblActivo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblActivo.Location = new System.Drawing.Point(22, 839);
-            this.lblActivo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblActivo.Location = new System.Drawing.Point(16, 682);
             this.lblActivo.Name = "lblActivo";
-            this.lblActivo.Size = new System.Drawing.Size(55, 20);
+            this.lblActivo.Size = new System.Drawing.Size(44, 16);
             this.lblActivo.TabIndex = 59;
+            this.lblActivo.Tag = "lblActivo";
             this.lblActivo.Text = "Activo";
             // 
             // lblBloqueado
@@ -111,11 +110,11 @@ namespace GUI
             this.lblBloqueado.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.lblBloqueado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBloqueado.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblBloqueado.Location = new System.Drawing.Point(22, 795);
-            this.lblBloqueado.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblBloqueado.Location = new System.Drawing.Point(16, 646);
             this.lblBloqueado.Name = "lblBloqueado";
-            this.lblBloqueado.Size = new System.Drawing.Size(88, 20);
+            this.lblBloqueado.Size = new System.Drawing.Size(74, 16);
             this.lblBloqueado.TabIndex = 58;
+            this.lblBloqueado.Tag = "lblBloqueado";
             this.lblBloqueado.Text = "Bloqueado";
             // 
             // lblLogin
@@ -124,11 +123,11 @@ namespace GUI
             this.lblLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.lblLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLogin.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblLogin.Location = new System.Drawing.Point(22, 750);
-            this.lblLogin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLogin.Location = new System.Drawing.Point(16, 609);
             this.lblLogin.Name = "lblLogin";
-            this.lblLogin.Size = new System.Drawing.Size(50, 20);
+            this.lblLogin.Size = new System.Drawing.Size(70, 16);
             this.lblLogin.TabIndex = 57;
+            this.lblLogin.Tag = "";
             this.lblLogin.Text = "Username";
             // 
             // lblRol
@@ -137,11 +136,11 @@ namespace GUI
             this.lblRol.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.lblRol.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRol.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblRol.Location = new System.Drawing.Point(22, 702);
-            this.lblRol.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblRol.Location = new System.Drawing.Point(16, 570);
             this.lblRol.Name = "lblRol";
-            this.lblRol.Size = new System.Drawing.Size(34, 20);
+            this.lblRol.Size = new System.Drawing.Size(28, 16);
             this.lblRol.TabIndex = 56;
+            this.lblRol.Tag = "lblRol";
             this.lblRol.Text = "Rol";
             // 
             // lblNombres
@@ -150,11 +149,11 @@ namespace GUI
             this.lblNombres.BackColor = System.Drawing.Color.Transparent;
             this.lblNombres.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNombres.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblNombres.Location = new System.Drawing.Point(22, 610);
-            this.lblNombres.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblNombres.Location = new System.Drawing.Point(16, 496);
             this.lblNombres.Name = "lblNombres";
-            this.lblNombres.Size = new System.Drawing.Size(77, 20);
+            this.lblNombres.Size = new System.Drawing.Size(63, 16);
             this.lblNombres.TabIndex = 55;
+            this.lblNombres.Tag = "lblNombres";
             this.lblNombres.Text = "Nombres";
             // 
             // lblEmail
@@ -163,10 +162,9 @@ namespace GUI
             this.lblEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.lblEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEmail.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblEmail.Location = new System.Drawing.Point(22, 654);
-            this.lblEmail.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblEmail.Location = new System.Drawing.Point(16, 531);
             this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(51, 20);
+            this.lblEmail.Size = new System.Drawing.Size(41, 16);
             this.lblEmail.TabIndex = 54;
             this.lblEmail.Text = "Email";
             // 
@@ -176,11 +174,11 @@ namespace GUI
             this.lblApellidos.BackColor = System.Drawing.Color.Transparent;
             this.lblApellidos.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblApellidos.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblApellidos.Location = new System.Drawing.Point(22, 561);
-            this.lblApellidos.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblApellidos.Location = new System.Drawing.Point(16, 456);
             this.lblApellidos.Name = "lblApellidos";
-            this.lblApellidos.Size = new System.Drawing.Size(77, 20);
+            this.lblApellidos.Size = new System.Drawing.Size(64, 16);
             this.lblApellidos.TabIndex = 53;
+            this.lblApellidos.Tag = "lblApellidos";
             this.lblApellidos.Text = "Apellidos";
             // 
             // lblDNI
@@ -189,76 +187,67 @@ namespace GUI
             this.lblDNI.BackColor = System.Drawing.Color.Transparent;
             this.lblDNI.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDNI.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblDNI.Location = new System.Drawing.Point(22, 505);
-            this.lblDNI.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblDNI.Location = new System.Drawing.Point(16, 410);
             this.lblDNI.Name = "lblDNI";
-            this.lblDNI.Size = new System.Drawing.Size(38, 20);
+            this.lblDNI.Size = new System.Drawing.Size(30, 16);
             this.lblDNI.TabIndex = 52;
             this.lblDNI.Text = "DNI";
             // 
             // txtActivo
             // 
-            this.txtActivo.Location = new System.Drawing.Point(149, 830);
-            this.txtActivo.Margin = new System.Windows.Forms.Padding(4);
+            this.txtActivo.Location = new System.Drawing.Point(112, 674);
             this.txtActivo.Name = "txtActivo";
-            this.txtActivo.Size = new System.Drawing.Size(241, 22);
+            this.txtActivo.Size = new System.Drawing.Size(182, 20);
             this.txtActivo.TabIndex = 51;
             // 
             // txtBloqueado
             // 
-            this.txtBloqueado.Location = new System.Drawing.Point(149, 786);
-            this.txtBloqueado.Margin = new System.Windows.Forms.Padding(4);
+            this.txtBloqueado.Location = new System.Drawing.Point(112, 639);
             this.txtBloqueado.Name = "txtBloqueado";
-            this.txtBloqueado.Size = new System.Drawing.Size(241, 22);
+            this.txtBloqueado.Size = new System.Drawing.Size(182, 20);
             this.txtBloqueado.TabIndex = 50;
             // 
             // txtLogin
             // 
-            this.txtLogin.Location = new System.Drawing.Point(149, 742);
-            this.txtLogin.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLogin.Location = new System.Drawing.Point(112, 603);
             this.txtLogin.Name = "txtLogin";
-            this.txtLogin.Size = new System.Drawing.Size(241, 22);
+            this.txtLogin.Size = new System.Drawing.Size(182, 20);
             this.txtLogin.TabIndex = 49;
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(149, 646);
-            this.txtEmail.Margin = new System.Windows.Forms.Padding(4);
+            this.txtEmail.Location = new System.Drawing.Point(112, 525);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(241, 22);
+            this.txtEmail.Size = new System.Drawing.Size(182, 20);
             this.txtEmail.TabIndex = 48;
             // 
             // txtNombres
             // 
-            this.txtNombres.Location = new System.Drawing.Point(149, 601);
-            this.txtNombres.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNombres.Location = new System.Drawing.Point(112, 488);
             this.txtNombres.Name = "txtNombres";
-            this.txtNombres.Size = new System.Drawing.Size(241, 22);
+            this.txtNombres.Size = new System.Drawing.Size(182, 20);
             this.txtNombres.TabIndex = 47;
             // 
             // txtApellidos
             // 
-            this.txtApellidos.Location = new System.Drawing.Point(149, 557);
-            this.txtApellidos.Margin = new System.Windows.Forms.Padding(4);
+            this.txtApellidos.Location = new System.Drawing.Point(112, 453);
             this.txtApellidos.Name = "txtApellidos";
-            this.txtApellidos.Size = new System.Drawing.Size(241, 22);
+            this.txtApellidos.Size = new System.Drawing.Size(182, 20);
             this.txtApellidos.TabIndex = 46;
             // 
             // txtDNI
             // 
-            this.txtDNI.Location = new System.Drawing.Point(149, 505);
-            this.txtDNI.Margin = new System.Windows.Forms.Padding(4);
+            this.txtDNI.Location = new System.Drawing.Point(112, 410);
             this.txtDNI.Name = "txtDNI";
-            this.txtDNI.Size = new System.Drawing.Size(241, 22);
+            this.txtDNI.Size = new System.Drawing.Size(182, 20);
             this.txtDNI.TabIndex = 45;
             // 
             // txtMensaje
             // 
-            this.txtMensaje.Location = new System.Drawing.Point(720, 518);
-            this.txtMensaje.Margin = new System.Windows.Forms.Padding(4);
+            this.txtMensaje.Location = new System.Drawing.Point(540, 421);
             this.txtMensaje.Multiline = true;
             this.txtMensaje.Name = "txtMensaje";
-            this.txtMensaje.Size = new System.Drawing.Size(301, 227);
+            this.txtMensaje.Size = new System.Drawing.Size(227, 185);
             this.txtMensaje.TabIndex = 44;
             this.txtMensaje.Text = "                            Mensaje:";
             // 
@@ -266,11 +255,11 @@ namespace GUI
             // 
             this.btnSalir.BackColor = System.Drawing.SystemColors.Control;
             this.btnSalir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSalir.Location = new System.Drawing.Point(1157, 740);
-            this.btnSalir.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSalir.Location = new System.Drawing.Point(868, 601);
             this.btnSalir.Name = "btnSalir";
-            this.btnSalir.Size = new System.Drawing.Size(131, 57);
+            this.btnSalir.Size = new System.Drawing.Size(98, 46);
             this.btnSalir.TabIndex = 43;
+            this.btnSalir.Tag = "btnSalir";
             this.btnSalir.Text = "Salir";
             this.btnSalir.UseVisualStyleBackColor = false;
             this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
@@ -279,11 +268,11 @@ namespace GUI
             // 
             this.btnCancelar.BackColor = System.Drawing.SystemColors.Control;
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Location = new System.Drawing.Point(1157, 631);
-            this.btnCancelar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCancelar.Location = new System.Drawing.Point(868, 513);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(131, 57);
+            this.btnCancelar.Size = new System.Drawing.Size(98, 46);
             this.btnCancelar.TabIndex = 42;
+            this.btnCancelar.Tag = "btnCancelar";
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = false;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
@@ -292,11 +281,11 @@ namespace GUI
             // 
             this.btnAplicar.BackColor = System.Drawing.SystemColors.Control;
             this.btnAplicar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAplicar.Location = new System.Drawing.Point(1157, 518);
-            this.btnAplicar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAplicar.Location = new System.Drawing.Point(868, 421);
             this.btnAplicar.Name = "btnAplicar";
-            this.btnAplicar.Size = new System.Drawing.Size(131, 57);
+            this.btnAplicar.Size = new System.Drawing.Size(98, 46);
             this.btnAplicar.TabIndex = 41;
+            this.btnAplicar.Tag = "btnAplicar";
             this.btnAplicar.Text = "Aplicar";
             this.btnAplicar.UseVisualStyleBackColor = false;
             this.btnAplicar.Click += new System.EventHandler(this.btnAplicar_Click);
@@ -305,11 +294,11 @@ namespace GUI
             // 
             this.btnActDes.BackColor = System.Drawing.SystemColors.Control;
             this.btnActDes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnActDes.Location = new System.Drawing.Point(1157, 404);
-            this.btnActDes.Margin = new System.Windows.Forms.Padding(4);
+            this.btnActDes.Location = new System.Drawing.Point(868, 328);
             this.btnActDes.Name = "btnActDes";
-            this.btnActDes.Size = new System.Drawing.Size(131, 57);
+            this.btnActDes.Size = new System.Drawing.Size(98, 46);
             this.btnActDes.TabIndex = 40;
+            this.btnActDes.Tag = "btnActivarDesactivar";
             this.btnActDes.Text = "Act./Desact.";
             this.btnActDes.UseVisualStyleBackColor = false;
             this.btnActDes.Click += new System.EventHandler(this.btnActDes_Click);
@@ -318,11 +307,11 @@ namespace GUI
             // 
             this.btnModificar.BackColor = System.Drawing.SystemColors.Control;
             this.btnModificar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnModificar.Location = new System.Drawing.Point(1157, 292);
-            this.btnModificar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnModificar.Location = new System.Drawing.Point(868, 237);
             this.btnModificar.Name = "btnModificar";
-            this.btnModificar.Size = new System.Drawing.Size(131, 57);
+            this.btnModificar.Size = new System.Drawing.Size(98, 46);
             this.btnModificar.TabIndex = 39;
+            this.btnModificar.Tag = "btnModificar";
             this.btnModificar.Text = "Modificar";
             this.btnModificar.UseVisualStyleBackColor = false;
             this.btnModificar.Click += new System.EventHandler(this.btnModificar_Click);
@@ -331,11 +320,11 @@ namespace GUI
             // 
             this.btnDesbloquear.BackColor = System.Drawing.SystemColors.Control;
             this.btnDesbloquear.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDesbloquear.Location = new System.Drawing.Point(1157, 178);
-            this.btnDesbloquear.Margin = new System.Windows.Forms.Padding(4);
+            this.btnDesbloquear.Location = new System.Drawing.Point(868, 145);
             this.btnDesbloquear.Name = "btnDesbloquear";
-            this.btnDesbloquear.Size = new System.Drawing.Size(131, 57);
+            this.btnDesbloquear.Size = new System.Drawing.Size(98, 46);
             this.btnDesbloquear.TabIndex = 38;
+            this.btnDesbloquear.Tag = "btnDesbloquear";
             this.btnDesbloquear.Text = "Desbloquear";
             this.btnDesbloquear.UseVisualStyleBackColor = false;
             this.btnDesbloquear.Click += new System.EventHandler(this.btnDesbloquear_Click);
@@ -344,11 +333,11 @@ namespace GUI
             // 
             this.btnCrear.BackColor = System.Drawing.SystemColors.Control;
             this.btnCrear.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCrear.Location = new System.Drawing.Point(1157, 75);
-            this.btnCrear.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCrear.Location = new System.Drawing.Point(868, 61);
             this.btnCrear.Name = "btnCrear";
-            this.btnCrear.Size = new System.Drawing.Size(131, 57);
+            this.btnCrear.Size = new System.Drawing.Size(98, 46);
             this.btnCrear.TabIndex = 37;
+            this.btnCrear.Tag = "btnCrear";
             this.btnCrear.Text = "Crear";
             this.btnCrear.UseVisualStyleBackColor = false;
             this.btnCrear.Click += new System.EventHandler(this.btnCrear_Click);
@@ -359,12 +348,12 @@ namespace GUI
             this.rbActivos.BackColor = System.Drawing.Color.Transparent;
             this.rbActivos.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbActivos.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.rbActivos.Location = new System.Drawing.Point(589, 34);
-            this.rbActivos.Margin = new System.Windows.Forms.Padding(4);
+            this.rbActivos.Location = new System.Drawing.Point(442, 28);
             this.rbActivos.Name = "rbActivos";
-            this.rbActivos.Size = new System.Drawing.Size(85, 24);
+            this.rbActivos.Size = new System.Drawing.Size(69, 20);
             this.rbActivos.TabIndex = 36;
             this.rbActivos.TabStop = true;
+            this.rbActivos.Tag = "rbActivos";
             this.rbActivos.Text = "Activos";
             this.rbActivos.UseVisualStyleBackColor = false;
             this.rbActivos.CheckedChanged += new System.EventHandler(this.rbActivos_CheckedChanged);
@@ -375,12 +364,12 @@ namespace GUI
             this.rbTodos.BackColor = System.Drawing.Color.Transparent;
             this.rbTodos.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbTodos.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.rbTodos.Location = new System.Drawing.Point(453, 34);
-            this.rbTodos.Margin = new System.Windows.Forms.Padding(4);
+            this.rbTodos.Location = new System.Drawing.Point(340, 28);
             this.rbTodos.Name = "rbTodos";
-            this.rbTodos.Size = new System.Drawing.Size(76, 24);
+            this.rbTodos.Size = new System.Drawing.Size(65, 20);
             this.rbTodos.TabIndex = 35;
             this.rbTodos.TabStop = true;
+            this.rbTodos.Tag = "rbTodos";
             this.rbTodos.Text = "Todos";
             this.rbTodos.UseVisualStyleBackColor = false;
             this.rbTodos.CheckedChanged += new System.EventHandler(this.rbTodos_CheckedChanged);
@@ -393,31 +382,30 @@ namespace GUI
             this.dgvUsuarios.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
             this.dgvUsuarios.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvUsuarios.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvUsuarios.EnableHeadersVisualStyles = false;
             this.dgvUsuarios.GridColor = System.Drawing.Color.Goldenrod;
-            this.dgvUsuarios.Location = new System.Drawing.Point(13, 97);
-            this.dgvUsuarios.Margin = new System.Windows.Forms.Padding(4);
+            this.dgvUsuarios.Location = new System.Drawing.Point(10, 79);
             this.dgvUsuarios.MultiSelect = false;
             this.dgvUsuarios.Name = "dgvUsuarios";
             this.dgvUsuarios.ReadOnly = true;
             this.dgvUsuarios.RowHeadersVisible = false;
             this.dgvUsuarios.RowHeadersWidth = 51;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
-            this.dgvUsuarios.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
+            this.dgvUsuarios.RowsDefaultCellStyle = dataGridViewCellStyle14;
             this.dgvUsuarios.RowTemplate.Height = 30;
             this.dgvUsuarios.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvUsuarios.Size = new System.Drawing.Size(1010, 378);
+            this.dgvUsuarios.Size = new System.Drawing.Size(758, 307);
             this.dgvUsuarios.TabIndex = 34;
             this.dgvUsuarios.SelectionChanged += new System.EventHandler(this.dgvUsuarios_SelectionChanged);
             // 
@@ -427,11 +415,11 @@ namespace GUI
             this.lblCantUsuarios.BackColor = System.Drawing.Color.Transparent;
             this.lblCantUsuarios.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCantUsuarios.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.lblCantUsuarios.Location = new System.Drawing.Point(877, 34);
-            this.lblCantUsuarios.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblCantUsuarios.Location = new System.Drawing.Point(658, 28);
             this.lblCantUsuarios.Name = "lblCantUsuarios";
-            this.lblCantUsuarios.Size = new System.Drawing.Size(173, 20);
+            this.lblCantUsuarios.Size = new System.Drawing.Size(137, 16);
             this.lblCantUsuarios.TabIndex = 33;
+            this.lblCantUsuarios.Tag = "lblNumeroUsuarios";
             this.lblCantUsuarios.Text = "Numero de Usuarios: ";
             // 
             // lblTitulo
@@ -440,11 +428,11 @@ namespace GUI
             this.lblTitulo.BackColor = System.Drawing.Color.Transparent;
             this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 22.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblTitulo.Location = new System.Drawing.Point(96, 21);
-            this.lblTitulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTitulo.Location = new System.Drawing.Point(72, 17);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(166, 42);
+            this.lblTitulo.Size = new System.Drawing.Size(134, 36);
             this.lblTitulo.TabIndex = 32;
+            this.lblTitulo.Tag = "lblUsuarios";
             this.lblTitulo.Text = "Usuarios";
             // 
             // iconPictureBox1
@@ -454,21 +442,22 @@ namespace GUI
             this.iconPictureBox1.IconChar = FontAwesome.Sharp.IconChar.UsersViewfinder;
             this.iconPictureBox1.IconColor = System.Drawing.Color.Goldenrod;
             this.iconPictureBox1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconPictureBox1.IconSize = 76;
-            this.iconPictureBox1.Location = new System.Drawing.Point(12, 21);
+            this.iconPictureBox1.IconSize = 58;
+            this.iconPictureBox1.Location = new System.Drawing.Point(9, 17);
+            this.iconPictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.iconPictureBox1.Name = "iconPictureBox1";
-            this.iconPictureBox1.Size = new System.Drawing.Size(77, 76);
+            this.iconPictureBox1.Size = new System.Drawing.Size(58, 62);
             this.iconPictureBox1.TabIndex = 62;
             this.iconPictureBox1.TabStop = false;
             // 
             // FormGestionUsuarios_08YS
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImage = global::GUI_08YS.Properties.Resources.ChatGPT_Image_19_may_2026__22_23_23;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1452, 914);
+            this.ClientSize = new System.Drawing.Size(1089, 743);
             this.Controls.Add(this.iconPictureBox1);
             this.Controls.Add(this.cmbRol);
             this.Controls.Add(this.rbBloqueados);
@@ -501,7 +490,6 @@ namespace GUI
             this.Controls.Add(this.lblCantUsuarios);
             this.Controls.Add(this.lblTitulo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormGestionUsuarios_08YS";
             this.Text = "FormGestionUsuarios";
             this.Load += new System.EventHandler(this.FormGestionUsuarios_Load);

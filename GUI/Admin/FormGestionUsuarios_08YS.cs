@@ -13,13 +13,36 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 namespace GUI
 {
-    public partial class FormGestionUsuarios_08YS : Form
+    public partial class FormGestionUsuarios_08YS : Form,IIdiomaObserver_08YS
     {
         private UserBLL_08YS _bll = BLLFactory_08YS.CreateUserBLL();
         
         public FormGestionUsuarios_08YS()
         {
             InitializeComponent();
+            TraductorManager_08YS.Instance.Suscribir(this);
+            UpdateIdioma();
+        }
+        public void UpdateIdioma()
+        {
+            TraducirControles(this);
+        }
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                // Si el control tiene un Tag asignado, buscamos su traducción
+                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                {
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
+                }
+
+                // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
+                if (c.HasChildren)
+                {
+                    TraducirControles(c);
+                }
+            }
         }
         private enum EstadoUI { Consulta, Insertando, Editando }
         private EstadoUI _estadoActual;
@@ -177,9 +200,10 @@ namespace GUI
 
             }
 
-                // Actualizamos el contador
-                int cantidadMostrada = dgvUsuarios.Rows.Count;
-            lblCantUsuarios.Text = $"Cantidad mostrada: {cantidadMostrada}";
+          
+            int cantidadMostrada = dgvUsuarios.Rows.Count;
+            string textoBase = TraductorManager_08YS.Instance.GetTexto(lblCantUsuarios.Tag.ToString());
+            lblCantUsuarios.Text = $"{textoBase}{cantidadMostrada}";
         }
       
       
@@ -210,16 +234,19 @@ namespace GUI
 
                 if (user.Activo)
                 {
-                    btnActDes.Text = "Desactivar Usuario";
+                  
+                    btnActDes.Tag = "btnDesactivar";
                     btnActDes.BackColor = Color.LightCoral; // Un tono rojo suave
                     btnActDes.ForeColor = Color.White;      // Texto blanco para contraste
                 }
                 else
                 {
-                    btnActDes.Text = "Activar Usuario";
+                   
+                    btnActDes.Tag = "btnActivar";
                     btnActDes.BackColor = Color.MediumSeaGreen; // Un tono verde suave
                     btnActDes.ForeColor = Color.White;
                 }
+                btnActDes.Text = TraductorManager_08YS.Instance.GetTexto(btnActDes.Tag.ToString());
                 btnActDes.Enabled = true;
             }
         }
