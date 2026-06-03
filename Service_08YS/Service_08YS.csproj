@@ -52,6 +52,7 @@
     <Compile Include="Entities\Bitacora\BitacoraEvento_08YS.cs" />
     <Compile Include="Entities\Bitacora\EventCatalog_08YS.cs" />
     <Compile Include="Encriptador_08YS.cs" />
+    <Compile Include="Entities\Comparers\AccessComponentComparer_08YS.cs" />
     <Compile Include="Entities\Comparers\PermisoComparer.cs" />
     <Compile Include="SessionManager_08YS.cs" />
     <Compile Include="Entities\User_08YS.cs" />

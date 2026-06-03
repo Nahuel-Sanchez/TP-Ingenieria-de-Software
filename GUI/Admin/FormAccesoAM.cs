@@ -1,5 +1,6 @@
 ﻿using BLL_08YS;
 using Service_08YS.Entities.Acceso;
+using Service_08YS.Entities.Comparers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,14 +24,21 @@ namespace GUI_08YS.Admin
         private readonly Action _onGuardado;
         private readonly Action _onCancelado;
 
-        private List<AccessComponent_08YS> _seleccionados = new List<AccessComponent_08YS>();
-        private List<AccessComponent_08YS> _disponibles = new List<AccessComponent_08YS>();
+        private HashSet<AccessComponent_08YS> _todosDisponibles =
+            new HashSet<AccessComponent_08YS>(AccessComponentComparer_08YS.Instance);
+
+        private HashSet<AccessComponent_08YS> _seleccionados =
+            new HashSet<AccessComponent_08YS>(AccessComponentComparer_08YS.Instance);
+
+        private HashSet<AccessComponent_08YS> _disponibles =
+            new HashSet<AccessComponent_08YS>(AccessComponentComparer_08YS.Instance);
 
         // Evita cascada de eventos entre los dos dgv durante refreshes
         private bool _actualizandoSeleccion = false;
+
         private AccesoBLL BLL => _tipo == TipoEntidad.Familia
-       ? (AccesoBLL)_familiaBLL
-       : _rolBLL;
+               ? (AccesoBLL)_familiaBLL
+               :            _rolBLL;
 
         public FormAccesoAM_08YS(
             TipoEntidad tipo,
@@ -58,12 +66,12 @@ namespace GUI_08YS.Admin
 
         private void FormAccesoAM_08YS_Load(object sender, EventArgs e)
         {
-            ConfigurarSegunTipo();
+            ConfigurarFrontPorTipo();
             //ConfigurarBotones();
             CargarDatos();
         }
 
-        private void ConfigurarSegunTipo()
+        private void ConfigurarFrontPorTipo()
         {
             bool esFamilia = _tipo == TipoEntidad.Familia;
 
@@ -72,48 +80,73 @@ namespace GUI_08YS.Admin
                 : FontAwesome.Sharp.IconChar.UserShield;
 
             string entidad = esFamilia ? "Familia" : "Rol";
-            string operacion = _operacion == OperacionAM.Alta ? "Nueva" : "Modificar";
+            string operacion = _operacion == OperacionAM.Alta ? "Crear" : "Modificar";
             lblTitulo.Text = $"{operacion} {entidad}";
 
             if (_operacion == OperacionAM.Modificacion)
                 txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;
         }
 
+        #region Datagrids
+
         private void CargarDatos()
         {
-            // Precargar seleccionados en Modificacion
             if (_operacion == OperacionAM.Modificacion)
             {
-                _seleccionados = _tipo == TipoEntidad.Familia
-                    ? _familiaAEditar.Hijos.ToList()
-                    : _rolAEditar.Componentes.ToList();
+                var precargados = _tipo == TipoEntidad.Familia
+                    ? _familiaAEditar.Hijos
+                    : _rolAEditar.Componentes;
+
+                foreach (var c in precargados)
+                    _seleccionados.Add(c);
             }
 
-            int? familiaId = null;
-
-            if (_operacion == OperacionAM.Modificacion)
-                familiaId = _familiaAEditar.FamiliaID;
+            int? familiaIdExcluir = _operacion == OperacionAM.Modificacion
+                ? _familiaAEditar.FamiliaID
+                : (int?) null;
 
             var todos = _tipo == TipoEntidad.Familia
-                ? _familiaBLL.GetComponentesDisponibles(familiaId)
+                ? _familiaBLL.GetComponentesDisponibles(familiaIdExcluir)
                 : _rolBLL.GetComponentesDisponibles();
-            _disponibles = todos
-                .Where(c => !_seleccionados.Any(s => MismoComponente(s, c)))
-                .ToList();
 
+            foreach (var c in todos)
+                _todosDisponibles.Add(c);
+
+            RecalcularDisponibles();
             RefrescarDGVSeleccionados();
             RefrescarDGVDisponibles();
+        }
+
+        private void RefrescarDGV(DataGridView dgv, HashSet<AccessComponent_08YS> fuente)
+        {
+            ActualizarSeleccion(() =>
+            {
+                dgv.DataSource = null;
+                dgv.DataSource = fuente
+                    .OrderBy(c => c is Familia_08YS ? 0 : 1)
+                    .ThenBy(c => c.Nombre)
+                    .Select(c => new ComponentRow(c))
+                    .ToList();
+            });
+        }
+
+        private void RefrescarDGVSeleccionados() => RefrescarDGV(dgvSeleccionados, _seleccionados);
+        private void RefrescarDGVDisponibles() => RefrescarDGV(dgvDisponibles, _disponibles);
+
+        public void ActualizarSeleccion(Action action)
+        {
+            _actualizandoSeleccion = true;
+            action();
+            _actualizandoSeleccion = false;
         }
 
         private void dgvSeleccionados_SelectionChanged(object sender, EventArgs e)
         {
             if (_actualizandoSeleccion) return;
 
-            _actualizandoSeleccion = true;
-            dgvDisponibles.ClearSelection();
-            _actualizandoSeleccion = false;
+            ActualizarSeleccion(() => dgvDisponibles.ClearSelection());
 
-            var row = dgvSeleccionados.CurrentRow?.DataBoundItem as ComponenteRow;
+            var row = dgvSeleccionados.CurrentRow?.DataBoundItem as ComponentRow;
             if (row != null) ActualizarDetalle(row.Componente);
             else LimpiarDetalle();
         }
@@ -122,54 +155,31 @@ namespace GUI_08YS.Admin
         {
             if (_actualizandoSeleccion) return;
 
-            _actualizandoSeleccion = true;
-            dgvSeleccionados.ClearSelection();
-            _actualizandoSeleccion = false;
+            ActualizarSeleccion(() => dgvSeleccionados.ClearSelection());
 
-            var row = dgvDisponibles.CurrentRow?.DataBoundItem as ComponenteRow;
+            var row = dgvDisponibles.CurrentRow?.DataBoundItem as ComponentRow;
             if (row != null) ActualizarDetalle(row.Componente);
             else LimpiarDetalle();
         }
 
-        private void ActualizarDetalle(AccessComponent_08YS componente)
+        private void RecalcularDisponibles()
         {
-            if (componente is Permiso_08YS permiso)
-            {
-                lblDescripcion.Text = string.IsNullOrWhiteSpace(permiso.Descripcion)
-                    ? "(Sin descripción)"
-                    : permiso.Descripcion;
-                lblDescripcion.Visible = true;
-                trvDetalle.Visible = false;
-            }
-            else if (componente is Familia_08YS familia)
-            {
-                trvDetalle.Nodes.Clear();
-                var raiz = CrearNodo(familia);
-                raiz.Expand();
-                trvDetalle.Nodes.Add(raiz);
-                trvDetalle.Visible = true;
-                lblDescripcion.Visible = false;
-            }
+            var permsCubiertos = _seleccionados
+                .SelectMany(c => c.GetPermisos())
+                .Select(p => p.PermisoID)
+                .ToHashSet();
+
+            _disponibles = new HashSet<AccessComponent_08YS>(
+                _todosDisponibles
+                    .Where(c => !_seleccionados.Contains(c))
+                    .Where(c => c.GetPermisos().Any()) // descarta vacíos por seguridad
+                    .Where(c => !c.GetPermisos().All(p => permsCubiertos.Contains(p.PermisoID))),
+                AccessComponentComparer_08YS.Instance);
         }
 
-        private void LimpiarDetalle()
-        {
-            lblDescripcion.Visible = false;
-            trvDetalle.Visible = false;
-            trvDetalle.Nodes.Clear();
-        }
+        #endregion
 
-        private TreeNode CrearNodo(AccessComponent_08YS componente)
-        {
-            var nodo = new TreeNode(
-                componente is Familia_08YS ? $"📁 {componente.Nombre}" : $"🔑 {componente.Nombre}");
-
-            if (componente is Familia_08YS f)
-                foreach (var hijo in f.Hijos)
-                    nodo.Nodes.Add(CrearNodo(hijo));
-
-            return nodo;
-        }
+        #region Buttons
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
@@ -180,7 +190,7 @@ namespace GUI_08YS.Admin
                 return;
             }
 
-            var candidato = (dgvDisponibles.CurrentRow.DataBoundItem as ComponenteRow)?.Componente;
+            var candidato = (dgvDisponibles.CurrentRow.DataBoundItem as ComponentRow)?.Componente;
             if (candidato == null)
             {
                 MessageBox.Show("Error al obtener el componente seleccionado.", "Error",
@@ -205,13 +215,9 @@ namespace GUI_08YS.Admin
 
                     if (confirm == DialogResult.OK)
                     {
-                        // Devuelve los reemplazados a disponibles antes de agregar el candidato
                         foreach (var reemplazar in resultado.ComponentesAReemplazar)
-                        {
                             _seleccionados.Remove(reemplazar);
-                            if (!_disponibles.Any(d => MismoComponente(d, reemplazar)))
-                                _disponibles.Add(reemplazar);
-                        }
+
                         EjecutarAgregado(candidato);
                     }
                     break;
@@ -226,9 +232,7 @@ namespace GUI_08YS.Admin
         private void EjecutarAgregado(AccessComponent_08YS componente)
         {
             _seleccionados.Add(componente);
-
-            var aQuitar = _disponibles.FirstOrDefault(d => MismoComponente(d, componente));
-            if (aQuitar != null) _disponibles.Remove(aQuitar);
+            RecalcularDisponibles();
 
             LimpiarDetalle();
             RefrescarDGVSeleccionados();
@@ -244,7 +248,7 @@ namespace GUI_08YS.Admin
                 return;
             }
 
-            var componente = (dgvSeleccionados.CurrentRow.DataBoundItem as ComponenteRow)?.Componente;
+            var componente = (dgvSeleccionados.CurrentRow.DataBoundItem as ComponentRow)?.Componente;
             if (componente == null)
             {
                 MessageBox.Show("Error al obtener el componente seleccionado.", "Error",
@@ -253,10 +257,7 @@ namespace GUI_08YS.Admin
             }
 
             _seleccionados.Remove(componente);
-
-            // Devuelve a disponibles si no está ya
-            if (!_disponibles.Any(d => MismoComponente(d, componente)))
-                _disponibles.Add(componente);
+            RecalcularDisponibles();
 
             LimpiarDetalle();
             RefrescarDGVSeleccionados();
@@ -301,44 +302,48 @@ namespace GUI_08YS.Admin
         private void btnCancelar_Click(object sender, EventArgs e)
             => _onCancelado?.Invoke();
 
-        private void RefrescarDGVSeleccionados()
+        #endregion
+
+        #region Panel Detalle 
+
+        private void ActualizarDetalle(AccessComponent_08YS componente)
         {
-            _actualizandoSeleccion = true;
-            dgvSeleccionados.DataSource = null;
-            dgvSeleccionados.DataSource = _seleccionados
-                .OrderBy(c => c is Familia_08YS ? 1 : 0)
-                .ThenBy(c => c.Nombre)
-                .Select(c => new ComponenteRow(c))
-                .ToList();
-            _actualizandoSeleccion = false;
+            if (componente is Permiso_08YS permiso)
+            {
+                lblDescripcion.Text = string.IsNullOrWhiteSpace(permiso.Descripcion)
+                    ? "(Sin descripción)"
+                    : permiso.Descripcion;
+                lblDescripcion.Visible = true;
+                trvDetalle.Visible = false;
+            }
+            else if (componente is Familia_08YS familia)
+            {
+                trvDetalle.Nodes.Clear();
+                var raiz = CrearNodo(familia);
+                raiz.Expand();
+                trvDetalle.Nodes.Add(raiz);
+                trvDetalle.Visible = true;
+                lblDescripcion.Visible = false;
+            }
         }
 
-        private void RefrescarDGVDisponibles()
+        private void LimpiarDetalle()
         {
-            _actualizandoSeleccion = true;
-            dgvDisponibles.DataSource = null;
-            dgvDisponibles.DataSource = _disponibles
-                .OrderBy(c => c is Familia_08YS ? 1 : 0)
-                .ThenBy(c => c.Nombre)
-                .Select(c => new ComponenteRow(c))
-                .ToList();
-            _actualizandoSeleccion = false;
+            lblDescripcion.Visible = false;
+            trvDetalle.Visible = false;
+            trvDetalle.Nodes.Clear();
         }
 
-        private bool MismoComponente(AccessComponent_08YS a, AccessComponent_08YS b)
+        private TreeNode CrearNodo(AccessComponent_08YS componente)
         {
-            if (a is Familia_08YS fa && b is Familia_08YS fb) return fa.FamiliaID == fb.FamiliaID;
-            if (a is Permiso_08YS pa && b is Permiso_08YS pb) return pa.PermisoID == pb.PermisoID;
-            return false;
-        }
+            var nodo = new TreeNode(
+                componente is Familia_08YS ? $"📁 {componente.Nombre}" : $"🔑 {componente.Nombre}");
 
-        private class ComponenteRow
-        {
-            public AccessComponent_08YS Componente { get; }
-            public string Nombre => Componente.Nombre;
-            public string TipoDisplay => Componente is Familia_08YS ? "Familia" : "Permiso";
+            if (componente is Familia_08YS f)
+                foreach (var hijo in f.Hijos)
+                    nodo.Nodes.Add(CrearNodo(hijo));
 
-            public ComponenteRow(AccessComponent_08YS c) => Componente = c;
+            return nodo;
         }
 
         private void trvDetalle_DrawNode(object sender, DrawTreeNodeEventArgs e)
@@ -347,9 +352,9 @@ namespace GUI_08YS.Admin
 
             Color colorFondo = seleccionado
                 ? Color.FromArgb(5, 5, 100)
-                : Color.FromArgb(5, 10, 30);
+                : Color.FromArgb(5, 10, 40);
 
-            Color colorTexto = seleccionado ? Color.Goldenrod : Color.White;
+            Color colorTexto = seleccionado ? Color.Gold : Color.White;
 
             using (var brush = new SolidBrush(colorFondo))
                 e.Graphics.FillRectangle(brush, e.Bounds);
@@ -362,5 +367,17 @@ namespace GUI_08YS.Admin
                 colorTexto,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
         }
+
+        #endregion
+
+        private class ComponentRow
+        {
+            public AccessComponent_08YS Componente { get; }
+            public string Nombre => Componente.Nombre;
+            public string TipoDisplay => Componente is Familia_08YS ? "Familia" : "Permiso";
+
+            public ComponentRow(AccessComponent_08YS c) => Componente = c;
+        }
+
     }
 }

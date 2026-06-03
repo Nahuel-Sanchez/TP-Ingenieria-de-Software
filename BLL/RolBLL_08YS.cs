@@ -22,8 +22,6 @@ namespace BLL_08YS
         // FormGestion: listado principal
         public List<Rol_08YS> GetAll() => _rolRepo.GetAll();
 
-        // FormABM lado derecho: todos los permisos + todas las familias
-        // Los ya seleccionados los filtra la GUI igual que en Familia
         public List<AccessComponent_08YS> GetComponentesDisponibles()
         {
             var permisos = _permisoRepo.GetAll().Cast<AccessComponent_08YS>();
@@ -31,16 +29,16 @@ namespace BLL_08YS
             return permisos.Concat(familias).ToList();
         }
 
-        public void Crear(string nombre, List<AccessComponent_08YS> componentes)
+        public void Crear(string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
-            _rolRepo.Create(nombre, componentes);
+            _rolRepo.Create(nombre, componentes.ToList());
         }
 
-        public void Modificar(int rolId, string nombre, List<AccessComponent_08YS> componentes)
+        public void Modificar(int rolId, string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
-            _rolRepo.Modify(rolId, nombre, componentes);
+            _rolRepo.Modify(rolId, nombre, componentes.ToList());
         }
 
         public void Eliminar(int rolId)

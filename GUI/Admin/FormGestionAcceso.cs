@@ -17,7 +17,7 @@ namespace GUI_08YS.Admin
 
     public partial class FormGestionAcceso : Form
     {
-        private readonly TipoEntidad _tipo;
+        private readonly TipoEntidad _modo;
         private readonly FamiliaBLL_08YS _familiaBLL;
         private readonly RolBLL_08YS _rolBLL;
         private readonly Action<Form> _openChildForm;
@@ -25,16 +25,62 @@ namespace GUI_08YS.Admin
         public FormGestionAcceso(TipoEntidad tipo, Action<Form> openChildForm)
         {
             InitializeComponent();
-            _tipo = tipo;
+            _modo = tipo;
             _familiaBLL = BLLFactory_08YS.CreateFamiliaBLL();
             _rolBLL = BLLFactory_08YS.CreateRolBLL();
             _openChildForm = openChildForm;
 
-            string entidad = _tipo == TipoEntidad.Familia ? "Familias" : "Roles";
+            string entidad = _modo == TipoEntidad.Familia ? "Familias" : "Roles";
             Text = $"Gestión de {entidad}";
             lblTitulo.Text = $"Gestión de {entidad}";
 
             dgvEntidades.AutoGenerateColumns = false;
+        }
+
+        private void FormGestionAcceso_Load(object sender, EventArgs e)
+        {
+            ConfigurarPorTipo();
+            //ConfigurarBotones();
+            CargarGrid();
+        }
+
+        private void ConfigurarPorTipo()
+        {
+            bool esFamilia = _modo == TipoEntidad.Familia;
+
+            lblTitulo.Text = esFamilia ? "Gestión de Familias" : "Gestión de Roles";
+            iconPictureBox.IconChar = esFamilia
+                ? FontAwesome.Sharp.IconChar.LayerGroup
+                : FontAwesome.Sharp.IconChar.UserShield;
+        }
+
+        private void CargarGrid()
+        {
+            try
+            {
+                trvDetalle.Nodes.Clear();
+
+                if (_modo == TipoEntidad.Familia)
+                {
+                    var familias = _familiaBLL.GetAll();
+                    dgvEntidades.DataSource = familias
+                        .Select(f => new { f.Nombre, TipoDisplay = "Familia", Entidad = (object)f })
+                        .ToList();
+                }
+                else
+                {
+                    var roles = _rolBLL.GetAll();
+                    dgvEntidades.DataSource = roles
+                        .Select(r => new { r.Nombre, TipoDisplay = "Rol", Entidad = (object)r })
+                        .ToList();
+                }
+
+                ActualizarEstadoBotones();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error al cargar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AbrirAM(
@@ -52,12 +98,10 @@ namespace GUI_08YS.Admin
             };
 
             Action onCancel = () =>
-            {
                 _openChildForm(formGestion);   // vuelve a FormGestion sin cambios
-            };
 
             var formABM = new FormAccesoAM_08YS(
-                _tipo,
+                _modo,
                 operacion,
                 _familiaBLL,
                 _rolBLL,
@@ -80,7 +124,7 @@ namespace GUI_08YS.Admin
             dynamic row = dgvEntidades.CurrentRow.DataBoundItem;
 
             //infiero el dynamic en funcion del tipo de entidad que se esta gestionando
-            if (_tipo == TipoEntidad.Familia)
+            if (_modo == TipoEntidad.Familia)
                 AbrirAM(OperacionAM.Modificacion, familiaAEditar: (Familia_08YS)row.Entidad);
             else
                 AbrirAM(OperacionAM.Modificacion, rolAEditar: (Rol_08YS)row.Entidad);
@@ -104,7 +148,7 @@ namespace GUI_08YS.Admin
 
             try
             {
-                if (_tipo == TipoEntidad.Familia)
+                if (_modo == TipoEntidad.Familia)
                     _familiaBLL.Eliminar(((Familia_08YS)entidad).FamiliaID);
                 else
                     _rolBLL.Eliminar(((Rol_08YS)entidad).RolID);
@@ -125,19 +169,19 @@ namespace GUI_08YS.Admin
             }
         }
 
+        private void ActualizarEstadoBotones()
+        {
+            bool hay = dgvEntidades.CurrentRow != null;
+            btnModificar.Enabled = hay;
+            btnEliminar.Enabled = hay;
+        }
+
         #endregion
 
         private void dgvEntidades_SelectionChanged(object sender, EventArgs e)
         {
             ActualizarEstadoBotones();
             ActualizarTreeView();
-        }
-
-        private void ActualizarEstadoBotones()
-        {
-            bool hay = dgvEntidades.CurrentRow != null;
-            btnModificar.Enabled = hay;
-            btnEliminar.Enabled = hay;
         }
 
         #region Treeview
@@ -152,11 +196,8 @@ namespace GUI_08YS.Admin
             object entidad = row.Entidad;
 
             TreeNode raiz;
-            if (_tipo == TipoEntidad.Familia)
-            {
-                var familia = (Familia_08YS)entidad;
-                raiz = CrearNodo(familia);
-            }
+            if (_modo == TipoEntidad.Familia)
+                raiz = CrearNodo((Familia_08YS)entidad);
             else
             {
                 var rol = (Rol_08YS)entidad;
@@ -185,63 +226,15 @@ namespace GUI_08YS.Admin
                 destino.Add(CrearNodo(c));
         }
 
-        #endregion
-
-        private void FormGestionAcceso_Load(object sender, EventArgs e)
-        {
-            ConfigurarPorTipo();
-            //ConfigurarBotones();
-            CargarGrid();
-        }
-
-        private void ConfigurarPorTipo()
-        {
-            bool esFamilia = _tipo == TipoEntidad.Familia;
-
-            lblTitulo.Text = esFamilia ? "Gestión de Familias" : "Gestión de Roles";
-            iconPictureBox.IconChar = esFamilia
-                ? FontAwesome.Sharp.IconChar.LayerGroup
-                : FontAwesome.Sharp.IconChar.UserShield;
-        }
-
-        private void CargarGrid()
-        {
-            try
-            {
-                trvDetalle.Nodes.Clear();
-
-                if (_tipo == TipoEntidad.Familia)
-                {
-                    var familias = _familiaBLL.GetAll();
-                    dgvEntidades.DataSource = familias
-                        .Select(f => new { f.Nombre, TipoDisplay = "Familia", Entidad = (object)f })
-                        .ToList();
-                }
-                else
-                {
-                    var roles = _rolBLL.GetAll();
-                    dgvEntidades.DataSource = roles
-                        .Select(r => new { r.Nombre, TipoDisplay = "Rol", Entidad = (object)r })
-                        .ToList();
-                }
-
-                ActualizarEstadoBotones();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error al cargar", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void trvDetalle_DrawNode(object sender, DrawTreeNodeEventArgs e)
         {
             bool seleccionado = (e.State & TreeNodeStates.Selected) != 0;
 
             Color colorFondo = seleccionado
-                ? Color.FromArgb(5, 5, 50)
-                : Color.FromArgb(5, 10, 30);
+                ? Color.FromArgb(5, 5, 100)
+                : Color.FromArgb(5, 10, 40);
 
-            Color colorTexto = seleccionado ? Color.Goldenrod : Color.White;
+            Color colorTexto = seleccionado ? Color.Gold : Color.White;
 
             using (var brush = new SolidBrush(colorFondo))
                 e.Graphics.FillRectangle(brush, e.Bounds);
@@ -254,5 +247,8 @@ namespace GUI_08YS.Admin
                 colorTexto,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
         }
+
+        #endregion
+
     }
 }

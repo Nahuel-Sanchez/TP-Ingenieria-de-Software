@@ -17,10 +17,9 @@ namespace BLL_08YS
             _familiaRepo = familiaRepo;
         }
 
-        // FormGestion: listado principal
         public List<Familia_08YS> GetAll() => _familiaRepo.GetAll();
 
-        // FormABM lado derecho (disponibles):
+        // FormAM lado derecho (disponibles):
         // familiaIdExcluir null  → Alta: sin exclusiones por ciclos
         // familiaIdExcluir int   → Modificacion: excluye la familia actual + sus contenedoras
         // Los ya seleccionados (DGV izquierdo) los filtra la GUI quitándolos del DGV derecho
@@ -31,12 +30,11 @@ namespace BLL_08YS
 
             if (familiaIdExcluir.HasValue)
             {
-                // Excluir la familia que se está editando
-                familias = familias
+                familias = familias             // Excluir la familia que se está editando
                     .Where(f => ((Familia_08YS)f).FamiliaID != familiaIdExcluir.Value)
                     .ToList();
 
-                // Excluir familias que ya contienen a la que se edita (evita ciclos transitivos)
+                // Excluir familias que ya contienen a la que se edita (evitando ciclos transitivos)
                 var contenedoras = ResolverContenedoras(familiaIdExcluir.Value,
                     familias.Cast<Familia_08YS>().ToList());
 
@@ -45,7 +43,6 @@ namespace BLL_08YS
                     .ToList();
             }
 
-            // Permisos primero por convención visual
             return permisos.Concat(familias).ToList();
         }
 
@@ -73,20 +70,18 @@ namespace BLL_08YS
             return contenedoras;
         }
 
-        // Las validaciones de negocio (nombre vacío, sin componentes) viven acá,
-        // no en la GUI. La GUI solo arma la lista y llama.
-        public void Crear(string nombre, List<AccessComponent_08YS> componentes)
+        public void Crear(string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(componentes, null);
-            _familiaRepo.Create(nombre, componentes);
+            _familiaRepo.Create(nombre, componentes.ToList());
         }
 
-        public void Modificar(int familiaId, string nombre, List<AccessComponent_08YS> componentes)
+        public void Modificar(int familiaId, string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(componentes, familiaId);
-            _familiaRepo.Modify(familiaId, nombre, componentes);
+            _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
         }
 
         public void Eliminar(int familiaId)
@@ -98,7 +93,7 @@ namespace BLL_08YS
             _familiaRepo.Delete(familiaId);
         }
 
-        private void ValidarFamiliaNoExistente(List<AccessComponent_08YS> componentes, int? excluirId)
+        private void ValidarFamiliaNoExistente(HashSet<AccessComponent_08YS> componentes, int? excluirId)
         {
             var permsNuevos = componentes
                 .SelectMany(c => c.GetPermisos())

@@ -41,7 +41,6 @@
             this.btnCancelar = new FontAwesome.Sharp.IconButton();
             this.btnGuardar = new FontAwesome.Sharp.IconButton();
             this.pnlNombre = new System.Windows.Forms.Panel();
-            this.txtNombre = new CustomControls.IconPlaceholderTextBox();
             this.lblNombre = new System.Windows.Forms.Label();
             this.splitContenido = new System.Windows.Forms.SplitContainer();
             this.pnlDerecha = new System.Windows.Forms.Panel();
@@ -62,6 +61,7 @@
             this.trvDetalle = new System.Windows.Forms.TreeView();
             this.lblDescripcion = new System.Windows.Forms.Label();
             this.lblDetalle = new System.Windows.Forms.Label();
+            this.txtNombre = new CustomControls.IconPlaceholderTextBox();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.pnlBottom.SuspendLayout();
@@ -190,30 +190,6 @@
             this.pnlNombre.Padding = new System.Windows.Forms.Padding(20, 10, 20, 5);
             this.pnlNombre.Size = new System.Drawing.Size(1470, 65);
             this.pnlNombre.TabIndex = 3;
-            // 
-            // txtNombre
-            // 
-            this.txtNombre.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.txtNombre.BorderColor = System.Drawing.Color.Goldenrod;
-            this.txtNombre.BorderFocusColor = System.Drawing.Color.Goldenrod;
-            this.txtNombre.BorderWidth = 2;
-            this.txtNombre.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombre.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.txtNombre.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
-            this.txtNombre.IconChar = FontAwesome.Sharp.IconChar.Edit;
-            this.txtNombre.IconColor = System.Drawing.Color.Goldenrod;
-            this.txtNombre.IconColorRight = System.Drawing.Color.DimGray;
-            this.txtNombre.IconPadding = 10;
-            this.txtNombre.IconSize = 30;
-            this.txtNombre.Location = new System.Drawing.Point(145, 10);
-            this.txtNombre.Name = "txtNombre";
-            this.txtNombre.PlaceholderColor = System.Drawing.Color.LightGray;
-            this.txtNombre.PlaceholderText = "Ingrese el nombre";
-            this.txtNombre.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtNombre.Size = new System.Drawing.Size(1305, 50);
-            this.txtNombre.TabIndex = 69;
-            this.txtNombre.TextLeftPadding = 20;
             // 
             // lblNombre
             // 
@@ -537,12 +513,13 @@
             this.trvDetalle.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.trvDetalle.FullRowSelect = true;
             this.trvDetalle.HideSelection = false;
-            this.trvDetalle.ItemHeight = 28;
+            this.trvDetalle.Indent = 100;
+            this.trvDetalle.ItemHeight = 40;
             this.trvDetalle.LineColor = System.Drawing.Color.Goldenrod;
             this.trvDetalle.Location = new System.Drawing.Point(15, 83);
             this.trvDetalle.Name = "trvDetalle";
             this.trvDetalle.Size = new System.Drawing.Size(1440, 163);
-            this.trvDetalle.TabIndex = 9;
+            this.trvDetalle.TabIndex = 60;
             this.trvDetalle.Visible = false;
             this.trvDetalle.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.trvDetalle_DrawNode);
             // 
@@ -574,6 +551,30 @@
             this.lblDetalle.TabIndex = 5;
             this.lblDetalle.Text = "Detalle del seleccionado";
             this.lblDetalle.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // txtNombre
+            // 
+            this.txtNombre.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtNombre.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtNombre.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtNombre.BorderWidth = 2;
+            this.txtNombre.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNombre.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtNombre.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
+            this.txtNombre.IconChar = FontAwesome.Sharp.IconChar.Edit;
+            this.txtNombre.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtNombre.IconColorRight = System.Drawing.Color.DimGray;
+            this.txtNombre.IconPadding = 10;
+            this.txtNombre.IconSize = 30;
+            this.txtNombre.Location = new System.Drawing.Point(145, 10);
+            this.txtNombre.Name = "txtNombre";
+            this.txtNombre.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtNombre.PlaceholderText = "Ingrese el nombre";
+            this.txtNombre.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtNombre.Size = new System.Drawing.Size(1305, 50);
+            this.txtNombre.TabIndex = 69;
+            this.txtNombre.TextLeftPadding = 20;
             // 
             // FormAccesoAM_08YS
             // 

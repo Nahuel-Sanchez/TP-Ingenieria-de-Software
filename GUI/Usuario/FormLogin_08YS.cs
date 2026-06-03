@@ -25,8 +25,8 @@ namespace GUI_08YS
         {
             InitializeComponent();
             _userBLL = BLLFactory_08YS.CreateUserBLL();
-            iconComboBox1.Items.Add("Español");
-            iconComboBox1.Items.Add("Ingles");
+            IdiomaCombobox.Items.Add("Español");
+            IdiomaCombobox.Items.Add("Ingles");
 
             TraductorManager_08YS.Instance.Suscribir(this);
 
@@ -39,6 +39,7 @@ namespace GUI_08YS
         {
             TraducirControles(this);
         }
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -56,6 +57,7 @@ namespace GUI_08YS
                 }
             }
         }
+
         private void btnAcceder_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
@@ -187,17 +189,13 @@ namespace GUI_08YS
             tb.IconCharRight = tb.MaskedInput ? IconChar.EyeSlash : IconChar.Eye;
         }
 
-        private void iconComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void IdiomaComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (iconComboBox1.SelectedIndex == 0)
+            if (IdiomaCombobox.SelectedIndex == 0)
                 TraductorManager_08YS.Instance.CambiarIdioma("es");
 
-            if (iconComboBox1.SelectedIndex == 1)
+            if (IdiomaCombobox.SelectedIndex == 1)
                 TraductorManager_08YS.Instance.CambiarIdioma("en");
-
-           
         }
-
-        
     }
 }
