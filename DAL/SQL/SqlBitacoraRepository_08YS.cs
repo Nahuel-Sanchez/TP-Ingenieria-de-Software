@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Service_08YS;
-using Service_08YS.Bitacora;
+using Service_08YS.Entities.Bitacora;
 using MPP_08YS;
 using DAL_08YS.Repositories_Interfaces;
 
 namespace DAL_08YS
 {
-    public class SqlBitacoraRepository : Connection_08YS, IBitacoraRepository_08YS
+    public class SqlBitacoraRepository_08YS : Connection_08YS, IBitacoraRepository_08YS
     {
-        public SqlBitacoraRepository(IDbFactory_08YS factory) : base(factory) { }
+        public SqlBitacoraRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
 
         private IDbDataParameter[] ToParameters(BitacoraEvento_08YS b)
         {

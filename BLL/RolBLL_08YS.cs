@@ -1,5 +1,6 @@
 ﻿using DAL_08YS.Interfaces_Repositories;
 using Service_08YS.Entities.Acceso;
+using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,17 @@ using System.Threading.Tasks;
 
 namespace BLL_08YS
 {
-    public class RolBLL_08YS : AccesoBLL
+    public class RolBLL_08YS : AccesoBLL_08YS
     {
+        private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly IRolRepository_08YS _rolRepo;
         private readonly IFamiliaRepository_08YS _familiaRepo;
 
-        public RolBLL_08YS(IRolRepository_08YS rolRepo, IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo) : base(permisoRepo)
+        public RolBLL_08YS(IRolRepository_08YS rolRepo, IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
         {
             _rolRepo = rolRepo;
             _familiaRepo = familiaRepo;
+            _bitacoraBll = bitacoraBll;
         }
 
         // FormGestion: listado principal
@@ -33,12 +36,14 @@ namespace BLL_08YS
         {
             ValidarDatosEntrada(nombre, componentes);
             _rolRepo.Create(nombre, componentes.ToList());
+            _bitacoraBll.RegistrarEvento(Evento.RolCreado);
         }
 
         public void Modificar(int rolId, string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
             _rolRepo.Modify(rolId, nombre, componentes.ToList());
+            _bitacoraBll.RegistrarEvento(Evento.RolModificado);
         }
 
         public void Eliminar(int rolId)
@@ -48,6 +53,7 @@ namespace BLL_08YS
                     "No se puede eliminar: el rol está asignado a uno o más usuarios.");
 
             _rolRepo.Delete(rolId);
+            _bitacoraBll.RegistrarEvento(Evento.RolEliminado);
         }
 
     }

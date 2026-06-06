@@ -7,6 +7,21 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Acceso
 {
+    public enum Permisos
+    {
+        CrearFamilias,
+        EliminarFamilias,
+        ModificarFamilias,
+        CrearRoles,
+        EliminarRoles,
+        ModificarRoles,
+        VerUsuarios,
+        CrearUsuario,
+        ModificarUsuario,
+        DesActivarUsuario,
+        DesbloquearUsuario
+    }
+
     public class Permiso_08YS : AccessComponent_08YS
     {
         public int PermisoID { get => ID; set => ID = value; }

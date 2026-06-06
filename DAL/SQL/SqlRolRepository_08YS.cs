@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DAL_08YS.SQL
 {
-    public class SqlRolRepository : Connection_08YS , IRolRepository_08YS
+    public class SqlRolRepository_08YS : Connection_08YS , IRolRepository_08YS
     {
-        public SqlRolRepository(IDbFactory_08YS factory) : base(factory) { }
+        public SqlRolRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
 
         public List<Rol_08YS> GetAll()
         {

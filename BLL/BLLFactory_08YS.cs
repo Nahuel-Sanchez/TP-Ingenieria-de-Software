@@ -25,25 +25,27 @@ namespace BLL_08YS
         public static BitacoraBLL_08YS CreateBitacoraBLL()
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
-            IBitacoraRepository_08YS repo = new SqlBitacoraRepository(factory);
+            IBitacoraRepository_08YS repo = new SqlBitacoraRepository_08YS(factory);
             return new BitacoraBLL_08YS(repo);
         }
 
         public static FamiliaBLL_08YS CreateFamiliaBLL()
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
-            IFamiliaRepository_08YS familiaRepo = new SqlFamiliaRepository(factory);
-            IPermisoRepository_08YS permisoRepo = new SqlPermisoRepository(factory);
-            return new FamiliaBLL_08YS(familiaRepo, permisoRepo);
+            IFamiliaRepository_08YS familiaRepo = new SqlFamiliaRepository_08YS(factory);
+            IPermisoRepository_08YS permisoRepo = new SqlPermisoRepository_08YS(factory);
+            BitacoraBLL_08YS bitacoraBll = CreateBitacoraBLL();
+            return new FamiliaBLL_08YS(familiaRepo, permisoRepo, bitacoraBll);
         }
 
         public static RolBLL_08YS CreateRolBLL()
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
-            IRolRepository_08YS rolRepo = new SqlRolRepository(factory);
-            IFamiliaRepository_08YS familiaRepo = new SqlFamiliaRepository(factory);
-            IPermisoRepository_08YS permisoRepo = new SqlPermisoRepository(factory);
-            return new RolBLL_08YS(rolRepo, familiaRepo, permisoRepo);
+            IRolRepository_08YS rolRepo = new SqlRolRepository_08YS(factory);
+            IFamiliaRepository_08YS familiaRepo = new SqlFamiliaRepository_08YS(factory);
+            IPermisoRepository_08YS permisoRepo = new SqlPermisoRepository_08YS(factory);
+            BitacoraBLL_08YS bitacoraBll = CreateBitacoraBLL();
+            return new RolBLL_08YS(rolRepo, familiaRepo, permisoRepo, bitacoraBll);
         }
     }
 }

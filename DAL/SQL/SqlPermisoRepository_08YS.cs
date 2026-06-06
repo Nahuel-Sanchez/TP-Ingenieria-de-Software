@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace DAL_08YS.SQL
 {
-    public class SqlPermisoRepository : Connection_08YS , IPermisoRepository_08YS
+    public class SqlPermisoRepository_08YS : Connection_08YS , IPermisoRepository_08YS
     {
-        public SqlPermisoRepository(IDbFactory_08YS factory) : base(factory) { }
+        public SqlPermisoRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
 
         public List<Permiso_08YS> GetAll()
                 => AccessMapper_08YS.PermisosFromTable(

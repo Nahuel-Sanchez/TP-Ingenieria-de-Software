@@ -1,5 +1,5 @@
 ﻿using GUI;
-using Service_08YS.Bitacora;
+using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace GUI_08YS
         [STAThread]
         static void Main()
         {
-            EventCatalog_08YS.ValidarCatalogo();
+            EventCatalog_08YS.CatalogValidation();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormLogin_08YS());

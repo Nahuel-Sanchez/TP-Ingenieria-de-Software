@@ -2,7 +2,7 @@
 using FontAwesome.Sharp;
 using CustomControls;
 using Service_08YS;
-using Service_08YS.Bitacora;
+using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -319,7 +319,7 @@ namespace GUI
             // Respeta el módulo actualmente seleccionado al filtrar por criticidad
             Modulo? moduloActual = comboBoxModulo.SelectedItem as Modulo?;
 
-            var eventos = EventCatalog_08YS.GetEventsByCriticidad(criticidadSeleccionada.Value);
+            var eventos = EventCatalog_08YS.GetEventsByCriticity(criticidadSeleccionada.Value);
 
             if (moduloActual.HasValue)
                 eventos = eventos.Where(ev =>

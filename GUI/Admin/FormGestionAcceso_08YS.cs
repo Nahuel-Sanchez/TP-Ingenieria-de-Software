@@ -15,14 +15,14 @@ namespace GUI_08YS.Admin
     public enum TipoEntidad { Familia, Rol }
     public enum OperacionAM { Alta, Modificacion }
 
-    public partial class FormGestionAcceso : Form
+    public partial class FormGestionAcceso_08YS : Form
     {
         private readonly TipoEntidad _modo;
         private readonly FamiliaBLL_08YS _familiaBLL;
         private readonly RolBLL_08YS _rolBLL;
         private readonly Action<Form> _openChildForm;
 
-        public FormGestionAcceso(TipoEntidad tipo, Action<Form> openChildForm)
+        public FormGestionAcceso_08YS(TipoEntidad tipo, Action<Form> openChildForm)
         {
             InitializeComponent();
             _modo = tipo;

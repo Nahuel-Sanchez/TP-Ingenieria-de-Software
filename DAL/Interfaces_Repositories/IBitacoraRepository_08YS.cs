@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Service_08YS.Bitacora;
+using Service_08YS.Entities.Bitacora;
 
 namespace DAL_08YS.Repositories_Interfaces
 {

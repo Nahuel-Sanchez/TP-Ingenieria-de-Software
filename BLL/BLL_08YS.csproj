@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccesoBLL.cs" />
+    <Compile Include="AccesoBLL_08YS.cs" />
     <Compile Include="BitacoraBLL_08YS.cs" />
     <Compile Include="BLLFactory_08YS.cs" />
     <Compile Include="FamiliaBLL_08YS.cs" />

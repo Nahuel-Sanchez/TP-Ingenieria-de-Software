@@ -36,8 +36,8 @@ namespace GUI_08YS.Admin
         // Evita cascada de eventos entre los dos dgv durante refreshes
         private bool _actualizandoSeleccion = false;
 
-        private AccesoBLL BLL => _tipo == TipoEntidad.Familia
-               ? (AccesoBLL)_familiaBLL
+        private AccesoBLL_08YS BLL => _tipo == TipoEntidad.Familia
+               ? (AccesoBLL_08YS)_familiaBLL
                :            _rolBLL;
 
         public FormAccesoAM_08YS(
@@ -102,6 +102,7 @@ namespace GUI_08YS.Admin
             }
 
             int? familiaIdExcluir = _operacion == OperacionAM.Modificacion
+                                 && _tipo      == TipoEntidad.Familia
                 ? _familiaAEditar.FamiliaID
                 : (int?) null;
 

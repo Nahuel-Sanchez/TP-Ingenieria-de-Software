@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service_08YS.Bitacora
+namespace Service_08YS.Entities.Bitacora
 {
     public enum Criticidad
     {
@@ -17,7 +17,8 @@ namespace Service_08YS.Bitacora
     public enum Modulo
     {
         Usuarios,
-        Login
+        Login,
+        Perfiles
     }
 
     public enum Evento
@@ -30,7 +31,14 @@ namespace Service_08YS.Bitacora
         UsuarioDeshabilitado,
         UsuarioHabilitado,
         UsuarioModificado,
-        CambioContraseña
+        CambioRol,
+        CambioContraseña,
+        FamiliaCreada,
+        FamiliaEliminada,
+        FamiliaModificada,
+        RolCreado,
+        RolEliminado,
+        RolModificado
     }
 
     public class BitacoraEvento_08YS

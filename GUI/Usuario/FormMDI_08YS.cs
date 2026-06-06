@@ -255,14 +255,12 @@ namespace GUI_08YS
 
         private void familiasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new FormGestionAcceso(TipoEntidad.Familia, OpenChildForm));
+            OpenChildForm(new FormGestionAcceso_08YS(TipoEntidad.Familia, OpenChildForm));
         }
 
         private void rolesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new FormGestionAcceso(TipoEntidad.Rol, OpenChildForm));
+            OpenChildForm(new FormGestionAcceso_08YS(TipoEntidad.Rol, OpenChildForm));
         }
-
-
     }
 }

@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Service_08YS.Bitacora;
+using Service_08YS.Entities.Bitacora;
 
 namespace MPP_08YS
 {

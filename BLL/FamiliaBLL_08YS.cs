@@ -5,16 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service_08YS.Entities.Bitacora;
 
 namespace BLL_08YS
 {
-    public class FamiliaBLL_08YS : AccesoBLL
+    public class FamiliaBLL_08YS : AccesoBLL_08YS
     {
+        private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly IFamiliaRepository_08YS _familiaRepo;
 
-        public FamiliaBLL_08YS(IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo) : base(permisoRepo)
+        public FamiliaBLL_08YS(IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
         {
             _familiaRepo = familiaRepo;
+            _bitacoraBll = bitacoraBll;
         }
 
         public List<Familia_08YS> GetAll() => _familiaRepo.GetAll();
@@ -75,6 +78,7 @@ namespace BLL_08YS
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(componentes, null);
             _familiaRepo.Create(nombre, componentes.ToList());
+            _bitacoraBll.RegistrarEvento(Evento.FamiliaCreada);
         }
 
         public void Modificar(int familiaId, string nombre, HashSet<AccessComponent_08YS> componentes)
@@ -82,6 +86,7 @@ namespace BLL_08YS
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(componentes, familiaId);
             _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
+            _bitacoraBll.RegistrarEvento(Evento.FamiliaModificada);
         }
 
         public void Eliminar(int familiaId)
@@ -91,6 +96,7 @@ namespace BLL_08YS
                     "No se puede eliminar: la familia está siendo utilizada por un rol u otra familia.");
 
             _familiaRepo.Delete(familiaId);
+            _bitacoraBll.RegistrarEvento(Evento.FamiliaEliminada);
         }
 
         private void ValidarFamiliaNoExistente(HashSet<AccessComponent_08YS> componentes, int? excluirId)

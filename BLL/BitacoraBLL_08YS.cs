@@ -1,7 +1,7 @@
 ﻿using DAL_08YS;
 using DAL_08YS.Repositories_Interfaces;
 using Service_08YS;
-using Service_08YS.Bitacora;
+using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.Linq;

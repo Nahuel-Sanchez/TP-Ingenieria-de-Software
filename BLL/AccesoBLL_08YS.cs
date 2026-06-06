@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace BLL_08YS
 {
-    public abstract class AccesoBLL
+    public abstract class AccesoBLL_08YS
     {
         protected readonly IPermisoRepository_08YS _permisoRepo;
 
-        protected AccesoBLL(IPermisoRepository_08YS permisoRepo)
+        protected AccesoBLL_08YS(IPermisoRepository_08YS permisoRepo)
         {
             _permisoRepo = permisoRepo;
         }
