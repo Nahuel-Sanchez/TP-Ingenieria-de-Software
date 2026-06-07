@@ -89,6 +89,7 @@ namespace BLL_08YS
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.DesbloquearUsuario);
             userRepository.Unlock(user.Username);
             string passwordDefault = user.DNI.ToString() + user.Apellido;
 
@@ -111,6 +112,7 @@ namespace BLL_08YS
 
             User_08YS nuevo = new User_08YS(username, dni, rol, nombre, apellido, email, hash, salt, false, true);
 
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearUsuario);
             userRepository.Create(nuevo);
             _bitacoraBll.RegistrarEvento(Evento.UsuarioCreado, targetUsername: username);
         }
@@ -127,6 +129,7 @@ namespace BLL_08YS
             user.Email = nuevoEmail;
             user.Rol = nuevoRol;
 
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarUsuario);
             userRepository.Modify(user,user.Username);
             _bitacoraBll.RegistrarEvento(Evento.UsuarioModificado, targetUsername: username);
         }
@@ -140,6 +143,7 @@ namespace BLL_08YS
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.DesActivarUsuario);
             bool nuevoEstado = !user.Activo;
             userRepository.UpdateState(username, nuevoEstado);
 

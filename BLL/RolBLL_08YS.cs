@@ -23,7 +23,6 @@ namespace BLL_08YS
             _bitacoraBll = bitacoraBll;
         }
 
-        // FormGestion: listado principal
         public List<Rol_08YS> GetAll() => _rolRepo.GetAll();
 
         public List<AccessComponent_08YS> GetComponentesDisponibles()

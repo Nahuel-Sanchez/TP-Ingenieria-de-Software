@@ -9,18 +9,20 @@ namespace Service_08YS.Entities.Acceso
 {
     public enum Permisos
     {
-        CrearFamilias,
-        EliminarFamilias,
-        ModificarFamilias,
-        CrearRoles,
-        EliminarRoles,
-        ModificarRoles,
+        VerBitacora,
         VerUsuarios,
         CrearUsuario,
         ModificarUsuario,
         DesActivarUsuario,
         DesbloquearUsuario,
-        VerBitacora
+        VerRoles,
+        CrearRoles,
+        ModificarRoles,
+        EliminarRoles,
+        VerFamilias,
+        CrearFamilias,
+        ModificarFamilias,
+        EliminarFamilias,
     }
 
     public class Permiso_08YS : AccessComponent_08YS

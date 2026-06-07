@@ -1,4 +1,5 @@
-﻿using GUI;
+﻿using FontAwesome.Sharp;
+using GUI;
 using GUI_08YS.Admin;
 using GUI_08YS.Properties;
 using Service_08YS;
@@ -17,29 +18,47 @@ namespace GUI_08YS
 {
     public partial class FormMDI_08YS : Form,IIdiomaObserver_08YS
     {
-        private static readonly Dictionary<string, Permisos> _mapaControles =
+        // Mapeo de controles del menu administrativo a los permisos necesarios para verlos y ejecutarlos
+        private static readonly Dictionary<string, Permisos> _mapaMenuAdmin =
             new Dictionary<string, Permisos>
             {
-                { nameof(bitacoraToolStripMenuItem),     Permisos.VerBitacora    },
+                { nameof(gestionUsuarioToolStripMenuItem),  Permisos.VerUsuarios    },
+                { nameof(bitacoraToolStripMenuItem),        Permisos.VerBitacora    },
+                { nameof(familiasToolStripMenuItem),        Permisos.VerFamilias    },
+                { nameof(rolesToolStripMenuItem),           Permisos.VerRoles       },
             };
-
 
         public event Action CerrarSesion;
 
         public FormMDI_08YS()
         {
             InitializeComponent();
-            PermissionFilter_08YS.Aplicar(this, _mapaControles);
-            lblRolSistema.Text = SessionManager_08YS.Instance.Current.Rol.ToString();
+            lblRolSistema.Text = SessionManager_08YS.Instance.Current.Rol.Nombre;
             lblNombreApellido.Text= SessionManager_08YS.Instance.Current.Nombre + " " + SessionManager_08YS.Instance.Current.Apellido;
+            AplicarPermisos();
             TraductorManager_08YS.Instance.Suscribir(this);
             UpdateIdioma(); 
         }
 
-        public void UpdateIdioma()
+        private void AplicarPermisos()
         {
-            TraducirControles(this);
+            // Botón "Administrativo" del panel lateral — solo visible si tiene algún permiso admin
+            btnAdministrativo.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.VerUsuarios)
+                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerBitacora)
+                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerFamilias)
+                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerRoles   );
+
+            gestionAccesosToolStripMenuItem.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.VerRoles   )
+                                                   || SessionManager_08YS.Instance.HasPermission(Permisos.VerFamilias);
+
+            // Items del menu desplegable de admin
+            PermissionFilter_08YS.AplicarMenuStrip(AdministrativoDropDownMenu, _mapaMenuAdmin);
         }
+
+        #region idioma
+        public void UpdateIdioma()
+            => TraducirControles(this);
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -57,9 +76,12 @@ namespace GUI_08YS
                 }
             }
         }
-        private void FormMDI_FormClosed(object sender, FormClosedEventArgs e)
+        #endregion
+
+        private void FormMDI_Load(object sender, EventArgs e)
         {
-            //CerrarSesion?.Invoke();
+            AdministrativoDropDownMenu.IsMainMenu = true;
+            PerfilDropDownMenu.IsMainMenu = true;
         }
 
         private void FormMDI_FormClosing(object sender, FormClosingEventArgs e)
@@ -72,13 +94,6 @@ namespace GUI_08YS
             {
                 CerrarSesion?.Invoke(); // Desoculta el Username y limpia Singleton
             }
-        }
-
-
-        private void FormMDI_Load(object sender, EventArgs e)
-        {
-            AdministrativoDropDownMenu.IsMainMenu = true;
-            PerfilDropDownMenu.IsMainMenu = true;
         }
 
         public void OpenChildForm(Form childForm)
@@ -140,16 +155,47 @@ namespace GUI_08YS
                 }
             }
         }
-        
+
+        #region Menu
+
+        #region Administrativo
+
+        private void btnAdministrativo_Click(object sender, EventArgs e)
+        {
+            AdministrativoDropDownMenu.Show(btnAdministrativo, btnAdministrativo.Width, 0);
+        }
 
         private void gestionUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerUsuarios);
             OpenChildForm(new FormGestionUsuarios_08YS());
         }
 
         private void bitacoraToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerBitacora);
             OpenChildForm(new FormBitacora_08YS());
+        }
+
+        private void familiasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerFamilias);
+            OpenChildForm(new FormGestionAcceso_08YS(TipoEntidad.Familia, OpenChildForm));
+        }
+
+        private void rolesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerRoles);
+            OpenChildForm(new FormGestionAcceso_08YS(TipoEntidad.Rol, OpenChildForm));
+        }
+
+        #endregion
+
+        #region Perfil
+
+        private void btnPerfil_Click(object sender, EventArgs e)
+        {
+            PerfilDropDownMenu.Show(btnPerfil, btnPerfil.Width, 0);
         }
 
         private void cambiarContraseñaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -167,6 +213,50 @@ namespace GUI_08YS
             };
             OpenChildForm(form);
         }
+
+        private void ReLoginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            FormLogin_08YS frmRelogin = new FormLogin_08YS();
+
+
+            frmRelogin.ModoRelogin = true;
+
+
+            frmRelogin.ShowDialog();
+        }
+
+        private void cerrarSesionToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var respuesta = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
+                                        "Cerrar Sesión",
+                                        MessageBoxButtons.YesNo,
+                                        MessageBoxIcon.Question);
+
+            if (respuesta == DialogResult.Yes)
+            {
+                CerrarSesion?.Invoke();
+                this.Close();
+            }
+        }
+
+        #endregion
+
+        private void btnCerrarSesion_Click(object sender, EventArgs e)
+        {
+            var respuesta = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
+                                        "Cerrar Sesión",
+                                        MessageBoxButtons.YesNo,
+                                        MessageBoxIcon.Question);
+
+            if (respuesta == DialogResult.Yes)
+            {
+                CerrarSesion?.Invoke();
+                this.Close();
+            }
+        }
+
+        #endregion
 
         #region BarraSuperior
 
@@ -201,68 +291,5 @@ namespace GUI_08YS
         }
 
         #endregion
-
-       
-
-        private void cerrarSesionToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            var respuesta = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
-                                        "Cerrar Sesión - GastroGest",
-                                        MessageBoxButtons.YesNo,
-                                        MessageBoxIcon.Question);
-
-            if (respuesta == DialogResult.Yes)
-            {
-                CerrarSesion?.Invoke();
-                this.Close();
-            }
-        }
-
-        private void ReLoginToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-         
-            FormLogin_08YS frmRelogin = new FormLogin_08YS();
-
-            
-            frmRelogin.ModoRelogin = true;
-
-          
-            frmRelogin.ShowDialog();
-        }
-
-        private void iconButton1_Click(object sender, EventArgs e)
-        {
-            PerfilDropDownMenu.Show(btnPerfil, btnPerfil.Width, 0);
-        }
-
-        private void iconButton2_Click(object sender, EventArgs e)
-        {
-            AdministrativoDropDownMenu.Show(btnAdministrativo, btnAdministrativo.Width, 0);
-        }
-
-        private void iconButton4_Click(object sender, EventArgs e)
-        {
-            var respuesta = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
-                                        "Cerrar Sesión - GastroGest",
-                                        MessageBoxButtons.YesNo,
-                                        MessageBoxIcon.Question);
-
-            if (respuesta == DialogResult.Yes)
-            {
-                CerrarSesion?.Invoke();
-                this.Close();
-            }
-        }
-
-
-        private void familiasToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenChildForm(new FormGestionAcceso_08YS(TipoEntidad.Familia, OpenChildForm));
-        }
-
-        private void rolesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenChildForm(new FormGestionAcceso_08YS(TipoEntidad.Rol, OpenChildForm));
-        }
     }
 }

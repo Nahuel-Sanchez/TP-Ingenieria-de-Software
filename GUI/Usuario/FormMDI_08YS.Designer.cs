@@ -231,7 +231,7 @@
             this.btnPerfil.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnPerfil.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnPerfil.UseVisualStyleBackColor = true;
-            this.btnPerfil.Click += new System.EventHandler(this.iconButton1_Click);
+            this.btnPerfil.Click += new System.EventHandler(this.btnPerfil_Click);
             // 
             // btnAdministrativo
             // 
@@ -255,7 +255,7 @@
             this.btnAdministrativo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnAdministrativo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnAdministrativo.UseVisualStyleBackColor = true;
-            this.btnAdministrativo.Click += new System.EventHandler(this.iconButton2_Click);
+            this.btnAdministrativo.Click += new System.EventHandler(this.btnAdministrativo_Click);
             // 
             // btnReservar
             // 
@@ -302,7 +302,7 @@
             this.btnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCerrarSesion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnCerrarSesion.UseVisualStyleBackColor = true;
-            this.btnCerrarSesion.Click += new System.EventHandler(this.iconButton4_Click);
+            this.btnCerrarSesion.Click += new System.EventHandler(this.btnCerrarSesion_Click);
             // 
             // panelLogo
             // 
@@ -404,7 +404,7 @@
             // rolesToolStripMenuItem
             // 
             this.rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
-            this.rolesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.rolesToolStripMenuItem.Size = new System.Drawing.Size(145, 26);
             this.rolesToolStripMenuItem.Tag = "menuRoles";
             this.rolesToolStripMenuItem.Text = "Roles";
             this.rolesToolStripMenuItem.Click += new System.EventHandler(this.rolesToolStripMenuItem_Click);
@@ -412,7 +412,7 @@
             // familiasToolStripMenuItem
             // 
             this.familiasToolStripMenuItem.Name = "familiasToolStripMenuItem";
-            this.familiasToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.familiasToolStripMenuItem.Size = new System.Drawing.Size(145, 26);
             this.familiasToolStripMenuItem.Tag = "menuFamilias";
             this.familiasToolStripMenuItem.Text = "Familias";
             this.familiasToolStripMenuItem.Click += new System.EventHandler(this.familiasToolStripMenuItem_Click);
@@ -429,7 +429,7 @@
             this.PerfilDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
             this.PerfilDropDownMenu.Name = "dropdownMenuStrip_08YS2";
             this.PerfilDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
-            this.PerfilDropDownMenu.Size = new System.Drawing.Size(213, 76);
+            this.PerfilDropDownMenu.Size = new System.Drawing.Size(213, 104);
             // 
             // cambiarContraseñaToolStripMenuItem
             // 
@@ -469,7 +469,6 @@
             this.Name = "FormMDI_08YS";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMDI_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMDI_FormClosed);
             this.Load += new System.EventHandler(this.FormMDI_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

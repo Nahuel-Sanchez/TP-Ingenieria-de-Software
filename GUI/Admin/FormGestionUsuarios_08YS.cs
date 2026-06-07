@@ -1,4 +1,5 @@
 ﻿using BLL_08YS;
+using GUI_08YS;
 using Service_08YS;
 using Service_08YS.Entities.Acceso;
 using System;
@@ -14,8 +15,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 namespace GUI
 {
-    public partial class FormGestionUsuarios_08YS : Form,IIdiomaObserver_08YS
+    public partial class FormGestionUsuarios_08YS : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnCrear),       Permisos.CrearUsuario      },
+                { nameof(btnModificar),   Permisos.ModificarUsuario  },
+                { nameof(btnDesbloquear), Permisos.DesbloquearUsuario},
+                { nameof(btnActDes),      Permisos.DesActivarUsuario },
+            };
+
         private UserBLL_08YS _bll = BLLFactory_08YS.CreateUserBLL();
         
         public FormGestionUsuarios_08YS()
@@ -24,10 +34,13 @@ namespace GUI
             TraductorManager_08YS.Instance.Suscribir(this);
             UpdateIdioma();
         }
+
+        #region Idioma
         public void UpdateIdioma()
         {
             TraducirControles(this);
         }
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -45,15 +58,19 @@ namespace GUI
                 }
             }
         }
+        #endregion
+
         private enum EstadoUI { Consulta, Insertando, Editando }
         private EstadoUI _estadoActual;
+
         private void FormGestionUsuarios_Load(object sender, EventArgs e)
         {
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
             CargarGrilla();
             cmbRol.DataSource = Enum.GetValues(typeof(UserRole));
-            
             CambiarEstado(EstadoUI.Consulta); // Inicia en modo lectura
         }
+
         #region Manejo de Interfaz y Estados
 
         private void CambiarEstado(EstadoUI nuevoEstado)
@@ -153,6 +170,7 @@ namespace GUI
         }
 
         #endregion
+
         #region Validaciones
         private bool ValidarDNI(string dni)
         {
@@ -173,6 +191,7 @@ namespace GUI
                    cmbRol.SelectedIndex != -1;
         }
         #endregion
+
         #region Grilla
         private void CargarGrilla()
         {
@@ -252,6 +271,7 @@ namespace GUI
             }
         }
         #endregion
+
         #region Botones
         private void btnCrear_Click(object sender, EventArgs e)
         {
@@ -371,6 +391,7 @@ namespace GUI
             this.Close();
         }
         #endregion
+
         private void EjecutarAlta()
         {
             // 1. Obtener datos de los campos
@@ -422,6 +443,5 @@ namespace GUI
 
         #endregion
 
-      
     }
 }

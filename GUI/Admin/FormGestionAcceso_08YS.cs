@@ -47,7 +47,6 @@ namespace GUI_08YS.Admin
             _familiaBLL = BLLFactory_08YS.CreateFamiliaBLL();
             _rolBLL = BLLFactory_08YS.CreateRolBLL();
             _openChildForm = openChildForm;
-            AplicarPermisos();
             string entidad = _modo == TipoEntidad.Familia ? "Familias" : "Roles";
             Text = $"Gestión de {entidad}";
             lblTitulo.Text = $"Gestión de {entidad}";
@@ -76,6 +75,8 @@ namespace GUI_08YS.Admin
             iconPictureBox.IconChar = esFamilia
                 ? FontAwesome.Sharp.IconChar.LayerGroup
                 : FontAwesome.Sharp.IconChar.UserShield;
+
+            AplicarPermisos();
         }
 
         private void CargarGrid()
