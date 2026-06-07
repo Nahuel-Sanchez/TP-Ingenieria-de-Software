@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service_08YS.Entities.Acceso;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Service_08YS
     {
         private string _username;
         private int _dni;
-        private UserRole _rol;
+        private Rol_08YS _rol;
         private string _nombre;
         private string _apellido;
         private string _hash;
@@ -30,7 +31,7 @@ namespace Service_08YS
       
 
 
-        public User_08YS(string username, int dni, UserRole rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true,string idioma="es")
+        public User_08YS(string username, int dni, Rol_08YS rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true,string idioma="es")
         {
             this._username = username;
             this._dni = dni;
@@ -76,7 +77,7 @@ namespace Service_08YS
             set { _dni = value; }
         }
 
-        public UserRole Rol
+        public Rol_08YS Rol
         {
             get { return _rol; }
             set { _rol = value; }

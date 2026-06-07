@@ -74,6 +74,7 @@
     <Compile Include="Admin\FormGestionAcceso_08YS.Designer.cs">
       <DependentUpon>FormGestionAcceso_08YS.cs</DependentUpon>
     </Compile>
+    <Compile Include="PermissionFilter_08YS.cs" />
     <Compile Include="UserControls\CustomCalendarPanel.cs">
       <SubType>Component</SubType>
     </Compile>

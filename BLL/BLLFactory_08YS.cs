@@ -18,8 +18,9 @@ namespace BLL_08YS
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
             IUserRepository_08YS repo = new SqlUserRepository_08YS(factory);
+            IRolRepository_08YS rolRepo = new SqlRolRepository_08YS(factory);
             BitacoraBLL_08YS bitacoraBll = CreateBitacoraBLL();
-            return new UserBLL_08YS(repo, bitacoraBll);
+            return new UserBLL_08YS(repo, rolRepo, bitacoraBll);
         }
 
         public static BitacoraBLL_08YS CreateBitacoraBLL()

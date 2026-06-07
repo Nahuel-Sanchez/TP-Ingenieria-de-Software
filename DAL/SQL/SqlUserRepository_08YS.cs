@@ -20,7 +20,7 @@ namespace DAL_08YS
             {
                 Param("@Username",  user.Username),
                 Param("@DNI",       user.DNI),
-                Param("@RolID",       (int)user.Rol),
+                Param("@RolID",     user.Rol.RolID),
                 Param("@Nombre",    user.Nombre),
                 Param("@Apellido",  user.Apellido),
                 Param("@Hash",      user.Hash),
@@ -91,7 +91,7 @@ namespace DAL_08YS
             (
                 "UPDATE Users SET Email = @Email , RolID=@RolID WHERE Username = @Username",
                 new[] { Param("@Email", user.Email),
-                        Param("@RolID", (int)user.Rol) ,
+                        Param("@RolID", user.Rol.RolID) ,
                         Param("@Username",user.Username)}
             );
         }

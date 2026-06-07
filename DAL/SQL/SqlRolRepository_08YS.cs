@@ -18,34 +18,18 @@ namespace DAL_08YS.SQL
         {
             DataSet ds = GetDataSet("sp_GetAllRolesConEstructura", storedProcedure: true);
 
-            // RS3-RS4-RS5 → reconstruye el árbol de familias igual que SqlFamiliaRepository
-            var familias = ds.Tables[3].AsEnumerable()
-                .ToDictionary(
-                    r => Convert.ToInt32(r["FamiliaID"]),
-                    r => AccessMapper_08YS.FamiliaFromRow(r));
+            // RS3 y RS4 en el SP original → misma firma que EnsamblarFamilias
+            var familias = AccessMapper_08YS.EnsamblarFamilias(ds.Tables[3], ds.Tables[4]);
 
-            foreach (DataRow row in ds.Tables[5].Rows)
-            {
-                int fid = Convert.ToInt32(row["FamiliaID"]);
-                if (familias.TryGetValue(fid, out var f))
-                    f.Agregar(AccessMapper_08YS.PermisoFromRow(row));
-            }
-            foreach (DataRow row in ds.Tables[4].Rows)
-            {
-                int hijoID = Convert.ToInt32(row["FamiliaID"]);
-                int padreID = Convert.ToInt32(row["FamiliaPadreID"]);
-                if (familias.TryGetValue(padreID, out var padre) &&
-                    familias.TryGetValue(hijoID, out var hijo))
-                    padre.Agregar(hijo);
-            }
-
-            // RS0 → roles
             var roles = ds.Tables[0].AsEnumerable()
                 .ToDictionary(
                     r => Convert.ToInt32(r["RolID"]),
-                    r => new Rol_08YS { RolID = Convert.ToInt32(r["RolID"]), Nombre = r["Nombre"].ToString() });
+                    r => new Rol_08YS
+                    {
+                        RolID = Convert.ToInt32(r["RolID"]),
+                        Nombre = r["Nombre"].ToString()
+                    });
 
-            // RS1 → familias completas al rol
             foreach (DataRow row in ds.Tables[1].Rows)
             {
                 int rolId = Convert.ToInt32(row["RolID"]);
@@ -55,7 +39,6 @@ namespace DAL_08YS.SQL
                     rol.Agregar(familia);
             }
 
-            // RS2 → permisos directos al rol
             foreach (DataRow row in ds.Tables[2].Rows)
             {
                 int rolId = Convert.ToInt32(row["RolID"]);
@@ -109,5 +92,40 @@ namespace DAL_08YS.SQL
             => ExecuteNonQuery("sp_DeleteRol",
                 new[] { Param("@RolID", rolId) },
                 storedProcedure: true);
+
+        public Rol_08YS GetById(int rolId)
+        {
+            DataSet ds = GetDataSet("sp_GetRolByID",
+        new[] { Param("@RolID", rolId) },
+        storedProcedure: true);
+
+            if (ds.Tables[0].Rows.Count == 0) return null;
+
+            // RS2 y RS3 → árbol de familias usando el mapper compartido
+            var familias = AccessMapper_08YS.EnsamblarFamilias(ds.Tables[2], ds.Tables[3]);
+
+            var rolRow = ds.Tables[0].Rows[0];
+            var rol = new Rol_08YS
+            {
+                RolID = Convert.ToInt32(rolRow["RolID"]),
+                Nombre = rolRow["Nombre"].ToString()
+            };
+
+            // RS1 → permisos directos del rol
+            foreach (DataRow row in ds.Tables[1].Rows)
+                rol.Agregar(AccessMapper_08YS.PermisoFromRow(row));
+
+            // RS2 → solo las familias raíz van al rol directamente
+            foreach (DataRow row in ds.Tables[2].Rows)
+            {
+                if (row["FamiliaPadreID"] != DBNull.Value) continue;
+
+                int familiaId = Convert.ToInt32(row["FamiliaID"]);
+                if (familias.TryGetValue(familiaId, out var familia))
+                    rol.Agregar(familia);
+            }
+
+            return rol;
+        }
     }
 }

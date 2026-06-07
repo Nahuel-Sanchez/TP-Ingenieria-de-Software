@@ -1,6 +1,8 @@
 ﻿using DAL_08YS;
+using DAL_08YS.Interfaces_Repositories;
 using DAL_08YS.Repositories_Interfaces;
 using Service_08YS;
+using Service_08YS.Entities.Acceso;
 using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,13 @@ namespace BLL_08YS
     public class UserBLL_08YS
     {
         private readonly IUserRepository_08YS userRepository;
+        private readonly IRolRepository_08YS _rolRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
 
-        public UserBLL_08YS(IUserRepository_08YS userRepository, BitacoraBLL_08YS bitacoraBll)
+        public UserBLL_08YS(IUserRepository_08YS userRepository, IRolRepository_08YS rolRepo, BitacoraBLL_08YS bitacoraBll)
         {
             this.userRepository = userRepository;
+            _rolRepo = rolRepo;
             _bitacoraBll = bitacoraBll;
         }
 
@@ -41,6 +45,7 @@ namespace BLL_08YS
                 throw new AuthenticationException("Ha ingresado una contraseña incorrecta. Después de 3 intentos fallidos, su cuenta será bloqueada.");
             }
 
+            user.Rol = _rolRepo.GetById(user.Rol.RolID);
             SessionManager_08YS.Instance.SetCurrentUser(user);
 
             //TraductorManager_08YS.Instance.CambiarIdioma(user.Idioma);
@@ -95,7 +100,7 @@ namespace BLL_08YS
             _bitacoraBll.RegistrarEvento(Evento.UsuarioDesbloqueado, targetUsername: username);
         }
 
-        public void CrearUsuario(int dni, string nombre, string apellido, string email, UserRole rol)
+        public void CrearUsuario(int dni, string nombre, string apellido, string email, Rol_08YS rol)
         {
             if (userRepository.Exists(dni))
                 throw new InvalidOperationException("Ya existe un usuario registrado con ese DNI.");
@@ -110,7 +115,7 @@ namespace BLL_08YS
             _bitacoraBll.RegistrarEvento(Evento.UsuarioCreado, targetUsername: username);
         }
 
-        public void ModificarUsuario(string username, string nuevoEmail, UserRole nuevoRol)
+        public void ModificarUsuario(string username, string nuevoEmail, Rol_08YS nuevoRol)
         {
             if(username == SessionManager_08YS.Instance.Current.Username)
                 throw new InvalidOperationException("No puede modificar su propio rol o email.");

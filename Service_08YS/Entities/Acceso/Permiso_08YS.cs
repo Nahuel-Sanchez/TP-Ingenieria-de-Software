@@ -19,7 +19,8 @@ namespace Service_08YS.Entities.Acceso
         CrearUsuario,
         ModificarUsuario,
         DesActivarUsuario,
-        DesbloquearUsuario
+        DesbloquearUsuario,
+        VerBitacora
     }
 
     public class Permiso_08YS : AccessComponent_08YS

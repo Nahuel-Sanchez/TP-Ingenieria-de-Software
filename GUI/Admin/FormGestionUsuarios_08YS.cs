@@ -1,5 +1,6 @@
 ﻿using BLL_08YS;
 using Service_08YS;
+using Service_08YS.Entities.Acceso;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -377,16 +378,16 @@ namespace GUI
             string nombre = txtNombres.Text.Trim();
             string apellido = txtApellidos.Text.Trim();
             string email = txtEmail.Text.Trim();
-            UserRole rol = (UserRole)cmbRol.SelectedItem;
+            Rol_08YS rol = (Rol_08YS)cmbRol.SelectedItem;
 
-             // 2. Enviar a la BLL
+            // 2. Enviar a la BLL
             _bll.CrearUsuario(dni,nombre,apellido,email,rol);
         }
         private void EjecutarModificacion()
         {
             string username = txtLogin.Text; // Usamos el login como ID
             string email = txtEmail.Text;
-            UserRole rol = (UserRole)cmbRol.SelectedItem;
+            Rol_08YS rol = (Rol_08YS)cmbRol.SelectedItem;
 
             // Llamada a la BLL
             _bll.ModificarUsuario(username, email, rol);

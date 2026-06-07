@@ -19,5 +19,7 @@ namespace DAL_08YS.Interfaces_Repositories
 
         void Delete(int rolId);
         void Modify(int rolId, string nombre, List<AccessComponent_08YS> componentes);
+
+        Rol_08YS GetById(int rolID);
     }
 }

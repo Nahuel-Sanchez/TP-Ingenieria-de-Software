@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Service_08YS;
+using Service_08YS.Entities.Acceso;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Service_08YS;
 
 namespace MPP_08YS
 {
@@ -24,7 +25,7 @@ namespace MPP_08YS
             {
                 Username = row["Username"].ToString(),
                 DNI = Convert.ToInt32(row["DNI"]),
-                Rol = (UserRole)Convert.ToInt32(row["RolID"]),
+                Rol = new Rol_08YS { RolID = Convert.ToInt32(row["RolID"]) },
                 Nombre = row["Nombre"].ToString(),
                 Apellido = row["Apellido"].ToString(),
                 Hash = row["Hash"].ToString(),

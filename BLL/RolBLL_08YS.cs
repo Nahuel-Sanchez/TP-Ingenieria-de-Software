@@ -1,4 +1,5 @@
 ﻿using DAL_08YS.Interfaces_Repositories;
+using Service_08YS;
 using Service_08YS.Entities.Acceso;
 using Service_08YS.Entities.Bitacora;
 using System;
@@ -35,6 +36,7 @@ namespace BLL_08YS
         public void Crear(string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearRoles);
             _rolRepo.Create(nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.RolCreado);
         }
@@ -42,6 +44,7 @@ namespace BLL_08YS
         public void Modificar(int rolId, string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarRoles);
             _rolRepo.Modify(rolId, nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.RolModificado);
         }
@@ -52,6 +55,7 @@ namespace BLL_08YS
                 throw new InvalidOperationException(
                     "No se puede eliminar: el rol está asignado a uno o más usuarios.");
 
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarRoles);
             _rolRepo.Delete(rolId);
             _bitacoraBll.RegistrarEvento(Evento.RolEliminado);
         }

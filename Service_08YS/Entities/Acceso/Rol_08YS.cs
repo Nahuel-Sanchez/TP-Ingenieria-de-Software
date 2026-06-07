@@ -17,7 +17,7 @@ namespace Service_08YS.Entities.Acceso
 
         public void Agregar(AccessComponent_08YS c) => _componentes.Add(c);
 
-        public HashSet<Permiso_08YS> ObtenerPermisos()
+        public HashSet<Permiso_08YS> GetPermisos()
         {
             var resultado = new HashSet<Permiso_08YS>(PermisoComparer.Instance);
             foreach (var c in _componentes)

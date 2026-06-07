@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Service_08YS.Entities.Bitacora;
+using Service_08YS;
 
 namespace BLL_08YS
 {
@@ -77,6 +78,7 @@ namespace BLL_08YS
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(componentes, null);
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearFamilias);
             _familiaRepo.Create(nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.FamiliaCreada);
         }
@@ -85,6 +87,7 @@ namespace BLL_08YS
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(componentes, familiaId);
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarFamilias);
             _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.FamiliaModificada);
         }
@@ -94,7 +97,7 @@ namespace BLL_08YS
             if (_familiaRepo.IsInUse(familiaId))
                 throw new InvalidOperationException(
                     "No se puede eliminar: la familia está siendo utilizada por un rol u otra familia.");
-
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarFamilias);
             _familiaRepo.Delete(familiaId);
             _bitacoraBll.RegistrarEvento(Evento.FamiliaEliminada);
         }

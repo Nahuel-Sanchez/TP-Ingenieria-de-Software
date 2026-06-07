@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Service_08YS.Entities.Acceso.ResultadoEvaluacion_08YS;
 
 namespace GUI_08YS.Admin
 {
@@ -17,6 +18,23 @@ namespace GUI_08YS.Admin
 
     public partial class FormGestionAcceso_08YS : Form
     {
+        private static readonly Dictionary<string, Permisos> _mapaFamilia =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnCrear),     Permisos.CrearFamilias     },
+                { nameof(btnModificar), Permisos.ModificarFamilias },
+                { nameof(btnEliminar),  Permisos.EliminarFamilias  },
+            };
+
+        private static readonly Dictionary<string, Permisos> _mapaRol =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnCrear),     Permisos.CrearRoles     },
+                { nameof(btnModificar), Permisos.ModificarRoles },
+                { nameof(btnEliminar),  Permisos.EliminarRoles  },
+            };
+
+
         private readonly TipoEntidad _modo;
         private readonly FamiliaBLL_08YS _familiaBLL;
         private readonly RolBLL_08YS _rolBLL;
@@ -29,7 +47,7 @@ namespace GUI_08YS.Admin
             _familiaBLL = BLLFactory_08YS.CreateFamiliaBLL();
             _rolBLL = BLLFactory_08YS.CreateRolBLL();
             _openChildForm = openChildForm;
-
+            AplicarPermisos();
             string entidad = _modo == TipoEntidad.Familia ? "Familias" : "Roles";
             Text = $"Gestión de {entidad}";
             lblTitulo.Text = $"Gestión de {entidad}";
@@ -42,6 +60,12 @@ namespace GUI_08YS.Admin
             ConfigurarPorTipo();
             //ConfigurarBotones();
             CargarGrid();
+        }
+
+        private void AplicarPermisos()
+        {
+            var mapa = _modo == TipoEntidad.Familia ? _mapaFamilia : _mapaRol;
+            PermissionFilter_08YS.Aplicar(this, mapa);
         }
 
         private void ConfigurarPorTipo()

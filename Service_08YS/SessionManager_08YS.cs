@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Service_08YS.Entities.Acceso;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +31,18 @@ namespace Service_08YS
 
         public void CerrarSesion() => Current = null;
 
+        public bool HasPermission(Permisos permiso)
+        {
+            if (Current?.Rol == null) return false;
 
+            return Current.Rol.GetPermisos()
+                .Any(p => p.Nombre == permiso.ToString());
+        }
 
+        public void ValidatePermission(Permisos permiso)
+        {
+            if(!HasPermission(permiso))
+                throw new UnauthorizedAccessException($"El usuario actual no tiene permiso para: {permiso}");
+        }
     }
 }

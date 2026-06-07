@@ -40,10 +40,10 @@
             this.Titulo = new System.Windows.Forms.Label();
             this.panelLateral = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.iconButton1 = new FontAwesome.Sharp.IconButton();
-            this.iconButton2 = new FontAwesome.Sharp.IconButton();
-            this.iconButton3 = new FontAwesome.Sharp.IconButton();
-            this.iconButton4 = new FontAwesome.Sharp.IconButton();
+            this.btnPerfil = new FontAwesome.Sharp.IconButton();
+            this.btnAdministrativo = new FontAwesome.Sharp.IconButton();
+            this.btnReservar = new FontAwesome.Sharp.IconButton();
+            this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panelLogo = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblNombreApellido = new System.Windows.Forms.Label();
@@ -59,8 +59,6 @@
             this.cambiarContraseñaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.crearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.crearToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelLateral.SuspendLayout();
@@ -192,7 +190,7 @@
             this.panelLateral.Controls.Add(this.panelLogo);
             this.panelLateral.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelLateral.Location = new System.Drawing.Point(0, 46);
-            this.panelLateral.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelLateral.Margin = new System.Windows.Forms.Padding(4);
             this.panelLateral.Name = "panelLateral";
             this.panelLateral.Size = new System.Drawing.Size(331, 919);
             this.panelLateral.TabIndex = 4;
@@ -200,10 +198,10 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.flowLayoutPanel1.Controls.Add(this.iconButton1);
-            this.flowLayoutPanel1.Controls.Add(this.iconButton2);
-            this.flowLayoutPanel1.Controls.Add(this.iconButton3);
-            this.flowLayoutPanel1.Controls.Add(this.iconButton4);
+            this.flowLayoutPanel1.Controls.Add(this.btnPerfil);
+            this.flowLayoutPanel1.Controls.Add(this.btnAdministrativo);
+            this.flowLayoutPanel1.Controls.Add(this.btnReservar);
+            this.flowLayoutPanel1.Controls.Add(this.btnCerrarSesion);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -211,100 +209,100 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(331, 849);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
-            // iconButton1
+            // btnPerfil
             // 
-            this.iconButton1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.iconButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.iconButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.iconButton1.ForeColor = System.Drawing.Color.Gold;
-            this.iconButton1.IconChar = FontAwesome.Sharp.IconChar.User;
-            this.iconButton1.IconColor = System.Drawing.Color.Gold;
-            this.iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconButton1.IconSize = 30;
-            this.iconButton1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton1.Location = new System.Drawing.Point(3, 2);
-            this.iconButton1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.iconButton1.Name = "iconButton1";
-            this.iconButton1.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.iconButton1.Size = new System.Drawing.Size(325, 60);
-            this.iconButton1.TabIndex = 3;
-            this.iconButton1.Tag = "btnPerfil";
-            this.iconButton1.Text = "Perfil";
-            this.iconButton1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.iconButton1.UseVisualStyleBackColor = true;
-            this.iconButton1.Click += new System.EventHandler(this.iconButton1_Click);
+            this.btnPerfil.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnPerfil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPerfil.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPerfil.ForeColor = System.Drawing.Color.Gold;
+            this.btnPerfil.IconChar = FontAwesome.Sharp.IconChar.User;
+            this.btnPerfil.IconColor = System.Drawing.Color.Gold;
+            this.btnPerfil.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnPerfil.IconSize = 30;
+            this.btnPerfil.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPerfil.Location = new System.Drawing.Point(3, 2);
+            this.btnPerfil.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnPerfil.Name = "btnPerfil";
+            this.btnPerfil.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnPerfil.Size = new System.Drawing.Size(325, 60);
+            this.btnPerfil.TabIndex = 3;
+            this.btnPerfil.Tag = "btnPerfil";
+            this.btnPerfil.Text = "Perfil";
+            this.btnPerfil.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPerfil.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnPerfil.UseVisualStyleBackColor = true;
+            this.btnPerfil.Click += new System.EventHandler(this.iconButton1_Click);
             // 
-            // iconButton2
+            // btnAdministrativo
             // 
-            this.iconButton2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.iconButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.iconButton2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.iconButton2.ForeColor = System.Drawing.Color.Gold;
-            this.iconButton2.IconChar = FontAwesome.Sharp.IconChar.UserTag;
-            this.iconButton2.IconColor = System.Drawing.Color.Gold;
-            this.iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconButton2.IconSize = 30;
-            this.iconButton2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton2.Location = new System.Drawing.Point(3, 66);
-            this.iconButton2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.iconButton2.Name = "iconButton2";
-            this.iconButton2.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.iconButton2.Size = new System.Drawing.Size(325, 60);
-            this.iconButton2.TabIndex = 4;
-            this.iconButton2.Tag = "btnAdministrativo";
-            this.iconButton2.Text = "Administrativo";
-            this.iconButton2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.iconButton2.UseVisualStyleBackColor = true;
-            this.iconButton2.Click += new System.EventHandler(this.iconButton2_Click);
+            this.btnAdministrativo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnAdministrativo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdministrativo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdministrativo.ForeColor = System.Drawing.Color.Gold;
+            this.btnAdministrativo.IconChar = FontAwesome.Sharp.IconChar.UserTag;
+            this.btnAdministrativo.IconColor = System.Drawing.Color.Gold;
+            this.btnAdministrativo.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnAdministrativo.IconSize = 30;
+            this.btnAdministrativo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdministrativo.Location = new System.Drawing.Point(3, 66);
+            this.btnAdministrativo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAdministrativo.Name = "btnAdministrativo";
+            this.btnAdministrativo.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnAdministrativo.Size = new System.Drawing.Size(325, 60);
+            this.btnAdministrativo.TabIndex = 4;
+            this.btnAdministrativo.Tag = "btnAdministrativo";
+            this.btnAdministrativo.Text = "Administrativo";
+            this.btnAdministrativo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdministrativo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAdministrativo.UseVisualStyleBackColor = true;
+            this.btnAdministrativo.Click += new System.EventHandler(this.iconButton2_Click);
             // 
-            // iconButton3
+            // btnReservar
             // 
-            this.iconButton3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.iconButton3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.iconButton3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.iconButton3.ForeColor = System.Drawing.Color.Gold;
-            this.iconButton3.IconChar = FontAwesome.Sharp.IconChar.CalendarCheck;
-            this.iconButton3.IconColor = System.Drawing.Color.Gold;
-            this.iconButton3.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconButton3.IconSize = 30;
-            this.iconButton3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton3.Location = new System.Drawing.Point(3, 130);
-            this.iconButton3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.iconButton3.Name = "iconButton3";
-            this.iconButton3.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.iconButton3.Size = new System.Drawing.Size(325, 60);
-            this.iconButton3.TabIndex = 5;
-            this.iconButton3.Tag = "btnReservar";
-            this.iconButton3.Text = "Reservar";
-            this.iconButton3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.iconButton3.UseVisualStyleBackColor = true;
+            this.btnReservar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnReservar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReservar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReservar.ForeColor = System.Drawing.Color.Gold;
+            this.btnReservar.IconChar = FontAwesome.Sharp.IconChar.CalendarCheck;
+            this.btnReservar.IconColor = System.Drawing.Color.Gold;
+            this.btnReservar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnReservar.IconSize = 30;
+            this.btnReservar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReservar.Location = new System.Drawing.Point(3, 130);
+            this.btnReservar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnReservar.Name = "btnReservar";
+            this.btnReservar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnReservar.Size = new System.Drawing.Size(325, 60);
+            this.btnReservar.TabIndex = 5;
+            this.btnReservar.Tag = "btnReservar";
+            this.btnReservar.Text = "Reservar";
+            this.btnReservar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReservar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnReservar.UseVisualStyleBackColor = true;
             // 
-            // iconButton4
+            // btnCerrarSesion
             // 
-            this.iconButton4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.iconButton4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.iconButton4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.iconButton4.ForeColor = System.Drawing.Color.Gold;
-            this.iconButton4.IconChar = FontAwesome.Sharp.IconChar.SignOut;
-            this.iconButton4.IconColor = System.Drawing.Color.Gold;
-            this.iconButton4.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconButton4.IconSize = 30;
-            this.iconButton4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton4.Location = new System.Drawing.Point(3, 194);
-            this.iconButton4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.iconButton4.Name = "iconButton4";
-            this.iconButton4.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.iconButton4.Size = new System.Drawing.Size(325, 60);
-            this.iconButton4.TabIndex = 6;
-            this.iconButton4.Tag = "btnCerrarSesion";
-            this.iconButton4.Text = "Cerrar Sesión";
-            this.iconButton4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton4.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.iconButton4.UseVisualStyleBackColor = true;
-            this.iconButton4.Click += new System.EventHandler(this.iconButton4_Click);
+            this.btnCerrarSesion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCerrarSesion.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCerrarSesion.ForeColor = System.Drawing.Color.Gold;
+            this.btnCerrarSesion.IconChar = FontAwesome.Sharp.IconChar.SignOut;
+            this.btnCerrarSesion.IconColor = System.Drawing.Color.Gold;
+            this.btnCerrarSesion.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnCerrarSesion.IconSize = 30;
+            this.btnCerrarSesion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCerrarSesion.Location = new System.Drawing.Point(3, 194);
+            this.btnCerrarSesion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnCerrarSesion.Name = "btnCerrarSesion";
+            this.btnCerrarSesion.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnCerrarSesion.Size = new System.Drawing.Size(325, 60);
+            this.btnCerrarSesion.TabIndex = 6;
+            this.btnCerrarSesion.Tag = "btnCerrarSesion";
+            this.btnCerrarSesion.Text = "Cerrar Sesión";
+            this.btnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCerrarSesion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCerrarSesion.UseVisualStyleBackColor = true;
+            this.btnCerrarSesion.Click += new System.EventHandler(this.iconButton4_Click);
             // 
             // panelLogo
             // 
@@ -313,7 +311,7 @@
             this.panelLogo.Controls.Add(this.lblRolSistema);
             this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelLogo.Location = new System.Drawing.Point(0, 0);
-            this.panelLogo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelLogo.Margin = new System.Windows.Forms.Padding(4);
             this.panelLogo.Name = "panelLogo";
             this.panelLogo.Size = new System.Drawing.Size(331, 70);
             this.panelLogo.TabIndex = 0;
@@ -321,7 +319,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Location = new System.Drawing.Point(4, 5);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(83, 57);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -375,12 +373,12 @@
             this.AdministrativoDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
             this.AdministrativoDropDownMenu.Name = "dropdownMenuStrip_08YS1";
             this.AdministrativoDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
-            this.AdministrativoDropDownMenu.Size = new System.Drawing.Size(211, 104);
+            this.AdministrativoDropDownMenu.Size = new System.Drawing.Size(186, 76);
             // 
             // gestionUsuarioToolStripMenuItem
             // 
             this.gestionUsuarioToolStripMenuItem.Name = "gestionUsuarioToolStripMenuItem";
-            this.gestionUsuarioToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.gestionUsuarioToolStripMenuItem.Size = new System.Drawing.Size(185, 24);
             this.gestionUsuarioToolStripMenuItem.Tag = "menuGestionUsuario";
             this.gestionUsuarioToolStripMenuItem.Text = "GestionUsuario";
             this.gestionUsuarioToolStripMenuItem.Click += new System.EventHandler(this.gestionUsuarioToolStripMenuItem_Click);
@@ -388,7 +386,7 @@
             // bitacoraToolStripMenuItem
             // 
             this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
-            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(185, 24);
             this.bitacoraToolStripMenuItem.Tag = "menuBitacora";
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
@@ -399,14 +397,12 @@
             this.rolesToolStripMenuItem,
             this.familiasToolStripMenuItem});
             this.gestionAccesosToolStripMenuItem.Name = "gestionAccesosToolStripMenuItem";
-            this.gestionAccesosToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.gestionAccesosToolStripMenuItem.Size = new System.Drawing.Size(185, 24);
             this.gestionAccesosToolStripMenuItem.Tag = "menuGestionAccesos";
             this.gestionAccesosToolStripMenuItem.Text = "Gestion Accesos";
             // 
             // rolesToolStripMenuItem
             // 
-            this.rolesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.crearToolStripMenuItem1});
             this.rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
             this.rolesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.rolesToolStripMenuItem.Tag = "menuRoles";
@@ -415,8 +411,6 @@
             // 
             // familiasToolStripMenuItem
             // 
-            this.familiasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.crearToolStripMenuItem2});
             this.familiasToolStripMenuItem.Name = "familiasToolStripMenuItem";
             this.familiasToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.familiasToolStripMenuItem.Tag = "menuFamilias";
@@ -515,15 +509,13 @@
         private System.Windows.Forms.ToolStripMenuItem ReLoginToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cerrarSesionToolStripMenuItem1;
         private System.Windows.Forms.Panel panel2;
-        private FontAwesome.Sharp.IconButton iconButton1;
-        private FontAwesome.Sharp.IconButton iconButton2;
-        private FontAwesome.Sharp.IconButton iconButton3;
-        private FontAwesome.Sharp.IconButton iconButton4;
+        private FontAwesome.Sharp.IconButton btnPerfil;
+        private FontAwesome.Sharp.IconButton btnAdministrativo;
+        private FontAwesome.Sharp.IconButton btnReservar;
+        private FontAwesome.Sharp.IconButton btnCerrarSesion;
         private System.Windows.Forms.ToolStripMenuItem gestionAccesosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rolesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem familiasToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem crearToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem crearToolStripMenuItem2;
     }
 }
 

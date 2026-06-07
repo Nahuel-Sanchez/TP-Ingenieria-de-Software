@@ -2,6 +2,7 @@
 using GUI_08YS.Admin;
 using GUI_08YS.Properties;
 using Service_08YS;
+using Service_08YS.Entities.Acceso;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,24 +17,25 @@ namespace GUI_08YS
 {
     public partial class FormMDI_08YS : Form,IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaControles =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(bitacoraToolStripMenuItem),     Permisos.VerBitacora    },
+            };
+
+
         public event Action CerrarSesion;
+
         public FormMDI_08YS()
         {
             InitializeComponent();
+            PermissionFilter_08YS.Aplicar(this, _mapaControles);
             lblRolSistema.Text = SessionManager_08YS.Instance.Current.Rol.ToString();
             lblNombreApellido.Text= SessionManager_08YS.Instance.Current.Nombre + " " + SessionManager_08YS.Instance.Current.Apellido;
-            GestionarRol();
             TraductorManager_08YS.Instance.Suscribir(this);
             UpdateIdioma(); 
         }
-        private void GestionarRol()
-        {
-            if (SessionManager_08YS.Instance.Current.Rol.ToString() == "Basico")
-            {
-                iconButton2.Visible = false;
-                iconButton2.Enabled = false;
-            }
-        }
+
         public void UpdateIdioma()
         {
             TraducirControles(this);
@@ -230,12 +232,12 @@ namespace GUI_08YS
 
         private void iconButton1_Click(object sender, EventArgs e)
         {
-            PerfilDropDownMenu.Show(iconButton1, iconButton1.Width, 0);
+            PerfilDropDownMenu.Show(btnPerfil, btnPerfil.Width, 0);
         }
 
         private void iconButton2_Click(object sender, EventArgs e)
         {
-            AdministrativoDropDownMenu.Show(iconButton2, iconButton2.Width, 0);
+            AdministrativoDropDownMenu.Show(btnAdministrativo, btnAdministrativo.Width, 0);
         }
 
         private void iconButton4_Click(object sender, EventArgs e)
