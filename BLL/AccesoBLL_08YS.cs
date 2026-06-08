@@ -54,8 +54,8 @@ namespace BLL_08YS
                 return new ResultadoEvaluacion_08YS
                 {
                     Resultado = ResultadoEvaluacion_08YS.Tipo.ConflictoIrresoluble,
-                    Mensaje = $"No se puede agregar '{candidato.Nombre}' porque contiene permisos " +
-                              $"que ya están en otros componentes: {string.Join(", ", nombres)}."
+                    Mensaje = $"No se puede agregar '{candidato.Nombre}' porque genera conflictos con permisos " +
+                              $"{string.Join(", ", nombres)} que ya están presentes en la lista actual dentro de otras familias."
                 };
             }
 

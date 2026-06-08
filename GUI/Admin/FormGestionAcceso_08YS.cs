@@ -1,4 +1,5 @@
 ﻿using BLL_08YS;
+using Service_08YS;
 using Service_08YS.Entities.Acceso;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,6 @@ namespace GUI_08YS.Admin
         private void FormGestionAcceso_Load(object sender, EventArgs e)
         {
             ConfigurarPorTipo();
-            //ConfigurarBotones();
             CargarGrid();
         }
 
@@ -77,6 +77,20 @@ namespace GUI_08YS.Admin
                 : FontAwesome.Sharp.IconChar.UserShield;
 
             AplicarPermisos();
+
+            if( esFamilia && 
+                   !SessionManager_08YS.Instance.HasPermission(Permisos.CrearFamilias    )  &&
+                   !SessionManager_08YS.Instance.HasPermission(Permisos.ModificarFamilias)  &&
+                   !SessionManager_08YS.Instance.HasPermission(Permisos.EliminarFamilias )
+              )
+              pnlBottom.Visible = false;
+
+            else if( !esFamilia && 
+                       !SessionManager_08YS.Instance.HasPermission(Permisos.CrearRoles    )  &&
+                       !SessionManager_08YS.Instance.HasPermission(Permisos.ModificarRoles)  &&
+                       !SessionManager_08YS.Instance.HasPermission(Permisos.EliminarRoles )
+                   )
+                   pnlBottom.Visible = false;
         }
 
         private void CargarGrid()

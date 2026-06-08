@@ -225,7 +225,7 @@ namespace GUI_08YS.Admin
 
                 case ResultadoEvaluacion_08YS.Tipo.ConflictoIrresoluble:
                     MessageBox.Show(resultado.Mensaje, "No se puede agregar",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
         }
