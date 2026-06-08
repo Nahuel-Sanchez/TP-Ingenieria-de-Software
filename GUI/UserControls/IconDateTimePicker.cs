@@ -1,4 +1,5 @@
 ﻿using FontAwesome.Sharp;
+using GUI_08YS.UserControls;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -639,15 +640,11 @@ namespace CustomControls
             if (_iconChar == IconChar.None)
             {
                 _iconPicture.Visible = false;
-                var prev = _iconPicture.Image;
                 _iconPicture.Image = null;
-                prev?.Dispose();
                 return;
             }
-            var old = _iconPicture.Image;
-            _iconPicture.Image = _iconChar.ToBitmap(_iconFont, _iconSize, _iconColor);
+            _iconPicture.Image = IconCache.Get(_iconChar, _iconFont, _iconSize, _iconColor);
             _iconPicture.Visible = true;
-            old?.Dispose();
         }
 
         private void UpdateLayout()
@@ -722,7 +719,6 @@ namespace CustomControls
         {
             if (disposing)
             {
-                _iconPicture?.Image?.Dispose();
                 _popup?.Dispose();
             }
             base.Dispose(disposing);

@@ -1,10 +1,11 @@
+using FontAwesome.Sharp;
+using GUI_08YS.UserControls;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using FontAwesome.Sharp; 
 
 namespace CustomControls
 {
@@ -852,15 +853,11 @@ namespace CustomControls
             if (_iconChar == IconChar.None)
             {
                 _iconPicture.Visible = false;
-                var prev = _iconPicture.Image;
                 _iconPicture.Image = null;
-                prev?.Dispose();
                 return;
             }
-            var old = _iconPicture.Image;
-            _iconPicture.Image = _iconChar.ToBitmap(_iconFont, _iconSize, _iconColor);
+            _iconPicture.Image = IconCache.Get(_iconChar, _iconFont, _iconSize, _iconColor);
             _iconPicture.Visible = true;
-            old?.Dispose();
         }
 
         private void UpdateLayout()
@@ -1020,8 +1017,7 @@ namespace CustomControls
         {
             if (disposing)
             {
-                _iconPicture?.Image?.Dispose();
-                _popup?.Dispose();
+                _popup?.Dispose();  // el popup sí se libera, el bitmap no
             }
             base.Dispose(disposing);
         }

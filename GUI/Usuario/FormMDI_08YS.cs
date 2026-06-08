@@ -103,16 +103,19 @@ namespace GUI_08YS
             childForm.FormBorderStyle = FormBorderStyle.None;
             childForm.Dock = DockStyle.Fill;
             childForm.AutoScaleMode = AutoScaleMode.None;
+
+            childForm.SuspendLayout();
+            panel2.SuspendLayout();
+
             panel2.Controls.Add(childForm);
             panel2.Tag = childForm;
             childForm.Show();
 
             childForm.BeginInvoke(new Action(() =>
             {
-                childForm.BeginInvoke(new Action(() =>
-                {
-                    ForceCustomControlsLayout(childForm);
-                }));
+                ForceCustomControlsLayout(childForm);
+                childForm.ResumeLayout(true);
+                panel2.ResumeLayout(true);
             }));
         }
 
