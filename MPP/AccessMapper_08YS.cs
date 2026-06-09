@@ -105,6 +105,24 @@ namespace MPP_08YS
             return dt;
         }
 
+        public static List<Rol_08YS> RolesPlanosFromTable(DataTable dt)
+        {
+            var listaRoles = new List<Rol_08YS>();
+
+            if (dt == null) return listaRoles;
+
+            foreach (DataRow row in dt.Rows)
+            {
+                listaRoles.Add(new Rol_08YS
+                {
+                    RolID = Convert.ToInt32(row["RolID"]),
+                    Nombre = row["Nombre"].ToString()
+                   
+                });
+            }
+
+            return listaRoles;
+        }
         #endregion
 
     }

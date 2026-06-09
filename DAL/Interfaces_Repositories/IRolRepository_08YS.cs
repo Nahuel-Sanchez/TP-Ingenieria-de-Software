@@ -11,6 +11,7 @@ namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IRolRepository_08YS
     {
+        List<Rol_08YS> GetAllPlano();
         List<Rol_08YS> GetAll();
 
         void Create(string nombre, List<AccessComponent_08YS> componentes);

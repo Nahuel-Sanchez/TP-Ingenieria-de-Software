@@ -25,6 +25,8 @@ namespace BLL_08YS
 
         public List<Rol_08YS> GetAll() => _rolRepo.GetAll();
 
+        public List<Rol_08YS> GetAllPlano() => _rolRepo.GetAllPlano();
+
         public List<AccessComponent_08YS> GetComponentesDisponibles()
         {
             var permisos = _permisoRepo.GetAll().Cast<AccessComponent_08YS>();

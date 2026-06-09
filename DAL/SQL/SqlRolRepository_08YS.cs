@@ -14,6 +14,15 @@ namespace DAL_08YS.SQL
     {
         public SqlRolRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
 
+        public List<Rol_08YS> GetAllPlano()
+        {
+
+            string query = "SELECT RolID, Nombre FROM Roles";
+            DataTable dt = GetDataTable(query);
+
+         
+            return AccessMapper_08YS.RolesPlanosFromTable(dt);
+        }
         public List<Rol_08YS> GetAll()
         {
             DataSet ds = GetDataSet("sp_GetAllRolesConEstructura", storedProcedure: true);

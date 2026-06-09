@@ -197,16 +197,22 @@ namespace BLL_08YS
         {
             var usuarios = userRepository.GetAll();
 
-            // Hidratamos el objeto Rol de cada usuario para que tenga su Nombre y componentes
+            // 2. Traemos TODOS los roles con sus estructuras completas (1 consulta al SP)
+            // Lo convertimos a un Diccionario indexado por RolID para que la búsqueda sea instantánea O(1)
+            var rolesCompletos = _rolRepo.GetAll().ToDictionary(r => r.RolID, r => r);
+
+            // 3. Cruzamos los datos en memoria sin volver a tocar la base de datos
             foreach (var user in usuarios)
             {
-                if (user.Rol != null && user.Rol.RolID > 0)
+                if (user.Rol != null && rolesCompletos.TryGetValue(user.Rol.RolID, out var rolEstructurado))
                 {
-                    user.Rol = _rolRepo.GetById(user.Rol.RolID);
+                    // Reemplazamos el rol vacío por el objeto completo que tiene el Nombre y sus Permisos
+                    user.Rol = rolEstructurado;
                 }
             }
+
             return usuarios;
         }
-
+        //public List<User_08YS> GetAll() => userRepository.GetAll();
     }
 }

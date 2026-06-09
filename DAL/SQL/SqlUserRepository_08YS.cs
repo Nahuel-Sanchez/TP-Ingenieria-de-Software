@@ -32,9 +32,21 @@ namespace DAL_08YS
         };
         }
 
+        //public List<User_08YS> GetAll()
+        //{
+        //    DataTable dt = GetDataTable("SELECT * FROM Users");
+        //    return UserMapper_08YS.FromDataTable(dt);
+        //}
         public List<User_08YS> GetAll()
         {
-            DataTable dt = GetDataTable("SELECT * FROM Users");
+            // Traemos las columnas de Users y el Nombre de la tabla Roles (asumiendo que se llama Roles o similar)
+            string query = @"
+        SELECT u.Username, u.DNI, u.RolID, u.Nombre, u.Apellido, u.Hash, u.Salt, u.Email, u.Bloqueado, u.Activo, u.Idioma,
+               r.Nombre AS NombreRol 
+        FROM Users u 
+        INNER JOIN Roles r ON u.RolID = r.RolID";
+
+            DataTable dt = GetDataTable(query);
             return UserMapper_08YS.FromDataTable(dt);
         }
 

@@ -83,7 +83,7 @@ namespace GUI
 
             cmbRol.ValueMember = "RolID";       // La propiedad ID del objeto Rol_08YS
             cmbRol.DisplayMember = "Nombre";    // La propiedad con el texto a mostrar en el objeto Rol_08YS
-            cmbRol.DataSource = _bllRol.GetAll(); // Trae los roles disponibles del sistema
+            cmbRol.DataSource = _bllRol.GetAllPlano(); // Trae los roles disponibles del sistema
             CargarGrilla();
            
             CambiarEstado(EstadoUI.Consulta); // Inicia en modo lectura

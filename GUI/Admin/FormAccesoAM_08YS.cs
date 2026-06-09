@@ -76,6 +76,15 @@ namespace GUI_08YS.Admin
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            string claveOperacion = _operacion == OperacionAM.Alta ? "Operacion_Alta" : "Operacion_Modificacion";
+            string claveEntidad = _tipo == TipoEntidad.Familia ? "Entidad_Familia" : "Entidad_Rol";
+
+            string operacionTraducida = TraductorManager_08YS.Instance.GetTexto(claveOperacion);
+            string entidadTraducida = TraductorManager_08YS.Instance.GetTexto(claveEntidad);
+
+            // Asignamos al Label del título respetando el idioma actual
+            lblTitulo.Text = $"{operacionTraducida} {entidadTraducida}";
+
             TraducirColumnas();
         }
 
@@ -135,9 +144,9 @@ namespace GUI_08YS.Admin
                 ? FontAwesome.Sharp.IconChar.LayerGroup
                 : FontAwesome.Sharp.IconChar.UserShield;
 
-            string entidad = esFamilia ? "Familia" : "Rol";
-            string operacion = _operacion == OperacionAM.Alta ? "Crear" : "Modificar";
-            lblTitulo.Text = $"{operacion} {entidad}";
+            //string entidad = esFamilia ? "Familia" : "Rol";
+            //string operacion = _operacion == OperacionAM.Alta ? "Crear" : "Modificar";
+            //lblTitulo.Text = $"{operacion} {entidad}";
 
             if (_operacion == OperacionAM.Modificacion)
                 txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;

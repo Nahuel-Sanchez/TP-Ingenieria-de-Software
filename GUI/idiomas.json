@@ -74,8 +74,11 @@
         "ColumnaFechaHora": "FechaHora",
         "ColumnaModulo": "Modulo",
         "ColumnaCriticidad": "Criticidad",
-        "ColumnaTipo": "Tipo"
-        
+        "ColumnaTipo": "Tipo",
+        "Operacion_Alta": "Crear",
+        "Operacion_Modificacion": "Modificar",
+        "Entidad_Familia": "Familia",
+        "Entidad_Rol": "Rol"
     },
     "en": {
         "btn_Aceptar": "Accept",
@@ -152,6 +155,10 @@
         "ColumnaFechaHora": "DateTime",
         "ColumnaModulo": "Module",
         "ColumnaCriticidad": "Criticality",
-        "ColumnaTipo": "Type"
+        "ColumnaTipo": "Type",
+        "Operacion_Alta": "Create",
+        "Operacion_Modificacion": "Modify",
+        "Entidad_Familia": "Family",
+        "Entidad_Rol": "Role"
     }
 }
