@@ -27,7 +27,7 @@ namespace GUI
             };
 
         private UserBLL_08YS _bll = BLLFactory_08YS.CreateUserBLL();
-        
+        private RolBLL_08YS _bllRol = BLLFactory_08YS.CreateRolBLL();
         public FormGestionUsuarios_08YS()
         {
             InitializeComponent();
@@ -80,8 +80,12 @@ namespace GUI
         private void FormGestionUsuarios_Load(object sender, EventArgs e)
         {
             PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
+
+            cmbRol.ValueMember = "RolID";       // La propiedad ID del objeto Rol_08YS
+            cmbRol.DisplayMember = "Nombre";    // La propiedad con el texto a mostrar en el objeto Rol_08YS
+            cmbRol.DataSource = _bllRol.GetAll(); // Trae los roles disponibles del sistema
             CargarGrilla();
-            cmbRol.DataSource = Enum.GetValues(typeof(UserRole));
+           
             CambiarEstado(EstadoUI.Consulta); // Inicia en modo lectura
             UpdateIdioma();
         }
@@ -260,7 +264,10 @@ namespace GUI
                 txtApellidos.Text = user.Apellido;
                 txtNombres.Text = user.Nombre;
                 txtEmail.Text = user.Email;
-                cmbRol.SelectedItem = user.Rol;
+                if (user.Rol != null)
+                {
+                    cmbRol.SelectedValue = user.Rol.RolID;
+                }
                 txtLogin.Text = user.Username;
                 txtBloqueado.Text = user.Bloqueado.ToString();
                 txtActivo.Text = user.Activo.ToString();

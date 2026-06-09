@@ -193,7 +193,20 @@ namespace BLL_08YS
         
             SessionManager_08YS.Instance.CerrarSesion();
         }
-        public List<User_08YS> GetAll() => userRepository.GetAll();
+        public List<User_08YS> GetAll()
+        {
+            var usuarios = userRepository.GetAll();
+
+            // Hidratamos el objeto Rol de cada usuario para que tenga su Nombre y componentes
+            foreach (var user in usuarios)
+            {
+                if (user.Rol != null && user.Rol.RolID > 0)
+                {
+                    user.Rol = _rolRepo.GetById(user.Rol.RolID);
+                }
+            }
+            return usuarios;
+        }
 
     }
 }

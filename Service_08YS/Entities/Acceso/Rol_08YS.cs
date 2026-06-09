@@ -24,5 +24,9 @@ namespace Service_08YS.Entities.Acceso
                 resultado.UnionWith(c.GetPermisos());
             return resultado;
         }
+        public override string ToString()
+        {
+            return $"{Nombre}";
+        }
     }
 }
