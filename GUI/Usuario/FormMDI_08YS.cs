@@ -104,19 +104,19 @@ namespace GUI_08YS
             childForm.Dock = DockStyle.Fill;
             childForm.AutoScaleMode = AutoScaleMode.None;
 
-            childForm.SuspendLayout();
             panel2.SuspendLayout();
+            childForm.SuspendLayout();
 
             panel2.Controls.Add(childForm);
             panel2.Tag = childForm;
-            childForm.Show();
 
-            childForm.BeginInvoke(new Action(() =>
-            {
-                ForceCustomControlsLayout(childForm);
-                childForm.ResumeLayout(true);
-                panel2.ResumeLayout(true);
-            }));
+            ForceCustomControlsLayout(childForm);   // ← MOVER antes del Show
+
+            childForm.ResumeLayout(false);          // ← false: no forzar redibujado todavía
+            panel2.ResumeLayout(false);
+
+            childForm.Show();                       // ← mostrar DESPUÉS de que todo esté listo
+            childForm.Refresh();                    // ← forzar un pintado limpio único
         }
 
         private void ForceCustomControlsLayout(Control parent)
@@ -292,6 +292,7 @@ namespace GUI_08YS
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
+
 
         #endregion
     }
