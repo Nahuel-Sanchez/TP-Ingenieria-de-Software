@@ -25,8 +25,7 @@ namespace GUI_08YS
         {
             InitializeComponent();
             _userBLL = BLLFactory_08YS.CreateUserBLL();
-            IdiomaCombobox.Items.Add("Español");
-            IdiomaCombobox.Items.Add("Ingles");
+            ConfigurarCombo();
 
             TraductorManager_08YS.Instance.Suscribir(this);
 
@@ -34,7 +33,13 @@ namespace GUI_08YS
             UpdateIdioma();
            
         }
-        
+        private void ConfigurarCombo()
+        {
+            IdiomaCombobox.Items.Add("Español");
+            IdiomaCombobox.Items.Add("Ingles");
+
+            IdiomaCombobox.SelectedIndex = 0;
+        }
         public void UpdateIdioma()
         {
             TraducirControles(this);
@@ -100,7 +105,10 @@ namespace GUI_08YS
                         return;
                     }
                 }
-
+                if (!string.IsNullOrEmpty(user.Idioma))
+                {
+                    TraductorManager_08YS.Instance.CambiarIdioma(user.Idioma);
+                }
                 FormMDI_08YS formMDI = new FormMDI_08YS();
                 this.Hide();
                 
@@ -110,7 +118,7 @@ namespace GUI_08YS
                     this.Show();
                     
                 };
-                _userBLL.CambiarIdiomaUsuario(user, TraductorManager_08YS.Instance.IdiomaActual);
+                //_userBLL.CambiarIdiomaUsuario(user, TraductorManager_08YS.Instance.IdiomaActual);
                 formMDI.Show();
                 formMDI.Activate();
 
@@ -200,7 +208,7 @@ namespace GUI_08YS
             if (SessionManager_08YS.Instance.IsLogged)
             {
                 User_08YS usuarioActual = SessionManager_08YS.Instance.Current;
-                _userBLL.CambiarIdiomaUsuario(usuarioActual, idiomaSeleccionado);
+                _userBLL.CambiarIdiomaUsuario(idiomaSeleccionado);
             }
         }
     }

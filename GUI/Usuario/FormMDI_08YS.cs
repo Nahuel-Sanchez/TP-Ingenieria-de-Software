@@ -1,4 +1,5 @@
-﻿using FontAwesome.Sharp;
+﻿using BLL_08YS;
+using FontAwesome.Sharp;
 using GUI;
 using GUI_08YS.Admin;
 using GUI_08YS.Properties;
@@ -29,17 +30,37 @@ namespace GUI_08YS
             };
 
         public event Action CerrarSesion;
-
+        private UserBLL_08YS _userBLL;
         public FormMDI_08YS()
         {
             InitializeComponent();
+            _userBLL = BLLFactory_08YS.CreateUserBLL();
             lblRolSistema.Text = SessionManager_08YS.Instance.Current.Rol.Nombre;
             lblNombreApellido.Text= SessionManager_08YS.Instance.Current.Nombre + " " + SessionManager_08YS.Instance.Current.Apellido;
+            ConfigurarCombo();
             AplicarPermisos();
+            TraductorManager_08YS.Instance.CambiarIdioma(SessionManager_08YS.Instance.Current.Idioma);
             TraductorManager_08YS.Instance.Suscribir(this);
             UpdateIdioma(); 
-        }
 
+        }
+        private void ConfigurarCombo()
+        {
+            IdiomaCombobox.SelectedIndexChanged -= IdiomaCombobox_SelectedIndexChanged;
+
+            IdiomaCombobox.Items.Clear();
+            IdiomaCombobox.Items.Add("Español");
+            IdiomaCombobox.Items.Add("Ingles");
+
+            // Seteamos el combo basándonos en lo que ya tiene la sesión del usuario
+            if (SessionManager_08YS.Instance.Current.Idioma == "en")
+                IdiomaCombobox.SelectedIndex = 1; // Inglés
+            else
+                IdiomaCombobox.SelectedIndex = 0; // Español (Default)
+
+            // Volvemos a asociar el evento para cuando el usuario interactúe físicamente con el ComboBox
+            IdiomaCombobox.SelectedIndexChanged += IdiomaCombobox_SelectedIndexChanged;
+        }
         private void AplicarPermisos()
         {
             // Botón "Administrativo" del panel lateral — solo visible si tiene algún permiso admin
@@ -160,6 +181,7 @@ namespace GUI_08YS
             //}
             if (SessionManager_08YS.Instance.IsLogged)
             {
+                _userBLL.Logout();
                 CerrarSesion?.Invoke(); // Desoculta el Username y limpia Singleton
             }
         }
@@ -306,6 +328,7 @@ namespace GUI_08YS
 
             if (respuesta == DialogResult.Yes)
             {
+
                 CerrarSesion?.Invoke();
                 this.Close();
             }
@@ -322,6 +345,7 @@ namespace GUI_08YS
 
             if (respuesta == DialogResult.Yes)
             {
+                _userBLL.Logout();
                 CerrarSesion?.Invoke();
                 this.Close();
             }
@@ -363,5 +387,17 @@ namespace GUI_08YS
 
 
         #endregion
+
+        private void IdiomaCombobox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string idiomaSeleccionado = IdiomaCombobox.SelectedIndex == 1 ? "en" : "es";
+
+            // 1. Sincronizamos la memoria de la sesión actual a través de la BLL (asumiendo que tenés la referencia '_userBll')
+            // Si no tenés la instancia de la BLL inyectada o mapeada en el MDI, accedés directo:
+            SessionManager_08YS.Instance.Current.Idioma = idiomaSeleccionado;
+
+            // 2. Le avisamos al Manager para que muten todas las pantallas abiertas por el Observer
+            TraductorManager_08YS.Instance.CambiarIdioma(idiomaSeleccionado);
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace BLL_08YS
             user.Rol = _rolRepo.GetById(user.Rol.RolID);
             SessionManager_08YS.Instance.SetCurrentUser(user);
 
-            //TraductorManager_08YS.Instance.CambiarIdioma(user.Idioma);
+           
             _bitacoraBll.RegistrarEvento(Evento.LoginExitoso);
 
             passwordDefault = Encriptador_08YS.Verificar(user.DNI.ToString() + user.Apellido, user.Hash, user.Salt);
@@ -163,15 +163,35 @@ namespace BLL_08YS
             userRepository.UpdatePassword(SessionManager_08YS.Instance.Current.Username, hashNuevo, saltNuevo);
             _bitacoraBll.RegistrarEvento(Evento.CambioContraseña);
         }
-        public void CambiarIdiomaUsuario(User_08YS usuario, string nuevoIdioma)
+        public void CambiarIdiomaUsuario(string nuevoIdioma)
         {
-            if (usuario == null) return;
+            if (SessionManager_08YS.Instance.Current == null) return;
 
-            // 1. Guardamos en la base de datos a través de la DAL
-            userRepository.UpdateLanguage(usuario.Username, nuevoIdioma);
+            // 1. Modificamos ÚNICAMENTE el objeto local en memoria de la sesión actual
+            SessionManager_08YS.Instance.Current.Idioma = nuevoIdioma;
+        }
 
-            // 2. Modificamos el objeto local en memoria de la sesión actual
-            usuario.Idioma = nuevoIdioma;
+        public void Logout()
+        {
+            // Verificamos que efectivamente haya una sesión activa
+            if (SessionManager_08YS.Instance.IsLogged)
+            {
+                string username = SessionManager_08YS.Instance.Current.Username;
+                string idiomaFinal = SessionManager_08YS.Instance.Current.Idioma;
+
+                try
+                {
+                   
+                    userRepository.UpdateLanguage(username, idiomaFinal);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Error al cerrar sesion");
+                }
+            }
+
+        
+            SessionManager_08YS.Instance.CerrarSesion();
         }
         public List<User_08YS> GetAll() => userRepository.GetAll();
 
