@@ -57,22 +57,90 @@ namespace GUI_08YS
 
         #region idioma
         public void UpdateIdioma()
-            => TraducirControles(this);
+        {
+            // 1. Traduce los controles nativos y paneles del formulario (los botones del panel lateral, labels, etc.)
+            TraducirControles(this);
+
+            // 2. TRADUCCIÓN EXPLÍCITA DE MENÚS FLOTANTES COMPOSITE
+            // Como no están en Controls, los enviamos individualmente a procesar
+            if (AdministrativoDropDownMenu != null)
+            {
+                TraducirMenuFlotanteCustom(AdministrativoDropDownMenu);
+            }
+
+            if (PerfilDropDownMenu != null)
+            {
+                TraducirMenuFlotanteCustom(PerfilDropDownMenu);
+            }
+        }
+
+        // NUEVO MÉTODO: Dedicado a los ContextMenuStrip / DropdownMenuStrip personalizados
+        private void TraducirMenuFlotanteCustom(ContextMenuStrip menuFlotante)
+        {
+            foreach (ToolStripItem item in menuFlotante.Items)
+            {
+                TraducirItemsDesplegables(item);
+            }
+        }
 
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
             {
-                // Si el control tiene un Tag asignado, buscamos su traducción
+                // 1. Si el control tiene hijos (un Panel, GroupBox, FlowLayoutPanel, etc.) y NO es una barra de herramientas,
+                // nos metemos inmediatamente a traducirlos de forma recursiva primero.
+                if (c.HasChildren && !(c is ToolStrip))
+                {
+                    TraducirControles(c);
+                }
+
+                // 2. SI ES UNA BARRA DE MENÚ (MenuStrip / ToolStrip tradicional)
+                if (c is ToolStrip barraMenu)
+                {
+                    TraducirBarraHerramientas(barraMenu);
+                    continue;
+                }
+
+                // 3. SI ES UN ICONBUTTON (Como btnPerfil, btnAdministrativo, btnReservar, btnCerrarSesion)
+                if (c is IconButton botonIcono)
+                {
+                    if (botonIcono.Tag != null && !string.IsNullOrWhiteSpace(botonIcono.Tag.ToString()))
+                    {
+                        botonIcono.Text = TraductorManager_08YS.Instance.GetTexto(botonIcono.Tag.ToString());
+                    }
+                    continue;
+                }
+
+                // 4. Control común y corriente (Labels, Checkbox, etc.)
                 if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
                 {
                     c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
                 }
+            }
+        }
 
-                // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
-                if (c.HasChildren)
+        // Recorre los ítems que están adentro de la barra de herramientas de FontAwesome
+        private void TraducirBarraHerramientas(ToolStrip barra)
+        {
+            foreach (ToolStripItem item in barra.Items)
+            {
+                TraducirItemsDesplegables(item);
+            }
+        }
+
+        // Se mete de forma recursiva en los submenús del Dropdown (sirve para ToolStrip y ContextMenuStrip)
+        private void TraducirItemsDesplegables(ToolStripItem item)
+        {
+            if (item.Tag != null && !string.IsNullOrWhiteSpace(item.Tag.ToString()))
+            {
+                item.Text = TraductorManager_08YS.Instance.GetTexto(item.Tag.ToString());
+            }
+
+            if (item is ToolStripDropDownItem itemDesplegable && itemDesplegable.HasDropDownItems)
+            {
+                foreach (ToolStripItem subItem in itemDesplegable.DropDownItems)
                 {
-                    TraducirControles(c);
+                    TraducirItemsDesplegables(subItem); // Recursividad para sub-ítems anidados
                 }
             }
         }
