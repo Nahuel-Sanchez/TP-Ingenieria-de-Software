@@ -1,4 +1,5 @@
 ﻿using BLL_08YS;
+using Service_08YS;
 using Service_08YS.Entities.Acceso;
 using Service_08YS.Entities.Comparers;
 using System;
@@ -13,7 +14,7 @@ using System.Windows.Forms;
 
 namespace GUI_08YS.Admin
 {
-    public partial class FormAccesoAM_08YS : Form
+    public partial class FormAccesoAM_08YS : Form,IIdiomaObserver_08YS
     {
         private readonly TipoEntidad _tipo;
         private readonly OperacionAM _operacion;
@@ -69,8 +70,32 @@ namespace GUI_08YS.Admin
             ConfigurarFrontPorTipo();
             //ConfigurarBotones();
             CargarDatos();
+            UpdateIdioma();
+        }
+        #region idiomas
+        public void UpdateIdioma()
+        {
+            TraducirControles(this);
         }
 
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                // Si el control tiene un Tag asignado, buscamos su traducción
+                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                {
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
+                }
+
+                // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
+                if (c.HasChildren)
+                {
+                    TraducirControles(c);
+                }
+            }
+        }
+        #endregion
         private void ConfigurarFrontPorTipo()
         {
             bool esFamilia = _tipo == TipoEntidad.Familia;
