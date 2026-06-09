@@ -64,7 +64,18 @@
         "btnEliminar": "Eliminar",
         "lblGestion": "Gestión",
         "lblListado": "Disponibles",
-        "lblDetalle": "Disponibles"
+        "lblDetalle": "Disponibles",
+        "ColumnaRol": "Rol",
+        "ColumnaNombre": "Nombre",
+        "ColumnaApellido": "Apellido",
+        "ColumnaActivo": "Activo",
+        "ColumnaBloqueado": "Bloqueado",
+        "ColumnaEvento": "Evento",
+        "ColumnaFechaHora": "FechaHora",
+        "ColumnaModulo": "Modulo",
+        "ColumnaCriticidad": "Criticidad",
+        "ColumnaTipo": "Tipo"
+        
     },
     "en": {
         "btn_Aceptar": "Accept",
@@ -131,6 +142,16 @@
         "btnEliminar": "Delete",
         "lblGestion": "Management",
         "lblListado": "List",
-        "lblDetalle": "Detail"
+        "lblDetalle": "Detail",
+        "ColumnaRol": "Role",
+        "ColumnaNombre": "Name",
+        "ColumnaApellido": "Surname",
+        "ColumnaActivo": "Active",
+        "ColumnaBloqueado": "Blocked",
+        "ColumnaEvento": "Event",
+        "ColumnaFechaHora": "DateTime",
+        "ColumnaModulo": "Module",
+        "ColumnaCriticidad": "Criticality",
+        "ColumnaTipo": "Type"
     }
 }

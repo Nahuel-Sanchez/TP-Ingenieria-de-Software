@@ -32,14 +32,28 @@ namespace GUI
         {
             InitializeComponent();
             TraductorManager_08YS.Instance.Suscribir(this);
-            UpdateIdioma();
+         
         }
 
         #region Idioma
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            TraducirColumnas();
         }
+
+        private void TraducirColumnas()
+        {
+            if (dgvUsuarios.Columns.Count > 0)
+            {
+                if (dgvUsuarios.Columns.Contains("Rol")) dgvUsuarios.Columns["Rol"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaRol");
+                if (dgvUsuarios.Columns.Contains("Nombre")) dgvUsuarios.Columns["Nombre"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaNombre");
+                if (dgvUsuarios.Columns.Contains("Apellido")) dgvUsuarios.Columns["Apellido"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaApellido");
+                if (dgvUsuarios.Columns.Contains("Activo")) dgvUsuarios.Columns["Activo"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaActivo");
+                if (dgvUsuarios.Columns.Contains("Bloqueado")) dgvUsuarios.Columns["Bloqueado"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaBloqueado");
+            }
+        }
+        
 
         private void TraducirControles(Control contenedor)
         {
@@ -69,6 +83,7 @@ namespace GUI
             CargarGrilla();
             cmbRol.DataSource = Enum.GetValues(typeof(UserRole));
             CambiarEstado(EstadoUI.Consulta); // Inicia en modo lectura
+            UpdateIdioma();
         }
 
         #region Manejo de Interfaz y Estados
@@ -224,6 +239,7 @@ namespace GUI
             int cantidadMostrada = dgvUsuarios.Rows.Count;
             string textoBase = TraductorManager_08YS.Instance.GetTexto(lblCantUsuarios.Tag.ToString());
             lblCantUsuarios.Text = $"{textoBase}{cantidadMostrada}";
+            TraducirColumnas();
         }
       
       

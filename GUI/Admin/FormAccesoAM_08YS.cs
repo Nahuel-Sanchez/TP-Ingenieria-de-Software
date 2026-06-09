@@ -76,6 +76,37 @@ namespace GUI_08YS.Admin
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            TraducirColumnas();
+        }
+
+        private void TraducirColumnas()
+        {
+            // Traducimos ambas grillas con un único método helper interno
+            TraducirGrillaComponentes(dgvSeleccionados);
+            TraducirGrillaComponentes(dgvDisponibles);
+        }
+
+        private void TraducirGrillaComponentes(DataGridView dgv)
+        {
+            if (dgv == null || dgv.Columns.Count == 0) return;
+
+            foreach (DataGridViewColumn columna in dgv.Columns)
+            {
+                // Evalúa si el nombre de la columna o el mapeo de la propiedad apuntan al Nombre
+                if (columna.Name.Equals("Nombre", StringComparison.OrdinalIgnoreCase) ||
+                    columna.DataPropertyName.Equals("Nombre", StringComparison.OrdinalIgnoreCase))
+                {
+                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaNombre");
+                }
+
+                // Evalúa discrepancias entre "Tipo", "TipoDisplay" o el DataPropertyName del wrapper ComponentRow
+                if (columna.Name.Equals("Tipo", StringComparison.OrdinalIgnoreCase) ||
+                    columna.Name.Equals("TipoDisplay", StringComparison.OrdinalIgnoreCase) ||
+                    columna.DataPropertyName.Equals("TipoDisplay", StringComparison.OrdinalIgnoreCase))
+                {
+                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaTipo");
+                }
+            }
         }
 
         private void TraducirControles(Control contenedor)
@@ -141,6 +172,7 @@ namespace GUI_08YS.Admin
             RecalcularDisponibles();
             RefrescarDGVSeleccionados();
             RefrescarDGVDisponibles();
+            TraducirColumnas();
         }
 
         private void RefrescarDGV(DataGridView dgv, HashSet<AccessComponent_08YS> fuente)
@@ -154,6 +186,7 @@ namespace GUI_08YS.Admin
                     .Select(c => new ComponentRow(c))
                     .ToList();
             });
+            TraducirColumnas();
         }
 
         private void RefrescarDGVSeleccionados() => RefrescarDGV(dgvSeleccionados, _seleccionados);

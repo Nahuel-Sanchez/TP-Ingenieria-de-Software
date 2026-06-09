@@ -65,8 +65,31 @@ namespace GUI_08YS.Admin
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            TraducirColumnas();
         }
 
+        private void TraducirColumnas()
+        {
+            if (dgvEntidades.Columns.Count == 0) return;
+
+            foreach (DataGridViewColumn columna in dgvEntidades.Columns)
+            {
+                // 1. Traducir la columna del Nombre
+                if (columna.Name.Equals("Nombre", StringComparison.OrdinalIgnoreCase) ||
+                    columna.DataPropertyName.Equals("Nombre", StringComparison.OrdinalIgnoreCase))
+                {
+                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaNombre");
+                }
+
+                // 2. Traducir la columna del Tipo (mapeada a 'TipoDisplay' en tu objeto anónimo)
+                if (columna.Name.Equals("Tipo", StringComparison.OrdinalIgnoreCase) ||
+                    columna.Name.Equals("TipoDisplay", StringComparison.OrdinalIgnoreCase) ||
+                    columna.DataPropertyName.Equals("TipoDisplay", StringComparison.OrdinalIgnoreCase))
+                {
+                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaTipo");
+                }
+            }
+        }
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -144,6 +167,7 @@ namespace GUI_08YS.Admin
             {
                 MessageBox.Show(ex.Message, "Error al cargar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            TraducirColumnas();
         }
 
         private void AbrirAM(

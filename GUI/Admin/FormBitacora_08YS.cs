@@ -47,6 +47,17 @@ namespace GUI
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            TraducirColumnas();
+        }
+        private void TraducirColumnas()
+        {
+            if (dgvEventos.Columns.Count > 0)
+            {
+                if (dgvEventos.Columns.Contains("Evento")) dgvEventos.Columns["Evento"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaEvento");
+                if (dgvEventos.Columns.Contains("FechaHora")) dgvEventos.Columns["FechaHora"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaFechaHora");
+                if (dgvEventos.Columns.Contains("Modulo")) dgvEventos.Columns["Modulo"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaModulo");
+                if (dgvEventos.Columns.Contains("Criticidad")) dgvEventos.Columns["Criticidad"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaCriticidad");
+            }
         }
         private void TraducirControles(Control contenedor)
         {
@@ -75,6 +86,7 @@ namespace GUI
 
                 dgvEventos.DataSource = _bll.GetAll();
                 dgvEventos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
+                TraducirColumnas();
             }
             catch (Exception ex)
             {
