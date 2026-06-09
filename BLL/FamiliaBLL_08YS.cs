@@ -77,7 +77,7 @@ namespace BLL_08YS
         public void Crear(string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
-            ValidarFamiliaNoExistente(componentes, null);
+            ValidarFamiliaNoExistente(nombre, componentes, null);
             SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearFamilias);
             _familiaRepo.Create(nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.FamiliaCreada);
@@ -86,7 +86,7 @@ namespace BLL_08YS
         public void Modificar(int familiaId, string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
-            ValidarFamiliaNoExistente(componentes, familiaId);
+            ValidarFamiliaNoExistente(nombre, componentes, familiaId);
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarFamilias);
             _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.FamiliaModificada);
@@ -102,15 +102,22 @@ namespace BLL_08YS
             _bitacoraBll.RegistrarEvento(Evento.FamiliaEliminada);
         }
 
-        private void ValidarFamiliaNoExistente(HashSet<AccessComponent_08YS> componentes, int? excluirId)
+        private void ValidarFamiliaNoExistente(string nombre, HashSet<AccessComponent_08YS> componentes, int? excluirId)
         {
             var permsNuevos = componentes
                 .SelectMany(c => c.GetPermisos())
                 .Select(p => p.PermisoID)
                 .ToHashSet();
-
-            bool existeIdentica = _familiaRepo.GetAll()
+            
+            var familias = _familiaRepo.GetAll()
                 .Where(f => !excluirId.HasValue || f.FamiliaID != excluirId.Value)
+                .ToList();
+
+            if (familias.Any(f => f.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
+                throw new InvalidOperationException(
+                    "Ya existe una familia con el mismo nombre.");
+
+            bool existeIdentica = familias
                 .Any(f => f.GetPermisos()
                            .Select(p => p.PermisoID)
                            .ToHashSet()

@@ -35,6 +35,7 @@ namespace BLL_08YS
         public void Crear(string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
+            ValidarRolNoExistente(nombre, componentes, null);
             SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearRoles);
             _rolRepo.Create(nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.RolCreado);
@@ -43,6 +44,7 @@ namespace BLL_08YS
         public void Modificar(int rolId, string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             ValidarDatosEntrada(nombre, componentes);
+            ValidarRolNoExistente(nombre, componentes, rolId);
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarRoles);
             _rolRepo.Modify(rolId, nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.RolModificado);
@@ -59,5 +61,22 @@ namespace BLL_08YS
             _bitacoraBll.RegistrarEvento(Evento.RolEliminado);
         }
 
+        public void ValidarRolNoExistente(string nombre, HashSet<AccessComponent_08YS> componentes, int? excluirId)
+        {
+            var permsNuevos = componentes
+                .SelectMany(c => c.GetPermisos())
+                .Select(p => p.PermisoID)
+                .ToHashSet();
+
+            var roles = _rolRepo.GetAll()
+                .Where(r => !excluirId.HasValue || r.RolID != excluirId.Value)
+                .ToList();
+
+            if(roles.Any(r => r.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
+                throw new InvalidOperationException("Ya existe un rol con ese nombre.");
+
+            if(roles.Any(r => r.GetPermisos().Select(p => p.PermisoID).ToHashSet().SetEquals(permsNuevos)))
+                throw new InvalidOperationException("Ya existe un rol con esos componentes.");
+        }
     }
 }
