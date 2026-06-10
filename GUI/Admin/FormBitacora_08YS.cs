@@ -41,7 +41,6 @@ namespace GUI
             dtpDesde.Value = null;
             dtpHasta.Value = null;
 
-            TraductorManager_08YS.Instance.Suscribir(this);
             UpdateIdioma();
         }
         public void UpdateIdioma()

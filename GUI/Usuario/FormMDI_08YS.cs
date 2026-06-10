@@ -31,6 +31,7 @@ namespace GUI_08YS
 
         public event Action CerrarSesion;
         private UserBLL_08YS _userBLL;
+
         public FormMDI_08YS()
         {
             InitializeComponent();
@@ -42,8 +43,8 @@ namespace GUI_08YS
             TraductorManager_08YS.Instance.CambiarIdioma(SessionManager_08YS.Instance.Current.Idioma);
             TraductorManager_08YS.Instance.Suscribir(this);
             UpdateIdioma(); 
-
         }
+
         private void ConfigurarCombo()
         {
             IdiomaCombobox.SelectedIndexChanged -= IdiomaCombobox_SelectedIndexChanged;
@@ -61,6 +62,7 @@ namespace GUI_08YS
             // Volvemos a asociar el evento para cuando el usuario interactúe físicamente con el ComboBox
             IdiomaCombobox.SelectedIndexChanged += IdiomaCombobox_SelectedIndexChanged;
         }
+
         private void AplicarPermisos()
         {
             // Botón "Administrativo" del panel lateral — solo visible si tiene algún permiso admin
@@ -204,6 +206,15 @@ namespace GUI_08YS
 
             childForm.ResumeLayout(false);          // ← false: no forzar redibujado todavía
             panel2.ResumeLayout(false);
+
+            if(childForm is IIdiomaObserver_08YS observer)
+            {
+                TraductorManager_08YS.Instance.Suscribir(observer); // Suscribir al nuevo formulario al cambio de idioma
+                observer.UpdateIdioma(); // Forzar actualización inmediata del idioma al abrir la pantalla
+            }
+
+            childForm.Load += (s, e) => TraductorManager_08YS.Instance.Suscribir(childForm as IIdiomaObserver_08YS); // Suscribir al nuevo formulario al cambio de idioma
+            childForm.FormClosed += (s, e) => TraductorManager_08YS.Instance.Desuscribir(childForm as IIdiomaObserver_08YS); // Desuscribir al cerrar
 
             childForm.Show();                       // ← mostrar DESPUÉS de que todo esté listo
             childForm.Refresh();                    // ← forzar un pintado limpio único

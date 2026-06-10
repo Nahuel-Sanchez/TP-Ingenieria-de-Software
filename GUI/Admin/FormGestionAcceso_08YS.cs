@@ -17,7 +17,7 @@ namespace GUI_08YS.Admin
     public enum TipoEntidad { Familia, Rol }
     public enum OperacionAM { Alta, Modificacion }
 
-    public partial class FormGestionAcceso_08YS : Form
+    public partial class FormGestionAcceso_08YS : Form, IIdiomaObserver_08YS
     {
         private static readonly Dictionary<string, Permisos> _mapaFamilia =
             new Dictionary<string, Permisos>

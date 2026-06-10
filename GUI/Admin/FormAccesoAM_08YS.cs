@@ -72,6 +72,7 @@ namespace GUI_08YS.Admin
             CargarDatos();
             UpdateIdioma();
         }
+
         #region idiomas
         public void UpdateIdioma()
         {
@@ -136,6 +137,7 @@ namespace GUI_08YS.Admin
             }
         }
         #endregion
+
         private void ConfigurarFrontPorTipo()
         {
             bool esFamilia = _tipo == TipoEntidad.Familia;

@@ -31,8 +31,6 @@ namespace GUI
         public FormGestionUsuarios_08YS()
         {
             InitializeComponent();
-            TraductorManager_08YS.Instance.Suscribir(this);
-         
         }
 
         #region Idioma
