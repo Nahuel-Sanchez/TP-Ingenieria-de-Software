@@ -21,20 +21,33 @@ namespace MPP_08YS
 
         public static User_08YS FromDataRow(DataRow row)
         {
-            return new User_08YS
+            var usuario = new User_08YS
             {
-                Username = row["Username"].ToString(),
+                Username = row["Username"].ToString() ,
                 DNI = Convert.ToInt32(row["DNI"]),
-                Rol = new Rol_08YS { RolID = Convert.ToInt32(row["RolID"]) },
-                Nombre = row["Nombre"].ToString(),
+                Nombre =row["Nombre"].ToString(),
                 Apellido = row["Apellido"].ToString(),
                 Hash = row["Hash"].ToString(),
                 Salt = row["Salt"].ToString(),
                 Email = row["Email"].ToString(),
                 Bloqueado = Convert.ToBoolean(row["Bloqueado"]),
                 Activo = Convert.ToBoolean(row["Activo"]),
-                Idioma = row["Idioma"].ToString() 
+                Idioma = row["Idioma"].ToString()
             };
+
+           
+            usuario.Rol = new Rol_08YS();
+
+           
+            if (row.Table.Columns.Contains("RolID") && row["RolID"] != DBNull.Value)
+                usuario.Rol.RolID = Convert.ToInt32(row["RolID"]);
+                  
+            if (row.Table.Columns.Contains("NombreRol") && row["NombreRol"] != DBNull.Value)
+            {
+                usuario.Rol.Nombre = row["NombreRol"].ToString();
+            }
+
+            return usuario;
         }
     }
 }

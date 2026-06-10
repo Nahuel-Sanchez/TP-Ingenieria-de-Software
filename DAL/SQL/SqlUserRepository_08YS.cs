@@ -20,7 +20,7 @@ namespace DAL_08YS
             {
                 Param("@Username",  user.Username),
                 Param("@DNI",       user.DNI),
-                Param("@RolID",     user.Rol.RolID),
+                Param("@Rol",     user.Rol.RolID),
                 Param("@Nombre",    user.Nombre),
                 Param("@Apellido",  user.Apellido),
                 Param("@Hash",      user.Hash),
@@ -39,13 +39,11 @@ namespace DAL_08YS
         //}
         public List<User_08YS> GetAll()
         {
-            // Traemos las columnas de Users y el Nombre de la tabla Roles (asumiendo que se llama Roles o similar)
             string query = @"
         SELECT u.Username, u.DNI, u.RolID, u.Nombre, u.Apellido, u.Hash, u.Salt, u.Email, u.Bloqueado, u.Activo, u.Idioma,
                r.Nombre AS NombreRol 
         FROM Users u 
-        INNER JOIN Roles r ON u.RolID = r.RolID";
-
+        INNER JOIN Roles r ON u.RolID = r.RolID"; 
             DataTable dt = GetDataTable(query);
             return UserMapper_08YS.FromDataTable(dt);
         }
@@ -83,7 +81,7 @@ namespace DAL_08YS
             ExecuteNonQuery
             (
                 "INSERT INTO Users (Username, DNI, RolID, Nombre, Apellido, Hash, Salt, Email, Bloqueado, Activo,Idioma) " +
-                "VALUES (@Username, @DNI, @RolID, @Nombre, @Apellido, @Hash, @Salt, @Email, @Bloqueado, @Activo,@Idioma)",
+                "VALUES (@Username, @DNI, @Rol, @Nombre, @Apellido, @Hash, @Salt, @Email, @Bloqueado, @Activo,@Idioma)",
                 ToParameters(user)
             );
         }
@@ -101,9 +99,9 @@ namespace DAL_08YS
         {
             ExecuteNonQuery
             (
-                "UPDATE Users SET Email = @Email , RolID=@RolID WHERE Username = @Username",
+                "UPDATE Users SET Email = @Email , RolID=@Rol WHERE Username = @Username",
                 new[] { Param("@Email", user.Email),
-                        Param("@RolID", user.Rol.RolID) ,
+                        Param("@Rol", user.Rol.RolID),
                         Param("@Username",user.Username)}
             );
         }
