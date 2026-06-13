@@ -330,7 +330,7 @@ namespace GUI
             // Respeta el módulo actualmente seleccionado al filtrar por criticidad
             Modulo? moduloActual = comboBoxModulo.SelectedItem as Modulo?;
 
-            var eventos = EventCatalog_08YS.GetEventsByCriticity(criticidadSeleccionada.Value);
+            var eventos = EventCatalog_08YS.GetEventsByCriticality(criticidadSeleccionada.Value);
 
             if (moduloActual.HasValue)
                 eventos = eventos.Where(ev =>

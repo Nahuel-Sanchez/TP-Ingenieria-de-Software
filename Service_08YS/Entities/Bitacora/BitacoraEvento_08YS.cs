@@ -31,7 +31,7 @@ namespace Service_08YS.Entities.Bitacora
         UsuarioDeshabilitado,
         UsuarioHabilitado,
         UsuarioModificado,
-        CambioRol,
+        UsuarioRolModificado,
         CambioContraseña,
         FamiliaCreada,
         FamiliaEliminada,

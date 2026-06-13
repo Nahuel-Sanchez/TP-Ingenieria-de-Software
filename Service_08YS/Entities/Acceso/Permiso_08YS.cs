@@ -30,8 +30,6 @@ namespace Service_08YS.Entities.Acceso
         public int PermisoID { get => ID; set => ID = value; }
         public string Descripcion { get; set; }
 
-        public override bool EsCompuesto => false;
-
         // El leaf devuelve un HashSet con sí mismo — ya usa el comparer correcto
         public override HashSet<Permiso_08YS> GetPermisos()
             => new HashSet<Permiso_08YS>(new[] { this }, PermisoComparer.Instance);

@@ -14,8 +14,6 @@ namespace Service_08YS.Entities.Acceso
         private readonly List<AccessComponent_08YS> _hijos = new List<AccessComponent_08YS>();
         public IReadOnlyList<AccessComponent_08YS> Hijos => _hijos.AsReadOnly();
 
-        public override bool EsCompuesto => true;
-
         public void Agregar(AccessComponent_08YS c) => _hijos.Add(c);
         public void Quitar(AccessComponent_08YS c) => _hijos.Remove(c);
 

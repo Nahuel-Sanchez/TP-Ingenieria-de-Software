@@ -12,6 +12,5 @@ namespace Service_08YS.Entities.Acceso
         public string Nombre { get; set; }
 
         public abstract HashSet<Permiso_08YS> GetPermisos();
-        public abstract bool EsCompuesto { get; }
     }
 }

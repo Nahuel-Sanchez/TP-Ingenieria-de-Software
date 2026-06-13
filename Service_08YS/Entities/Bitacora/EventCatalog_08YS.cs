@@ -32,7 +32,7 @@ namespace Service_08YS.Entities.Bitacora
                 { Evento.UsuarioHabilitado,      new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto)          },
                 { Evento.UsuarioModificado,      new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Bajo)          },
                 { Evento.CambioContraseña,       new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Medio)         },
-                { Evento.CambioRol,              new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto)          },
+                { Evento.UsuarioRolModificado,              new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto)          },
                 { Evento.FamiliaCreada,          new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          },
                 { Evento.FamiliaModificada,      new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          },
                 { Evento.FamiliaEliminada,       new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          },
@@ -51,7 +51,7 @@ namespace Service_08YS.Entities.Bitacora
                 .ToList();
         }
 
-        public static List<Evento> GetEventsByCriticity(Criticidad value)
+        public static List<Evento> GetEventsByCriticality(Criticidad value)
         {
             return _catalogo
                 .Where(kvp => kvp.Value.Criticidad == value)
