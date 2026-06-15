@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Service_08YS.Entities.Bitacora
 {
-    public class EventoMetadata_08YS
+    public sealed class EventoMetadata_08YS
     {
         public Modulo Modulo { get; }
         public Criticidad Criticidad { get; }

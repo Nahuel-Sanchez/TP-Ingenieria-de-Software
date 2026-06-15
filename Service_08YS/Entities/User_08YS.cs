@@ -27,10 +27,6 @@ namespace Service_08YS
         private bool _activo;
         private string _idioma;
       
-
-      
-
-
         public User_08YS(string username, int dni, Rol_08YS rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true,string idioma="es")
         {
             this._username = username;

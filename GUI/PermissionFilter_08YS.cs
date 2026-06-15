@@ -22,7 +22,7 @@ namespace GUI_08YS
         }
 
         public static void AplicarMenuStrip(ContextMenuStrip menu, Dictionary<string, Permisos> mapa)
-        => AplicarItems(menu.Items, mapa);
+            => AplicarItems(menu.Items, mapa);
 
         private static void AplicarItems(ToolStripItemCollection items, Dictionary<string, Permisos> mapa)
         {

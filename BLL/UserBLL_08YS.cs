@@ -16,13 +16,13 @@ namespace BLL_08YS
 {
     public class UserBLL_08YS
     {
-        private readonly IUserRepository_08YS userRepository;
+        private readonly IUserRepository_08YS _userRepository;
         private readonly IRolRepository_08YS _rolRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
 
         public UserBLL_08YS(IUserRepository_08YS userRepository, IRolRepository_08YS rolRepo, BitacoraBLL_08YS bitacoraBll)
         {
-            this.userRepository = userRepository;
+            this._userRepository = userRepository;
             _rolRepo = rolRepo;
             _bitacoraBll = bitacoraBll;
         }
@@ -31,7 +31,7 @@ namespace BLL_08YS
 
         public User_08YS Login(string username, string password, out bool passwordDefault)
         {
-            var user = userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException_08YS();
+            var user = _userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException_08YS();
 
             if (SessionManager_08YS.Instance.IsLogged)
                 throw new InvalidOperationException("Ya hay un usuario logueado. Cierre la sesión antes de iniciar otra.");
@@ -73,10 +73,10 @@ namespace BLL_08YS
 
         public void UserLockOut(string username)
         {
-            var user = userRepository.GetByUsername(username);
+            var user = _userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
-            userRepository.LockOut(user.Username);
+            _userRepository.LockOut(user.Username);
             _bitacoraBll.RegistrarEvento(Evento.UsuarioBloqueado, username: username);
             throw new UserBloqueadoException_08YS("Su cuenta ha sido bloqueada debido a múltiples intentos fallidos de inicio de sesión. Por favor, contacte al administrador para desbloquear su cuenta.");
         }
@@ -85,25 +85,25 @@ namespace BLL_08YS
 
         public void DesbloquearUsuario(string username)
         {
-            var user = userRepository.GetByUsername(username);
+            var user = _userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.DesbloquearUsuario);
-            userRepository.Unlock(user.Username);
+            _userRepository.Unlock(user.Username);
             string passwordDefault = user.DNI.ToString() + user.Apellido;
 
            
             Encriptador_08YS.CrearHash(passwordDefault, out string nuevoHash, out string nuevoSalt);
 
-            userRepository.UpdatePassword(user.Username, nuevoHash, nuevoSalt);
+            _userRepository.UpdatePassword(user.Username, nuevoHash, nuevoSalt);
 
             _bitacoraBll.RegistrarEvento(Evento.UsuarioDesbloqueado, targetUsername: username);
         }
 
         public void CrearUsuario(int dni, string nombre, string apellido, string email, Rol_08YS rol)
         {
-            if (userRepository.Exists(dni))
+            if (_userRepository.Exists(dni))
                 throw new InvalidOperationException("Ya existe un usuario registrado con ese DNI.");
 
             string username = dni.ToString() + nombre;
@@ -113,7 +113,7 @@ namespace BLL_08YS
             User_08YS nuevo = new User_08YS(username, dni, rol, nombre, apellido, email, hash, salt, false, true);
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearUsuario);
-            userRepository.Create(nuevo);
+            _userRepository.Create(nuevo);
             _bitacoraBll.RegistrarEvento(Evento.UsuarioCreado, targetUsername: username);
         }
 
@@ -122,7 +122,7 @@ namespace BLL_08YS
             if(username == SessionManager_08YS.Instance.Current.Username)
                 throw new InvalidOperationException("No puede modificar su propio rol o email.");
 
-            var user = userRepository.GetByUsername(username);
+            var user = _userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
@@ -130,22 +130,22 @@ namespace BLL_08YS
             user.Rol = nuevoRol;
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarUsuario);
-            userRepository.Modify(user,user.Username);
+            _userRepository.Modify(user,user.Username);
             _bitacoraBll.RegistrarEvento(Evento.UsuarioModificado, targetUsername: username);
         }
 
-        public void AlternarEstadoActivo(string username)
+        public void AlternarEstado(string username)
         {
             if(username == SessionManager_08YS.Instance.Current.Username)
                 throw new InvalidOperationException("No puede modificar su propio estado activo.");
 
-            var user = userRepository.GetByUsername(username);
+            var user = _userRepository.GetByUsername(username);
             if (user == null)
                 throw new Exception("No se encontró el usuario para modificar.");
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.DesActivarUsuario);
             bool nuevoEstado = !user.Activo;
-            userRepository.UpdateState(username, nuevoEstado);
+            _userRepository.UpdateState(username, nuevoEstado);
 
             user.Activo = nuevoEstado;
             Evento accion = user.Activo ? Evento.UsuarioHabilitado : Evento.UsuarioDeshabilitado;
@@ -160,9 +160,10 @@ namespace BLL_08YS
                 throw new Exception("La contraseña actual ingresada es incorrecta.");
 
             Encriptador_08YS.CrearHash(passwordNueva, out string hashNuevo, out string saltNuevo);
-            userRepository.UpdatePassword(SessionManager_08YS.Instance.Current.Username, hashNuevo, saltNuevo);
+            _userRepository.UpdatePassword(SessionManager_08YS.Instance.Current.Username, hashNuevo, saltNuevo);
             _bitacoraBll.RegistrarEvento(Evento.CambioContraseña);
         }
+
         public void CambiarIdiomaUsuario(string nuevoIdioma)
         {
             if (SessionManager_08YS.Instance.Current == null) return;
@@ -182,7 +183,7 @@ namespace BLL_08YS
                 try
                 {
                    
-                    userRepository.UpdateLanguage(username, idiomaFinal);
+                    _userRepository.UpdateLanguage(username, idiomaFinal);
                 }
                 catch (Exception)
                 {
@@ -193,26 +194,7 @@ namespace BLL_08YS
         
             SessionManager_08YS.Instance.CerrarSesion();
         }
-        //public List<User_08YS> GetAll()
-        //{
-        //    var usuarios = userRepository.GetAll();
 
-        //    // 2. Traemos TODOS los roles con sus estructuras completas (1 consulta al SP)
-        //    // Lo convertimos a un Diccionario indexado por RolID para que la búsqueda sea instantánea O(1)
-        //    var rolesCompletos = _rolRepo.GetAll().ToDictionary(r => r.RolID, r => r);
-
-        //    // 3. Cruzamos los datos en memoria sin volver a tocar la base de datos
-        //    foreach (var user in usuarios)
-        //    {
-        //        if (user.Rol != null && rolesCompletos.TryGetValue(user.Rol.RolID, out var rolEstructurado))
-        //        {
-        //            // Reemplazamos el rol vacío por el objeto completo que tiene el Nombre y sus Permisos
-        //            user.Rol = rolEstructurado;
-        //        }
-        //    }
-
-        //    return usuarios;
-        //}
-        public List<User_08YS> GetAll() => userRepository.GetAll();
+        public List<User_08YS> GetAll() => _userRepository.GetAll();
     }
 }

@@ -50,27 +50,48 @@ namespace BLL_08YS
             return permisos.Concat(familias).ToList();
         }
 
-        // BFS sobre el árbol ya cargado en memoria: sin viajes extra a la BD
+        /// <summary>
+        /// Obtiene todas las familias contenedoras (directas e indirectas)
+        /// de una familia determinada.
+        /// </summary>
+        /// <returns>
+        /// Conjunto de IDs de las familias que contienen a la familia indicada,
+        /// ya sea de forma directa o a través de otros niveles de jerarquía.
+        /// </returns>
         private HashSet<int> ResolverContenedoras(int familiaId, List<Familia_08YS> todasFamilias)
         {
+            // Almacena los IDs de las familias contenedoras encontradas. Utilizando HashSet para evitar duplicados.
             var contenedoras = new HashSet<int>();
+
+            // Cola utilizada para recorrer la jerarquia hacia arriba mediante una busqueda en anchura (BFS).
             var cola = new Queue<int>();
+
+            // Comienza la búsqueda desde la familia indicada.
             cola.Enqueue(familiaId);
 
             while (cola.Count > 0)
             {
+                // Obtiene la siguiente familia a buscar de la cola.
                 int buscado = cola.Dequeue();
+
+                // Recorre todas las familias para encontrar cuales contienen a la familia actualmente buscada.
                 foreach (var f in todasFamilias)
                 {
+                    // Verifica si alguno de los hijos de la familia actual coincide con el ID buscado.
                     bool contieneAlBuscado = f.Hijos
                         .OfType<Familia_08YS>()
                         .Any(h => h.FamiliaID == buscado);
 
+                    // Si la familia contiene al buscado y todavia no fue agregada:
                     if (contieneAlBuscado && contenedoras.Add(f.FamiliaID))
+                    {
+                        // Se agrega a la cola para seguir buscando familias que contengan a esta nueva contenedora.
                         cola.Enqueue(f.FamiliaID);
+                    }
                 }
             }
 
+            // Devuelve todas las familias contenedoras encontradas.
             return contenedoras;
         }
 

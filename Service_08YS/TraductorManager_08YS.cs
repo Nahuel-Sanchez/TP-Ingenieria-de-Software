@@ -11,14 +11,13 @@ namespace Service_08YS
     {
         void UpdateIdioma();
     }
+
     public class TraductorManager_08YS
     {
         private static TraductorManager_08YS _instance;
         private readonly List<IIdiomaObserver_08YS> _observadores = new List<IIdiomaObserver_08YS>();
         private Dictionary<string, Dictionary<string, string>> _traducciones;
         private string _idiomaActual = "es"; // Idioma por defecto
-
-        public string IdiomaActual => _idiomaActual;
 
         private TraductorManager_08YS()
         {
@@ -52,7 +51,6 @@ namespace Service_08YS
             }
         }
 
-   
         public void Suscribir(IIdiomaObserver_08YS observador)
         {
             if (!_observadores.Contains(observador))
@@ -64,7 +62,6 @@ namespace Service_08YS
             _observadores.Remove(observador);
         }
 
-    
         public void CambiarIdioma(string codigoIdioma)
         {
             if (_traducciones.ContainsKey(codigoIdioma))

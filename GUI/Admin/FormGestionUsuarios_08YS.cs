@@ -347,7 +347,7 @@ namespace GUI
                 try
                 {
                   
-                    _bll.AlternarEstadoActivo(user.Username);
+                    _bll.AlternarEstado(user.Username);
 
                     MessageBox.Show($"Usuario {user.Username} actualizado correctamente.");
 

@@ -543,8 +543,8 @@
             this.lblAsignados.Padding = new System.Windows.Forms.Padding(4, 0, 0, 2);
             this.lblAsignados.Size = new System.Drawing.Size(154, 39);
             this.lblAsignados.TabIndex = 3;
-            this.lblAsignados.Text = "Asignados";
             this.lblAsignados.Tag = "lblAsignados";
+            this.lblAsignados.Text = "Asignados";
             this.lblAsignados.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // trvDetalle
