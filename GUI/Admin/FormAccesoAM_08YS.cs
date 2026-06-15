@@ -255,16 +255,14 @@ namespace GUI_08YS.Admin
         {
             if (dgvDisponibles.CurrentRow == null)
             {
-                MessageBox.Show("Seleccione un componente para agregar.", "Sin selección",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_seleccionar_componente_add"), TraductorManager_08YS.Instance.GetTexto("sin_seleccion"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             var candidato = (dgvDisponibles.CurrentRow.DataBoundItem as ComponentRow)?.Componente;
             if (candidato == null)
             {
-                MessageBox.Show("Error al obtener el componente seleccionado.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_error_obtener_componente"), TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -278,8 +276,8 @@ namespace GUI_08YS.Admin
 
                 case ResultadoEvaluacion_08YS.Tipo.SugerenciaReemplazo:
                     var confirm = MessageBox.Show(
-                        resultado.Mensaje,
-                        "Reemplazo sugerido",
+                        resultado.Mensaje, // Viene directo con lógica traducida desde la BLL o formateada
+                        TraductorManager_08YS.Instance.GetTexto("reemplazo_sugerido"),
                         MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Question);
 
@@ -293,8 +291,7 @@ namespace GUI_08YS.Admin
                     break;
 
                 case ResultadoEvaluacion_08YS.Tipo.ConflictoIrresoluble:
-                    MessageBox.Show(resultado.Mensaje, "No se puede agregar",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(resultado.Mensaje, TraductorManager_08YS.Instance.GetTexto("no_se_puede_agregar"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
         }
@@ -313,16 +310,14 @@ namespace GUI_08YS.Admin
         {
             if (dgvSeleccionados.CurrentRow == null)
             {
-                MessageBox.Show("Seleccione un componente para eliminar.", "Sin selección",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_seleccionar_componente_del"), TraductorManager_08YS.Instance.GetTexto("sin_seleccion"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             var componente = (dgvSeleccionados.CurrentRow.DataBoundItem as ComponentRow)?.Componente;
             if (componente == null)
             {
-                MessageBox.Show("Error al obtener el componente seleccionado.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_error_obtener_componente"), TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -357,15 +352,20 @@ namespace GUI_08YS.Admin
 
                 _onGuardado?.Invoke();
             }
-            catch (InvalidOperationException ex)
+            catch (NombreDuplicadoException_08YS)
             {
-                MessageBox.Show(ex.Message, "Error de validación",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_nombre_acceso_duplicado"),
+                                TraductorManager_08YS.Instance.GetTexto("error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (PermisosDuplicadosException_08YS)
+            {
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_permisos_identicos_error"),
+                                TraductorManager_08YS.Instance.GetTexto("error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado")}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -381,7 +381,7 @@ namespace GUI_08YS.Admin
             if (componente is Permiso_08YS permiso)
             {
                 lblDescripcion.Text = string.IsNullOrWhiteSpace(permiso.Descripcion)
-                    ? "(Sin descripción)"
+                    ? TraductorManager_08YS.Instance.GetTexto("msg_sin_descripcion")
                     : permiso.Descripcion;
                 lblDescripcion.Visible = true;
                 trvDetalle.Visible = false;

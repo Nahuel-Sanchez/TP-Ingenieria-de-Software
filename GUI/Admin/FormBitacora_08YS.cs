@@ -181,7 +181,7 @@ namespace GUI
         {
             if (dgvEventos.Rows.Count == 0)
             {
-                MessageBox.Show("No hay datos en la grilla para exportar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_no_datos_exportar"), TraductorManager_08YS.Instance.GetTexto("atencion"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -230,29 +230,32 @@ namespace GUI
         {
             DateTime? desde = dtpDesde.Value.HasValue ? dtpDesde.Value.Value.Date : (DateTime?)null;
             DateTime? hasta = dtpHasta.Value.HasValue ? dtpHasta.Value.Value.Date : (DateTime?)null;
+
+            string tituloError = TraductorManager_08YS.Instance.GetTexto("error_validacion");
+
             if (!desde.HasValue && hasta.HasValue)
             {
-                MessageBox.Show("Debe ingresar una fecha de partida para usar la fecha de finalización.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fecha_partida_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (desde.HasValue && !hasta.HasValue)
             {
-                MessageBox.Show("Debe ingresar una fecha de finalización para usar la fecha de partida.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fecha_fin_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (desde.HasValue && desde.Value > DateTime.Today)
             {
-                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fecha_partida_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (hasta.HasValue && hasta.Value > DateTime.Today)
             {
-                MessageBox.Show("La fecha de finalización no puede ser posterior a la fecha actual.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fecha_fin_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
             {
-                MessageBox.Show("La fecha de partida no puede ser posterior a la fecha de finalización.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fechas_invertidas"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true;

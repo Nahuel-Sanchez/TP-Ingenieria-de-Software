@@ -94,7 +94,7 @@ namespace DAL_08YS.SQL
 
         public bool IsInUse(int rolId)
             => ExecuteScalar<int>(
-                "SELECT COUNT(1) FROM Users WHERE Rol = @id",
+                "SELECT COUNT(1) FROM Users WHERE RolID = @id",
                 new[] { Param("@id", rolId) }) > 0;
 
         public void Delete(int rolId)

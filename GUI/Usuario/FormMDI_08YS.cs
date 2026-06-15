@@ -332,10 +332,10 @@ namespace GUI_08YS
 
         private void cerrarSesionToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var respuesta = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
-                                        "Cerrar Sesión",
-                                        MessageBoxButtons.YesNo,
-                                        MessageBoxIcon.Question);
+            var respuesta = MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_cerrar_sesion"),
+                                        TraductorManager_08YS.Instance.GetTexto("cerrar_sesion"),
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
 
             if (respuesta == DialogResult.Yes)
             {
@@ -349,8 +349,8 @@ namespace GUI_08YS
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            var respuesta = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
-                                        "Cerrar Sesión",
+            var respuesta = MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_cerrar_sesion"),
+                                       TraductorManager_08YS.Instance.GetTexto("cerrar_sesion"),
                                         MessageBoxButtons.YesNo,
                                         MessageBoxIcon.Question);
 
