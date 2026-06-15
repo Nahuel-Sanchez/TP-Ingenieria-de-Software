@@ -67,7 +67,9 @@ namespace GUI_08YS
         {
             if (string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                MessageBox.Show("Por favor, complete todos los campos.");
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_completar_campos"),
+                                TraductorManager_08YS.Instance.GetTexto("error_validacion"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -80,79 +82,98 @@ namespace GUI_08YS
 
                 if (passwordDefault)
                 {
-                    MessageBox.Show("Debe cambiar su contraseña antes de continuar.", "Cambio de Contraseña Requerido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        TraductorManager_08YS.Instance.GetTexto("msg_pwd_cambio_req"),
+                        TraductorManager_08YS.Instance.GetTexto("pwd_cambio_req"),
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
 
                     FormCambiarContraseña_08YS formCambiarContraseña = new FormCambiarContraseña_08YS();
                     formCambiarContraseña.ShowDialog();
 
                     if (formCambiarContraseña.DialogResult == DialogResult.OK)
                     {
-                        // Limpiamos el Singleton para que la cuenta no quede tomada
                         SessionManager_08YS.Instance.CerrarSesion();
-
-                        // Limpiamos los campos para obligarlo a escribir la nueva
                         txtUsername.Text = "";
                         txtPassword.Text = "";
 
-                        MessageBox.Show("Por favor, inicie sesión nuevamente con su nueva contraseña.", "Sesión Reiniciada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        
-                        return; // Cortamos el flujo ACÁ para que NO intente abrir el MDI
+                        MessageBox.Show(
+                            TraductorManager_08YS.Instance.GetTexto("msg_sesion_reiniciada"),
+                            TraductorManager_08YS.Instance.GetTexto("sesion_reiniciada"),
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+
+                        return;
                     }
                     else
                     {
-                        // Si el usuario canceló o cerró la ventana de cambio obligatorio sin éxito, lo sacamos
                         SessionManager_08YS.Instance.CerrarSesion();
                         return;
                     }
                 }
+
                 if (!string.IsNullOrEmpty(user.Idioma))
                 {
                     TraductorManager_08YS.Instance.CambiarIdioma(user.Idioma);
                 }
+
                 FormMDI_08YS formMDI = new FormMDI_08YS();
                 this.Hide();
-                
+
                 formMDI.CerrarSesion += () =>
                 {
-                    SessionManager_08YS.Instance.CerrarSesion();
+                    try
+                    {
+                        _userBLL.Logout();
+                    }
+                    catch (LogoutPersistenceException_08YS)
+                    {
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_logout_fallido"),
+                                        TraductorManager_08YS.Instance.GetTexto("error_critico"),
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                     this.Show();
-                    
                 };
-                //_userBLL.CambiarIdiomaUsuario(user, TraductorManager_08YS.Instance.IdiomaActual);
+
                 formMDI.Show();
                 formMDI.Activate();
-
             }
-
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
-                MessageBox.Show(ex.Message, "Error de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string mensajeError = TraductorManager_08YS.Instance.GetTexto("msg_ErrorLogin");
-                MessageBox.Show(mensajeError, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_ya_hay_login"),
+                                TraductorManager_08YS.Instance.GetTexto("error_sesion"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch (UserBloqueadoException_08YS ex)
+            catch (AuthenticationException)
             {
-                MessageBox.Show(ex.Message, "Acceso Denegado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_error_credenciales"),
+                                TraductorManager_08YS.Instance.GetTexto("error_autenticacion"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
-            // CATCH 2: Captura específica si el usuario no existe
-            catch (UserNoRegistradoException_08YS ex)
+            catch (UserBloqueadoException_08YS)
             {
-                MessageBox.Show(ex.Message, "Usuario Inválido", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_bloqueado"),
+                                TraductorManager_08YS.Instance.GetTexto("acceso_denegado"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
-            // CATCH 3: Captura específica si el usuario no esta activo
-            catch (UserInactivoException_08YS ex)
+            catch (UserNoRegistradoException_08YS)
             {
-                MessageBox.Show(ex.Message, "Usuario Suspendido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_no_registrado"),
+                                TraductorManager_08YS.Instance.GetTexto("usuario_invalido"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            // CATCH 4: Captura para errores de credenciales incorrectas (AuthenticationException)
-            catch (AuthenticationException ex)
+            catch (UserInactivoException_08YS)
             {
-                MessageBox.Show(ex.Message, "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_inactivo"),
+                                TraductorManager_08YS.Instance.GetTexto("usuario_suspendido"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error inesperado en el sistema:\n{ex.Message}", "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                string msgBase = TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado");
+                MessageBox.Show($"{msgBase}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("error_critico"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

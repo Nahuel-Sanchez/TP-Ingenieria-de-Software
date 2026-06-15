@@ -1,4 +1,5 @@
 ﻿using DAL_08YS.Interfaces_Repositories;
+using Service_08YS;
 using Service_08YS.Entities.Acceso;
 using Service_08YS.Entities.Comparers;
 using System;
@@ -50,25 +51,23 @@ namespace BLL_08YS
                 var nombres = _permisoRepo.GetAll()
                     .Where(p => permsEnConflicto.Contains(p.PermisoID))
                     .Select(p => p.Nombre);
-
+                string plantillaConflicto = TraductorManager_08YS.Instance.GetTexto("bll_composite_conflicto");
                 return new ResultadoEvaluacion_08YS
                 {
                     Resultado = ResultadoEvaluacion_08YS.Tipo.ConflictoIrresoluble,
-                    Mensaje = $"No se puede agregar '{candidato.Nombre}' porque genera conflictos con permisos " +
-                              $"{string.Join(", ", nombres)} que ya están presentes en la lista actual dentro de otras familias."
+                    Mensaje = string.Format(plantillaConflicto, candidato.Nombre, string.Join(", ", nombres))
                 };
             }
 
             if (contemplados.Any())
             {
                 var nombresReemplazar = contemplados.Select(i => $"'{i.Nombre}'");
+                string plantillaSugerencia = TraductorManager_08YS.Instance.GetTexto("bll_composite_sugerencia");
                 return new ResultadoEvaluacion_08YS
                 {
                     Resultado = ResultadoEvaluacion_08YS.Tipo.SugerenciaReemplazo,
                     ComponentesAReemplazar = contemplados,
-                    Mensaje = $"Al agregar '{candidato.Nombre}' se reemplazarán "       +
-                              $"{string.Join(", ", nombresReemplazar)}, que ya están "  +
-                              $"contenidos en él. ¿Desea continuar?"
+                    Mensaje = string.Format(plantillaSugerencia, candidato.Nombre, string.Join(", ", nombresReemplazar))
                 };
             }
 
@@ -78,9 +77,10 @@ namespace BLL_08YS
         protected void ValidarDatosEntrada(string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             if (string.IsNullOrWhiteSpace(nombre))
-                throw new InvalidOperationException("El nombre no puede estar vacío.");
-            if (!componentes.Any())
-                throw new InvalidOperationException("Debe contener al menos un permiso o familia.");
+                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("bll_val_nombre_vacio"));
+
+            if (componentes == null || !componentes.Any())
+                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("bll_val_sin_componentes"));
         }
     }
 }

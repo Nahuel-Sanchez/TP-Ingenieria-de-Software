@@ -116,8 +116,8 @@ namespace BLL_08YS
         public void Eliminar(int familiaId)
         {
             if (_familiaRepo.IsInUse(familiaId))
-                throw new InvalidOperationException(
-                    "No se puede eliminar: la familia está siendo utilizada por un rol u otra familia.");
+                throw new ComponenteEnUsoException_08YS();
+
             SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarFamilias);
             _familiaRepo.Delete(familiaId);
             _bitacoraBll.RegistrarEvento(Evento.FamiliaEliminada);
@@ -125,28 +125,14 @@ namespace BLL_08YS
 
         private void ValidarFamiliaNoExistente(string nombre, HashSet<AccessComponent_08YS> componentes, int? excluirId)
         {
-            var permsNuevos = componentes
-                .SelectMany(c => c.GetPermisos())
-                .Select(p => p.PermisoID)
-                .ToHashSet();
-            
-            var familias = _familiaRepo.GetAll()
-                .Where(f => !excluirId.HasValue || f.FamiliaID != excluirId.Value)
-                .ToList();
+            var permsNuevos = componentes.SelectMany(c => c.GetPermisos()).Select(p => p.PermisoID).ToHashSet();
+            var familias = _familiaRepo.GetAll().Where(f => !excluirId.HasValue || f.FamiliaID != excluirId.Value).ToList();
 
             if (familias.Any(f => f.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
-                throw new InvalidOperationException(
-                    "Ya existe una familia con el mismo nombre.");
+                throw new NombreDuplicadoException_08YS();
 
-            bool existeIdentica = familias
-                .Any(f => f.GetPermisos()
-                           .Select(p => p.PermisoID)
-                           .ToHashSet()
-                           .SetEquals(permsNuevos));
-
-            if (existeIdentica)
-                throw new InvalidOperationException(
-                    "Ya existe una familia con exactamente el mismo conjunto de permisos.");
+            if (familias.Any(f => f.GetPermisos().Select(p => p.PermisoID).ToHashSet().SetEquals(permsNuevos)))
+                throw new PermisosDuplicadosException_08YS();
         }
     }
 }

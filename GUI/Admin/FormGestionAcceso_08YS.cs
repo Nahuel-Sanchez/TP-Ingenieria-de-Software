@@ -165,7 +165,8 @@ namespace GUI_08YS.Admin
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error al cargar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("msg_error_cargar_datos")}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             TraducirColumnas();
         }
@@ -225,9 +226,10 @@ namespace GUI_08YS.Admin
             string nombre = row.Nombre;
             object entidad = row.Entidad;
 
+            string pregunta = string.Format(TraductorManager_08YS.Instance.GetTexto("msg_eliminar_preg"), nombre);
             var confirmacion = MessageBox.Show(
-                $"¿Desea eliminar \"{nombre}\"?",
-                "Confirmar eliminación",
+                pregunta,
+                TraductorManager_08YS.Instance.GetTexto("confirmar_eliminacion"),
                 MessageBoxButtons.OKCancel,
                 MessageBoxIcon.Warning);
 
@@ -242,17 +244,15 @@ namespace GUI_08YS.Admin
 
                 CargarGrid();
             }
-            catch (InvalidOperationException ex)
+            catch (ComponenteEnUsoException_08YS)
             {
-                // Excepción de negocio: mensaje entendible para el usuario
-                MessageBox.Show(ex.Message, "No se puede eliminar",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_componente_en_uso_error"),
+                                TraductorManager_08YS.Instance.GetTexto("no_se_puede_eliminar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                // Error inesperado
-                MessageBox.Show(ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado")}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

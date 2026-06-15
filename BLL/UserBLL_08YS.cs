@@ -14,6 +14,12 @@ using System.Threading.Tasks;
 
 namespace BLL_08YS
 {
+    public class UserDniDuplicadoException_08YS : Exception { }
+    public class UserAutoModificacionException_08YS : Exception { }
+    public class UserAutoEstadoException_08YS : Exception { }
+    public class PwdActualIncorrectaException_08YS : Exception { }
+    public class EntityNotFoundException_08YS : Exception { }
+    public class LogoutPersistenceException_08YS : Exception { }
     public class UserBLL_08YS
     {
         private readonly IUserRepository_08YS _userRepository;
@@ -34,23 +40,21 @@ namespace BLL_08YS
             var user = _userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException_08YS();
 
             if (SessionManager_08YS.Instance.IsLogged)
-                throw new InvalidOperationException("Ya hay un usuario logueado. Cierre la sesión antes de iniciar otra.");
+                throw new InvalidOperationException(); // Capturado en UI con msg_ya_hay_login
 
             if (user.Bloqueado) throw new UserBloqueadoException_08YS();
-            if (!user.Activo)   throw new UserInactivoException_08YS();
+            if (!user.Activo) throw new UserInactivoException_08YS();
 
-            if ( ! Encriptador_08YS.Verificar(password, user.Hash, user.Salt) )
+            if (!Encriptador_08YS.Verificar(password, user.Hash, user.Salt))
             {
                 RegistrarIntentoFallido(username);
-                throw new AuthenticationException("Ha ingresado una contraseña incorrecta. Después de 3 intentos fallidos, su cuenta será bloqueada.");
+                throw new AuthenticationException(); // Capturado en UI con msg_error_credenciales
             }
 
             user.Rol = _rolRepo.GetById(user.Rol.RolID);
             SessionManager_08YS.Instance.SetCurrentUser(user);
 
-           
             _bitacoraBll.RegistrarEvento(Evento.LoginExitoso);
-
             passwordDefault = Encriptador_08YS.Verificar(user.DNI.ToString() + user.Apellido, user.Hash, user.Salt);
 
             return user;
@@ -73,29 +77,25 @@ namespace BLL_08YS
 
         public void UserLockOut(string username)
         {
-            var user = _userRepository.GetByUsername(username);
-            if (user == null)
-                throw new Exception("No se encontró el usuario para modificar.");
+            var user = _userRepository.GetByUsername(username) ?? throw new EntityNotFoundException_08YS();
+
             _userRepository.LockOut(user.Username);
             _bitacoraBll.RegistrarEvento(Evento.UsuarioBloqueado, username: username);
-            throw new UserBloqueadoException_08YS("Su cuenta ha sido bloqueada debido a múltiples intentos fallidos de inicio de sesión. Por favor, contacte al administrador para desbloquear su cuenta.");
+
+            throw new UserBloqueadoException_08YS();
         }
 
         #region GestionUsuario
 
         public void DesbloquearUsuario(string username)
         {
-            var user = _userRepository.GetByUsername(username);
-            if (user == null)
-                throw new Exception("No se encontró el usuario para modificar.");
+            var user = _userRepository.GetByUsername(username) ?? throw new EntityNotFoundException_08YS();
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.DesbloquearUsuario);
             _userRepository.Unlock(user.Username);
             string passwordDefault = user.DNI.ToString() + user.Apellido;
 
-           
             Encriptador_08YS.CrearHash(passwordDefault, out string nuevoHash, out string nuevoSalt);
-
             _userRepository.UpdatePassword(user.Username, nuevoHash, nuevoSalt);
 
             _bitacoraBll.RegistrarEvento(Evento.UsuarioDesbloqueado, targetUsername: username);
@@ -104,7 +104,7 @@ namespace BLL_08YS
         public void CrearUsuario(int dni, string nombre, string apellido, string email, Rol_08YS rol)
         {
             if (_userRepository.Exists(dni))
-                throw new InvalidOperationException("Ya existe un usuario registrado con ese DNI.");
+                throw new UserDniDuplicadoException_08YS();
 
             string username = dni.ToString() + nombre;
             string passwordDefault = dni.ToString() + apellido;
@@ -119,29 +119,25 @@ namespace BLL_08YS
 
         public void ModificarUsuario(string username, string nuevoEmail, Rol_08YS nuevoRol)
         {
-            if(username == SessionManager_08YS.Instance.Current.Username)
-                throw new InvalidOperationException("No puede modificar su propio rol o email.");
+            if (username == SessionManager_08YS.Instance.Current.Username)
+                throw new UserAutoModificacionException_08YS();
 
-            var user = _userRepository.GetByUsername(username);
-            if (user == null)
-                throw new Exception("No se encontró el usuario para modificar.");
+            var user = _userRepository.GetByUsername(username) ?? throw new KeyNotFoundException();
 
             user.Email = nuevoEmail;
             user.Rol = nuevoRol;
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarUsuario);
-            _userRepository.Modify(user,user.Username);
+            _userRepository.Modify(user, user.Username);
             _bitacoraBll.RegistrarEvento(Evento.UsuarioModificado, targetUsername: username);
         }
 
         public void AlternarEstado(string username)
         {
-            if(username == SessionManager_08YS.Instance.Current.Username)
-                throw new InvalidOperationException("No puede modificar su propio estado activo.");
+            if (username == SessionManager_08YS.Instance.Current.Username)
+                throw new UserAutoEstadoException_08YS();
 
-            var user = _userRepository.GetByUsername(username);
-            if (user == null)
-                throw new Exception("No se encontró el usuario para modificar.");
+            var user = _userRepository.GetByUsername(username) ?? throw new KeyNotFoundException();
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.DesActivarUsuario);
             bool nuevoEstado = !user.Activo;
@@ -156,8 +152,8 @@ namespace BLL_08YS
 
         public void CambiarContraseña(string passwordActual, string passwordNueva)
         {
-            if(!Encriptador_08YS.Verificar(passwordActual, SessionManager_08YS.Instance.Current.Hash, SessionManager_08YS.Instance.Current.Salt))
-                throw new Exception("La contraseña actual ingresada es incorrecta.");
+            if (!Encriptador_08YS.Verificar(passwordActual, SessionManager_08YS.Instance.Current.Hash, SessionManager_08YS.Instance.Current.Salt))
+                throw new PwdActualIncorrectaException_08YS();
 
             Encriptador_08YS.CrearHash(passwordNueva, out string hashNuevo, out string saltNuevo);
             _userRepository.UpdatePassword(SessionManager_08YS.Instance.Current.Username, hashNuevo, saltNuevo);
@@ -182,16 +178,15 @@ namespace BLL_08YS
 
                 try
                 {
-                   
                     _userRepository.UpdateLanguage(username, idiomaFinal);
                 }
                 catch (Exception)
                 {
-                    throw new Exception("Error al cerrar sesion");
+                    // Lanzamos una excepción tipada interna en lugar de texto plano
+                    throw new LogoutPersistenceException_08YS();
                 }
             }
 
-        
             SessionManager_08YS.Instance.CerrarSesion();
         }
 

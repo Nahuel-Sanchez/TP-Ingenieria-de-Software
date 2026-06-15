@@ -84,13 +84,25 @@ namespace GUI_08YS
             try
             {
                 _userBLL.CambiarContraseña(txtContraseñaActual.Text, txtNuevaContraseña.Text);
-                MessageBox.Show("Contraseña cambiada exitosamente.");
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_pwd_changed"));
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
+            catch (PwdActualIncorrectaException_08YS)
+            {
+                // Buscamos la clave de traducción exacta para este error de negocio
+                string mensajeTraducido = TraductorManager_08YS.Instance.GetTexto("msg_pwd_actual_incorrecta");
+                string tituloError = TraductorManager_08YS.Instance.GetTexto("error_validacion");
+
+                MessageBox.Show(mensajeTraducido, tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                // Error inesperado del sistema
+                string msgInesperado = TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado");
+                string tituloError = TraductorManager_08YS.Instance.GetTexto("error");
+
+                MessageBox.Show($"{msgInesperado}: {ex.Message}", tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -98,18 +110,18 @@ namespace GUI_08YS
         {
             if (string.IsNullOrWhiteSpace(txtContraseñaActual.Text) || string.IsNullOrWhiteSpace(txtNuevaContraseña.Text) || string.IsNullOrWhiteSpace(txtConfirmarContraseña.Text))
             {
-                MessageBox.Show("Por favor, complete todos los campos.");
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_completar_campos"));
                 return false;
             }
             if (txtNuevaContraseña.Text != txtConfirmarContraseña.Text)
             {
-                MessageBox.Show("La nueva contraseña y la confirmación no coinciden.");
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_pwd_no_coinciden"));
                 return false;
             }
-            if(txtNuevaContraseña.Text == txtContraseñaActual.Text)
+            if (txtNuevaContraseña.Text == txtContraseñaActual.Text)
             {
-                MessageBox.Show("La nueva contraseña no puede ser igual a la actual.");
-                return false; 
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_pwd_igual_actual"));
+                return false;
             }
             return true;
         }
