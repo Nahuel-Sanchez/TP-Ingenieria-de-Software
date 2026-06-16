@@ -66,7 +66,7 @@
             this.panel1.Controls.Add(this.Titulo);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(592, 37);
             this.panel1.TabIndex = 8;
@@ -77,7 +77,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox1.Image = global::GUI_08YS.Properties.Resources.HorizonLogoPuro1;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(62, 37);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -94,7 +94,7 @@
             this.btnMinimizar.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMinimizar.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnMinimizar.Location = new System.Drawing.Point(505, 0);
-            this.btnMinimizar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnMinimizar.Margin = new System.Windows.Forms.Padding(2);
             this.btnMinimizar.Name = "btnMinimizar";
             this.btnMinimizar.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.btnMinimizar.Size = new System.Drawing.Size(29, 37);
@@ -113,7 +113,7 @@
             this.btnMaximizar.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMaximizar.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnMaximizar.Location = new System.Drawing.Point(534, 0);
-            this.btnMaximizar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnMaximizar.Margin = new System.Windows.Forms.Padding(2);
             this.btnMaximizar.Name = "btnMaximizar";
             this.btnMaximizar.Padding = new System.Windows.Forms.Padding(2, 0, 0, 6);
             this.btnMaximizar.Size = new System.Drawing.Size(29, 37);
@@ -133,7 +133,7 @@
             this.btnCerrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCerrar.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnCerrar.Location = new System.Drawing.Point(563, 0);
-            this.btnCerrar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCerrar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCerrar.Name = "btnCerrar";
             this.btnCerrar.Padding = new System.Windows.Forms.Padding(3, 1, 0, 0);
             this.btnCerrar.Size = new System.Drawing.Size(29, 37);
@@ -161,7 +161,7 @@
             this.panel3.Controls.Add(this.iconPictureBox2);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel3.Location = new System.Drawing.Point(0, 316);
-            this.panel3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel3.Margin = new System.Windows.Forms.Padding(2);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(592, 50);
             this.panel3.TabIndex = 10;
@@ -188,7 +188,7 @@
             this.iconPictureBox2.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.iconPictureBox2.IconSize = 36;
             this.iconPictureBox2.Location = new System.Drawing.Point(278, 0);
-            this.iconPictureBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.iconPictureBox2.Margin = new System.Windows.Forms.Padding(2);
             this.iconPictureBox2.Name = "iconPictureBox2";
             this.iconPictureBox2.Size = new System.Drawing.Size(36, 39);
             this.iconPictureBox2.TabIndex = 0;
@@ -201,7 +201,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel2.ForeColor = System.Drawing.Color.Goldenrod;
             this.panel2.Location = new System.Drawing.Point(0, 37);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(198, 279);
             this.panel2.TabIndex = 11;
@@ -217,7 +217,7 @@
             this.iconPictureBox1.IconFont = FontAwesome.Sharp.IconFont.Solid;
             this.iconPictureBox1.IconSize = 171;
             this.iconPictureBox1.Location = new System.Drawing.Point(0, 108);
-            this.iconPictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.iconPictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.iconPictureBox1.Name = "iconPictureBox1";
             this.iconPictureBox1.Size = new System.Drawing.Size(198, 171);
             this.iconPictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -231,7 +231,7 @@
             this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox2.Image = global::GUI_08YS.Properties.Resources.HorizonLogoPuro1;
             this.pictureBox2.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(198, 108);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -247,7 +247,7 @@
             this.panel4.Controls.Add(this.txtUsername);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(198, 37);
-            this.panel4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(394, 279);
             this.panel4.TabIndex = 12;
@@ -293,7 +293,7 @@
             this.btn_Acceder.IconSize = 40;
             this.btn_Acceder.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btn_Acceder.Location = new System.Drawing.Point(77, 220);
-            this.btn_Acceder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_Acceder.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Acceder.Name = "btn_Acceder";
             this.btn_Acceder.Padding = new System.Windows.Forms.Padding(41, 0, 15, 0);
             this.btn_Acceder.Size = new System.Drawing.Size(240, 45);
@@ -331,7 +331,7 @@
             this.txtPassword.IconSize = 24;
             this.txtPassword.IconSizeRight = 30;
             this.txtPassword.Location = new System.Drawing.Point(77, 158);
-            this.txtPassword.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(2);
             this.txtPassword.MaskedInput = true;
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PlaceholderColor = System.Drawing.Color.Gray;
@@ -339,7 +339,7 @@
             this.txtPassword.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtPassword.Size = new System.Drawing.Size(240, 33);
             this.txtPassword.TabIndex = 2;
-            this.txtPassword.Tag = "";
+            this.txtPassword.Tag = "txtPassword";
             this.txtPassword.IconRightClick += new System.EventHandler(this.txtPassword_IconRightClick);
             // 
             // txtUsername
@@ -355,14 +355,14 @@
             this.txtUsername.IconColorRight = System.Drawing.Color.DimGray;
             this.txtUsername.IconSize = 24;
             this.txtUsername.Location = new System.Drawing.Point(77, 97);
-            this.txtUsername.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtUsername.Margin = new System.Windows.Forms.Padding(2);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtUsername.PlaceholderText = "Username";
             this.txtUsername.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtUsername.Size = new System.Drawing.Size(240, 33);
             this.txtUsername.TabIndex = 1;
-            this.txtUsername.Tag = "";
+            this.txtUsername.Tag = "txtUsername";
             // 
             // FormLogin_08YS
             // 
@@ -377,7 +377,7 @@
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormLogin_08YS";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormLogin";

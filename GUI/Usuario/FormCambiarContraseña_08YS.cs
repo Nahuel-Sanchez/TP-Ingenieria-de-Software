@@ -19,6 +19,16 @@ namespace GUI_08YS
         private UserBLL_08YS _userBLL;
         private bool _syncingPasswords = false;
 
+        // Hint Strings de traducción correspondientes
+        private string _hintActual = "";
+        private string _hintNueva = "";
+        private string _hintConfirmar = "";
+
+        // BANDERAS DE ESTADO: Eliminan fallos de sincronización por comparación de strings literales
+        private bool _actualTienePlaceholder = true;
+        private bool _nuevaTienePlaceholder = true;
+        private bool _confirmarTienePlaceholder = true;
+
         public FormCambiarContraseña_08YS()
         {
             InitializeComponent();
@@ -32,32 +42,128 @@ namespace GUI_08YS
 
             txtNuevaContraseña.IconClick += OnLinkedPasswordToggle;
             txtConfirmarContraseña.IconClick += OnLinkedPasswordToggle;
+
+            AsignarEventosPlaceholder();
             TraductorManager_08YS.Instance.Suscribir(this);
             UpdateIdioma(); 
         }
         public void UpdateIdioma()
         {
+            // 1. Cargamos las traducciones vigentes desde el diccionario de recursos
+            _hintActual = TraductorManager_08YS.Instance.GetTexto("txtPwdActual_hint");
+            _hintNueva = TraductorManager_08YS.Instance.GetTexto("txtPwdNueva_hint");
+            _hintConfirmar = TraductorManager_08YS.Instance.GetTexto("txtPwdConfirmar_hint");
+
+            // 2. Traducimos etiquetas y botones usando Tags
             TraducirControles(this);
+
+            // 3. Forzamos refresco visual de campos según su estado booleano
+            RefrescarEstadoPlaceholder(txtContraseñaActual, _hintActual, _actualTienePlaceholder);
+            RefrescarEstadoPlaceholder(txtNuevaContraseña, _hintNueva, _nuevaTienePlaceholder);
+            RefrescarEstadoPlaceholder(txtConfirmarContraseña, _hintConfirmar, _confirmarTienePlaceholder);
         }
+
+        private void RefrescarEstadoPlaceholder(IconPlaceholderTextBox txt, string placeholder, bool tienePlaceholder)
+        {
+            if (tienePlaceholder)
+            {
+                txt.Text = placeholder;
+                txt.ForeColor = Color.DarkGray;
+                txt.MaskedInput = false; // Desactivar máscara para que se lea el hint informativo
+            }
+        }
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
             {
-                // Si el control tiene un Tag asignado, buscamos su traducción
+                // Ignoramos la propiedad Text directa de los cuadros de texto
+                if (c is TextBox || c is IconPlaceholderTextBox)
+                {
+                    continue;
+                }
+
                 if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
                 {
                     c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
                 }
 
-                // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
                 if (c.HasChildren)
                 {
                     TraducirControles(c);
                 }
             }
         }
+
+        #region Lógica Controladora de Placeholders Basada en Estados
+
+        private void AsignarEventosPlaceholder()
+        {
+            // Contraseña Actual
+            txtContraseñaActual.Enter += (s, e) => {
+                if (_actualTienePlaceholder)
+                {
+                    txtContraseñaActual.Text = "";
+                    txtContraseñaActual.ForeColor = Color.White;
+                    txtContraseñaActual.MaskedInput = true;
+                    _actualTienePlaceholder = false;
+                }
+            };
+            txtContraseñaActual.Leave += (s, e) => {
+                if (string.IsNullOrWhiteSpace(txtContraseñaActual.Text))
+                {
+                    txtContraseñaActual.Text = _hintActual;
+                    txtContraseñaActual.ForeColor = Color.DarkGray;
+                    txtContraseñaActual.MaskedInput = false;
+                    _actualTienePlaceholder = true;
+                }
+            };
+
+            // Nueva Contraseña
+            txtNuevaContraseña.Enter += (s, e) => {
+                if (_nuevaTienePlaceholder)
+                {
+                    txtNuevaContraseña.Text = "";
+                    txtNuevaContraseña.ForeColor = Color.White;
+                    txtNuevaContraseña.MaskedInput = true;
+                    _nuevaTienePlaceholder = false;
+                }
+            };
+            txtNuevaContraseña.Leave += (s, e) => {
+                if (string.IsNullOrWhiteSpace(txtNuevaContraseña.Text))
+                {
+                    txtNuevaContraseña.Text = _hintNueva;
+                    txtNuevaContraseña.ForeColor = Color.DarkGray;
+                    txtNuevaContraseña.MaskedInput = false;
+                    _nuevaTienePlaceholder = true;
+                }
+            };
+
+            // Confirmar Contraseña
+            txtConfirmarContraseña.Enter += (s, e) => {
+                if (_confirmarTienePlaceholder)
+                {
+                    txtConfirmarContraseña.Text = "";
+                    txtConfirmarContraseña.ForeColor = Color.White;
+                    txtConfirmarContraseña.MaskedInput = true;
+                    _confirmarTienePlaceholder = false;
+                }
+            };
+            txtConfirmarContraseña.Leave += (s, e) => {
+                if (string.IsNullOrWhiteSpace(txtConfirmarContraseña.Text))
+                {
+                    txtConfirmarContraseña.Text = _hintConfirmar;
+                    txtConfirmarContraseña.ForeColor = Color.DarkGray;
+                    txtConfirmarContraseña.MaskedInput = false;
+                    _confirmarTienePlaceholder = true;
+                }
+            };
+        }
+
+        #endregion
         private void OnLinkedPasswordToggle(object sender, EventArgs e)
         {
+            if (_nuevaTienePlaceholder || _confirmarTienePlaceholder) return;
             if (_syncingPasswords) return;
 
             _syncingPasswords = true;
@@ -80,6 +186,10 @@ namespace GUI_08YS
         }
         private void btnCambiarContraseña_Click(object sender, EventArgs e)
         {
+            // Extraemos los valores reales ingresados basándonos en la bandera de estado
+            string passActualInput = _actualTienePlaceholder ? "" : txtContraseñaActual.Text;
+            string passNuevaInput = _nuevaTienePlaceholder ? "" : txtNuevaContraseña.Text;
+            string passConfirmarInput = _confirmarTienePlaceholder ? "" : txtConfirmarContraseña.Text;
             if (!ValidarCampos()) return;
             try
             {

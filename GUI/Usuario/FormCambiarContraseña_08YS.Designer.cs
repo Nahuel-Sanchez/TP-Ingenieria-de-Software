@@ -102,7 +102,7 @@
             this.btnCambiarContraseña.IconSize = 30;
             this.btnCambiarContraseña.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCambiarContraseña.Location = new System.Drawing.Point(95, 338);
-            this.btnCambiarContraseña.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCambiarContraseña.Margin = new System.Windows.Forms.Padding(2);
             this.btnCambiarContraseña.Name = "btnCambiarContraseña";
             this.btnCambiarContraseña.Padding = new System.Windows.Forms.Padding(4, 0, 15, 0);
             this.btnCambiarContraseña.Size = new System.Drawing.Size(199, 46);
@@ -135,6 +135,7 @@
             this.txtConfirmarContraseña.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtConfirmarContraseña.Size = new System.Drawing.Size(199, 32);
             this.txtConfirmarContraseña.TabIndex = 10;
+            this.txtConfirmarContraseña.Tag = "txtPwdConfirmar";
             // 
             // txtNuevaContraseña
             // 
@@ -157,6 +158,7 @@
             this.txtNuevaContraseña.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtNuevaContraseña.Size = new System.Drawing.Size(199, 32);
             this.txtNuevaContraseña.TabIndex = 9;
+            this.txtNuevaContraseña.Tag = "txtPwdNueva";
             // 
             // txtContraseñaActual
             // 
@@ -179,6 +181,7 @@
             this.txtContraseñaActual.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtContraseñaActual.Size = new System.Drawing.Size(199, 32);
             this.txtContraseñaActual.TabIndex = 8;
+            this.txtContraseñaActual.Tag = "txtPwdActual";
             // 
             // FormCambiarContraseña_08YS
             // 
