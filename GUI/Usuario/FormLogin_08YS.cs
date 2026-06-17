@@ -113,9 +113,7 @@ namespace GUI_08YS
                 }
 
                 if (!string.IsNullOrEmpty(user.Idioma))
-                {
                     TraductorManager_08YS.Instance.CambiarIdioma(user.Idioma);
-                }
 
                 FormMDI_08YS formMDI = new FormMDI_08YS();
                 this.Hide();
@@ -162,9 +160,9 @@ namespace GUI_08YS
                                 TraductorManager_08YS.Instance.GetTexto("usuario_invalido"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            catch (UserInactivoException_08YS)
+            catch (UserDesactivadoException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_inactivo"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_desactivado"),
                                 TraductorManager_08YS.Instance.GetTexto("usuario_suspendido"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }

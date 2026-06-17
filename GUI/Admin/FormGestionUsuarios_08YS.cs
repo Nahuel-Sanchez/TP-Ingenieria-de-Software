@@ -28,6 +28,7 @@ namespace GUI
 
         private UserBLL_08YS _bll = BLLFactory_08YS.CreateUserBLL();
         private RolBLL_08YS _bllRol = BLLFactory_08YS.CreateRolBLL();
+
         public FormGestionUsuarios_08YS()
         {
             InitializeComponent();
@@ -304,7 +305,6 @@ namespace GUI
         }
         private void btnDesbloquear_Click(object sender, EventArgs e)
         {
-
             if (dgvUsuarios.CurrentRow == null)
             {
                 MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_seleccionar_usuario"),

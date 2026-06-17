@@ -18,7 +18,7 @@ namespace BLL_08YS
     public class UserAutoModificacionException_08YS : Exception { }
     public class UserAutoEstadoException_08YS : Exception { }
     public class PwdActualIncorrectaException_08YS : Exception { }
-    public class EntityNotFoundException_08YS : Exception { }
+    public class UserNotFoundException_08YS : Exception { }
     public class LogoutPersistenceException_08YS : Exception { }
     public class UserBLL_08YS
     {
@@ -37,19 +37,16 @@ namespace BLL_08YS
 
         public User_08YS Login(string username, string password, out bool passwordDefault)
         {
+            if (SessionManager_08YS.Instance.IsLogged)
+                throw new InvalidOperationException();
+
             var user = _userRepository.GetByUsername(username) ?? throw new UserNoRegistradoException_08YS();
 
-            if (SessionManager_08YS.Instance.IsLogged)
-                throw new InvalidOperationException(); // Capturado en UI con msg_ya_hay_login
-
             if (user.Bloqueado) throw new UserBloqueadoException_08YS();
-            if (!user.Activo) throw new UserInactivoException_08YS();
+            if (!user.Activo) throw new UserDesactivadoException_08YS();
 
             if (!Encriptador_08YS.Verificar(password, user.Hash, user.Salt))
-            {
                 RegistrarIntentoFallido(username);
-                throw new AuthenticationException(); // Capturado en UI con msg_error_credenciales
-            }
 
             user.Rol = _rolRepo.GetById(user.Rol.RolID);
             SessionManager_08YS.Instance.SetCurrentUser(user);
@@ -67,17 +64,16 @@ namespace BLL_08YS
             int intentos = _bitacoraBll.ContarIntentosFallidos(username, ventanaHoras: 2);
 
             if (intentos >= 3)
-            {
                 UserLockOut(username);
-                _bitacoraBll.RegistrarEvento(Evento.UsuarioBloqueado, username: username);
-            }
+
+            throw new AuthenticationException();
         }
 
         #endregion
 
         public void UserLockOut(string username)
         {
-            var user = _userRepository.GetByUsername(username) ?? throw new EntityNotFoundException_08YS();
+            var user = _userRepository.GetByUsername(username) ?? throw new UserNotFoundException_08YS();
 
             _userRepository.LockOut(user.Username);
             _bitacoraBll.RegistrarEvento(Evento.UsuarioBloqueado, username: username);
@@ -89,7 +85,7 @@ namespace BLL_08YS
 
         public void DesbloquearUsuario(string username)
         {
-            var user = _userRepository.GetByUsername(username) ?? throw new EntityNotFoundException_08YS();
+            var user = _userRepository.GetByUsername(username) ?? throw new UserNotFoundException_08YS();
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.DesbloquearUsuario);
             _userRepository.Unlock(user.Username);
