@@ -417,8 +417,8 @@ namespace GUI_08YS
 
             // 1. Sincronizamos la memoria de la sesión actual a través de la BLL (asumiendo que tenés la referencia '_userBll')
             // Si no tenés la instancia de la BLL inyectada o mapeada en el MDI, accedés directo:
-            SessionManager_08YS.Instance.Current.Idioma = idiomaSeleccionado;
-
+            //SessionManager_08YS.Instance.Current.Idioma = idiomaSeleccionado;
+            _userBLL.CambiarIdiomaUsuario(idiomaSeleccionado);
             // 2. Le avisamos al Manager para que muten todas las pantallas abiertas por el Observer
             TraductorManager_08YS.Instance.CambiarIdioma(idiomaSeleccionado);
         }
