@@ -65,7 +65,7 @@
             this.pnlHeader.Controls.Add(this.iconPictureBox);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeader.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlHeader.Margin = new System.Windows.Forms.Padding(2);
             this.pnlHeader.Name = "pnlHeader";
             this.pnlHeader.Padding = new System.Windows.Forms.Padding(19, 12, 15, 4);
             this.pnlHeader.Size = new System.Drawing.Size(1102, 122);
@@ -96,7 +96,7 @@
             this.iconPictureBox.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.iconPictureBox.IconSize = 90;
             this.iconPictureBox.Location = new System.Drawing.Point(19, 12);
-            this.iconPictureBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.iconPictureBox.Margin = new System.Windows.Forms.Padding(2);
             this.iconPictureBox.Name = "iconPictureBox";
             this.iconPictureBox.Size = new System.Drawing.Size(90, 106);
             this.iconPictureBox.TabIndex = 0;
@@ -110,7 +110,7 @@
             this.pnlBottom.Controls.Add(this.btnCrear);
             this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlBottom.Location = new System.Drawing.Point(0, 683);
-            this.pnlBottom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlBottom.Margin = new System.Windows.Forms.Padding(2);
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Padding = new System.Windows.Forms.Padding(0, 8, 19, 8);
             this.pnlBottom.Size = new System.Drawing.Size(1102, 65);
@@ -129,7 +129,7 @@
             this.btnEliminar.IconSize = 32;
             this.btnEliminar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEliminar.Location = new System.Drawing.Point(504, 8);
-            this.btnEliminar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEliminar.Margin = new System.Windows.Forms.Padding(2);
             this.btnEliminar.Name = "btnEliminar";
             this.btnEliminar.Padding = new System.Windows.Forms.Padding(4, 0, 15, 0);
             this.btnEliminar.Size = new System.Drawing.Size(188, 42);
@@ -154,7 +154,7 @@
             this.btnModificar.IconSize = 40;
             this.btnModificar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnModificar.Location = new System.Drawing.Point(704, 8);
-            this.btnModificar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnModificar.Margin = new System.Windows.Forms.Padding(2);
             this.btnModificar.Name = "btnModificar";
             this.btnModificar.Padding = new System.Windows.Forms.Padding(4, 0, 15, 0);
             this.btnModificar.Size = new System.Drawing.Size(188, 42);
@@ -179,7 +179,7 @@
             this.btnCrear.IconSize = 42;
             this.btnCrear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCrear.Location = new System.Drawing.Point(902, 8);
-            this.btnCrear.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCrear.Margin = new System.Windows.Forms.Padding(2);
             this.btnCrear.Name = "btnCrear";
             this.btnCrear.Padding = new System.Windows.Forms.Padding(4, 0, 15, 0);
             this.btnCrear.Size = new System.Drawing.Size(188, 42);
@@ -197,7 +197,7 @@
             this.pnlContent.Controls.Add(this.splitMain);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(0, 122);
-            this.pnlContent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlContent.Margin = new System.Windows.Forms.Padding(2);
             this.pnlContent.Name = "pnlContent";
             this.pnlContent.Padding = new System.Windows.Forms.Padding(11, 4, 11, 4);
             this.pnlContent.Size = new System.Drawing.Size(1102, 561);
@@ -207,7 +207,7 @@
             // 
             this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitMain.Location = new System.Drawing.Point(11, 4);
-            this.splitMain.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitMain.Margin = new System.Windows.Forms.Padding(2);
             this.splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
@@ -327,7 +327,7 @@
             this.trvDetalle.ItemHeight = 32;
             this.trvDetalle.LineColor = System.Drawing.Color.Goldenrod;
             this.trvDetalle.Location = new System.Drawing.Point(2, 32);
-            this.trvDetalle.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.trvDetalle.Margin = new System.Windows.Forms.Padding(2);
             this.trvDetalle.Name = "trvDetalle";
             this.trvDetalle.Size = new System.Drawing.Size(658, 521);
             this.trvDetalle.TabIndex = 4;
@@ -360,7 +360,7 @@
             this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormGestionAcceso_08YS";
             this.Text = "FormFamilia";
             this.Load += new System.EventHandler(this.FormGestionAcceso_Load);

@@ -171,8 +171,23 @@
         "modo_insercion_msg": "Modo Insercion",
         "modo_consulta_msg": "Modo Consulta",
         "modo_edicion_msg": "Modo edicion",
-        "msg_componente_en_uso_error": "Componente en uso"
+        "msg_componente_en_uso_error": "Componente en uso",
 
+
+        "idioma_es": "Español",
+        "idioma_en": "Inglés",
+        "txtUsername_hint": "Ingrese nombre de usuario...",
+        "txtPassword_hint": "Ingrese contraseña...",
+
+        "txtPwdActual_hint": "Ingrese su contraseña actual",
+        "txtPwdNueva_hint": "Ingrese su nueva contraseña",
+        "txtPwdConfirmar_hint": "Ingrese su nueva contraseña",
+        "txtNombreAcceso_hint": "Ingrese el nombre",
+
+        "Texto_GestionDe": "Gestión de",
+        "Entidad_Familias": "Familias",
+        "Entidad_Roles": "Roles"
+       
     },
     "en": {
         "btn_Aceptar": "Accept",
@@ -345,6 +360,20 @@
         "msg_componente_en_uso_error": "Component in use",
         "modo_insercion_msg": "Insert Mode",
         "modo_consulta_msg": "View Mode",
-        "modo_edicion_msg": "Edit Mode"
+        "modo_edicion_msg": "Edit Mode",
+
+        "idioma_es": "Spanish",
+        "idioma_en": "English",
+        "txtUsername_hint": "Enter your username...",
+        "txtPassword_hint": "Enter your password...",
+
+        "txtPwdActual_hint": "Enter your current password",
+        "txtPwdNueva_hint": "Enter your new password",
+        "txtPwdConfirmar_hint": "Enter your new password",
+        "txtNombreAcceso_hint": "Enter the name",
+
+        "Texto_GestionDe": "Management of",
+        "Entidad_Familias": "Families",
+        "Entidad_Roles": "Roles"
     }
 }

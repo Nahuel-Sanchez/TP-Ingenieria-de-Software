@@ -47,22 +47,33 @@ namespace GUI_08YS
 
         private void ConfigurarCombo()
         {
-            IdiomaCombobox.SelectedIndexChanged -= IdiomaCombobox_SelectedIndexChanged;
-
-            IdiomaCombobox.Items.Clear();
-            IdiomaCombobox.Items.Add("Español");
-            IdiomaCombobox.Items.Add("Ingles");
-
-            // Seteamos el combo basándonos en lo que ya tiene la sesión del usuario
-            if (SessionManager_08YS.Instance.Current.Idioma == "en")
-                IdiomaCombobox.SelectedIndex = 1; // Inglés
-            else
-                IdiomaCombobox.SelectedIndex = 0; // Español (Default)
-
-            // Volvemos a asociar el evento para cuando el usuario interactúe físicamente con el ComboBox
-            IdiomaCombobox.SelectedIndexChanged += IdiomaCombobox_SelectedIndexChanged;
+            RefrescarContenidoComboIdioma();
         }
 
+        private void RefrescarContenidoComboIdioma()
+        {
+            // Bloqueamos el evento para evitar recursividad infinita al limpiar/agregar ítems
+            IdiomaCombobox.SelectedIndexChanged -= IdiomaCombobox_SelectedIndexChanged;
+
+            int indexTemporal = IdiomaCombobox.SelectedIndex;
+
+            IdiomaCombobox.Items.Clear();
+            // Obtenemos los nombres de los idiomas traducidos dinámicamente
+            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("idioma_es")); // "Español"
+            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("idioma_en")); // "Inglés"
+
+            // Si es la primera carga, inicializamos según la sesión del usuario
+            if (indexTemporal < 0)
+            {
+                IdiomaCombobox.SelectedIndex = (SessionManager_08YS.Instance.Current.Idioma == "en") ? 1 : 0;
+            }
+            else
+            {
+                IdiomaCombobox.SelectedIndex = indexTemporal;
+            }
+
+            IdiomaCombobox.SelectedIndexChanged += IdiomaCombobox_SelectedIndexChanged;
+        }
         private void AplicarPermisos()
         {
             // Botón "Administrativo" del panel lateral — solo visible si tiene algún permiso admin
@@ -95,6 +106,7 @@ namespace GUI_08YS
             {
                 TraducirMenuFlotanteCustom(PerfilDropDownMenu);
             }
+            RefrescarContenidoComboIdioma();
         }
 
         // NUEVO MÉTODO: Dedicado a los ContextMenuStrip / DropdownMenuStrip personalizados
@@ -405,8 +417,8 @@ namespace GUI_08YS
 
             // 1. Sincronizamos la memoria de la sesión actual a través de la BLL (asumiendo que tenés la referencia '_userBll')
             // Si no tenés la instancia de la BLL inyectada o mapeada en el MDI, accedés directo:
-            SessionManager_08YS.Instance.Current.Idioma = idiomaSeleccionado;
-
+            //SessionManager_08YS.Instance.Current.Idioma = idiomaSeleccionado;
+            _userBLL.CambiarIdiomaUsuario(idiomaSeleccionado);
             // 2. Le avisamos al Manager para que muten todas las pantallas abiertas por el Observer
             TraductorManager_08YS.Instance.CambiarIdioma(idiomaSeleccionado);
         }

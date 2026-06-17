@@ -21,6 +21,12 @@ namespace GUI_08YS
     {
         private UserBLL_08YS _userBLL;
         public bool ModoRelogin { get; set; } = false;
+        private string _userPlaceholder = "";
+        private string _passPlaceholder = "";
+
+        // BANDERAS DE ESTADO: Eliminan el error de comparación de strings al cambiar de idioma
+        private bool _userTienePlaceholder = true;
+        private bool _passTienePlaceholder = true;
         public FormLogin_08YS()
         {
             InitializeComponent();
@@ -29,33 +35,86 @@ namespace GUI_08YS
 
             TraductorManager_08YS.Instance.Suscribir(this);
 
-         
+            AsignarEventosPlaceholder();
+
+            // 2. Ejecutamos la carga inicial de traducciones
             UpdateIdioma();
-           
+
         }
         private void ConfigurarCombo()
         {
-            IdiomaCombobox.Items.Add("Español");
-            IdiomaCombobox.Items.Add("Ingles");
+            IdiomaCombobox.Items.Clear();
 
+            // En lugar de hardcodear textos, manejamos el índice inicial por defecto (0 = Español)
             IdiomaCombobox.SelectedIndex = 0;
         }
         public void UpdateIdioma()
         {
-            TraducirControles(this);
-        }
+            _userPlaceholder = TraductorManager_08YS.Instance.GetTexto("txtUsername_hint");
+            _passPlaceholder = TraductorManager_08YS.Instance.GetTexto("txtPassword_hint");
 
+            // Traducimos el resto de la interfaz (Labels, botones, etc.)
+            TraducirControles(this);
+
+            // Refrescamos los placeholders basándonos en la bandera de estado, no en el texto literal anterior
+            RefrescarPlaceholderTraduccion(txtUsername, _userPlaceholder, _userTienePlaceholder, false);
+            RefrescarPlaceholderTraduccion(txtPassword, _passPlaceholder, _passTienePlaceholder, true);
+
+            ActualizarContenidoComboIdioma();
+        }
+        private void RefrescarPlaceholderTraduccion(IconPlaceholderTextBox txt, string placeholder, bool tienePlaceholder, bool esPassword)
+        {
+            // Si el control está actualmente en modo placeholder, actualizamos su texto al nuevo idioma de inmediato
+            if (tienePlaceholder)
+            {
+                txt.Text = placeholder;
+                txt.ForeColor = Color.DarkGray;
+                if (esPassword) txt.MaskedInput = false;
+            }
+        }
+        private void ActualizarContenidoComboIdioma()
+        {
+            // Salvamos el índice seleccionado actualmente para que no se resetee la vista al usuario
+            int indexTemporal = IdiomaCombobox.SelectedIndex;
+
+            // Desenganchamos temporalmente el evento para evitar ejecuciones cíclicas en cascada
+            IdiomaCombobox.SelectedIndexChanged -= IdiomaComboBox_SelectedIndexChanged;
+
+            IdiomaCombobox.Items.Clear();
+
+            // Insertamos las traducciones dinámicas directo desde el archivo de traducción activo
+            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("idioma_es")); // "Español" o "Spanish"
+            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("idioma_en")); // "Inglés" o "English"
+
+            // Restauramos la selección previa de manera segura
+            if (indexTemporal >= 0)
+            {
+                IdiomaCombobox.SelectedIndex = indexTemporal;
+            }
+            else
+            {
+                // Fallback por si la carga inicial viene vacía
+                IdiomaCombobox.SelectedIndex = 0;
+            }
+
+            // Volvemos a dar de alta el manejador de eventos del ComboBox
+            IdiomaCombobox.SelectedIndexChanged += IdiomaComboBox_SelectedIndexChanged;
+        }
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
             {
-                // Si el control tiene un Tag asignado, buscamos su traducción
-                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                // CONDICIÓN CRÍTICA: Si es un TextBox o tu control personalizado de texto, 
+                // NO traduzcas su propiedad .Text, solo hazlo si es un Label, Button, GroupBox, etc.
+                if (c is TextBox || c is IconPlaceholderTextBox)
+                {
+                    // Ignoramos la traducción del .Text directo para que no se rompa el input
+                }
+                else if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
                 {
                     c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
                 }
 
-                // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
                 if (c.HasChildren)
                 {
                     TraducirControles(c);
@@ -65,6 +124,8 @@ namespace GUI_08YS
 
         private void btnAcceder_Click(object sender, EventArgs e)
         {
+            string usernameInput = _userTienePlaceholder ? "" : txtUsername.Text.Trim();
+            string passwordInput = _passTienePlaceholder ? "" : txtPassword.Text.Trim();
             if (string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
             {
                 MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_completar_campos"),
@@ -94,9 +155,7 @@ namespace GUI_08YS
                     if (formCambiarContraseña.DialogResult == DialogResult.OK)
                     {
                         SessionManager_08YS.Instance.CerrarSesion();
-                        txtUsername.Text = "";
-                        txtPassword.Text = "";
-
+                        ResetearCamposAForcePlaceholder();
                         MessageBox.Show(
                             TraductorManager_08YS.Instance.GetTexto("msg_sesion_reiniciada"),
                             TraductorManager_08YS.Instance.GetTexto("sesion_reiniciada"),
@@ -174,7 +233,13 @@ namespace GUI_08YS
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        private void ResetearCamposAForcePlaceholder()
+        {
+            // Forzar el vaciado y re-inyección de Placeholders limpios al desloguearse o resetear
+            _userTienePlaceholder = true;
+            _passTienePlaceholder = true;
+            UpdateIdioma();
+        }
         #region BarraSuperior
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -211,9 +276,12 @@ namespace GUI_08YS
 
         private void txtPassword_IconRightClick(object sender, EventArgs e)
         {
-            var tb = (IconPlaceholderTextBox)sender;
-            tb.MaskedInput = !tb.MaskedInput;
-            tb.IconCharRight = tb.MaskedInput ? IconChar.EyeSlash : IconChar.Eye;
+            if (txtPassword.Text != _passPlaceholder)
+            {
+                var tb = (IconPlaceholderTextBox)sender;
+                tb.MaskedInput = !tb.MaskedInput;
+                tb.IconCharRight = tb.MaskedInput ? IconChar.EyeSlash : IconChar.Eye;
+            }
         }
 
         private void IdiomaComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -230,5 +298,50 @@ namespace GUI_08YS
                 _userBLL.CambiarIdiomaUsuario(idiomaSeleccionado);
             }
         }
+
+        #region Lógica Efecto Placeholder Avanzada
+
+        private void AsignarEventosPlaceholder()
+        {
+            // Eventos de Foco - Username
+            txtUsername.Enter += (s, e) => {
+                if (_userTienePlaceholder)
+                {
+                    txtUsername.Text = "";
+                    txtUsername.ForeColor = Color.White;
+                    _userTienePlaceholder = false;
+                }
+            };
+            txtUsername.Leave += (s, e) => {
+                if (string.IsNullOrWhiteSpace(txtUsername.Text))
+                {
+                    txtUsername.Text = _userPlaceholder;
+                    txtUsername.ForeColor = Color.DarkGray;
+                    _userTienePlaceholder = true;
+                }
+            };
+
+            // Eventos de Foco - Password
+            txtPassword.Enter += (s, e) => {
+                if (_passTienePlaceholder)
+                {
+                    txtPassword.Text = "";
+                    txtPassword.ForeColor = Color.White;
+                    txtPassword.MaskedInput = true; // Activamos máscara al escribir
+                    _passTienePlaceholder = false;
+                }
+            };
+            txtPassword.Leave += (s, e) => {
+                if (string.IsNullOrWhiteSpace(txtPassword.Text))
+                {
+                    txtPassword.Text = _passPlaceholder;
+                    txtPassword.ForeColor = Color.DarkGray;
+                    txtPassword.MaskedInput = false; // Desactivamos máscara para leer el hint
+                    _passTienePlaceholder = true;
+                }
+            };
+        }
+
+        #endregion
     }
 }

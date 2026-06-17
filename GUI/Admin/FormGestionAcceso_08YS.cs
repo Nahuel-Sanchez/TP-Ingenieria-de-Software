@@ -48,9 +48,9 @@ namespace GUI_08YS.Admin
             _familiaBLL = BLLFactory_08YS.CreateFamiliaBLL();
             _rolBLL = BLLFactory_08YS.CreateRolBLL();
             _openChildForm = openChildForm;
-            string entidad = _modo == TipoEntidad.Familia ? "Familias" : "Roles";
-            Text = $"Gestión de {entidad}";
-            lblTitulo.Text = $"Gestión de {entidad}";
+            //string entidad = _modo == TipoEntidad.Familia ? "Familias" : "Roles";
+            //Text = $"Gestión de {entidad}";
+            //lblTitulo.Text = $"Gestión de {entidad}";
 
             dgvEntidades.AutoGenerateColumns = false;
         }
@@ -64,10 +64,24 @@ namespace GUI_08YS.Admin
         #region Idioma
         public void UpdateIdioma()
         {
+            // 1. Traduce primero todos los controles fijos usando los Tags
             TraducirControles(this);
+
+            // 2. AHORA asignamos los títulos dinámicos consultando las claves del TraductorManager
+            string claveEntidad = _modo == TipoEntidad.Familia ? "Entidad_Familias" : "Entidad_Roles";
+            string gestionTraducida = TraductorManager_08YS.Instance.GetTexto("Texto_GestionDe"); // Debería retornar "Gestión de"
+            string entidadTraducida = TraductorManager_08YS.Instance.GetTexto(claveEntidad);     // Retorna "Familias" o "Roles"
+
+            // Armamos la cadena final en base al idioma actual
+            string tituloFinal = $"{gestionTraducida} {entidadTraducida}";
+
+            // Asignamos de forma segura para que no se pise
+            this.Text = tituloFinal;
+            lblTitulo.Text = tituloFinal;
+
+            // 3. Traducimos las columnas de la grilla
             TraducirColumnas();
         }
-
         private void TraducirColumnas()
         {
             if (dgvEntidades.Columns.Count == 0) return;
@@ -94,13 +108,14 @@ namespace GUI_08YS.Admin
         {
             foreach (Control c in contenedor.Controls)
             {
-                // Si el control tiene un Tag asignado, buscamos su traducción
+                // Opcional: Podés saltear explícitamente el lblTitulo para que TraducirControles ni lo toque
+                if (c == lblTitulo) continue;
+
                 if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
                 {
                     c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
                 }
 
-                // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
                 if (c.HasChildren)
                 {
                     TraducirControles(c);
@@ -118,7 +133,7 @@ namespace GUI_08YS.Admin
         {
             bool esFamilia = _modo == TipoEntidad.Familia;
 
-            lblTitulo.Text = esFamilia ? "Gestión de Familias" : "Gestión de Roles";
+            //lblTitulo.Text = esFamilia ? "Gestión de Familias" : "Gestión de Roles";
             iconPictureBox.IconChar = esFamilia
                 ? FontAwesome.Sharp.IconChar.LayerGroup
                 : FontAwesome.Sharp.IconChar.UserShield;

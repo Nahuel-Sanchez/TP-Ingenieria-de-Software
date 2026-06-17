@@ -37,6 +37,8 @@ namespace GUI_08YS.Admin
         // Evita cascada de eventos entre los dos dgv durante refreshes
         private bool _actualizandoSeleccion = false;
 
+        private string _hintNombre = "";
+        private bool _nombreTienePlaceholder = true;
         private AccesoBLL_08YS BLL => _tipo == TipoEntidad.Familia
                ? (AccesoBLL_08YS)_familiaBLL
                :            _rolBLL;
@@ -63,6 +65,8 @@ namespace GUI_08YS.Admin
 
             dgvDisponibles.AutoGenerateColumns = false;
             dgvSeleccionados.AutoGenerateColumns = false;
+
+            AsignarEventosPlaceholder();
         }
 
         private void FormAccesoAM_08YS_Load(object sender, EventArgs e)
@@ -76,6 +80,8 @@ namespace GUI_08YS.Admin
         #region idiomas
         public void UpdateIdioma()
         {
+            _hintNombre = TraductorManager_08YS.Instance.GetTexto("txtNombreAcceso_hint");
+
             TraducirControles(this);
             string claveOperacion = _operacion == OperacionAM.Alta ? "Operacion_Alta" : "Operacion_Modificacion";
             string claveEntidad = _tipo == TipoEntidad.Familia ? "Entidad_Familia" : "Entidad_Rol";
@@ -87,6 +93,12 @@ namespace GUI_08YS.Admin
             lblTitulo.Text = $"{operacionTraducida} {entidadTraducida}";
 
             TraducirColumnas();
+
+            if (_nombreTienePlaceholder)
+            {
+                txtNombre.Text = _hintNombre;
+                txtNombre.ForeColor = Color.DarkGray;
+            }
         }
 
         private void TraducirColumnas()
@@ -123,6 +135,7 @@ namespace GUI_08YS.Admin
         {
             foreach (Control c in contenedor.Controls)
             {
+                if (c == txtNombre) continue;
                 // Si el control tiene un Tag asignado, buscamos su traducción
                 if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
                 {
@@ -152,8 +165,38 @@ namespace GUI_08YS.Admin
 
             if (_operacion == OperacionAM.Modificacion)
                 txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;
+            else
+            {
+                // Si es alta, el estado inicial es verdadero
+                _nombreTienePlaceholder = true;
+            }
+        }
+        #region Lógica del Placeholder
+
+        private void AsignarEventosPlaceholder()
+        {
+            txtNombre.Enter += (s, e) =>
+            {
+                if (_nombreTienePlaceholder)
+                {
+                    txtNombre.Text = "";
+                    txtNombre.ForeColor = Color.White;
+                    _nombreTienePlaceholder = false;
+                }
+            };
+
+            txtNombre.Leave += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(txtNombre.Text))
+                {
+                    txtNombre.Text = _hintNombre;
+                    txtNombre.ForeColor = Color.DarkGray;
+                    _nombreTienePlaceholder = true;
+                }
+            };
         }
 
+        #endregion
         #region Datagrids
 
         private void CargarDatos()
@@ -333,7 +376,7 @@ namespace GUI_08YS.Admin
         {
             try
             {
-                string nombre = txtNombre.Text.Trim();
+                string nombre = _nombreTienePlaceholder ? string.Empty : txtNombre.Text.Trim();
 
                 if (_tipo == TipoEntidad.Familia)
                 {
