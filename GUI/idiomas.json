@@ -176,8 +176,8 @@
 
         "idioma_es": "Español",
         "idioma_en": "Inglés",
-        "txtUsername_hint": "Ingrese nombre de usuario...",
-        "txtPassword_hint": "Ingrese contraseña...",
+        "txtUsername_hint": "Ingrese nombre de usuario",
+        "txtPassword_hint": "Ingrese contraseña",
 
         "txtPwdActual_hint": "Ingrese su contraseña actual",
         "txtPwdNueva_hint": "Ingrese su nueva contraseña",
@@ -364,8 +364,8 @@
 
         "idioma_es": "Spanish",
         "idioma_en": "English",
-        "txtUsername_hint": "Enter your username...",
-        "txtPassword_hint": "Enter your password...",
+        "txtUsername_hint": "Enter your username",
+        "txtPassword_hint": "Enter your password",
 
         "txtPwdActual_hint": "Enter your current password",
         "txtPwdNueva_hint": "Enter your new password",

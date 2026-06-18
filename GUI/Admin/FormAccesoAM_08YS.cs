@@ -65,8 +65,6 @@ namespace GUI_08YS.Admin
 
             dgvDisponibles.AutoGenerateColumns = false;
             dgvSeleccionados.AutoGenerateColumns = false;
-
-            AsignarEventosPlaceholder();
         }
 
         private void FormAccesoAM_08YS_Load(object sender, EventArgs e)
@@ -80,25 +78,18 @@ namespace GUI_08YS.Admin
         #region idiomas
         public void UpdateIdioma()
         {
-            _hintNombre = TraductorManager_08YS.Instance.GetTexto("txtNombreAcceso_hint");
-
             TraducirControles(this);
             string claveOperacion = _operacion == OperacionAM.Alta ? "Operacion_Alta" : "Operacion_Modificacion";
             string claveEntidad = _tipo == TipoEntidad.Familia ? "Entidad_Familia" : "Entidad_Rol";
-
             string operacionTraducida = TraductorManager_08YS.Instance.GetTexto(claveOperacion);
             string entidadTraducida = TraductorManager_08YS.Instance.GetTexto(claveEntidad);
 
             // Asignamos al Label del título respetando el idioma actual
             lblTitulo.Text = $"{operacionTraducida} {entidadTraducida}";
 
-            TraducirColumnas();
+            txtNombre.PlaceholderText = TraductorManager_08YS.Instance.GetTexto("txtNombreAcceso_hint");
 
-            if (_nombreTienePlaceholder)
-            {
-                txtNombre.Text = _hintNombre;
-                txtNombre.ForeColor = Color.DarkGray;
-            }
+            TraducirColumnas();
         }
 
         private void TraducirColumnas()
@@ -171,32 +162,7 @@ namespace GUI_08YS.Admin
                 _nombreTienePlaceholder = true;
             }
         }
-        #region Lógica del Placeholder
-
-        private void AsignarEventosPlaceholder()
-        {
-            txtNombre.Enter += (s, e) =>
-            {
-                if (_nombreTienePlaceholder)
-                {
-                    txtNombre.Text = "";
-                    txtNombre.ForeColor = Color.White;
-                    _nombreTienePlaceholder = false;
-                }
-            };
-
-            txtNombre.Leave += (s, e) =>
-            {
-                if (string.IsNullOrWhiteSpace(txtNombre.Text))
-                {
-                    txtNombre.Text = _hintNombre;
-                    txtNombre.ForeColor = Color.DarkGray;
-                    _nombreTienePlaceholder = true;
-                }
-            };
-        }
-
-        #endregion
+        
         #region Datagrids
 
         private void CargarDatos()
@@ -483,7 +449,7 @@ namespace GUI_08YS.Admin
 
         #endregion
 
-        private class ComponentRow
+        private class ComponentRow //clase auxiliar para mostrar componentes en el dgv debido a autogenerate columns false manteniendo control sobre las columnas y un acceso al objeto original
         {
             public AccessComponent_08YS Componente { get; }
             public string Nombre => Componente.Nombre;

@@ -332,13 +332,7 @@ namespace GUI_08YS
 
         private void ReLoginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            FormLogin_08YS frmRelogin = new FormLogin_08YS();
-
-
-            frmRelogin.ModoRelogin = true;
-
-
+            FormLogin_08YS frmRelogin = new FormLogin_08YS(true);
             frmRelogin.ShowDialog();
         }
 

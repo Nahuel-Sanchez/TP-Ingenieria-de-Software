@@ -20,19 +20,21 @@ namespace GUI_08YS
     public partial class FormLogin_08YS : Form,IIdiomaObserver_08YS
     {
         private UserBLL_08YS _userBLL;
-        public bool ModoRelogin { get; set; } = false;
+        private readonly bool ModoRelogin;
         private string _userPlaceholder = "";
         private string _passPlaceholder = "";
 
         // BANDERAS DE ESTADO: Eliminan el error de comparación de strings al cambiar de idioma
         private bool _userTienePlaceholder = true;
         private bool _passTienePlaceholder = true;
-        public FormLogin_08YS()
+        public FormLogin_08YS(bool modoRelogin = false)
         {
             InitializeComponent();
+            ModoRelogin = modoRelogin;
             _userBLL = BLLFactory_08YS.CreateUserBLL();
             ConfigurarCombo();
-
+            if (ModoRelogin)
+                IdiomaCombobox.Visible = false;
             TraductorManager_08YS.Instance.Suscribir(this);
 
             AsignarEventosPlaceholder();
@@ -240,6 +242,7 @@ namespace GUI_08YS
             _passTienePlaceholder = true;
             UpdateIdioma();
         }
+
         #region BarraSuperior
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -250,7 +253,9 @@ namespace GUI_08YS
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            Application.Exit();
+            if(ModoRelogin)
+                this.Close();
+            else Application.Exit();
         }
 
         private void button2_Click(object sender, EventArgs e)

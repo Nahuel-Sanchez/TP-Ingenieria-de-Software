@@ -772,12 +772,11 @@ namespace CustomControls
 
             int itemH = _listBox.ItemHeight;
             int listH = Math.Min(_items.Count * itemH, _dropMaxHeight);
-            int listW = Math.Max(Width, MeasureMaxItemWidth() + 12);
+            int listW = Math.Max(Width - 2, MeasureMaxItemWidth() + 10);
 
             _listBox.Width = listW;
             _listBox.Height = listH;
 
-            // borderPanel y host siguen el tamaño del listbox + 2px de borde
             var borderPanel = _listBox.Parent as Panel;
             if (borderPanel != null)
             {
@@ -789,7 +788,7 @@ namespace CustomControls
 
         private int MeasureMaxItemWidth()
         {
-            int max = Width;
+            int max = 0;   // ← antes era Width, lo que garantizaba siempre Width+12
             using (var g = CreateGraphics())
                 foreach (var item in _items)
                 {
