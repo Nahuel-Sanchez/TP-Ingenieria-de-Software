@@ -78,6 +78,9 @@
     <Compile Include="UserControls\CustomCalendarPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UserControls\CustomTimePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UserControls\IconCache.cs" />
     <Compile Include="UserControls\IconComboBox.cs">
       <SubType>UserControl</SubType>

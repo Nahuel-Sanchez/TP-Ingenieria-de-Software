@@ -28,7 +28,9 @@ namespace CustomControls
         // ──────────────────────────────────────────────────────────────────
         private PictureBox _iconPicture;
         private CustomCalendarPanel _calendar;    // ← reemplaza MonthCalendar
+        private CustomTimePanel _timePanel;
         private ToolStripDropDown _popup;
+        private ToolStripDropDown _timePopup;
 
         // ──────────────────────────────────────────────────────────────────
         // Valor
@@ -519,6 +521,13 @@ namespace CustomControls
         {
             if (_showCheckBox && !_checked) return;
 
+            // Si el formato es Time, usar el selector de hora, no el calendario
+            if (_format == DateTimePickerFormat.Time)
+            {
+                ToggleTimePopup();
+                return;
+            }
+
             if (_popup == null || _popup.IsDisposed)
                 BuildPopup();
 
@@ -544,6 +553,33 @@ namespace CustomControls
 
                 _popup.Show(showAt);
                 _calendar.Focus();
+                _calendarOpen = true;
+                _isFocused = true;
+                Invalidate();
+            }
+        }
+
+        private void ToggleTimePopup()
+        {
+            if (_timePopup == null || _timePopup.IsDisposed)
+                BuildTimePopup();
+
+            if (_timePopup.Visible)
+            {
+                _timePopup.Close();
+            }
+            else
+            {
+                DateTime safeTime = _value ?? DateTime.Now;
+                _timePanel.SetTime(safeTime);
+
+                Point showAt = PointToScreen(new Point(0, Height));
+                int popH = _timePanel.Height + 4;
+                if (showAt.Y + popH > Screen.FromControl(this).WorkingArea.Bottom)
+                    showAt = PointToScreen(new Point(0, -popH));
+
+                _timePopup.Show(showAt);
+                _timePanel.Focus();
                 _calendarOpen = true;
                 _isFocused = true;
                 Invalidate();
@@ -608,27 +644,94 @@ namespace CustomControls
             };
         }
 
+        private void BuildTimePopup()
+        {
+            _timePanel = new CustomTimePanel
+            {
+                Font = new Font("Segoe UI", 9f)
+            };
+            ApplyCalendarColors(); // ya propaga colores al _timePanel (ver paso 6)
+
+            _timePanel.TimeAccepted += (s, e) =>
+            {
+                DateTime baseDate = _value?.Date ?? DateTime.Today;
+                DateTime newValue = baseDate
+                    .AddHours(_timePanel.Hour)
+                    .AddMinutes(_timePanel.Minute)
+                    .AddSeconds(_timePanel.ShowSeconds ? _timePanel.Second : 0);
+
+                _value = newValue;
+                _checked = true;
+                _timePopup.Close();
+                Invalidate();
+                ValueChanged?.Invoke(this, EventArgs.Empty);
+            };
+
+            var host = new ToolStripControlHost(_timePanel)
+            {
+                Padding = Padding.Empty,
+                Margin = Padding.Empty,
+                AutoSize = false,
+                Size = _timePanel.PreferredSize
+            };
+
+            _timePopup = new ToolStripDropDown
+            {
+                Padding = Padding.Empty,
+                AutoSize = false,
+                Size = _timePanel.PreferredSize,
+                BackColor = _calBackColor
+            };
+            _timePopup.Items.Add(host);
+
+            _timePopup.Closed += (s, e) =>
+            {
+                _calendarOpen = false;
+                _isFocused = ContainsFocus;
+                Invalidate();
+            };
+        }
+
         private void ApplyCalendarColors()
         {
-            if (_calendar == null) return;
-            _calendar.BackColor = _calBackColor;
-            _calendar.ForeColor = _calForeColor;
-            _calendar.TitleBackColor = _calTitleBackColor;
-            _calendar.TitleForeColor = _calTitleForeColor;
-            _calendar.TrailingForeColor = _calTrailingForeColor;
-            _calendar.DayForeColor = _calForeColor;
-            _calendar.FooterForeColor = _calForeColor;
-            _calendar.DayNameForeColor = Color.FromArgb(
-                Math.Max(0, _calForeColor.R - 40),
-                Math.Max(0, _calForeColor.G - 40),
-                Math.Max(0, _calForeColor.B - 40));
-            _calendar.SeparatorColor = Color.FromArgb(
-                Math.Min(255, _calBackColor.R + 30),
-                Math.Min(255, _calBackColor.G + 30),
-                Math.Min(255, _calBackColor.B + 30));
+            if (_calendar != null)
+            {
+                _calendar.BackColor = _calBackColor;
+                _calendar.ForeColor = _calForeColor;
+                _calendar.TitleBackColor = _calTitleBackColor;
+                _calendar.TitleForeColor = _calTitleForeColor;
+                _calendar.TrailingForeColor = _calTrailingForeColor;
+                _calendar.DayForeColor = _calForeColor;
+                _calendar.FooterForeColor = _calForeColor;
+                _calendar.DayNameForeColor = Color.FromArgb(
+                    Math.Max(0, _calForeColor.R - 40),
+                    Math.Max(0, _calForeColor.G - 40),
+                    Math.Max(0, _calForeColor.B - 40));
+                _calendar.SeparatorColor = Color.FromArgb(
+                    Math.Min(255, _calBackColor.R + 30),
+                    Math.Min(255, _calBackColor.G + 30),
+                    Math.Min(255, _calBackColor.B + 30));
 
-            if (_popup != null)
-                _popup.BackColor = _calBackColor;
+                if (_popup != null)
+                    _popup.BackColor = _calBackColor;
+            }
+
+            if (_timePanel != null)
+            {
+                _timePanel.BackColor = _calBackColor;
+                _timePanel.ForeColor = _calForeColor;
+                _timePanel.TitleBackColor = _calTitleBackColor;
+                _timePanel.TitleForeColor = _calTitleForeColor;
+                _timePanel.AccentColor = _calTitleBackColor;
+                _timePanel.AccentForeColor = _calTitleForeColor;
+                _timePanel.SeparatorColor = Color.FromArgb(
+                    Math.Min(255, _calBackColor.R + 30),
+                    Math.Min(255, _calBackColor.G + 30),
+                    Math.Min(255, _calBackColor.B + 30));
+
+                if (_timePopup != null)
+                    _timePopup.BackColor = _calBackColor;
+            }
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -697,9 +800,9 @@ namespace CustomControls
             if (!_value.HasValue) return string.Empty;
             switch (_format)
             {
-                case DateTimePickerFormat.Long: return _value.Value.ToLongDateString();
-                case DateTimePickerFormat.Short: return _value.Value.ToShortDateString();
-                case DateTimePickerFormat.Time: return _value.Value.ToShortTimeString();
+                case DateTimePickerFormat.Long:   return _value.Value.ToLongDateString();
+                case DateTimePickerFormat.Short:  return _value.Value.ToShortDateString();
+                case DateTimePickerFormat.Time: return _value.Value.ToString("HH:mm:ss");
                 case DateTimePickerFormat.Custom: return _value.Value.ToString(_customFormat);
                 default: return _value.Value.ToShortDateString();
             }
@@ -720,6 +823,7 @@ namespace CustomControls
             if (disposing)
             {
                 _popup?.Dispose();
+                _timePopup?.Dispose();
             }
             base.Dispose(disposing);
         }
