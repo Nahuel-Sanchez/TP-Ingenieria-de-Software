@@ -125,14 +125,28 @@ namespace CustomControls
         // ══════════════════════════════════════════════════════════════════
 
         [Category("Data")]
-        [Description("Fecha seleccionada. Null si no hay valor.")]
+        [Description("Fecha seleccionada. Null si no hay valor. En Format=Time, la fecha siempre se normaliza a hoy.")]
         public DateTime? Value
         {
-            get => _value;
+            get
+            {
+                // En modo Time la fecha no importa: siempre se devuelve con la fecha de hoy,
+                // así el consumidor del control nunca tiene que pensar en eso.
+                if (_format == DateTimePickerFormat.Time && _value.HasValue)
+                    return DateTime.Today.Add(_value.Value.TimeOfDay);
+                return _value;
+            }
             set
             {
-                DateTime? clamped = value.HasValue
-                    ? Clamp(value.Value, _minDate, _maxDate)
+                DateTime? incoming = value;
+
+                // Si estamos en modo Time, descartamos cualquier fecha que venga
+                // y nos quedamos solo con la hora, pegada a la fecha de hoy.
+                if (_format == DateTimePickerFormat.Time && incoming.HasValue)
+                    incoming = DateTime.Today.Add(incoming.Value.TimeOfDay);
+
+                DateTime? clamped = incoming.HasValue
+                    ? Clamp(incoming.Value, _minDate, _maxDate)
                     : (DateTime?)null;
                 if (clamped == _value) return;
                 _value = clamped;
@@ -173,7 +187,18 @@ namespace CustomControls
         public DateTimePickerFormat Format
         {
             get => _format;
-            set { _format = value; Invalidate(); }
+            set
+            {
+                _format = value;
+
+                // Si pasamos a modo Time y ya había un valor con una fecha real
+                // cargada (ej. proviene de Format=Short), descartamos esa fecha
+                // y dejamos solo la hora, pegada a hoy.
+                if (_format == DateTimePickerFormat.Time && _value.HasValue)
+                    _value = DateTime.Today.Add(_value.Value.TimeOfDay);
+
+                Invalidate();
+            }
         }
 
         [Category("Data")]
@@ -182,6 +207,25 @@ namespace CustomControls
         {
             get => _customFormat;
             set { _customFormat = value ?? "dd/MM/yyyy"; Invalidate(); }
+        }
+
+        /// <summary>
+        /// Solo la porción de hora/minuto/segundo del valor actual, sin fecha.
+        /// Pensada para usar cuando Format = Time. Null si no hay valor.
+        /// </summary>
+        [Browsable(false)]
+        public TimeSpan? TimeValue
+        {
+            get => Value?.TimeOfDay;
+            set
+            {
+                if (!value.HasValue)
+                {
+                    Value = null;
+                    return;
+                }
+                Value = DateTime.Today.Add(value.Value);
+            }
         }
 
         // ══════════════════════════════════════════════════════════════════

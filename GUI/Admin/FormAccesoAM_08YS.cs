@@ -37,8 +37,6 @@ namespace GUI_08YS.Admin
         // Evita cascada de eventos entre los dos dgv durante refreshes
         private bool _actualizandoSeleccion = false;
 
-        private string _hintNombre = "";
-        private bool _nombreTienePlaceholder = true;
         private AccesoBLL_08YS BLL => _tipo == TipoEntidad.Familia
                ? (AccesoBLL_08YS)_familiaBLL
                :            _rolBLL;
@@ -156,11 +154,6 @@ namespace GUI_08YS.Admin
 
             if (_operacion == OperacionAM.Modificacion)
                 txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;
-            else
-            {
-                // Si es alta, el estado inicial es verdadero
-                _nombreTienePlaceholder = true;
-            }
         }
         
         #region Datagrids
@@ -342,21 +335,33 @@ namespace GUI_08YS.Admin
         {
             try
             {
-                string nombre = _nombreTienePlaceholder ? string.Empty : txtNombre.Text.Trim();
+                string nombre = txtNombre.Text.Trim();
 
                 if (_tipo == TipoEntidad.Familia)
                 {
                     if (_operacion == OperacionAM.Alta)
+                    {
                         _familiaBLL.Crear(nombre, _seleccionados);
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_familia_creada_exito"), TraductorManager_08YS.Instance.GetTexto("exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                     else
+                    {
                         _familiaBLL.Modificar(_familiaAEditar.FamiliaID, nombre, _seleccionados);
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_familia_modificada_exito"), TraductorManager_08YS.Instance.GetTexto("exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {
                     if (_operacion == OperacionAM.Alta)
+                    {
                         _rolBLL.Crear(nombre, _seleccionados);
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_rol_creado_exito"), TraductorManager_08YS.Instance.GetTexto("exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                     else
+                    {
                         _rolBLL.Modificar(_rolAEditar.RolID, nombre, _seleccionados);
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_rol_modificado_exito"), TraductorManager_08YS.Instance.GetTexto("exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
 
                 _onGuardado?.Invoke();

@@ -311,7 +311,7 @@
             this.dgvDisponibles.EnableHeadersVisualStyles = false;
             this.dgvDisponibles.GridColor = System.Drawing.Color.Goldenrod;
             this.dgvDisponibles.Location = new System.Drawing.Point(8, 44);
-            this.dgvDisponibles.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvDisponibles.Margin = new System.Windows.Forms.Padding(4);
             this.dgvDisponibles.MultiSelect = false;
             this.dgvDisponibles.Name = "dgvDisponibles";
             this.dgvDisponibles.ReadOnly = true;
@@ -496,7 +496,7 @@
             this.dgvSeleccionados.EnableHeadersVisualStyles = false;
             this.dgvSeleccionados.GridColor = System.Drawing.Color.Goldenrod;
             this.dgvSeleccionados.Location = new System.Drawing.Point(15, 44);
-            this.dgvSeleccionados.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvSeleccionados.Margin = new System.Windows.Forms.Padding(4);
             this.dgvSeleccionados.MultiSelect = false;
             this.dgvSeleccionados.Name = "dgvSeleccionados";
             this.dgvSeleccionados.ReadOnly = true;
@@ -577,7 +577,7 @@
             this.lblDescripcion.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.lblDescripcion.Location = new System.Drawing.Point(15, 42);
             this.lblDescripcion.Name = "lblDescripcion";
-            this.lblDescripcion.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.lblDescripcion.Padding = new System.Windows.Forms.Padding(5);
             this.lblDescripcion.Size = new System.Drawing.Size(150, 41);
             this.lblDescripcion.TabIndex = 8;
             this.lblDescripcion.Tag = "lblDescripcion";
