@@ -14,23 +14,27 @@ namespace BLL_08YS
     {
         private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly IFamiliaRepository_08YS _familiaRepo;
+        private readonly IRolRepository_08YS _rolRepo;
 
-        public FamiliaBLL_08YS(IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
+        public FamiliaBLL_08YS(IFamiliaRepository_08YS familiaRepo, IRolRepository_08YS rolRepo, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
         {
             _familiaRepo = familiaRepo;
             _bitacoraBll = bitacoraBll;
+            _rolRepo = rolRepo;
         }
 
-        public List<Familia_08YS> GetAll() => _familiaRepo.GetAll();
+        public List<Familia_08YS> GetAll() => _familiaRepo.GetAllRoots();
 
-        // FormAM lado derecho (disponibles):
-        // familiaIdExcluir null  → Alta: sin exclusiones por ciclos
-        // familiaIdExcluir int   → Modificacion: excluye la familia actual + sus contenedoras
-        // Los ya seleccionados (DGV izquierdo) los filtra la GUI quitándolos del DGV derecho
+        /// <summary>
+        /// FormAM lado derecho (disponibles):
+        /// <para>familiaIdExcluir null  → Alta: sin exclusiones por ciclos</para>
+        /// <para>familiaIdExcluir int   → Modificacion: excluye la familia actual + sus contenedoras</para>
+        /// <para>Los ya asignados (DGV izquierdo) los filtra la GUI quitándolos del DGV derecho</para>
+        /// </summary>
         public List<AccessComponent_08YS> GetComponentesDisponibles(int? familiaIdExcluir = null)
         {
             var permisos = _permisoRepo.GetAll().Cast<AccessComponent_08YS>();
-            var familias = _familiaRepo.GetAll().Cast<AccessComponent_08YS>().ToList();
+            var familias = _familiaRepo.GetAllRoots().Cast<AccessComponent_08YS>().ToList();
 
             if (familiaIdExcluir.HasValue)
             {
@@ -99,6 +103,7 @@ namespace BLL_08YS
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(nombre, componentes, null);
+
             SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearFamilias);
             _familiaRepo.Create(nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.FamiliaCreada);
@@ -108,9 +113,102 @@ namespace BLL_08YS
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(nombre, componentes, familiaId);
+            ValidarPropagacion(familiaId, componentes);
+
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarFamilias);
             _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.FamiliaModificada);
+        }
+
+        /// <summary>
+        /// Verifica que modificar esta familia no genere permisos duplicados en
+        /// ningún contenedor (familia o rol) que dependa de ella, directa o transitivamente.
+        /// </summary>
+        private void ValidarPropagacion(int familiaId, HashSet<AccessComponent_08YS> nuevaComposicion)
+        {
+            var (familiaIds, rolIds) = _familiaRepo.GetAncestors(familiaId);
+
+            if (!familiaIds.Any() && !rolIds.Any())
+                return;
+
+            var familiasDict = _familiaRepo.GetAllDictionary();
+
+            if (familiasDict.TryGetValue(familiaId, out var familiaEditada))
+                familiaEditada.ReemplazarHijos(nuevaComposicion);
+
+            var conflictos = new List<string>();
+
+            string plantillaConflictoLinea = TraductorManager_08YS.Instance.GetTexto("bll_propagacion_conflicto_linea");
+
+            foreach (int fid in familiaIds)
+                if (familiasDict.TryGetValue(fid, out var f))
+                    conflictos.AddRange(
+                        DetectarConflictosEntreHijos(f.Nombre, "Familia", f.Hijos, plantillaConflictoLinea));
+
+            if (rolIds.Any())
+            {
+                var rolesAfectados = _rolRepo.GetAll(familiasDict)
+                    .Where(r => rolIds.Contains(r.RolID));
+
+                foreach (var r in rolesAfectados)
+                    conflictos.AddRange(
+                        DetectarConflictosEntreHijos(r.Nombre, "Rol", r.Componentes, plantillaConflictoLinea));
+            }
+
+            if (conflictos.Any())
+            {
+                string plantillaEncabezado = TraductorManager_08YS.Instance.GetTexto("bll_propagacion_conflicto_encabezado");
+                throw new InvalidOperationException(
+                    plantillaEncabezado + "\n\n" + string.Join("\n", conflictos));
+            }
+        }
+
+        private List<string> DetectarConflictosEntreHijos(
+            string nombreContenedor, string tipo,
+            IReadOnlyList<AccessComponent_08YS> hijos, string plantillaLinea)
+        {
+            var resultado = new List<string>();
+
+            // ── PASO 1: Precalculo ──────────────────────────────────────────────────
+            // Por cada hijo, recorremos una unica vez todo su árbol con GetPermisos()
+            // y guardamos el resultado (solo los IDs, no los objetos completos) en un
+            // diccionario. Usamos el objeto AccessComponent_08YS como clave porque acá
+            // todos son instancias reales de la misma lista (no copias), entonces la
+            // igualdad por referencia que usa Dictionary lo resuelve con ese objeto concreto".
+            var permisosPorHijo = hijos.ToDictionary(
+                hijo => hijo,
+                hijo => hijo.GetPermisos()
+                            .Select(p => p.PermisoID)
+                            .ToHashSet());
+
+            // ── PASO 2: Comparación par a par ────────────────────────────────────────
+            // Recorremos todos los pares posibles (i, j) sin repetir combinaciones.
+            // j siempre arranca en i+1 para no comparar un hijo consigo mismo
+            // ni repetir el par (B,A) si ya comparamos (A,B).
+            for (int i = 0; i < hijos.Count; i++)
+            {
+                for (int j = i + 1; j < hijos.Count; j++)
+                {
+                    var hijoA = hijos[i];
+                    var hijoB = hijos[j];
+
+                    // Buscamos los HashSets ya calculados en el paso 1.
+                    // Esto es una lectura de diccionario (O(1)), no un recorrido.
+                    var permisosA = permisosPorHijo[hijoA];
+                    var permisosB = permisosPorHijo[hijoB];
+
+                    // Overlaps() devuelve true si hay al menos un elemento en común
+                    // entre los dos HashSets, sin necesidad de intersectarlos
+                    // completamente — corta apenas encuentra la primera coincidencia.
+                    if (permisosA.Overlaps(permisosB))
+                    {
+                        resultado.Add(
+                            string.Format(plantillaLinea, tipo, nombreContenedor, hijoA.Nombre, hijoB.Nombre));
+                    }
+                }
+            }
+
+            return resultado;
         }
 
         public void Eliminar(int familiaId)
@@ -126,7 +224,7 @@ namespace BLL_08YS
         private void ValidarFamiliaNoExistente(string nombre, HashSet<AccessComponent_08YS> componentes, int? excluirId)
         {
             var permsNuevos = componentes.SelectMany(c => c.GetPermisos()).Select(p => p.PermisoID).ToHashSet();
-            var familias = _familiaRepo.GetAll().Where(f => !excluirId.HasValue || f.FamiliaID != excluirId.Value).ToList();
+            var familias = _familiaRepo.GetAllRoots().Where(f => !excluirId.HasValue || f.FamiliaID != excluirId.Value).ToList();
 
             if (familias.Any(f => f.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
                 throw new NombreDuplicadoException_08YS();

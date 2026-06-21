@@ -228,6 +228,10 @@ namespace CustomControls
             }
         }
 
+        /// <summary>Hora formateada como "HH:mm:ss". String.Empty si no hay valor.</summary>
+        [Browsable(false)]
+        public string TimeText => Value.HasValue ? Value.Value.ToString("HH:mm:ss") : string.Empty;
+
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES: ÍCONO ────────────────────────────────────────────
         // ══════════════════════════════════════════════════════════════════

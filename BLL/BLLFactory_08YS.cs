@@ -33,10 +33,12 @@ namespace BLL_08YS
         public static FamiliaBLL_08YS CreateFamiliaBLL()
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
-            IFamiliaRepository_08YS familiaRepo = new SqlFamiliaRepository_08YS(factory);
-            IPermisoRepository_08YS permisoRepo = new SqlPermisoRepository_08YS(factory);
-            BitacoraBLL_08YS bitacoraBll = CreateBitacoraBLL();
-            return new FamiliaBLL_08YS(familiaRepo, permisoRepo, bitacoraBll);
+            return new FamiliaBLL_08YS(
+                       new SqlFamiliaRepository_08YS(factory),
+                       new SqlRolRepository_08YS(factory),
+                       new SqlPermisoRepository_08YS(factory),
+                       CreateBitacoraBLL()
+                   );
         }
 
         public static RolBLL_08YS CreateRolBLL()

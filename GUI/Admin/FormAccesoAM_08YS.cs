@@ -120,22 +120,27 @@ namespace GUI_08YS.Admin
             }
         }
 
+        private static readonly Type[] _tiposTraducibles =
+        {
+            typeof(Label),
+            typeof(Button),
+            typeof(FontAwesome.Sharp.IconButton),
+            typeof(CheckBox),
+            typeof(RadioButton)
+        };
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
             {
-                if (c == txtNombre) continue;
+                bool esTraducible = _tiposTraducibles.Any(t => t.IsInstanceOfType(c));
                 // Si el control tiene un Tag asignado, buscamos su traducción
-                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
-                {
+                if (esTraducible && c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
                     c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
-                }
 
                 // Si el control tiene hijos (como un Panel o GroupBox), hacemos recursividad
                 if (c.HasChildren)
-                {
                     TraducirControles(c);
-                }
             }
         }
         #endregion
@@ -147,10 +152,6 @@ namespace GUI_08YS.Admin
             iconPictureBox.IconChar = esFamilia
                 ? FontAwesome.Sharp.IconChar.LayerGroup
                 : FontAwesome.Sharp.IconChar.UserShield;
-
-            //string entidad = esFamilia ? "Familia" : "Rol";
-            //string operacion = _operacion == OperacionAM.Alta ? "Crear" : "Modificar";
-            //lblTitulo.Text = $"{operacion} {entidad}";
 
             if (_operacion == OperacionAM.Modificacion)
                 txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;

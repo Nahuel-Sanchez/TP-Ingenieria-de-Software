@@ -17,6 +17,14 @@ namespace Service_08YS.Entities.Acceso
         public void Agregar(AccessComponent_08YS c) => _hijos.Add(c);
         public void Quitar(AccessComponent_08YS c) => _hijos.Remove(c);
 
+        // Usado exclusivamente por la validacion de propagacion en FamiliaBLL,
+        // para simular en memoria el resultado de una edición antes de persistirla.
+        public void ReemplazarHijos(IEnumerable<AccessComponent_08YS> nuevos)
+        {
+            _hijos.Clear();
+            _hijos.AddRange(nuevos);
+        }
+
         public override HashSet<Permiso_08YS> GetPermisos()
         {
             var resultado = new HashSet<Permiso_08YS>(PermisoComparer.Instance);

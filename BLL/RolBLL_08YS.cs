@@ -33,7 +33,7 @@ namespace BLL_08YS
         public List<AccessComponent_08YS> GetComponentesDisponibles()
         {
             var permisos = _permisoRepo.GetAll().Cast<AccessComponent_08YS>();
-            var familias = _familiaRepo.GetAll().Cast<AccessComponent_08YS>();
+            var familias = _familiaRepo.GetAllRoots().Cast<AccessComponent_08YS>();
             return permisos.Concat(familias).ToList();
         }
 

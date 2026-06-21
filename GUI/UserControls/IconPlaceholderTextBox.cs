@@ -503,19 +503,17 @@ namespace CustomControls
             int padX = bw + 3;
             bool hasIconLeft = _iconChar != IconChar.None && _iconAlign == IconTextBoxAlignment.Left;
             bool hasIconRight = _iconCharRight != IconChar.None;
-            // ícono principal en posición derecha (modo antiguo)
             bool hasIconMainRight = _iconChar != IconChar.None && _iconAlign == IconTextBoxAlignment.Right;
 
             int iconWLeft = hasIconLeft ? (_iconSize + _iconPadding * 2) : 0;
             int iconWRight = hasIconRight ? (_iconSizeRight + _iconPaddingRight * 2) : 0;
-            // si el ícono principal está a la derecha y no hay ícono derecho independiente, ocupa ese espacio
-            int iconWMainRight = hasIconMainRight && !hasIconRight
-                ? (_iconSize + _iconPadding * 2)
-                : 0;
+            // ✅ ancho del ícono principal cuando está a la derecha, sin importar
+            // si también hay ícono derecho independiente — los dos deben sumar espacio
+            int iconWMainRight = hasIconMainRight ? (_iconSize + _iconPadding * 2) : 0;
 
             int leftOffset = hasIconLeft ? iconWLeft : _textLeftPadding;
-            int rightReserved = Math.Max(iconWRight, iconWMainRight);
-
+            int rightReserved = iconWRight + iconWMainRight;
+            
             int textX = padX + leftOffset;
             int textW = Width - textX - rightReserved - padX;
 
@@ -659,7 +657,7 @@ namespace CustomControls
 
             // ── TextBox ────────────────────────────────────────────────────────
             int leftStart = iconMainIsLeft ? (padX - 2 + iconWMain) : (padX + _textLeftPadding);
-            int rightReserved = iconWRight > 0 ? iconWRight : (iconMainIsRight ? iconWMain : 0);
+            int rightReserved = iconWRight + (iconMainIsRight ? iconWMain : 0);
             int tbW = Width - leftStart - rightReserved - padX;
 
             _innerTextBox.Location = new Point(leftStart, tbTop);

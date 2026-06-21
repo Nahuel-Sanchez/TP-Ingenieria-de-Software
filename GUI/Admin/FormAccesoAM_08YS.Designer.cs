@@ -222,7 +222,6 @@
             this.txtNombre.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtNombre.Size = new System.Drawing.Size(1307, 50);
             this.txtNombre.TabIndex = 69;
-            this.txtNombre.Tag = "txtNombreAcceso";
             this.txtNombre.TextLeftPadding = 20;
             // 
             // lblNombre
@@ -580,7 +579,6 @@
             this.lblDescripcion.Padding = new System.Windows.Forms.Padding(5);
             this.lblDescripcion.Size = new System.Drawing.Size(150, 41);
             this.lblDescripcion.TabIndex = 8;
-            this.lblDescripcion.Tag = "lblDescripcion";
             this.lblDescripcion.Text = "Descripcion";
             this.lblDescripcion.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.lblDescripcion.Visible = false;

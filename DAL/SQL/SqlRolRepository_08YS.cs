@@ -23,29 +23,28 @@ namespace DAL_08YS.SQL
          
             return AccessMapper_08YS.RolesPlanosFromTable(dt);
         }
-        public List<Rol_08YS> GetAll()
+
+        public List<Rol_08YS> GetAll(Dictionary<int, Familia_08YS> familiasCompartidas = null)
         {
             DataSet ds = GetDataSet("sp_GetAllRolesConEstructura", storedProcedure: true);
 
-            // RS3 y RS4 en el SP original → misma firma que EnsamblarFamilias
-            var familias = AccessMapper_08YS.EnsamblarFamilias(ds.Tables[3], ds.Tables[4]);
+            // Si se pasa un diccionario compartido, lo reutiliza en lugar de crear
+            // instancias nuevas — necesario para que las mutaciones de validación
+            // se propaguen correctamente entre Familia y Rol.
+            var familias = familiasCompartidas
+                ?? AccessMapper_08YS.EnsamblarFamilias(ds.Tables[3], ds.Tables[4]);
 
             var roles = ds.Tables[0].AsEnumerable()
                 .ToDictionary(
                     r => Convert.ToInt32(r["RolID"]),
-                    r => new Rol_08YS
-                    {
-                        RolID = Convert.ToInt32(r["RolID"]),
-                        Nombre = r["Nombre"].ToString()
-                    });
+                    r => new Rol_08YS { RolID = Convert.ToInt32(r["RolID"]), Nombre = r["Nombre"].ToString() });
 
             foreach (DataRow row in ds.Tables[1].Rows)
             {
                 int rolId = Convert.ToInt32(row["RolID"]);
                 int familiaId = Convert.ToInt32(row["FamiliaID"]);
-                if (roles.TryGetValue(rolId, out var rol) &&
-                    familias.TryGetValue(familiaId, out var familia))
-                    rol.Agregar(familia);
+                if (roles.TryGetValue(rolId, out var rol) && familias.TryGetValue(familiaId, out var f))
+                    rol.Agregar(f);
             }
 
             foreach (DataRow row in ds.Tables[2].Rows)

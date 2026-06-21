@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblCriticidad = new System.Windows.Forms.Label();
             this.lblFechaFin = new System.Windows.Forms.Label();
             this.lblEvento = new System.Windows.Forms.Label();
@@ -62,9 +62,10 @@
             this.lblCriticidad.BackColor = System.Drawing.Color.Transparent;
             this.lblCriticidad.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCriticidad.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblCriticidad.Location = new System.Drawing.Point(12, 669);
+            this.lblCriticidad.Location = new System.Drawing.Point(16, 823);
+            this.lblCriticidad.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCriticidad.Name = "lblCriticidad";
-            this.lblCriticidad.Size = new System.Drawing.Size(109, 26);
+            this.lblCriticidad.Size = new System.Drawing.Size(142, 32);
             this.lblCriticidad.TabIndex = 43;
             this.lblCriticidad.Tag = "lblCriticidad";
             this.lblCriticidad.Text = "Criticidad:";
@@ -74,9 +75,10 @@
             this.lblFechaFin.BackColor = System.Drawing.Color.Transparent;
             this.lblFechaFin.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFechaFin.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblFechaFin.Location = new System.Drawing.Point(841, 584);
+            this.lblFechaFin.Location = new System.Drawing.Point(1121, 719);
+            this.lblFechaFin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFechaFin.Name = "lblFechaFin";
-            this.lblFechaFin.Size = new System.Drawing.Size(113, 24);
+            this.lblFechaFin.Size = new System.Drawing.Size(151, 30);
             this.lblFechaFin.TabIndex = 42;
             this.lblFechaFin.Tag = "lblHasta";
             this.lblFechaFin.Text = "Hasta:";
@@ -87,9 +89,10 @@
             this.lblEvento.BackColor = System.Drawing.Color.Transparent;
             this.lblEvento.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEvento.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblEvento.Location = new System.Drawing.Point(421, 582);
+            this.lblEvento.Location = new System.Drawing.Point(561, 716);
+            this.lblEvento.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblEvento.Name = "lblEvento";
-            this.lblEvento.Size = new System.Drawing.Size(86, 26);
+            this.lblEvento.Size = new System.Drawing.Size(111, 32);
             this.lblEvento.TabIndex = 41;
             this.lblEvento.Tag = "lblEvento";
             this.lblEvento.Text = "Evento:";
@@ -100,9 +103,10 @@
             this.lblModulo.BackColor = System.Drawing.Color.Transparent;
             this.lblModulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblModulo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblModulo.Location = new System.Drawing.Point(12, 582);
+            this.lblModulo.Location = new System.Drawing.Point(16, 716);
+            this.lblModulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblModulo.Name = "lblModulo";
-            this.lblModulo.Size = new System.Drawing.Size(89, 26);
+            this.lblModulo.Size = new System.Drawing.Size(116, 32);
             this.lblModulo.TabIndex = 40;
             this.lblModulo.Tag = "lblModulo";
             this.lblModulo.Text = "Modulo:";
@@ -112,9 +116,10 @@
             this.lblFechaIni.BackColor = System.Drawing.Color.Transparent;
             this.lblFechaIni.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFechaIni.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblFechaIni.Location = new System.Drawing.Point(841, 517);
+            this.lblFechaIni.Location = new System.Drawing.Point(1121, 636);
+            this.lblFechaIni.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFechaIni.Name = "lblFechaIni";
-            this.lblFechaIni.Size = new System.Drawing.Size(168, 24);
+            this.lblFechaIni.Size = new System.Drawing.Size(224, 30);
             this.lblFechaIni.TabIndex = 39;
             this.lblFechaIni.Tag = "lblDesde";
             this.lblFechaIni.Text = "Desde:";
@@ -125,9 +130,10 @@
             this.lblLogin.BackColor = System.Drawing.Color.Transparent;
             this.lblLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLogin.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblLogin.Location = new System.Drawing.Point(12, 489);
+            this.lblLogin.Location = new System.Drawing.Point(16, 602);
+            this.lblLogin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLogin.Name = "lblLogin";
-            this.lblLogin.Size = new System.Drawing.Size(119, 26);
+            this.lblLogin.Size = new System.Drawing.Size(152, 32);
             this.lblLogin.TabIndex = 38;
             this.lblLogin.Tag = "";
             this.lblLogin.Text = "Username:";
@@ -139,11 +145,11 @@
             this.iconPictureBox1.IconChar = FontAwesome.Sharp.IconChar.FileInvoice;
             this.iconPictureBox1.IconColor = System.Drawing.Color.Goldenrod;
             this.iconPictureBox1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconPictureBox1.IconSize = 83;
-            this.iconPictureBox1.Location = new System.Drawing.Point(36, 22);
-            this.iconPictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.iconPictureBox1.IconSize = 111;
+            this.iconPictureBox1.Location = new System.Drawing.Point(48, 27);
+            this.iconPictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.iconPictureBox1.Name = "iconPictureBox1";
-            this.iconPictureBox1.Size = new System.Drawing.Size(83, 93);
+            this.iconPictureBox1.Size = new System.Drawing.Size(111, 114);
             this.iconPictureBox1.TabIndex = 53;
             this.iconPictureBox1.TabStop = false;
             // 
@@ -153,9 +159,10 @@
             this.lblTitulo.BackColor = System.Drawing.Color.Transparent;
             this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblTitulo.Location = new System.Drawing.Point(131, 22);
+            this.lblTitulo.Location = new System.Drawing.Point(175, 27);
+            this.lblTitulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(537, 64);
+            this.lblTitulo.Size = new System.Drawing.Size(672, 79);
             this.lblTitulo.TabIndex = 54;
             this.lblTitulo.Tag = "lblAuditoriaEventos";
             this.lblTitulo.Text = "Auditoria de eventos";
@@ -168,39 +175,40 @@
             this.dgvEventos.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
             this.dgvEventos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvEventos.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvEventos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvEventos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvEventos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvEventos.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvEventos.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvEventos.EnableHeadersVisualStyles = false;
             this.dgvEventos.GridColor = System.Drawing.Color.Goldenrod;
-            this.dgvEventos.Location = new System.Drawing.Point(10, 120);
+            this.dgvEventos.Location = new System.Drawing.Point(13, 148);
+            this.dgvEventos.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvEventos.MultiSelect = false;
             this.dgvEventos.Name = "dgvEventos";
             this.dgvEventos.ReadOnly = true;
             this.dgvEventos.RowHeadersVisible = false;
             this.dgvEventos.RowHeadersWidth = 51;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
-            this.dgvEventos.RowsDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(5)))), ((int)(((byte)(100)))));
+            this.dgvEventos.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvEventos.RowTemplate.Height = 30;
             this.dgvEventos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEventos.Size = new System.Drawing.Size(1070, 341);
+            this.dgvEventos.Size = new System.Drawing.Size(1427, 420);
             this.dgvEventos.TabIndex = 55;
             this.dgvEventos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvEventos_CellFormatting);
             // 
@@ -215,11 +223,11 @@
             this.btnLimpiar.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnLimpiar.IconSize = 40;
             this.btnLimpiar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLimpiar.Location = new System.Drawing.Point(654, 687);
-            this.btnLimpiar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnLimpiar.Location = new System.Drawing.Point(872, 846);
+            this.btnLimpiar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Padding = new System.Windows.Forms.Padding(4, 0, 15, 0);
-            this.btnLimpiar.Size = new System.Drawing.Size(210, 53);
+            this.btnLimpiar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnLimpiar.Size = new System.Drawing.Size(280, 65);
             this.btnLimpiar.TabIndex = 57;
             this.btnLimpiar.Tag = "btnLimpiar";
             this.btnLimpiar.Text = "Limpiar";
@@ -239,11 +247,11 @@
             this.btnFiltrar.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnFiltrar.IconSize = 40;
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(883, 687);
-            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnFiltrar.Location = new System.Drawing.Point(1177, 846);
+            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnFiltrar.Name = "btnFiltrar";
-            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(4, 0, 15, 0);
-            this.btnFiltrar.Size = new System.Drawing.Size(210, 53);
+            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnFiltrar.Size = new System.Drawing.Size(280, 65);
             this.btnFiltrar.TabIndex = 58;
             this.btnFiltrar.Tag = "btnFiltrar";
             this.btnFiltrar.Text = "Filtrar";
@@ -263,11 +271,11 @@
             this.btnExportar.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnExportar.IconSize = 38;
             this.btnExportar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExportar.Location = new System.Drawing.Point(425, 687);
-            this.btnExportar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnExportar.Location = new System.Drawing.Point(567, 846);
+            this.btnExportar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExportar.Name = "btnExportar";
-            this.btnExportar.Padding = new System.Windows.Forms.Padding(4, 0, 15, 0);
-            this.btnExportar.Size = new System.Drawing.Size(210, 53);
+            this.btnExportar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnExportar.Size = new System.Drawing.Size(280, 65);
             this.btnExportar.TabIndex = 59;
             this.btnExportar.Tag = "btnExportar";
             this.btnExportar.Text = "Exportar";
@@ -282,9 +290,10 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label1.Location = new System.Drawing.Point(840, 477);
+            this.label1.Location = new System.Drawing.Point(1120, 587);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(194, 29);
+            this.label1.Size = new System.Drawing.Size(240, 36);
             this.label1.TabIndex = 64;
             this.label1.Tag = "lblRangoFechas";
             this.label1.Text = "Rango de fechas";
@@ -295,9 +304,10 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label2.Location = new System.Drawing.Point(421, 489);
+            this.label2.Location = new System.Drawing.Point(561, 602);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(186, 26);
+            this.label2.Size = new System.Drawing.Size(241, 32);
             this.label2.TabIndex = 67;
             this.label2.Tag = "";
             this.label2.Text = "Target Username:";
@@ -315,13 +325,13 @@
             this.txtTargetUsername.IconColorRight = System.Drawing.Color.DimGray;
             this.txtTargetUsername.IconPadding = 4;
             this.txtTargetUsername.IconSize = 30;
-            this.txtTargetUsername.Location = new System.Drawing.Point(425, 522);
-            this.txtTargetUsername.Margin = new System.Windows.Forms.Padding(2);
+            this.txtTargetUsername.Location = new System.Drawing.Point(567, 642);
+            this.txtTargetUsername.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTargetUsername.Name = "txtTargetUsername";
             this.txtTargetUsername.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtTargetUsername.PlaceholderText = "Ingrese un username o parte de él";
             this.txtTargetUsername.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtTargetUsername.Size = new System.Drawing.Size(393, 37);
+            this.txtTargetUsername.Size = new System.Drawing.Size(524, 46);
             this.txtTargetUsername.TabIndex = 68;
             // 
             // comboBoxEvento
@@ -343,12 +353,12 @@
             this.comboBoxEvento.IconChar = FontAwesome.Sharp.IconChar.ScrewdriverWrench;
             this.comboBoxEvento.IconColor = System.Drawing.Color.Goldenrod;
             this.comboBoxEvento.IconSize = 25;
-            this.comboBoxEvento.Location = new System.Drawing.Point(425, 613);
-            this.comboBoxEvento.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxEvento.Location = new System.Drawing.Point(567, 754);
+            this.comboBoxEvento.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboBoxEvento.Name = "comboBoxEvento";
             this.comboBoxEvento.SelectedItem = null;
             this.comboBoxEvento.SelectedValue = null;
-            this.comboBoxEvento.Size = new System.Drawing.Size(388, 37);
+            this.comboBoxEvento.Size = new System.Drawing.Size(517, 46);
             this.comboBoxEvento.TabIndex = 66;
             this.comboBoxEvento.SelectedIndexChanged += new System.EventHandler(this.comboBoxEvento_SelectedIndexChanged);
             // 
@@ -372,12 +382,12 @@
             this.comboBoxCriticidad.IconChar = FontAwesome.Sharp.IconChar.ExclamationTriangle;
             this.comboBoxCriticidad.IconColor = System.Drawing.Color.Goldenrod;
             this.comboBoxCriticidad.IconSize = 25;
-            this.comboBoxCriticidad.Location = new System.Drawing.Point(16, 701);
-            this.comboBoxCriticidad.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxCriticidad.Location = new System.Drawing.Point(21, 863);
+            this.comboBoxCriticidad.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboBoxCriticidad.Name = "comboBoxCriticidad";
             this.comboBoxCriticidad.SelectedItem = null;
             this.comboBoxCriticidad.SelectedValue = null;
-            this.comboBoxCriticidad.Size = new System.Drawing.Size(228, 37);
+            this.comboBoxCriticidad.Size = new System.Drawing.Size(304, 46);
             this.comboBoxCriticidad.TabIndex = 65;
             this.comboBoxCriticidad.SelectedIndexChanged += new System.EventHandler(this.comboBoxCriticidad_SelectedIndexChanged);
             // 
@@ -400,12 +410,12 @@
             this.comboBoxModulo.IconChar = FontAwesome.Sharp.IconChar.Kaaba;
             this.comboBoxModulo.IconColor = System.Drawing.Color.Goldenrod;
             this.comboBoxModulo.IconSize = 30;
-            this.comboBoxModulo.Location = new System.Drawing.Point(16, 613);
-            this.comboBoxModulo.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxModulo.Location = new System.Drawing.Point(21, 754);
+            this.comboBoxModulo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboBoxModulo.Name = "comboBoxModulo";
             this.comboBoxModulo.SelectedItem = null;
             this.comboBoxModulo.SelectedValue = null;
-            this.comboBoxModulo.Size = new System.Drawing.Size(393, 37);
+            this.comboBoxModulo.Size = new System.Drawing.Size(524, 46);
             this.comboBoxModulo.TabIndex = 63;
             this.comboBoxModulo.SelectedIndexChanged += new System.EventHandler(this.comboBoxModulo_SelectedIndexChanged);
             // 
@@ -426,13 +436,14 @@
             this.dtpHasta.IconChar = FontAwesome.Sharp.IconChar.CalendarDay;
             this.dtpHasta.IconColor = System.Drawing.Color.Goldenrod;
             this.dtpHasta.IconSize = 19;
-            this.dtpHasta.Location = new System.Drawing.Point(844, 613);
-            this.dtpHasta.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpHasta.Location = new System.Drawing.Point(1125, 754);
+            this.dtpHasta.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dtpHasta.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpHasta.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpHasta.Name = "dtpHasta";
-            this.dtpHasta.Size = new System.Drawing.Size(249, 37);
+            this.dtpHasta.Size = new System.Drawing.Size(332, 46);
             this.dtpHasta.TabIndex = 62;
+            this.dtpHasta.TimeValue = System.TimeSpan.Parse("15:11:01.3740000");
             this.dtpHasta.Value = new System.DateTime(2026, 5, 23, 15, 11, 1, 374);
             // 
             // dtpDesde
@@ -452,13 +463,14 @@
             this.dtpDesde.IconChar = FontAwesome.Sharp.IconChar.CalendarDay;
             this.dtpDesde.IconColor = System.Drawing.Color.Goldenrod;
             this.dtpDesde.IconSize = 19;
-            this.dtpDesde.Location = new System.Drawing.Point(844, 543);
-            this.dtpDesde.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpDesde.Location = new System.Drawing.Point(1125, 668);
+            this.dtpDesde.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dtpDesde.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpDesde.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpDesde.Name = "dtpDesde";
-            this.dtpDesde.Size = new System.Drawing.Size(249, 37);
+            this.dtpDesde.Size = new System.Drawing.Size(332, 46);
             this.dtpDesde.TabIndex = 61;
+            this.dtpDesde.TimeValue = System.TimeSpan.Parse("15:11:01.3740000");
             this.dtpDesde.Value = new System.DateTime(2026, 5, 23, 15, 11, 1, 374);
             // 
             // txtUsername
@@ -474,23 +486,23 @@
             this.txtUsername.IconColorRight = System.Drawing.Color.DimGray;
             this.txtUsername.IconPadding = 4;
             this.txtUsername.IconSize = 30;
-            this.txtUsername.Location = new System.Drawing.Point(16, 522);
-            this.txtUsername.Margin = new System.Windows.Forms.Padding(2);
+            this.txtUsername.Location = new System.Drawing.Point(21, 642);
+            this.txtUsername.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtUsername.PlaceholderText = "Ingrese un username o parte de él";
             this.txtUsername.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtUsername.Size = new System.Drawing.Size(393, 37);
+            this.txtUsername.Size = new System.Drawing.Size(524, 46);
             this.txtUsername.TabIndex = 60;
             // 
             // FormBitacora_08YS
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImage = global::GUI_08YS.Properties.Resources.BackGroundHorizon;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1102, 748);
+            this.ClientSize = new System.Drawing.Size(1469, 921);
             this.Controls.Add(this.txtTargetUsername);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxEvento);
@@ -513,6 +525,7 @@
             this.Controls.Add(this.lblFechaIni);
             this.Controls.Add(this.lblLogin);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FormBitacora_08YS";
             this.Text = " ";
             this.Load += new System.EventHandler(this.FormBitacora_Load);

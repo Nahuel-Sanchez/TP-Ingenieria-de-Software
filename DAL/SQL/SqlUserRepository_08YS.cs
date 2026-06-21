@@ -32,7 +32,7 @@ namespace DAL_08YS
         };
         }
 
-        //public List<User_08YS> GetAll()
+        //public List<User_08YS> GetAllRoots()
         //{
         //    DataTable dt = GetDataTable("SELECT * FROM Users");
         //    return UserMapper_08YS.FromDataTable(dt);

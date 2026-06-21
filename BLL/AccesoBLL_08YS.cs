@@ -21,11 +21,11 @@ namespace BLL_08YS
 
         /// <summary>
         /// Evalúa si el candidato puede agregarse a la lista actual.
-        /// — Valido: sin solapamiento, proceder.
-        /// — SugerenciaReemplazo: solapamiento total con items existentes que el candidato
-        ///   engloba completamente → proponer reemplazo al usuario.
-        /// — ConflictoIrresoluble: solapamiento con items que el candidato no engloba
-        ///   completamente → error, no se puede resolver.
+        /// <para>— Valido: sin solapamiento, proceder.</para>
+        /// <para>— SugerenciaReemplazo: solapamiento total con items existentes que el candidato
+        ///         engloba completamente → proponer reemplazo al usuario.</para>
+        /// <para>— ConflictoIrresoluble: solapamiento con items que el candidato no engloba
+        ///         completamente → error, no se puede resolver.</para>
         /// </summary>
         public ResultadoEvaluacion_08YS EvaluarAgregarComponente(
             HashSet<AccessComponent_08YS> listaActual,
