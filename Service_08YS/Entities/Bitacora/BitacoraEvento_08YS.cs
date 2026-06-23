@@ -30,7 +30,7 @@ namespace Service_08YS.Entities.Bitacora
         UsuarioDesbloqueado,
         UsuarioDeshabilitado,
         UsuarioHabilitado,
-        UsuarioModificado,
+        UsuarioEmailModificado,
         UsuarioRolModificado,
         CambioContraseña,
         FamiliaCreada,

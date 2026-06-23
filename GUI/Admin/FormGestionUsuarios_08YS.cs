@@ -376,11 +376,11 @@ namespace GUI
         private void btnAplicar_Click(object sender, EventArgs e)
         {
             var validaciones = new (bool condicion, string mensaje)[]
-     {
-        (!ValidarCampos(), TraductorManager_08YS.Instance.GetTexto("msg_completar_campos")),
-        (!ValidarCorreo(txtEmail.Text), TraductorManager_08YS.Instance.GetTexto("msg_email_invalido")),
-        (!ValidarDNI(txtDNI.Text), TraductorManager_08YS.Instance.GetTexto("msg_dni_invalido"))
-     };
+            {
+                (!ValidarCampos(), TraductorManager_08YS.Instance.GetTexto("msg_completar_campos")),
+                (!ValidarCorreo(txtEmail.Text), TraductorManager_08YS.Instance.GetTexto("msg_email_invalido")),
+                (!ValidarDNI(txtDNI.Text), TraductorManager_08YS.Instance.GetTexto("msg_dni_invalido"))
+            };
 
             var fallo = validaciones.FirstOrDefault(v => v.condicion);
 
@@ -401,12 +401,12 @@ namespace GUI
             }
             catch (UserDniDuplicadoException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_dni_duplicado"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_dni_duplicado"),
                                 TraductorManager_08YS.Instance.GetTexto("error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (UserAutoModificacionException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_error_auto_modificar"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_auto_modificacion"),
                                 TraductorManager_08YS.Instance.GetTexto("operacion_invalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)

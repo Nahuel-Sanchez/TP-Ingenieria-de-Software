@@ -120,12 +120,15 @@ namespace BLL_08YS
 
             var user = _userRepository.GetByUsername(username) ?? throw new KeyNotFoundException();
 
+            var cambioRol = user.Rol != nuevoRol;
+            var cambioEmail = user.Email != nuevoEmail;
             user.Email = nuevoEmail;
             user.Rol = nuevoRol;
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarUsuario);
             _userRepository.Modify(user, user.Username);
-            _bitacoraBll.RegistrarEvento(Evento.UsuarioModificado, targetUsername: username);
+            if(cambioEmail) _bitacoraBll.RegistrarEvento(Evento.UsuarioEmailModificado, targetUsername: username);
+            if(cambioRol) _bitacoraBll.RegistrarEvento(Evento.UsuarioRolModificado, targetUsername: username);
         }
 
         public void AlternarEstado(string username)
