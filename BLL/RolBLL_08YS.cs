@@ -53,6 +53,9 @@ namespace BLL_08YS
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarRoles);
             _rolRepo.Modify(rolId, nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.RolModificado);
+
+            if(rolId == SessionManager_08YS.Instance.Current.Rol.RolID)
+                SessionManager_08YS.Instance.InvalidarSesion();
         }
 
         public void Eliminar(int rolId)

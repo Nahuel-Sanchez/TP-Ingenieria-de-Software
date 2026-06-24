@@ -33,18 +33,25 @@
             this.modificarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.desbloquearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panelIdioma = new System.Windows.Forms.Panel();
+            this.IdiomaCombobox = new CustomControls.IconComboBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.Titulo = new System.Windows.Forms.Label();
             this.panelLateral = new System.Windows.Forms.Panel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnPerfil = new FontAwesome.Sharp.IconButton();
+            this.btnAdministrativo = new FontAwesome.Sharp.IconButton();
+            this.btnReservar = new FontAwesome.Sharp.IconButton();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panelLogo = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblNombreApellido = new System.Windows.Forms.Label();
             this.lblRolSistema = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.IdiomaCombobox = new CustomControls.IconComboBox();
             this.AdministrativoDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.gestionUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,23 +62,16 @@
             this.cambiarContraseñaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.panelIdioma = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnPerfil = new FontAwesome.Sharp.IconButton();
-            this.btnAdministrativo = new FontAwesome.Sharp.IconButton();
-            this.btnReservar = new FontAwesome.Sharp.IconButton();
-            this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panel1.SuspendLayout();
+            this.panelIdioma.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelLateral.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.panelLogo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.AdministrativoDropDownMenu.SuspendLayout();
             this.PerfilDropDownMenu.SuspendLayout();
-            this.panelIdioma.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // crearToolStripMenuItem
@@ -108,6 +108,43 @@
             this.panel1.Size = new System.Drawing.Size(1800, 46);
             this.panel1.TabIndex = 2;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            // 
+            // panelIdioma
+            // 
+            this.panelIdioma.Controls.Add(this.IdiomaCombobox);
+            this.panelIdioma.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panelIdioma.Location = new System.Drawing.Point(1370, 0);
+            this.panelIdioma.Name = "panelIdioma";
+            this.panelIdioma.Size = new System.Drawing.Size(250, 46);
+            this.panelIdioma.TabIndex = 8;
+            // 
+            // IdiomaCombobox
+            // 
+            this.IdiomaCombobox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
+            this.IdiomaCombobox.BorderColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.IdiomaCombobox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IdiomaCombobox.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
+            this.IdiomaCombobox.DropDownBorderColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(100)))));
+            this.IdiomaCombobox.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.DropDownItemHeight = 35;
+            this.IdiomaCombobox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.IconChar = FontAwesome.Sharp.IconChar.Earth;
+            this.IdiomaCombobox.IconColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.IdiomaCombobox.IconPadding = 10;
+            this.IdiomaCombobox.IconSize = 30;
+            this.IdiomaCombobox.Location = new System.Drawing.Point(0, 0);
+            this.IdiomaCombobox.Margin = new System.Windows.Forms.Padding(4);
+            this.IdiomaCombobox.Name = "IdiomaCombobox";
+            this.IdiomaCombobox.SelectedItem = null;
+            this.IdiomaCombobox.SelectedValue = null;
+            this.IdiomaCombobox.Size = new System.Drawing.Size(250, 46);
+            this.IdiomaCombobox.TabIndex = 7;
+            this.IdiomaCombobox.SelectedIndexChanged += new System.EventHandler(this.IdiomaCombobox_SelectedIndexChanged);
             // 
             // pictureBox1
             // 
@@ -197,10 +234,130 @@
             this.panelLateral.Controls.Add(this.panelLogo);
             this.panelLateral.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelLateral.Location = new System.Drawing.Point(0, 46);
-            this.panelLateral.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelLateral.Margin = new System.Windows.Forms.Padding(4);
             this.panelLateral.Name = "panelLateral";
             this.panelLateral.Size = new System.Drawing.Size(331, 919);
             this.panelLateral.TabIndex = 4;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.flowLayoutPanel1.Controls.Add(this.btnPerfil);
+            this.flowLayoutPanel1.Controls.Add(this.btnAdministrativo);
+            this.flowLayoutPanel1.Controls.Add(this.btnReservar);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(331, 789);
+            this.flowLayoutPanel1.TabIndex = 2;
+            // 
+            // btnPerfil
+            // 
+            this.btnPerfil.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnPerfil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPerfil.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPerfil.ForeColor = System.Drawing.Color.Gold;
+            this.btnPerfil.IconChar = FontAwesome.Sharp.IconChar.User;
+            this.btnPerfil.IconColor = System.Drawing.Color.Gold;
+            this.btnPerfil.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnPerfil.IconSize = 30;
+            this.btnPerfil.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPerfil.Location = new System.Drawing.Point(3, 2);
+            this.btnPerfil.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnPerfil.Name = "btnPerfil";
+            this.btnPerfil.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnPerfil.Size = new System.Drawing.Size(325, 60);
+            this.btnPerfil.TabIndex = 3;
+            this.btnPerfil.Tag = "btnPerfil";
+            this.btnPerfil.Text = "Perfil";
+            this.btnPerfil.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPerfil.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnPerfil.UseVisualStyleBackColor = true;
+            this.btnPerfil.Click += new System.EventHandler(this.btnPerfil_Click);
+            // 
+            // btnAdministrativo
+            // 
+            this.btnAdministrativo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnAdministrativo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdministrativo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdministrativo.ForeColor = System.Drawing.Color.Gold;
+            this.btnAdministrativo.IconChar = FontAwesome.Sharp.IconChar.UserTag;
+            this.btnAdministrativo.IconColor = System.Drawing.Color.Gold;
+            this.btnAdministrativo.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnAdministrativo.IconSize = 30;
+            this.btnAdministrativo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdministrativo.Location = new System.Drawing.Point(3, 66);
+            this.btnAdministrativo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAdministrativo.Name = "btnAdministrativo";
+            this.btnAdministrativo.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnAdministrativo.Size = new System.Drawing.Size(325, 60);
+            this.btnAdministrativo.TabIndex = 4;
+            this.btnAdministrativo.Tag = "btnAdministrativo";
+            this.btnAdministrativo.Text = "Administrativo";
+            this.btnAdministrativo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdministrativo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAdministrativo.UseVisualStyleBackColor = true;
+            this.btnAdministrativo.Click += new System.EventHandler(this.btnAdministrativo_Click);
+            // 
+            // btnReservar
+            // 
+            this.btnReservar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnReservar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReservar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReservar.ForeColor = System.Drawing.Color.Gold;
+            this.btnReservar.IconChar = FontAwesome.Sharp.IconChar.CalendarCheck;
+            this.btnReservar.IconColor = System.Drawing.Color.Gold;
+            this.btnReservar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnReservar.IconSize = 30;
+            this.btnReservar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReservar.Location = new System.Drawing.Point(3, 130);
+            this.btnReservar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnReservar.Name = "btnReservar";
+            this.btnReservar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnReservar.Size = new System.Drawing.Size(325, 60);
+            this.btnReservar.TabIndex = 5;
+            this.btnReservar.Tag = "btnReservar";
+            this.btnReservar.Text = "Reservar";
+            this.btnReservar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReservar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnReservar.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.btnCerrarSesion);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel3.Location = new System.Drawing.Point(0, 859);
+            this.panel3.Name = "panel3";
+            this.panel3.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.panel3.Size = new System.Drawing.Size(331, 60);
+            this.panel3.TabIndex = 1;
+            // 
+            // btnCerrarSesion
+            // 
+            this.btnCerrarSesion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(7)))), ((int)(((byte)(50)))));
+            this.btnCerrarSesion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCerrarSesion.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
+            this.btnCerrarSesion.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCerrarSesion.ForeColor = System.Drawing.Color.Gold;
+            this.btnCerrarSesion.IconChar = FontAwesome.Sharp.IconChar.SignOut;
+            this.btnCerrarSesion.IconColor = System.Drawing.Color.Gold;
+            this.btnCerrarSesion.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnCerrarSesion.IconSize = 30;
+            this.btnCerrarSesion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCerrarSesion.Location = new System.Drawing.Point(2, 0);
+            this.btnCerrarSesion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnCerrarSesion.Name = "btnCerrarSesion";
+            this.btnCerrarSesion.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnCerrarSesion.Size = new System.Drawing.Size(327, 60);
+            this.btnCerrarSesion.TabIndex = 7;
+            this.btnCerrarSesion.Tag = "btnCerrarSesion";
+            this.btnCerrarSesion.Text = "  Cerrar Sesión";
+            this.btnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCerrarSesion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCerrarSesion.UseVisualStyleBackColor = false;
+            this.btnCerrarSesion.Click += new System.EventHandler(this.btnCerrarSesion_Click);
             // 
             // panelLogo
             // 
@@ -209,7 +366,7 @@
             this.panelLogo.Controls.Add(this.lblRolSistema);
             this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelLogo.Location = new System.Drawing.Point(0, 0);
-            this.panelLogo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelLogo.Margin = new System.Windows.Forms.Padding(4);
             this.panelLogo.Name = "panelLogo";
             this.panelLogo.Size = new System.Drawing.Size(331, 70);
             this.panelLogo.TabIndex = 0;
@@ -217,7 +374,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Location = new System.Drawing.Point(4, 5);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(83, 57);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -258,34 +415,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1469, 919);
             this.panel2.TabIndex = 5;
-            // 
-            // IdiomaCombobox
-            // 
-            this.IdiomaCombobox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
-            this.IdiomaCombobox.BorderColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.BorderFocusColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.IdiomaCombobox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IdiomaCombobox.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
-            this.IdiomaCombobox.DropDownBorderColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(100)))));
-            this.IdiomaCombobox.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.DropDownItemHeight = 35;
-            this.IdiomaCombobox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.IconChar = FontAwesome.Sharp.IconChar.Earth;
-            this.IdiomaCombobox.IconColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.IconFont = FontAwesome.Sharp.IconFont.Solid;
-            this.IdiomaCombobox.IconPadding = 10;
-            this.IdiomaCombobox.IconSize = 30;
-            this.IdiomaCombobox.Location = new System.Drawing.Point(0, 0);
-            this.IdiomaCombobox.Margin = new System.Windows.Forms.Padding(4);
-            this.IdiomaCombobox.Name = "IdiomaCombobox";
-            this.IdiomaCombobox.SelectedItem = null;
-            this.IdiomaCombobox.SelectedValue = null;
-            this.IdiomaCombobox.Size = new System.Drawing.Size(250, 46);
-            this.IdiomaCombobox.TabIndex = 7;
-            this.IdiomaCombobox.SelectedIndexChanged += new System.EventHandler(this.IdiomaCombobox_SelectedIndexChanged);
             // 
             // AdministrativoDropDownMenu
             // 
@@ -381,135 +510,6 @@
             this.cerrarSesionToolStripMenuItem1.Text = "Cerrar Sesion";
             this.cerrarSesionToolStripMenuItem1.Click += new System.EventHandler(this.cerrarSesionToolStripMenuItem1_Click);
             // 
-            // panelIdioma
-            // 
-            this.panelIdioma.Controls.Add(this.IdiomaCombobox);
-            this.panelIdioma.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelIdioma.Location = new System.Drawing.Point(1370, 0);
-            this.panelIdioma.Name = "panelIdioma";
-            this.panelIdioma.Size = new System.Drawing.Size(250, 46);
-            this.panelIdioma.TabIndex = 8;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.btnCerrarSesion);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 859);
-            this.panel3.Name = "panel3";
-            this.panel3.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.panel3.Size = new System.Drawing.Size(331, 60);
-            this.panel3.TabIndex = 1;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.flowLayoutPanel1.Controls.Add(this.btnPerfil);
-            this.flowLayoutPanel1.Controls.Add(this.btnAdministrativo);
-            this.flowLayoutPanel1.Controls.Add(this.btnReservar);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(331, 789);
-            this.flowLayoutPanel1.TabIndex = 2;
-            // 
-            // btnPerfil
-            // 
-            this.btnPerfil.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnPerfil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPerfil.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPerfil.ForeColor = System.Drawing.Color.Gold;
-            this.btnPerfil.IconChar = FontAwesome.Sharp.IconChar.User;
-            this.btnPerfil.IconColor = System.Drawing.Color.Gold;
-            this.btnPerfil.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnPerfil.IconSize = 30;
-            this.btnPerfil.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPerfil.Location = new System.Drawing.Point(3, 2);
-            this.btnPerfil.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnPerfil.Name = "btnPerfil";
-            this.btnPerfil.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnPerfil.Size = new System.Drawing.Size(325, 60);
-            this.btnPerfil.TabIndex = 3;
-            this.btnPerfil.Tag = "btnPerfil";
-            this.btnPerfil.Text = "Perfil";
-            this.btnPerfil.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPerfil.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnPerfil.UseVisualStyleBackColor = true;
-            this.btnPerfil.Click += new System.EventHandler(this.btnPerfil_Click);
-            // 
-            // btnAdministrativo
-            // 
-            this.btnAdministrativo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnAdministrativo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdministrativo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdministrativo.ForeColor = System.Drawing.Color.Gold;
-            this.btnAdministrativo.IconChar = FontAwesome.Sharp.IconChar.UserTag;
-            this.btnAdministrativo.IconColor = System.Drawing.Color.Gold;
-            this.btnAdministrativo.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnAdministrativo.IconSize = 30;
-            this.btnAdministrativo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAdministrativo.Location = new System.Drawing.Point(3, 66);
-            this.btnAdministrativo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnAdministrativo.Name = "btnAdministrativo";
-            this.btnAdministrativo.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnAdministrativo.Size = new System.Drawing.Size(325, 60);
-            this.btnAdministrativo.TabIndex = 4;
-            this.btnAdministrativo.Tag = "btnAdministrativo";
-            this.btnAdministrativo.Text = "Administrativo";
-            this.btnAdministrativo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAdministrativo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnAdministrativo.UseVisualStyleBackColor = true;
-            this.btnAdministrativo.Click += new System.EventHandler(this.btnAdministrativo_Click);
-            // 
-            // btnReservar
-            // 
-            this.btnReservar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnReservar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReservar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReservar.ForeColor = System.Drawing.Color.Gold;
-            this.btnReservar.IconChar = FontAwesome.Sharp.IconChar.CalendarCheck;
-            this.btnReservar.IconColor = System.Drawing.Color.Gold;
-            this.btnReservar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnReservar.IconSize = 30;
-            this.btnReservar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReservar.Location = new System.Drawing.Point(3, 130);
-            this.btnReservar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnReservar.Name = "btnReservar";
-            this.btnReservar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnReservar.Size = new System.Drawing.Size(325, 60);
-            this.btnReservar.TabIndex = 5;
-            this.btnReservar.Tag = "btnReservar";
-            this.btnReservar.Text = "Reservar";
-            this.btnReservar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReservar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnReservar.UseVisualStyleBackColor = true;
-            // 
-            // btnCerrarSesion
-            // 
-            this.btnCerrarSesion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(7)))), ((int)(((byte)(50)))));
-            this.btnCerrarSesion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCerrarSesion.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
-            this.btnCerrarSesion.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCerrarSesion.ForeColor = System.Drawing.Color.Gold;
-            this.btnCerrarSesion.IconChar = FontAwesome.Sharp.IconChar.SignOut;
-            this.btnCerrarSesion.IconColor = System.Drawing.Color.Gold;
-            this.btnCerrarSesion.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnCerrarSesion.IconSize = 30;
-            this.btnCerrarSesion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCerrarSesion.Location = new System.Drawing.Point(2, 0);
-            this.btnCerrarSesion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnCerrarSesion.Name = "btnCerrarSesion";
-            this.btnCerrarSesion.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnCerrarSesion.Size = new System.Drawing.Size(327, 60);
-            this.btnCerrarSesion.TabIndex = 7;
-            this.btnCerrarSesion.Tag = "btnCerrarSesion";
-            this.btnCerrarSesion.Text = "  Cerrar Sesión";
-            this.btnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCerrarSesion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnCerrarSesion.UseVisualStyleBackColor = false;
-            this.btnCerrarSesion.Click += new System.EventHandler(this.btnCerrarSesion_Click);
-            // 
             // FormMDI_08YS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -527,16 +527,16 @@
             this.Load += new System.EventHandler(this.FormMDI_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panelIdioma.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelLateral.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
             this.panelLogo.ResumeLayout(false);
             this.panelLogo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.AdministrativoDropDownMenu.ResumeLayout(false);
             this.PerfilDropDownMenu.ResumeLayout(false);
-            this.panelIdioma.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

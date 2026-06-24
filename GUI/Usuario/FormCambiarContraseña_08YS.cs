@@ -45,8 +45,9 @@ namespace GUI_08YS
 
             AsignarEventosPlaceholder();
             TraductorManager_08YS.Instance.Suscribir(this);
-            UpdateIdioma(); 
+            UpdateIdioma();
         }
+
         public void UpdateIdioma()
         {
             // 1. Cargamos las traducciones vigentes desde el diccionario de recursos

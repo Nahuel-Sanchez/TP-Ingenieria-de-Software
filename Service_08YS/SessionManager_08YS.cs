@@ -44,5 +44,10 @@ namespace Service_08YS
             if(!HasPermission(permiso))
                 throw new UnauthorizedAccessException($"El usuario actual no tiene permiso para: {permiso}");
         }
+
+        public event Action SesionInvalidada;
+
+        public void InvalidarSesion()
+            => SesionInvalidada?.Invoke();
     }
 }

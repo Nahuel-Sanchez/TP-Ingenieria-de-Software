@@ -113,21 +113,25 @@ namespace BLL_08YS
         {
             ValidarDatosEntrada(nombre, componentes);
             ValidarFamiliaNoExistente(nombre, componentes, familiaId);
-            ValidarPropagacion(familiaId, componentes);
+            ValidarPropagacion(familiaId, componentes, out var rolesAncestrosIds);
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarFamilias);
             _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
             _bitacoraBll.RegistrarEvento(Evento.FamiliaModificada);
+
+            int rolActual = SessionManager_08YS.Instance.Current.Rol.RolID;
+            if(rolesAncestrosIds.Contains(rolActual))
+                SessionManager_08YS.Instance.InvalidarSesion();
         }
 
         /// <summary>
         /// Verifica que modificar esta familia no genere permisos duplicados en
         /// ningún contenedor (familia o rol) que dependa de ella, directa o transitivamente.
         /// </summary>
-        private void ValidarPropagacion(int familiaId, HashSet<AccessComponent_08YS> nuevaComposicion)
+        private void ValidarPropagacion(int familiaId, HashSet<AccessComponent_08YS> nuevaComposicion, out List<int> rolesAncestrosIds)
         {
             var (familiaIds, rolIds) = _familiaRepo.GetAncestors(familiaId);
-
+            rolesAncestrosIds = rolIds;
             if (!familiaIds.Any() && !rolIds.Any())
                 return;
 

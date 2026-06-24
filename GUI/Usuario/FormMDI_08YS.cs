@@ -42,7 +42,17 @@ namespace GUI_08YS
             AplicarPermisos();
             TraductorManager_08YS.Instance.CambiarIdioma(SessionManager_08YS.Instance.Current.Idioma);
             TraductorManager_08YS.Instance.Suscribir(this);
-            UpdateIdioma(); 
+            SessionManager_08YS.Instance.SesionInvalidada += OnSesionInvalidada;
+            UpdateIdioma();
+        }
+
+        private void OnSesionInvalidada()
+        {
+            MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_sesion_invalidada"),
+                            TraductorManager_08YS.Instance.GetTexto("sesion_invalidada"),
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+            this.Close();
         }
 
         private void ConfigurarCombo()
@@ -193,6 +203,8 @@ namespace GUI_08YS
             //{
             //    e.Cancel = true;
             //}
+            SessionManager_08YS.Instance.SesionInvalidada -= OnSesionInvalidada;
+
             if (SessionManager_08YS.Instance.IsLogged)
             {
                 _userBLL.Logout();
