@@ -61,15 +61,49 @@ namespace DAL_08YS.SQL
             using (var conn = new SqlConnection(masterCs))
             {
                 conn.Open();
+
+                string clausulasMove = ArmarClausulasMove(conn, nombreBaseDatos);
+
                 EjecutarEnMaster(conn,
                     $"ALTER DATABASE [{nombreBaseDatos}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
                 EjecutarEnMaster(conn,
-                    $"RESTORE DATABASE [{nombreBaseDatos}] FROM DISK = N'{rutaBak}' WITH REPLACE");
+                    $"RESTORE DATABASE [{nombreBaseDatos}] FROM DISK = N'{rutaBak}' WITH REPLACE{clausulasMove}");
                 EjecutarEnMaster(conn,
                     $"ALTER DATABASE [{nombreBaseDatos}] SET MULTI_USER WITH ROLLBACK IMMEDIATE");
             }
 
             SqlConnection.ClearAllPools();
+        }
+
+        /// <summary>
+        /// Arma las cláusulas MOVE reubicando los archivos lógicos del backup a las
+        /// rutas físicas ACTUALES de la base ya instalada en esta PC. Sin esto, restaurar
+        /// un .bak hecho en otra instancia tira "Operating system error 5" porque SQL
+        /// intenta escribir en la ruta de origen (de la otra PC), que acá no existe.
+        /// Asume que la base ya fue creada por el instalador (AsegurarBaseDatos corre
+        /// antes que cualquier form de restore esté disponible), así que sys.master_files
+        /// ya tiene los nombres lógicos y las rutas físicas reales de esta instancia.
+        /// </summary>
+        private string ArmarClausulasMove(SqlConnection conn, string nombreBaseDatos)
+        {
+            var sb = new StringBuilder();
+
+            using (var cmd = new SqlCommand(
+                "SELECT name, physical_name FROM sys.master_files WHERE database_id = DB_ID(@bd)", conn))
+            {
+                cmd.Parameters.AddWithValue("@bd", nombreBaseDatos);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string logico = reader.GetString(0);
+                        string fisico = reader.GetString(1);
+                        sb.Append($", MOVE N'{logico}' TO N'{fisico}'");
+                    }
+                }
+            }
+
+            return sb.ToString();
         }
 
         private string BuildMasterConnectionString()

@@ -7,4 +7,7 @@
     <Build Solution="Debug|*" Project="false" />
   </Project>
   <Project Path="Service_08YS/Service_08YS.csproj" Id="6196a91d-881c-4563-b43c-5adcd13c0c14" />
+  <Project Path="Setup_08YS/Setup_08YS.vdproj" Type="Installer">
+    <Build />
+  </Project>
 </Solution>

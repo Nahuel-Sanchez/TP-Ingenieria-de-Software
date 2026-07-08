@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connection_08YS.cs" />
+    <Compile Include="Instalador\InstaladorBD_08YS.cs" />
     <Compile Include="Interfaces_Repositories\IBackupRepository_08YS.cs" />
     <Compile Include="Interfaces_Repositories\IBitacoraRepository_08YS.cs" />
     <Compile Include="Interfaces_Repositories\IDvRepository_08YS.cs" />

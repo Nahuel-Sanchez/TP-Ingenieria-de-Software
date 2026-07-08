@@ -46,6 +46,7 @@
     <Compile Include="BackupBLL_08YS.cs" />
     <Compile Include="BitacoraBLL_08YS.cs" />
     <Compile Include="BLLFactory_08YS.cs" />
+    <Compile Include="BLLInstalador_08YS.cs" />
     <Compile Include="DvBLL_08YS.cs" />
     <Compile Include="FamiliaBLL_08YS.cs" />
     <Compile Include="RolBLL_08YS.cs" />

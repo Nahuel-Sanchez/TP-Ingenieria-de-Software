@@ -19,6 +19,21 @@ namespace GUI_08YS
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            try
+            {
+                BLLInstalador_08YS.AsegurarBaseDatos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "No se pudo preparar la base de datos:\n\n" + ex.Message,
+                    "Error de instalación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
             EventCatalog_08YS.CatalogValidation();
             DVManager_08YS.Inicializar(BLLFactory_08YS.CreateDvBLL());
             Application.Run(new FormLogin_08YS());

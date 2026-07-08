@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -10,16 +11,36 @@ namespace DAL_08YS
 {
     public class SqlDbFactory_08YS : IDbFactory_08YS
     {
-        private readonly string _connectionString;
+        private const string NombreClaveConfig = "TP_Ing_Soft";
+        private const string ConnectionStringDefault =
+            @"Data Source=.\SQLEXPRESS;Initial Catalog=TP_Ing_Soft;Integrated Security=True";
 
-        public SqlDbFactory_08YS()
+        // Seteable manualmente (ej: instalador, tests). Si queda vacía, se resuelve
+        // desde App.config y, si tampoco hay nada ahí, se usa el default local.
+        // TODAS las conexiones de la DAL pasan por acá (Connection_08YS recibe el
+        // factory, y el factory siempre lee de esta propiedad).
+        private static string _connectionStringOverride;
+
+        public static string ConnectionString
         {
-            _connectionString = "Data Source=DESKTOP-CRINK3R\\SQLEXPRESS;Initial Catalog=TP_Ing_Soft;Integrated Security=True;";
-            //_connectionString = "Data Source=desktop-gciu8b0;Initial Catalog=TP_Ing_Soft;Integrated Security=True";
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(_connectionStringOverride))
+                    return _connectionStringOverride;
+
+                string desdeConfig = ConfigurationManager
+                    .ConnectionStrings[NombreClaveConfig]?.ConnectionString;
+
+                if (!string.IsNullOrWhiteSpace(desdeConfig))
+                    return desdeConfig;
+
+                return ConnectionStringDefault;
+            }
+            set { _connectionStringOverride = value; }
         }
 
         public IDbConnection CreateConnection()
-            => new SqlConnection(_connectionString);
+            => new SqlConnection(ConnectionString);
 
         public IDbCommand CreateCommand(string query, IDbConnection connection)
             => new SqlCommand(query, (SqlConnection)connection);
@@ -48,6 +69,6 @@ namespace DAL_08YS
             return ds;
         }
 
-        public string GetConnectionString() => _connectionString;
+        public string GetConnectionString() => ConnectionString;
     }
 }
