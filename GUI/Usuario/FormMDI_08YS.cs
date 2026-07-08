@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 namespace GUI_08YS
 {
     public partial class FormMDI_08YS : Form,IIdiomaObserver_08YS
@@ -23,10 +24,11 @@ namespace GUI_08YS
         private static readonly Dictionary<string, Permisos> _mapaMenuAdmin =
             new Dictionary<string, Permisos>
             {
-                { nameof(gestionUsuarioToolStripMenuItem),  Permisos.VerUsuarios    },
-                { nameof(bitacoraToolStripMenuItem),        Permisos.VerBitacora    },
-                { nameof(familiasToolStripMenuItem),        Permisos.VerFamilias    },
-                { nameof(rolesToolStripMenuItem),           Permisos.VerRoles       },
+                { nameof(gestionUsuarioToolStripMenuItem),   Permisos.VerUsuarios    },
+                { nameof(bitacoraToolStripMenuItem),         Permisos.VerBitacora    },
+                { nameof(familiasToolStripMenuItem),         Permisos.VerFamilias    },
+                { nameof(rolesToolStripMenuItem),            Permisos.VerRoles       },
+                { nameof(gestionRespaldosToolStripMenuItem), Permisos.VerRespaldos   },
             };
 
         public event Action CerrarSesion;
@@ -317,6 +319,12 @@ namespace GUI_08YS
             OpenChildForm(new FormGestionAcceso_08YS(TipoEntidad.Rol, OpenChildForm));
         }
 
+        private void gestionRespaldosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerRespaldos);
+            OpenChildForm(new FormGestionRespaldos_08YS());
+        }
+
         #endregion
 
         #region Perfil
@@ -428,5 +436,6 @@ namespace GUI_08YS
             // 2. Le avisamos al Manager para que muten todas las pantallas abiertas por el Observer
             TraductorManager_08YS.Instance.CambiarIdioma(idiomaSeleccionado);
         }
+
     }
 }

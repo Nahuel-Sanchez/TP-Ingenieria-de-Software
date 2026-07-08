@@ -47,5 +47,7 @@ namespace DAL_08YS
                 adapter.Fill(ds);
             return ds;
         }
+
+        public string GetConnectionString() => _connectionString;
     }
 }

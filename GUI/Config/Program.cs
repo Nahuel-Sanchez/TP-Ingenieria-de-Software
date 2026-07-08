@@ -1,4 +1,5 @@
-﻿using GUI;
+﻿using BLL_08YS;
+using GUI;
 using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,10 @@ namespace GUI_08YS
         [STAThread]
         static void Main()
         {
-            EventCatalog_08YS.CatalogValidation();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            EventCatalog_08YS.CatalogValidation();
+            DVManager_08YS.Inicializar(BLLFactory_08YS.CreateDvBLL());
             Application.Run(new FormLogin_08YS());
         }
     }

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DvEncriptador_08YS.cs" />
     <Compile Include="Entities\Acceso\AccessComponent_08YS.cs" />
     <Compile Include="Entities\Acceso\Familia_08YS.cs" />
     <Compile Include="Entities\Acceso\Permiso_08YS.cs" />
@@ -54,6 +55,8 @@
     <Compile Include="Encriptador_08YS.cs" />
     <Compile Include="Entities\Comparers\AccessComponentComparer_08YS.cs" />
     <Compile Include="Entities\Comparers\PermisoComparer.cs" />
+    <Compile Include="Entities\DigitoVerificador_08YS.cs" />
+    <Compile Include="Entities\ResultadoValidacion_08YS.cs" />
     <Compile Include="SessionManager_08YS.cs" />
     <Compile Include="Entities\User_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

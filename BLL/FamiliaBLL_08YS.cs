@@ -106,6 +106,7 @@ namespace BLL_08YS
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearFamilias);
             _familiaRepo.Create(nombre, componentes.ToList());
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.FamiliaCreada);
         }
 
@@ -117,6 +118,7 @@ namespace BLL_08YS
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarFamilias);
             _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.FamiliaModificada);
 
             int rolActual = SessionManager_08YS.Instance.Current.Rol.RolID;
@@ -222,6 +224,7 @@ namespace BLL_08YS
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarFamilias);
             _familiaRepo.Delete(familiaId);
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.FamiliaEliminada);
         }
 

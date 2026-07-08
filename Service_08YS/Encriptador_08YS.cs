@@ -35,48 +35,6 @@ namespace Service_08YS
             }
         }
 
-        private static readonly byte[] _clave = Convert.FromBase64String("tWB5s/KcvsgTRLfuL+VLdP2b7nLPe/keaC3/2r4TJHo=");
-
-        public static string Cifrar(string textoPlano)
-        {
-            using (Aes aes = Aes.Create())
-            {
-                aes.Key = _clave;
-                aes.GenerateIV();                                    // genera un IV aleatorio de 16 bytes
-
-                using (var ms = new System.IO.MemoryStream())
-                {
-                    ms.Write(aes.IV, 0, aes.IV.Length);              // guardamos el IV al inicio
-
-                    using (var cs = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write))
-                    using (var sw = new System.IO.StreamWriter(cs))
-                        sw.Write(textoPlano);
-
-                    return Convert.ToBase64String(ms.ToArray());
-                }
-            }
-        }
-
-        public static string Descifrar(string textoCifradoBase64)
-        {
-            byte[] datos = Convert.FromBase64String(textoCifradoBase64);
-
-            using (Aes aes = Aes.Create())
-            {
-                aes.Key = _clave;
-
-                byte[] iv = new byte[16];
-                Buffer.BlockCopy(datos, 0, iv, 0, iv.Length);        // extraemos el IV del inicio
-                aes.IV = iv;
-
-                byte[] textoCifrado = new byte[datos.Length - iv.Length];
-                Buffer.BlockCopy(datos, iv.Length, textoCifrado, 0, textoCifrado.Length);
-
-                using (var ms = new System.IO.MemoryStream(textoCifrado))
-                using (var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read))
-                using (var sr = new System.IO.StreamReader(cs))
-                    return sr.ReadToEnd();
-            }
-        }
+        
     }
 }

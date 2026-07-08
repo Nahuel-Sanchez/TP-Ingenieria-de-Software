@@ -50,5 +50,18 @@ namespace BLL_08YS
             BitacoraBLL_08YS bitacoraBll = CreateBitacoraBLL();
             return new RolBLL_08YS(rolRepo, familiaRepo, permisoRepo, bitacoraBll);
         }
+
+        public static DvBLL_08YS CreateDvBLL()
+        {
+            IDbFactory_08YS factory = new SqlDbFactory_08YS();
+            return new DvBLL_08YS(new SqlDvRepository_08YS(factory));
+        }
+
+        public static BackupBLL_08YS CreateBackupBLL()
+        {
+            IDbFactory_08YS factory = new SqlDbFactory_08YS();
+            IBackupRepository_08YS backupRepo = new SqlBackupRepository_08YS(factory);
+            return new BackupBLL_08YS(backupRepo);
+        }
     }
 }

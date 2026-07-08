@@ -23,6 +23,10 @@ namespace Service_08YS.Entities.Acceso
         CrearFamilias,
         ModificarFamilias,
         EliminarFamilias,
+        ManejarInconsistencias,
+        VerRespaldos,
+        RealizarBackup,
+        RealizarRestore
     }
 
     public class Permiso_08YS : AccessComponent_08YS

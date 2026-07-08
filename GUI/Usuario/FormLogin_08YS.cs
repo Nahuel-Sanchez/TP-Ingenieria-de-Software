@@ -1,6 +1,7 @@
 ﻿using BLL_08YS;
 using CustomControls;
 using FontAwesome.Sharp;
+using GUI_08YS.Admin;
 using Service_08YS;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 namespace GUI_08YS
 {
     public partial class FormLogin_08YS : Form,IIdiomaObserver_08YS
@@ -23,10 +25,9 @@ namespace GUI_08YS
         private readonly bool ModoRelogin;
         private string _userPlaceholder = "";
         private string _passPlaceholder = "";
-
-        // BANDERAS DE ESTADO: Eliminan el error de comparación de strings al cambiar de idioma
         private bool _userTienePlaceholder = true;
         private bool _passTienePlaceholder = true;
+
         public FormLogin_08YS(bool modoRelogin = false)
         {
             InitializeComponent();
@@ -43,6 +44,8 @@ namespace GUI_08YS
             UpdateIdioma();
 
         }
+
+        #region Idioma
         private void ConfigurarCombo()
         {
             IdiomaCombobox.Items.Clear();
@@ -50,6 +53,7 @@ namespace GUI_08YS
             // En lugar de hardcodear textos, manejamos el índice inicial por defecto (0 = Español)
             IdiomaCombobox.SelectedIndex = 0;
         }
+
         public void UpdateIdioma()
         {
             _userPlaceholder = TraductorManager_08YS.Instance.GetTexto("txtUsername_hint");
@@ -64,6 +68,7 @@ namespace GUI_08YS
 
             ActualizarContenidoComboIdioma();
         }
+
         private void RefrescarPlaceholderTraduccion(IconPlaceholderTextBox txt, string placeholder, bool tienePlaceholder, bool esPassword)
         {
             // Si el control está actualmente en modo placeholder, actualizamos su texto al nuevo idioma de inmediato
@@ -74,6 +79,7 @@ namespace GUI_08YS
                 if (esPassword) txt.MaskedInput = false;
             }
         }
+
         private void ActualizarContenidoComboIdioma()
         {
             // Salvamos el índice seleccionado actualmente para que no se resetee la vista al usuario
@@ -102,6 +108,7 @@ namespace GUI_08YS
             // Volvemos a dar de alta el manejador de eventos del ComboBox
             IdiomaCombobox.SelectedIndexChanged += IdiomaComboBox_SelectedIndexChanged;
         }
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -123,6 +130,7 @@ namespace GUI_08YS
                 }
             }
         }
+        #endregion
 
         private void btnAcceder_Click(object sender, EventArgs e)
         {
@@ -141,7 +149,23 @@ namespace GUI_08YS
 
             try
             {
-                User_08YS user = _userBLL.Login(username, password, out bool passwordDefault);
+                User_08YS user = _userBLL.ValidarLogin(username, password);
+
+                if(!DVManager_08YS.VerificarConsistencia())
+                {
+                    if (_userBLL.ManejaInconsistencias(user))
+                    {
+                        var formDV = new FormInconsistenciaDB_08YS();
+                        formDV.ShowDialog(this);
+                    }
+                    else MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_dv_inconsistente"),
+                                         TraductorManager_08YS.Instance.GetTexto("error_critico"),
+                                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                _userBLL.Login(user, out bool passwordDefault);
 
                 if (passwordDefault)
                 {

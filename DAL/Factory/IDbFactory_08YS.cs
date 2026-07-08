@@ -19,5 +19,7 @@ namespace DAL_08YS
         // por lo que el factory se va a encargar de llenar el DataTable
         DataTable FillDataTable(IDbCommand command);
         DataSet FillDataSet(IDbCommand command);
+
+        string GetConnectionString();
     }
 }

@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,8 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccesoBLL_08YS.cs" />
+    <Compile Include="BackupBLL_08YS.cs" />
     <Compile Include="BitacoraBLL_08YS.cs" />
     <Compile Include="BLLFactory_08YS.cs" />
+    <Compile Include="DvBLL_08YS.cs" />
     <Compile Include="FamiliaBLL_08YS.cs" />
     <Compile Include="RolBLL_08YS.cs" />
     <Compile Include="UserBLL_08YS.cs" />

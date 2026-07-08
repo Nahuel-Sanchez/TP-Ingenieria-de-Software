@@ -42,7 +42,9 @@ namespace BLL_08YS
             ValidarDatosEntrada(nombre, componentes);
             ValidarRolNoExistente(nombre, componentes, null);
             SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearRoles);
+
             _rolRepo.Create(nombre, componentes.ToList());
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.RolCreado);
         }
 
@@ -51,7 +53,9 @@ namespace BLL_08YS
             ValidarDatosEntrada(nombre, componentes);
             ValidarRolNoExistente(nombre, componentes, rolId);
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarRoles);
+
             _rolRepo.Modify(rolId, nombre, componentes.ToList());
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.RolModificado);
 
             if(rolId == SessionManager_08YS.Instance.Current.Rol.RolID)
@@ -64,7 +68,9 @@ namespace BLL_08YS
                 throw new ComponenteEnUsoException_08YS();
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarRoles);
+
             _rolRepo.Delete(rolId);
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.RolEliminado);
         }
 

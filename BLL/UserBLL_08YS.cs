@@ -14,12 +14,13 @@ using System.Threading.Tasks;
 
 namespace BLL_08YS
 {
-    public class UserDniDuplicadoException_08YS : Exception { }
+    public class UserDniDuplicadoException_08YS     : Exception { }
     public class UserAutoModificacionException_08YS : Exception { }
-    public class UserAutoEstadoException_08YS : Exception { }
-    public class PwdActualIncorrectaException_08YS : Exception { }
-    public class UserNotFoundException_08YS : Exception { }
-    public class LogoutPersistenceException_08YS : Exception { }
+    public class UserAutoEstadoException_08YS       : Exception { }
+    public class PwdActualIncorrectaException_08YS  : Exception { }
+    public class UserNotFoundException_08YS         : Exception { }
+    public class LogoutPersistenceException_08YS    : Exception { }
+
     public class UserBLL_08YS
     {
         private readonly IUserRepository_08YS _userRepository;
@@ -35,7 +36,7 @@ namespace BLL_08YS
 
         #region Login
 
-        public User_08YS Login(string username, string password, out bool passwordDefault)
+        public User_08YS ValidarLogin(string username, string password)
         {
             if (SessionManager_08YS.Instance.IsLogged)
                 throw new InvalidOperationException();
@@ -48,6 +49,11 @@ namespace BLL_08YS
             if (!Encriptador_08YS.Verificar(password, user.Hash, user.Salt))
                 RegistrarIntentoFallido(username);
 
+            return user;
+        }
+
+        public User_08YS Login(User_08YS user, out bool passwordDefault)
+        {
             user.Rol = _rolRepo.GetById(user.Rol.RolID);
             SessionManager_08YS.Instance.SetCurrentUser(user);
 
@@ -69,6 +75,9 @@ namespace BLL_08YS
             throw new AuthenticationException();
         }
 
+        public bool ManejaInconsistencias(User_08YS user) =>
+            _rolRepo.GetById(user.Rol.RolID).GetPermisos().Any(p => p.Nombre == Permisos.ManejarInconsistencias.ToString() );
+
         #endregion
 
         public void UserLockOut(string username)
@@ -76,6 +85,7 @@ namespace BLL_08YS
             var user = _userRepository.GetByUsername(username) ?? throw new UserNotFoundException_08YS();
 
             _userRepository.LockOut(user.Username);
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.UsuarioBloqueado, username: username);
 
             throw new UserBloqueadoException_08YS();
@@ -88,12 +98,14 @@ namespace BLL_08YS
             var user = _userRepository.GetByUsername(username) ?? throw new UserNotFoundException_08YS();
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.DesbloquearUsuario);
+
             _userRepository.Unlock(user.Username);
+
             string passwordDefault = user.DNI.ToString() + user.Apellido;
-
             Encriptador_08YS.CrearHash(passwordDefault, out string nuevoHash, out string nuevoSalt);
-            _userRepository.UpdatePassword(user.Username, nuevoHash, nuevoSalt);
 
+            _userRepository.UpdatePassword(user.Username, nuevoHash, nuevoSalt);
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.UsuarioDesbloqueado, targetUsername: username);
         }
 
@@ -109,7 +121,9 @@ namespace BLL_08YS
             User_08YS nuevo = new User_08YS(username, dni, rol, nombre, apellido, email, hash, salt, false, true);
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearUsuario);
+
             _userRepository.Create(nuevo);
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.UsuarioCreado, targetUsername: username);
         }
 
@@ -126,7 +140,9 @@ namespace BLL_08YS
             user.Rol = nuevoRol;
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarUsuario);
+
             _userRepository.Modify(user, user.Username);
+            DVManager_08YS.Recalcular();
             if(cambioEmail) _bitacoraBll.RegistrarEvento(Evento.UsuarioEmailModificado, targetUsername: username);
             if(cambioRol) _bitacoraBll.RegistrarEvento(Evento.UsuarioRolModificado, targetUsername: username);
         }
@@ -140,7 +156,9 @@ namespace BLL_08YS
 
             SessionManager_08YS.Instance.ValidatePermission(Permisos.DesActivarUsuario);
             bool nuevoEstado = !user.Activo;
+
             _userRepository.UpdateState(username, nuevoEstado);
+            DVManager_08YS.Recalcular();
 
             user.Activo = nuevoEstado;
             Evento accion = user.Activo ? Evento.UsuarioHabilitado : Evento.UsuarioDeshabilitado;
@@ -155,7 +173,9 @@ namespace BLL_08YS
                 throw new PwdActualIncorrectaException_08YS();
 
             Encriptador_08YS.CrearHash(passwordNueva, out string hashNuevo, out string saltNuevo);
+
             _userRepository.UpdatePassword(SessionManager_08YS.Instance.Current.Username, hashNuevo, saltNuevo);
+            DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.CambioContraseña);
         }
 
@@ -178,6 +198,7 @@ namespace BLL_08YS
                 try
                 {
                     _userRepository.UpdateLanguage(username, idiomaFinal);
+                    DVManager_08YS.Recalcular();
                 }
                 catch (Exception)
                 {

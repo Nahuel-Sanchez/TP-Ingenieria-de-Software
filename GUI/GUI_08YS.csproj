@@ -68,11 +68,23 @@
     <Compile Include="Admin\FormBitacora_08YS.Designer.cs">
       <DependentUpon>FormBitacora_08YS.cs</DependentUpon>
     </Compile>
+    <Compile Include="Admin\FormInconsistenciaDB_08YS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormInconsistenciaDB_08YS.Designer.cs">
+      <DependentUpon>FormInconsistenciaDB_08YS.cs</DependentUpon>
+    </Compile>
     <Compile Include="Admin\FormGestionAcceso_08YS.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Admin\FormGestionAcceso_08YS.Designer.cs">
       <DependentUpon>FormGestionAcceso_08YS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormGestionRespaldos_08YS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormGestionRespaldos_08YS.Designer.cs">
+      <DependentUpon>FormGestionRespaldos_08YS.cs</DependentUpon>
     </Compile>
     <Compile Include="PermissionFilter_08YS.cs" />
     <Compile Include="UserControls\CustomCalendarPanel.cs">
@@ -131,8 +143,14 @@
     <EmbeddedResource Include="Admin\FormBitacora_08YS.resx">
       <DependentUpon>FormBitacora_08YS.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormInconsistenciaDB_08YS.resx">
+      <DependentUpon>FormInconsistenciaDB_08YS.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Admin\FormGestionAcceso_08YS.resx">
       <DependentUpon>FormGestionAcceso_08YS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormGestionRespaldos_08YS.resx">
+      <DependentUpon>FormGestionRespaldos_08YS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Usuario\FormCambiarContraseña_08YS.resx">
       <DependentUpon>FormCambiarContraseña_08YS.cs</DependentUpon>

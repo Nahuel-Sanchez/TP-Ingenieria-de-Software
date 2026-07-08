@@ -34,7 +34,6 @@
             this.desbloquearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panelIdioma = new System.Windows.Forms.Panel();
-            this.IdiomaCombobox = new CustomControls.IconComboBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -52,12 +51,14 @@
             this.lblNombreApellido = new System.Windows.Forms.Label();
             this.lblRolSistema = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.IdiomaCombobox = new CustomControls.IconComboBox();
             this.AdministrativoDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.gestionUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gestionAccesosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rolesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.familiasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gestionRespaldosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PerfilDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.cambiarContraseñaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -117,34 +118,6 @@
             this.panelIdioma.Name = "panelIdioma";
             this.panelIdioma.Size = new System.Drawing.Size(250, 46);
             this.panelIdioma.TabIndex = 8;
-            // 
-            // IdiomaCombobox
-            // 
-            this.IdiomaCombobox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
-            this.IdiomaCombobox.BorderColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.BorderFocusColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.IdiomaCombobox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IdiomaCombobox.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
-            this.IdiomaCombobox.DropDownBorderColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(100)))));
-            this.IdiomaCombobox.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.DropDownItemHeight = 35;
-            this.IdiomaCombobox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.IconChar = FontAwesome.Sharp.IconChar.Earth;
-            this.IdiomaCombobox.IconColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.IconFont = FontAwesome.Sharp.IconFont.Solid;
-            this.IdiomaCombobox.IconPadding = 10;
-            this.IdiomaCombobox.IconSize = 30;
-            this.IdiomaCombobox.Location = new System.Drawing.Point(0, 0);
-            this.IdiomaCombobox.Margin = new System.Windows.Forms.Padding(4);
-            this.IdiomaCombobox.Name = "IdiomaCombobox";
-            this.IdiomaCombobox.SelectedItem = null;
-            this.IdiomaCombobox.SelectedValue = null;
-            this.IdiomaCombobox.Size = new System.Drawing.Size(250, 46);
-            this.IdiomaCombobox.TabIndex = 7;
-            this.IdiomaCombobox.SelectedIndexChanged += new System.EventHandler(this.IdiomaCombobox_SelectedIndexChanged);
             // 
             // pictureBox1
             // 
@@ -416,6 +389,34 @@
             this.panel2.Size = new System.Drawing.Size(1469, 919);
             this.panel2.TabIndex = 5;
             // 
+            // IdiomaCombobox
+            // 
+            this.IdiomaCombobox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
+            this.IdiomaCombobox.BorderColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.IdiomaCombobox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IdiomaCombobox.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
+            this.IdiomaCombobox.DropDownBorderColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(100)))));
+            this.IdiomaCombobox.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.DropDownItemHeight = 35;
+            this.IdiomaCombobox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.IconChar = FontAwesome.Sharp.IconChar.Earth;
+            this.IdiomaCombobox.IconColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.IdiomaCombobox.IconPadding = 10;
+            this.IdiomaCombobox.IconSize = 30;
+            this.IdiomaCombobox.Location = new System.Drawing.Point(0, 0);
+            this.IdiomaCombobox.Margin = new System.Windows.Forms.Padding(4);
+            this.IdiomaCombobox.Name = "IdiomaCombobox";
+            this.IdiomaCombobox.SelectedItem = null;
+            this.IdiomaCombobox.SelectedValue = null;
+            this.IdiomaCombobox.Size = new System.Drawing.Size(250, 46);
+            this.IdiomaCombobox.TabIndex = 7;
+            this.IdiomaCombobox.SelectedIndexChanged += new System.EventHandler(this.IdiomaCombobox_SelectedIndexChanged);
+            // 
             // AdministrativoDropDownMenu
             // 
             this.AdministrativoDropDownMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -423,17 +424,18 @@
             this.AdministrativoDropDownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gestionUsuarioToolStripMenuItem,
             this.bitacoraToolStripMenuItem,
-            this.gestionAccesosToolStripMenuItem});
+            this.gestionAccesosToolStripMenuItem,
+            this.gestionRespaldosToolStripMenuItem});
             this.AdministrativoDropDownMenu.MenuItemHeight = 25;
             this.AdministrativoDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
             this.AdministrativoDropDownMenu.Name = "dropdownMenuStrip_08YS1";
             this.AdministrativoDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
-            this.AdministrativoDropDownMenu.Size = new System.Drawing.Size(186, 76);
+            this.AdministrativoDropDownMenu.Size = new System.Drawing.Size(201, 100);
             // 
             // gestionUsuarioToolStripMenuItem
             // 
             this.gestionUsuarioToolStripMenuItem.Name = "gestionUsuarioToolStripMenuItem";
-            this.gestionUsuarioToolStripMenuItem.Size = new System.Drawing.Size(185, 24);
+            this.gestionUsuarioToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
             this.gestionUsuarioToolStripMenuItem.Tag = "menuGestionUsuario";
             this.gestionUsuarioToolStripMenuItem.Text = "GestionUsuario";
             this.gestionUsuarioToolStripMenuItem.Click += new System.EventHandler(this.gestionUsuarioToolStripMenuItem_Click);
@@ -441,7 +443,7 @@
             // bitacoraToolStripMenuItem
             // 
             this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
-            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(185, 24);
+            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
             this.bitacoraToolStripMenuItem.Tag = "menuBitacora";
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
@@ -452,7 +454,7 @@
             this.rolesToolStripMenuItem,
             this.familiasToolStripMenuItem});
             this.gestionAccesosToolStripMenuItem.Name = "gestionAccesosToolStripMenuItem";
-            this.gestionAccesosToolStripMenuItem.Size = new System.Drawing.Size(185, 24);
+            this.gestionAccesosToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
             this.gestionAccesosToolStripMenuItem.Tag = "menuGestionAccesos";
             this.gestionAccesosToolStripMenuItem.Text = "Gestion Accesos";
             // 
@@ -471,6 +473,13 @@
             this.familiasToolStripMenuItem.Tag = "menuFamilias";
             this.familiasToolStripMenuItem.Text = "Familias";
             this.familiasToolStripMenuItem.Click += new System.EventHandler(this.familiasToolStripMenuItem_Click);
+            // 
+            // gestionRespaldosToolStripMenuItem
+            // 
+            this.gestionRespaldosToolStripMenuItem.Name = "gestionRespaldosToolStripMenuItem";
+            this.gestionRespaldosToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
+            this.gestionRespaldosToolStripMenuItem.Text = "Gestion Respaldos";
+            this.gestionRespaldosToolStripMenuItem.Click += new System.EventHandler(this.gestionRespaldosToolStripMenuItem_Click);
             // 
             // PerfilDropDownMenu
             // 
@@ -575,6 +584,7 @@
         private FontAwesome.Sharp.IconButton btnReservar;
         private System.Windows.Forms.Panel panel3;
         private FontAwesome.Sharp.IconButton btnCerrarSesion;
+        private System.Windows.Forms.ToolStripMenuItem gestionRespaldosToolStripMenuItem;
     }
 }
 
