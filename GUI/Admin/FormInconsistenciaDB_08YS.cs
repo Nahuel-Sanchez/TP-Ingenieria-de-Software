@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace GUI_08YS.Admin
 {
-    public partial class FormInconsistenciaDB_08YS : Form
+    public partial class FormInconsistenciaDB_08YS : Form, IIdiomaObserver_08YS
     {
         private readonly DvBLL_08YS _dvBLL;
         private readonly BackupBLL_08YS _backupBLL;
@@ -30,7 +30,31 @@ namespace GUI_08YS.Admin
         }
 
         private void FormInconsistenciaDB_08YS_Load(object sender, EventArgs e)
-                        => ConfigurarBotones();
+        {
+            ConfigurarBotones();
+            UpdateIdioma();
+        }
+
+        #region Idioma
+        public void UpdateIdioma()
+            => TraducirControles(this);
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                {
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControles(c);
+                }
+            }
+        }
+        #endregion
 
         private void btnRecalcular_Click(object sender, EventArgs e)
         {

@@ -478,6 +478,7 @@
             // 
             this.gestionRespaldosToolStripMenuItem.Name = "gestionRespaldosToolStripMenuItem";
             this.gestionRespaldosToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
+            this.gestionRespaldosToolStripMenuItem.Tag = "menuRespaldos";
             this.gestionRespaldosToolStripMenuItem.Text = "Gestion Respaldos";
             this.gestionRespaldosToolStripMenuItem.Click += new System.EventHandler(this.gestionRespaldosToolStripMenuItem_Click);
             // 

@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace GUI_08YS.Admin
 {
-    public partial class FormGestionRespaldos_08YS : Form
+    public partial class FormGestionRespaldos_08YS : Form, IIdiomaObserver_08YS
     {
         private readonly BackupBLL_08YS _bll;
 
@@ -29,6 +29,29 @@ namespace GUI_08YS.Admin
             InitializeComponent();
             _bll = BLLFactory_08YS.CreateBackupBLL();
         }
+
+        #region Idioma
+        public void UpdateIdioma()
+        {
+            TraducirControles(this);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                {
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControles(c);
+                }
+            }
+        }
+        #endregion
 
         private void FormGestionRespaldos_Load(object sender, EventArgs e)
         {

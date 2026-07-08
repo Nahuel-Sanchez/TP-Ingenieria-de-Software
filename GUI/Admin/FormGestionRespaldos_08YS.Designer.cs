@@ -37,7 +37,6 @@
             this.lblNombreArchivo = new System.Windows.Forms.Label();
             this.lblNombreLabel = new System.Windows.Forms.Label();
             this.pnlCarpeta = new System.Windows.Forms.Panel();
-            this.txtCarpetaDestino = new CustomControls.IconPlaceholderTextBox();
             this.btnSeleccionarCarpetaBackup = new FontAwesome.Sharp.IconButton();
             this.lblBackupDesc = new System.Windows.Forms.Label();
             this.lblBackupTitulo = new System.Windows.Forms.Label();
@@ -47,13 +46,14 @@
             this.lblInfoArchivo = new System.Windows.Forms.Label();
             this.iconPictureBox3 = new FontAwesome.Sharp.IconPictureBox();
             this.pnlArchivo = new System.Windows.Forms.Panel();
-            this.txtArchivoRestore = new CustomControls.IconPlaceholderTextBox();
             this.btnSeleccionarArchivoRestore = new FontAwesome.Sharp.IconButton();
             this.lblRestoreLabel = new System.Windows.Forms.Label();
             this.pnlWarning = new System.Windows.Forms.Panel();
             this.lblWarning = new System.Windows.Forms.Label();
             this.iconPictureBox2 = new FontAwesome.Sharp.IconPictureBox();
             this.lblRestoreTitulo = new System.Windows.Forms.Label();
+            this.txtCarpetaDestino = new CustomControls.IconPlaceholderTextBox();
+            this.txtArchivoRestore = new CustomControls.IconPlaceholderTextBox();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -92,6 +92,7 @@
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(496, 62);
             this.lblTitulo.TabIndex = 1;
+            this.lblTitulo.Tag = "backup_titulo";
             this.lblTitulo.Text = "Gestión de Respaldos";
             this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -168,7 +169,7 @@
             this.btnRealizarBackUp.Padding = new System.Windows.Forms.Padding(5, 0, 10, 0);
             this.btnRealizarBackUp.Size = new System.Drawing.Size(670, 50);
             this.btnRealizarBackUp.TabIndex = 61;
-            this.btnRealizarBackUp.Tag = "btnGuardar";
+            this.btnRealizarBackUp.Tag = "backup_btn_realizar";
             this.btnRealizarBackUp.Text = "Realizar BackUp";
             this.btnRealizarBackUp.UseVisualStyleBackColor = false;
             this.btnRealizarBackUp.Click += new System.EventHandler(this.btnRealizarBackUp_Click);
@@ -197,6 +198,7 @@
             this.lblNombreLabel.Padding = new System.Windows.Forms.Padding(0, 25, 0, 0);
             this.lblNombreLabel.Size = new System.Drawing.Size(308, 57);
             this.lblNombreLabel.TabIndex = 3;
+            this.lblNombreLabel.Tag = "backup_nombre_label";
             this.lblNombreLabel.Text = "El nombre del archivo será:";
             // 
             // pnlCarpeta
@@ -209,29 +211,6 @@
             this.pnlCarpeta.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.pnlCarpeta.Size = new System.Drawing.Size(670, 55);
             this.pnlCarpeta.TabIndex = 2;
-            // 
-            // txtCarpetaDestino
-            // 
-            this.txtCarpetaDestino.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.txtCarpetaDestino.BorderColor = System.Drawing.Color.Goldenrod;
-            this.txtCarpetaDestino.BorderFocusColor = System.Drawing.Color.Goldenrod;
-            this.txtCarpetaDestino.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtCarpetaDestino.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCarpetaDestino.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.txtCarpetaDestino.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
-            this.txtCarpetaDestino.IconColor = System.Drawing.Color.Goldenrod;
-            this.txtCarpetaDestino.IconColorRight = System.Drawing.Color.DimGray;
-            this.txtCarpetaDestino.IconPadding = 10;
-            this.txtCarpetaDestino.IconSize = 30;
-            this.txtCarpetaDestino.Location = new System.Drawing.Point(0, 10);
-            this.txtCarpetaDestino.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtCarpetaDestino.Name = "txtCarpetaDestino";
-            this.txtCarpetaDestino.PlaceholderColor = System.Drawing.Color.LightGray;
-            this.txtCarpetaDestino.ReadOnly = true;
-            this.txtCarpetaDestino.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtCarpetaDestino.Size = new System.Drawing.Size(615, 45);
-            this.txtCarpetaDestino.TabIndex = 70;
-            this.txtCarpetaDestino.TextLeftPadding = 20;
             // 
             // btnSeleccionarCarpetaBackup
             // 
@@ -251,7 +230,6 @@
             this.btnSeleccionarCarpetaBackup.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnSeleccionarCarpetaBackup.Size = new System.Drawing.Size(55, 45);
             this.btnSeleccionarCarpetaBackup.TabIndex = 62;
-            this.btnSeleccionarCarpetaBackup.Tag = "btnCancelar";
             this.btnSeleccionarCarpetaBackup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSeleccionarCarpetaBackup.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnSeleccionarCarpetaBackup.UseVisualStyleBackColor = false;
@@ -268,6 +246,7 @@
             this.lblBackupDesc.Padding = new System.Windows.Forms.Padding(0, 15, 0, 0);
             this.lblBackupDesc.Size = new System.Drawing.Size(519, 40);
             this.lblBackupDesc.TabIndex = 1;
+            this.lblBackupDesc.Tag = "backup_crear_desc";
             this.lblBackupDesc.Text = "Seleccioná la carpeta donde se guardará el archivo de backup";
             // 
             // lblBackupTitulo
@@ -281,6 +260,7 @@
             this.lblBackupTitulo.Name = "lblBackupTitulo";
             this.lblBackupTitulo.Size = new System.Drawing.Size(202, 38);
             this.lblBackupTitulo.TabIndex = 0;
+            this.lblBackupTitulo.Tag = "backup_crear_titulo";
             this.lblBackupTitulo.Text = "Crear respaldo";
             // 
             // panel3
@@ -311,7 +291,7 @@
             this.btnRealizarRestore.Padding = new System.Windows.Forms.Padding(5, 0, 10, 0);
             this.btnRealizarRestore.Size = new System.Drawing.Size(696, 50);
             this.btnRealizarRestore.TabIndex = 61;
-            this.btnRealizarRestore.Tag = "btnGuardar";
+            this.btnRealizarRestore.Tag = "backup_btn_restaurar";
             this.btnRealizarRestore.Text = "Restaurar Backup";
             this.btnRealizarRestore.UseVisualStyleBackColor = false;
             this.btnRealizarRestore.Click += new System.EventHandler(this.btnRealizarRestore_Click);
@@ -326,6 +306,7 @@
             this.pnlInfoArchivo.Padding = new System.Windows.Forms.Padding(0, 15, 0, 0);
             this.pnlInfoArchivo.Size = new System.Drawing.Size(696, 75);
             this.pnlInfoArchivo.TabIndex = 6;
+            this.pnlInfoArchivo.Visible = false;
             // 
             // lblInfoArchivo
             // 
@@ -367,29 +348,6 @@
             this.pnlArchivo.Size = new System.Drawing.Size(696, 55);
             this.pnlArchivo.TabIndex = 5;
             // 
-            // txtArchivoRestore
-            // 
-            this.txtArchivoRestore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.txtArchivoRestore.BorderColor = System.Drawing.Color.Goldenrod;
-            this.txtArchivoRestore.BorderFocusColor = System.Drawing.Color.Goldenrod;
-            this.txtArchivoRestore.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtArchivoRestore.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtArchivoRestore.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.txtArchivoRestore.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
-            this.txtArchivoRestore.IconColor = System.Drawing.Color.Goldenrod;
-            this.txtArchivoRestore.IconColorRight = System.Drawing.Color.DimGray;
-            this.txtArchivoRestore.IconPadding = 10;
-            this.txtArchivoRestore.IconSize = 30;
-            this.txtArchivoRestore.Location = new System.Drawing.Point(0, 10);
-            this.txtArchivoRestore.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtArchivoRestore.Name = "txtArchivoRestore";
-            this.txtArchivoRestore.PlaceholderColor = System.Drawing.Color.LightGray;
-            this.txtArchivoRestore.ReadOnly = true;
-            this.txtArchivoRestore.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtArchivoRestore.Size = new System.Drawing.Size(641, 45);
-            this.txtArchivoRestore.TabIndex = 70;
-            this.txtArchivoRestore.TextLeftPadding = 20;
-            // 
             // btnSeleccionarArchivoRestore
             // 
             this.btnSeleccionarArchivoRestore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
@@ -408,7 +366,6 @@
             this.btnSeleccionarArchivoRestore.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnSeleccionarArchivoRestore.Size = new System.Drawing.Size(55, 45);
             this.btnSeleccionarArchivoRestore.TabIndex = 62;
-            this.btnSeleccionarArchivoRestore.Tag = "btnCancelar";
             this.btnSeleccionarArchivoRestore.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSeleccionarArchivoRestore.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnSeleccionarArchivoRestore.UseVisualStyleBackColor = false;
@@ -425,6 +382,7 @@
             this.lblRestoreLabel.Padding = new System.Windows.Forms.Padding(0, 25, 0, 0);
             this.lblRestoreLabel.Size = new System.Drawing.Size(429, 57);
             this.lblRestoreLabel.TabIndex = 4;
+            this.lblRestoreLabel.Tag = "backup_restore_label";
             this.lblRestoreLabel.Text = "Seleccioná el archivo de backup (.bak)";
             // 
             // pnlWarning
@@ -449,6 +407,7 @@
             this.lblWarning.Name = "lblWarning";
             this.lblWarning.Size = new System.Drawing.Size(635, 84);
             this.lblWarning.TabIndex = 2;
+            this.lblWarning.Tag = "backup_warning";
             this.lblWarning.Text = "Restaurar reemplazará completamente la base de datos actual con el\r\ncontenido del" +
     " backup seleccionado. Esta operación no puede \r\ndeshacerse. El sistema se reinic" +
     "iará automáticamente al finalizar.";
@@ -480,7 +439,54 @@
             this.lblRestoreTitulo.Name = "lblRestoreTitulo";
             this.lblRestoreTitulo.Size = new System.Drawing.Size(254, 38);
             this.lblRestoreTitulo.TabIndex = 1;
+            this.lblRestoreTitulo.Tag = "backup_restore_titulo";
             this.lblRestoreTitulo.Text = "Restaurar respaldo";
+            // 
+            // txtCarpetaDestino
+            // 
+            this.txtCarpetaDestino.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtCarpetaDestino.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtCarpetaDestino.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtCarpetaDestino.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCarpetaDestino.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCarpetaDestino.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtCarpetaDestino.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
+            this.txtCarpetaDestino.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtCarpetaDestino.IconColorRight = System.Drawing.Color.DimGray;
+            this.txtCarpetaDestino.IconPadding = 10;
+            this.txtCarpetaDestino.IconSize = 30;
+            this.txtCarpetaDestino.Location = new System.Drawing.Point(0, 10);
+            this.txtCarpetaDestino.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtCarpetaDestino.Name = "txtCarpetaDestino";
+            this.txtCarpetaDestino.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtCarpetaDestino.ReadOnly = true;
+            this.txtCarpetaDestino.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtCarpetaDestino.Size = new System.Drawing.Size(615, 45);
+            this.txtCarpetaDestino.TabIndex = 70;
+            this.txtCarpetaDestino.TextLeftPadding = 20;
+            // 
+            // txtArchivoRestore
+            // 
+            this.txtArchivoRestore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtArchivoRestore.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtArchivoRestore.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtArchivoRestore.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtArchivoRestore.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtArchivoRestore.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtArchivoRestore.IconAlignment = CustomControls.IconTextBoxAlignment.Right;
+            this.txtArchivoRestore.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtArchivoRestore.IconColorRight = System.Drawing.Color.DimGray;
+            this.txtArchivoRestore.IconPadding = 10;
+            this.txtArchivoRestore.IconSize = 30;
+            this.txtArchivoRestore.Location = new System.Drawing.Point(0, 10);
+            this.txtArchivoRestore.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtArchivoRestore.Name = "txtArchivoRestore";
+            this.txtArchivoRestore.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtArchivoRestore.ReadOnly = true;
+            this.txtArchivoRestore.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtArchivoRestore.Size = new System.Drawing.Size(641, 45);
+            this.txtArchivoRestore.TabIndex = 70;
+            this.txtArchivoRestore.TextLeftPadding = 20;
             // 
             // FormGestionRespaldos_08YS
             // 

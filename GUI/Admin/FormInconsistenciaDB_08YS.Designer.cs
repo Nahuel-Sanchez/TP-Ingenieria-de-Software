@@ -62,6 +62,7 @@
             this.lblTitulo.Padding = new System.Windows.Forms.Padding(0, 25, 0, 0);
             this.lblTitulo.Size = new System.Drawing.Size(544, 70);
             this.lblTitulo.TabIndex = 1;
+            this.lblTitulo.Tag = "dv_titulo";
             this.lblTitulo.Text = "Inconsistencia en la base de datos";
             this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -91,6 +92,7 @@
             this.lblDescripcion.Padding = new System.Windows.Forms.Padding(15);
             this.lblDescripcion.Size = new System.Drawing.Size(685, 53);
             this.lblDescripcion.TabIndex = 1;
+            this.lblDescripcion.Tag = "dv_descripcion";
             this.lblDescripcion.Text = "Se detectaron modificaciones directas sobre la base de datos. Seleccione una acci" +
     "ón:";
             // 
@@ -128,7 +130,7 @@
             this.btnSalir.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnSalir.Size = new System.Drawing.Size(214, 60);
             this.btnSalir.TabIndex = 6;
-            this.btnSalir.Tag = "btnPerfil";
+            this.btnSalir.Tag = "dv_btn_salir";
             this.btnSalir.Text = "Salir";
             this.btnSalir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSalir.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -152,7 +154,7 @@
             this.btnRestore.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnRestore.Size = new System.Drawing.Size(213, 60);
             this.btnRestore.TabIndex = 5;
-            this.btnRestore.Tag = "btnPerfil";
+            this.btnRestore.Tag = "dv_btn_restaurar";
             this.btnRestore.Text = "Restaurar";
             this.btnRestore.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnRestore.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -176,7 +178,7 @@
             this.btnRecalcular.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnRecalcular.Size = new System.Drawing.Size(213, 60);
             this.btnRecalcular.TabIndex = 4;
-            this.btnRecalcular.Tag = "btnPerfil";
+            this.btnRecalcular.Tag = "dv_btn_recalcular";
             this.btnRecalcular.Text = "Recalcular";
             this.btnRecalcular.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnRecalcular.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
