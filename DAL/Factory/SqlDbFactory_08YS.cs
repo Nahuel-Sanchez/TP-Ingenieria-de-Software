@@ -13,7 +13,7 @@ namespace DAL_08YS
     {
         private const string NombreClaveConfig = "TP_Ing_Soft";
         private const string ConnectionStringDefault =
-            @"Data Source=.\SQLEXPRESS;Initial Catalog=TP_Ing_Soft;Integrated Security=True";
+            @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TP_Ing_Soft;Integrated Security=True";
 
         // Seteable manualmente (ej: instalador, tests). Si queda vacía, se resuelve
         // desde App.config y, si tampoco hay nada ahí, se usa el default local.
