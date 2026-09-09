@@ -11,7 +11,7 @@ namespace DAL_08YS.Instalador
 {
     /// <summary>
     /// Crea la base de datos en silencio en el primer arranque, a partir del
-    /// script.sql que queda al lado del .exe. No depende de ningún formulario:
+    /// script.sql que queda al lado del .exe.
     /// se invoca una sola vez desde BLLInstalador_08YS.AsegurarBaseDatos().
     /// </summary>
     public static class InstaladorBD_08YS
@@ -59,8 +59,29 @@ namespace DAL_08YS.Instalador
                 {
                     if (string.IsNullOrWhiteSpace(lote)) continue;
 
-                    using (var cmd = new SqlCommand(lote, conn) { CommandTimeout = 120 })
-                        cmd.ExecuteNonQuery();
+                    try
+                    {
+                        using (var cmd = new SqlCommand(lote, conn) { CommandTimeout = 120 })
+                            cmd.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Lotes de configuración (ALTER DATABASE ... QUERY_STORE, ACCELERATED_DATABASE_RECOVERY,
+                        // etc.) pueden no ser soportados según la edición/versión de SQL Server instalada
+                        // (por ejemplo LocalDB 2019 vs. SQL Server 2022). No son críticos para el
+                        // funcionamiento de la app: si fallan, se ignoran y se sigue con el resto del script
+                        // para no perder la creación de tablas y datos. Se deja rastro en un log para poder
+                        // diagnosticar si algo importante (una tabla) llegara a fallar.
+                        try
+                        {
+                            string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "instalador_db.log");
+                            File.AppendAllText(logPath,
+                                $"[{DateTime.Now}] Lote ignorado por error: {ex.Message}{Environment.NewLine}");
+                        }
+                        catch { /* si ni siquiera se puede loguear, no bloqueamos la instalación por esto */ }
+
+                        continue;
+                    }
                 }
             }
         }

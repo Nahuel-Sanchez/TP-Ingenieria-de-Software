@@ -2,7 +2,7 @@
 using FontAwesome.Sharp;
 using GUI;
 using GUI_08YS.Admin;
-using GUI_08YS.Properties;
+using GUI_08YS.Recepcionista;
 using Service_08YS;
 using Service_08YS.Entities.Acceso;
 using System;
@@ -373,6 +373,14 @@ namespace GUI_08YS
 
         #endregion
 
+        #region Recepcionista
+
+        private void btnReservar_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormDisponibilidad(OpenChildForm));
+        }
+
+        #endregion
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
             var respuesta = MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_cerrar_sesion"),
@@ -437,5 +445,6 @@ namespace GUI_08YS
             TraductorManager_08YS.Instance.CambiarIdioma(idiomaSeleccionado);
         }
 
+        
     }
 }

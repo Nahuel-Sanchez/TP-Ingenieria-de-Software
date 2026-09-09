@@ -34,6 +34,7 @@
             this.desbloquearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panelIdioma = new System.Windows.Forms.Panel();
+            this.IdiomaCombobox = new CustomControls.IconComboBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -51,7 +52,6 @@
             this.lblNombreApellido = new System.Windows.Forms.Label();
             this.lblRolSistema = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.IdiomaCombobox = new CustomControls.IconComboBox();
             this.AdministrativoDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.gestionUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -118,6 +118,34 @@
             this.panelIdioma.Name = "panelIdioma";
             this.panelIdioma.Size = new System.Drawing.Size(250, 46);
             this.panelIdioma.TabIndex = 8;
+            // 
+            // IdiomaCombobox
+            // 
+            this.IdiomaCombobox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
+            this.IdiomaCombobox.BorderColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.IdiomaCombobox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IdiomaCombobox.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
+            this.IdiomaCombobox.DropDownBorderColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(100)))));
+            this.IdiomaCombobox.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.DropDownItemHeight = 35;
+            this.IdiomaCombobox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.IdiomaCombobox.IconChar = FontAwesome.Sharp.IconChar.Earth;
+            this.IdiomaCombobox.IconColor = System.Drawing.Color.Goldenrod;
+            this.IdiomaCombobox.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.IdiomaCombobox.IconPadding = 10;
+            this.IdiomaCombobox.IconSize = 30;
+            this.IdiomaCombobox.Location = new System.Drawing.Point(0, 0);
+            this.IdiomaCombobox.Margin = new System.Windows.Forms.Padding(4);
+            this.IdiomaCombobox.Name = "IdiomaCombobox";
+            this.IdiomaCombobox.SelectedItem = null;
+            this.IdiomaCombobox.SelectedValue = null;
+            this.IdiomaCombobox.Size = new System.Drawing.Size(250, 46);
+            this.IdiomaCombobox.TabIndex = 7;
+            this.IdiomaCombobox.SelectedIndexChanged += new System.EventHandler(this.IdiomaCombobox_SelectedIndexChanged);
             // 
             // pictureBox1
             // 
@@ -295,6 +323,7 @@
             this.btnReservar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReservar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnReservar.UseVisualStyleBackColor = true;
+            this.btnReservar.Click += new System.EventHandler(this.btnReservar_Click);
             // 
             // panel3
             // 
@@ -388,34 +417,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1469, 919);
             this.panel2.TabIndex = 5;
-            // 
-            // IdiomaCombobox
-            // 
-            this.IdiomaCombobox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
-            this.IdiomaCombobox.BorderColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.BorderFocusColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.IdiomaCombobox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IdiomaCombobox.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(38)))));
-            this.IdiomaCombobox.DropDownBorderColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.DropDownForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.DropDownHighlightBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(20)))), ((int)(((byte)(100)))));
-            this.IdiomaCombobox.DropDownHighlightForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.DropDownItemHeight = 35;
-            this.IdiomaCombobox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IdiomaCombobox.IconChar = FontAwesome.Sharp.IconChar.Earth;
-            this.IdiomaCombobox.IconColor = System.Drawing.Color.Goldenrod;
-            this.IdiomaCombobox.IconFont = FontAwesome.Sharp.IconFont.Solid;
-            this.IdiomaCombobox.IconPadding = 10;
-            this.IdiomaCombobox.IconSize = 30;
-            this.IdiomaCombobox.Location = new System.Drawing.Point(0, 0);
-            this.IdiomaCombobox.Margin = new System.Windows.Forms.Padding(4);
-            this.IdiomaCombobox.Name = "IdiomaCombobox";
-            this.IdiomaCombobox.SelectedItem = null;
-            this.IdiomaCombobox.SelectedValue = null;
-            this.IdiomaCombobox.Size = new System.Drawing.Size(250, 46);
-            this.IdiomaCombobox.TabIndex = 7;
-            this.IdiomaCombobox.SelectedIndexChanged += new System.EventHandler(this.IdiomaCombobox_SelectedIndexChanged);
             // 
             // AdministrativoDropDownMenu
             // 

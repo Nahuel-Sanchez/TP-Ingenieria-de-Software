@@ -1,5 +1,6 @@
 ﻿using BLL_08YS;
 using GUI;
+using GUI_08YS.Recepcionista;
 using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;

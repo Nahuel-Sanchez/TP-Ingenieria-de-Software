@@ -93,12 +93,22 @@
       <DependentUpon>FormGestionRespaldos_08YS.cs</DependentUpon>
     </Compile>
     <Compile Include="PermissionFilter_08YS.cs" />
+    <Compile Include="Recepcionista\FormDisponibilidad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\FormDisponibilidad.Designer.cs">
+      <DependentUpon>FormDisponibilidad.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CustomCalendarPanel.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\CustomDateRangePanel.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\CustomTimePanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UserControls\DateRangeSelector.cs" />
     <Compile Include="UserControls\IconCache.cs" />
     <Compile Include="UserControls\IconComboBox.cs">
       <SubType>UserControl</SubType>
@@ -158,6 +168,9 @@
     <EmbeddedResource Include="Admin\FormGestionRespaldos_08YS.resx">
       <DependentUpon>FormGestionRespaldos_08YS.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Recepcionista\FormDisponibilidad.resx">
+      <DependentUpon>FormDisponibilidad.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Usuario\FormCambiarContraseña_08YS.resx">
       <DependentUpon>FormCambiarContraseña_08YS.cs</DependentUpon>
     </EmbeddedResource>
@@ -171,7 +184,7 @@
       <DependentUpon>FormLogin_08YS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>

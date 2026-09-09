@@ -259,7 +259,7 @@
             this.dgvEntidades.EnableHeadersVisualStyles = false;
             this.dgvEntidades.GridColor = System.Drawing.Color.Goldenrod;
             this.dgvEntidades.Location = new System.Drawing.Point(0, 40);
-            this.dgvEntidades.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvEntidades.Margin = new System.Windows.Forms.Padding(4);
             this.dgvEntidades.MultiSelect = false;
             this.dgvEntidades.Name = "dgvEntidades";
             this.dgvEntidades.ReadOnly = true;
