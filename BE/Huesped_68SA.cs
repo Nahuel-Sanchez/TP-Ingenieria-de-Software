@@ -13,6 +13,7 @@ namespace BE_08YS
         Cedula,
         Otro
     }
+
     public class Huesped_68SA
     {
         public int Id { get; set; }

@@ -30,7 +30,9 @@
         {
             this.calRangoReservas = new CustomControls.CustomDateRangePanel();
             this.lblTitulo = new System.Windows.Forms.Label();
-            this.btnFiltrar = new FontAwesome.Sharp.IconButton();
+            this.btnContinuar = new FontAwesome.Sharp.IconButton();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // calRangoReservas
@@ -83,29 +85,41 @@
             this.lblTitulo.Tag = "lblAuditoriaEventos";
             this.lblTitulo.Text = "Registrar reserva";
             // 
-            // btnFiltrar
+            // btnContinuar
             // 
-            this.btnFiltrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFiltrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFiltrar.ForeColor = System.Drawing.Color.Goldenrod;
-            this.btnFiltrar.IconChar = FontAwesome.Sharp.IconChar.Filter;
-            this.btnFiltrar.IconColor = System.Drawing.Color.Gold;
-            this.btnFiltrar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnFiltrar.IconSize = 40;
-            this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(1178, 844);
-            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnFiltrar.Name = "btnFiltrar";
-            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnFiltrar.Size = new System.Drawing.Size(280, 65);
-            this.btnFiltrar.TabIndex = 59;
-            this.btnFiltrar.Tag = "btnFiltrar";
-            this.btnFiltrar.Text = "Continuar";
-            this.btnFiltrar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnFiltrar.UseVisualStyleBackColor = false;
-            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
+            this.btnContinuar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.btnContinuar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnContinuar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnContinuar.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnContinuar.ForeColor = System.Drawing.Color.Goldenrod;
+            this.btnContinuar.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlass;
+            this.btnContinuar.IconColor = System.Drawing.Color.Gold;
+            this.btnContinuar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnContinuar.IconSize = 40;
+            this.btnContinuar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnContinuar.Location = new System.Drawing.Point(20, 10);
+            this.btnContinuar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnContinuar.Name = "btnContinuar";
+            this.btnContinuar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnContinuar.Size = new System.Drawing.Size(1430, 79);
+            this.btnContinuar.TabIndex = 59;
+            this.btnContinuar.Tag = "btnContinuar";
+            this.btnContinuar.Text = "Continuar";
+            this.btnContinuar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnContinuar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnContinuar.UseVisualStyleBackColor = false;
+            this.btnContinuar.Click += new System.EventHandler(this.btnContinuar_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.btnContinuar);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 821);
+            this.panel1.Name = "panel1";
+            this.panel1.Padding = new System.Windows.Forms.Padding(20, 10, 20, 10);
+            this.panel1.Size = new System.Drawing.Size(1470, 99);
+            this.panel1.TabIndex = 60;
             // 
             // FormDisponibilidad
             // 
@@ -114,12 +128,13 @@
             this.BackgroundImage = global::GUI_08YS.Properties.Resources.BackGroundHorizon;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1470, 920);
-            this.Controls.Add(this.btnFiltrar);
             this.Controls.Add(this.lblTitulo);
             this.Controls.Add(this.calRangoReservas);
+            this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormDisponibilidad";
             this.Text = "FormDisponibilidad";
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,6 +144,7 @@
 
         private CustomControls.CustomDateRangePanel calRangoReservas;
         private System.Windows.Forms.Label lblTitulo;
-        private FontAwesome.Sharp.IconButton btnFiltrar;
+        private FontAwesome.Sharp.IconButton btnContinuar;
+        private System.Windows.Forms.Panel panel1;
     }
 }

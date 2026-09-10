@@ -29,7 +29,7 @@ namespace BE_08YS
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
-        public int capacidad { get; set; }
-        public decimal tarifaNoche { get; set; }
+        public int Capacidad { get; set; }
+        public decimal TarifaNoche { get; set; }
     }
 }

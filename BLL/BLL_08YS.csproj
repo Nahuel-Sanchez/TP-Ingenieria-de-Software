@@ -42,19 +42,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccesoBLL_08YS.cs" />
-    <Compile Include="BackupBLL_08YS.cs" />
-    <Compile Include="BitacoraBLL_08YS.cs" />
+    <Compile Include="Negocio\Excepciones.cs" />
+    <Compile Include="Negocio\HabitacionBLL_68SA.cs" />
+    <Compile Include="Negocio\HuespedBLL_68SA.cs" />
+    <Compile Include="Negocio\PagoBLL_68SA.cs" />
+    <Compile Include="Negocio\PisoBLL_68SA.cs" />
+    <Compile Include="Negocio\ReservaBLL_68SA.cs" />
+    <Compile Include="Negocio\TipoHabitacionBLL_68SA.cs" />
+    <Compile Include="Sistema\AccesoBLL_08YS.cs" />
+    <Compile Include="Sistema\BackupBLL_08YS.cs" />
+    <Compile Include="Sistema\BitacoraBLL_08YS.cs" />
     <Compile Include="BLLFactory_08YS.cs" />
-    <Compile Include="BLLInstalador_08YS.cs" />
-    <Compile Include="DvBLL_08YS.cs" />
-    <Compile Include="FamiliaBLL_08YS.cs" />
-    <Compile Include="RolBLL_08YS.cs" />
-    <Compile Include="UserBLL_08YS.cs" />
+    <Compile Include="Sistema\BLLInstalador_08YS.cs" />
+    <Compile Include="Sistema\DvBLL_08YS.cs" />
+    <Compile Include="Sistema\FamiliaBLL_08YS.cs" />
+    <Compile Include="Sistema\RolBLL_08YS.cs" />
+    <Compile Include="Sistema\UserBLL_08YS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Exceptions\UserBloqueadoException_08YS.cs" />
-    <Compile Include="Exceptions\UserNoRegistradoException_08YS.cs" />
-    <Compile Include="Exceptions\UserDesactivadoException_08YS.cs" />
+    <Compile Include="Sistema\Exceptions\UserBloqueadoException_08YS.cs" />
+    <Compile Include="Sistema\Exceptions\UserNoRegistradoException_08YS.cs" />
+    <Compile Include="Sistema\Exceptions\UserDesactivadoException_08YS.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE_08YS.csproj">

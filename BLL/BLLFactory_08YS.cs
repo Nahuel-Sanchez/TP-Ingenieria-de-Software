@@ -1,19 +1,25 @@
-﻿using System;
+﻿using BLL_08YS.Negocio;
+using DAL_08YS;
+using DAL_08YS.Interfaces_Repositories;
+using DAL_08YS.Interfaces_Repositories.Negocio;
+using DAL_08YS.Interfaces_Repositories.Negocio.habitacion;
+using DAL_08YS.Repositories_Interfaces;
+using DAL_08YS.SQL;
+using DAL_08YS.SQL.Negocio;
+using Service_08YS;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL_08YS;
-using DAL_08YS.Interfaces_Repositories;
-using DAL_08YS.Repositories_Interfaces;
-using DAL_08YS.SQL;
-using Service_08YS;
 
 namespace BLL_08YS
 {
     public static class BLLFactory_08YS
     {
+        #region sistema
+
         public static UserBLL_08YS CreateUserBLL()
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
@@ -63,5 +69,53 @@ namespace BLL_08YS
             IBackupRepository_08YS backupRepo = new SqlBackupRepository_08YS(factory);
             return new BackupBLL_08YS(backupRepo);
         }
+        #endregion
+
+        #region Negocio
+
+        public static PisoBLL_68SA CreatePisoBLL()
+        {
+            var factory = new SqlDbFactory_08YS();
+            IPisoRepository_68SA pisoRepo = new SqlPisoRepository_68SA(factory);
+            return new PisoBLL_68SA(pisoRepo);
+        }
+
+        public static TipoHabitacionBLL_68SA CreateTipoHabitacionBLL()
+        {
+            var factory = new SqlDbFactory_08YS();
+            ITipoHabitacionRepository_68SA tipoRepo = new SqlTipoHabitacionRepository_68SA(factory);
+            return new TipoHabitacionBLL_68SA(tipoRepo);
+        }
+
+        public static HabitacionBLL_68SA CreateHabitacionBLL()
+        {
+            var factory = new SqlDbFactory_08YS();
+            IHabitacionRepository_68SA habitacionRepo = new SqlHabitacionRepository_68SA(factory);
+            return new HabitacionBLL_68SA(habitacionRepo);
+        }
+
+        public static HuespedBLL_68SA CreateHuespedBLL()
+        {
+            var factory = new SqlDbFactory_08YS();
+            IHuespedRepository_68SA huespedRepo = new SqlHuespedRepository_68SA(factory);
+            return new HuespedBLL_68SA(huespedRepo);
+        }
+
+        public static ReservaBLL_68SA CreateReservaBLL()
+        {
+            var factory = new SqlDbFactory_08YS();
+            IReservaRepository_68SA reservaRepo = new SqlReservaRepository_68SA(factory);
+            IHabitacionRepository_68SA habitacionRepo = new SqlHabitacionRepository_68SA(factory);
+            return new ReservaBLL_68SA(reservaRepo, habitacionRepo, CreateHuespedBLL());
+        }
+
+        public static PagoBLL_68SA CreatePagoBLL()
+        {
+            var factory = new SqlDbFactory_08YS();
+            IPagoRepository_68SA pagoRepo = new SqlPagoRepository_68SA(factory);
+            return new PagoBLL_68SA(pagoRepo);
+        }
+
+        #endregion
     }
 }

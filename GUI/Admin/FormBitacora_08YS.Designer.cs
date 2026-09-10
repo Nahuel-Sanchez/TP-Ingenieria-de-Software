@@ -236,7 +236,7 @@
             this.btnLimpiar.UseVisualStyleBackColor = false;
             this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
-            // btnFiltrar
+            // btnContinuar
             // 
             this.btnFiltrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -249,11 +249,11 @@
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltrar.Location = new System.Drawing.Point(1177, 846);
             this.btnFiltrar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnFiltrar.Name = "btnFiltrar";
+            this.btnFiltrar.Name = "btnContinuar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnFiltrar.Size = new System.Drawing.Size(280, 65);
             this.btnFiltrar.TabIndex = 58;
-            this.btnFiltrar.Tag = "btnFiltrar";
+            this.btnFiltrar.Tag = "btnContinuar";
             this.btnFiltrar.Text = "Filtrar";
             this.btnFiltrar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltrar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;

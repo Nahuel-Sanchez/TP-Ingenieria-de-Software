@@ -52,14 +52,26 @@ namespace GUI_08YS.Recepcionista
             //}
         }
 
-        private void btnFiltrar_Click(object sender, EventArgs e)
+        private void btnContinuar_Click(object sender, EventArgs e)
         {
-            if (!calRangoReservas.RangeStart.HasValue || !calRangoReservas.RangeEnd.HasValue) return;
+            if (!calRangoReservas.RangeStart.HasValue || !calRangoReservas.RangeEnd.HasValue)
+                return;
 
-            // _abrirFormulario(new FormControlHabitaciones_08YS(
-            //     ModoHabitaciones.Reserva,
-            //     calRangoReservas.RangeStart.Value,
-            //     calRangoReservas.RangeEnd.Value));
+            DateTime fechaIngreso = calRangoReservas.RangeStart.Value;
+            DateTime fechaEgreso = calRangoReservas.RangeEnd.Value;
+
+            // TODO: cuando exista FormControlHabitaciones_08YS, reemplazar el bloque de abajo por:
+            // _openChildForm(new FormControlHabitaciones_08YS(ModoHabitaciones.Reserva, fechaIngreso, fechaEgreso));
+
+            // Smoke test provisorio: confirma que la BLL ya devuelve datos reales para el rango elegido.
+            var habitacionBLL = BLL_08YS.BLLFactory_08YS.CreateHabitacionBLL();
+            var disponibles = habitacionBLL.GetDisponibles(fechaIngreso, fechaEgreso);
+
+            MessageBox.Show(
+                $"{disponibles.Count} habitación/es disponibles del {fechaIngreso:dd/MM/yyyy} al {fechaEgreso:dd/MM/yyyy}.",
+                "Disponibilidad",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
     }
 }
