@@ -82,7 +82,7 @@
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(570, 79);
             this.lblTitulo.TabIndex = 55;
-            this.lblTitulo.Tag = "lblAuditoriaEventos";
+            this.lblTitulo.Tag = "lblTituloDisponibilidad";
             this.lblTitulo.Text = "Registrar reserva";
             // 
             // btnContinuar
@@ -103,7 +103,7 @@
             this.btnContinuar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnContinuar.Size = new System.Drawing.Size(1430, 79);
             this.btnContinuar.TabIndex = 59;
-            this.btnContinuar.Tag = "btnContinuar";
+            this.btnContinuar.Tag = "btnContinuarDisponibilidad";
             this.btnContinuar.Text = "Continuar";
             this.btnContinuar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnContinuar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;

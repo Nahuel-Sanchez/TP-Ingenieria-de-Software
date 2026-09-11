@@ -17,14 +17,18 @@ namespace DAL_08YS.SQL.Negocio
         private const string BaseSelect = @"
             SELECT h.HabitacionID, h.NroHabitacion, h.Estado,
                    p.PisoID, p.Numero, p.Nombre AS NombrePiso,
-                   t.TipoHabitacionID, t.Nombre AS NombreTipo, t.Descripcion, t.Capacidad, t.TarifaNoche
+                   t.TipoHabitacionID, t.Nombre AS NombreTipo, t.Descripcion, t.Capacidad, t.TarifaNoche,
+                   CASE WHEN rHoy.ReservaID IS NOT NULL THEN 1 ELSE 0 END AS TieneReservaHoy
             FROM Habitaciones h
             INNER JOIN Pisos p ON h.PisoID = p.PisoID
-            INNER JOIN TiposHabitacion t ON h.TipoHabitacionID = t.TipoHabitacionID";
+            INNER JOIN TiposHabitacion t ON h.TipoHabitacionID = t.TipoHabitacionID
+            LEFT JOIN Reservas rHoy ON rHoy.HabitacionID = h.HabitacionID AND rHoy.Estado = 0 -- Confirmada
+                                    AND rHoy.FechaIngreso <= CAST(GETDATE() AS DATE)
+                                    AND rHoy.FechaEgreso > CAST(GETDATE() AS DATE)";
 
         public SqlHabitacionRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
 
-        public List<Habitacion_68SA> GetAll(int? idTipoHabitacion = null, EstadoHabitacion? estado = null)
+        public List<Habitacion_68SA> GetAll(int? idTipoHabitacion = null)
         {
             var where = new List<string>();
             var parametros = new List<IDbDataParameter>();
@@ -33,11 +37,6 @@ namespace DAL_08YS.SQL.Negocio
             {
                 where.Add("h.TipoHabitacionID = @TipoHabitacionID");
                 parametros.Add(Param("@TipoHabitacionID", idTipoHabitacion.Value));
-            }
-            if (estado.HasValue)
-            {
-                where.Add("h.Estado = @Estado");
-                parametros.Add(Param("@Estado", (int)estado.Value));
             }
 
             string query = BaseSelect
@@ -49,40 +48,18 @@ namespace DAL_08YS.SQL.Negocio
         }
 
         public List<Habitacion_68SA> GetDisponibles(DateTime fechaIngreso, DateTime fechaEgreso,
-                                                      int? idTipoHabitacion = null, int? capacidadMinima = null)
+                                              int? idTipoHabitacion = null, int? capacidadMinima = null)
         {
-            var where = new List<string>
-            {
-                @"NOT EXISTS (
-                    SELECT 1 FROM Reservas r
-                    WHERE r.HabitacionID = h.HabitacionID
-                      AND r.Estado IN (0, 1) -- 0 = Confirmada, 1 = EnCurso
-                      AND r.FechaIngreso < @FechaEgreso
-                      AND r.FechaEgreso > @FechaIngreso
-                  )"
-            };
-            var parametros = new List<IDbDataParameter>
-            {
-                Param("@FechaIngreso", fechaIngreso.Date),
-                Param("@FechaEgreso", fechaEgreso.Date)
-            };
+            DataTable dt = GetDataTable("sp_GetHabitacionesDisponibles",
+                new[]
+                {
+                    Param("@FechaIngreso", fechaIngreso.Date),
+                    Param("@FechaEgreso",  fechaEgreso.Date),
+                    Param("@TipoHabitacionID", (object)idTipoHabitacion ?? DBNull.Value),
+                    Param("@CapacidadMinima",  (object)capacidadMinima ?? DBNull.Value)
+                },
+                storedProcedure: true);
 
-            if (idTipoHabitacion.HasValue)
-            {
-                where.Add("h.TipoHabitacionID = @TipoHabitacionID");
-                parametros.Add(Param("@TipoHabitacionID", idTipoHabitacion.Value));
-            }
-            if (capacidadMinima.HasValue)
-            {
-                where.Add("t.Capacidad >= @CapacidadMinima");
-                parametros.Add(Param("@CapacidadMinima", capacidadMinima.Value));
-            }
-
-            string query = BaseSelect
-                + " WHERE " + string.Join(" AND ", where)
-                + " ORDER BY p.Numero, h.NroHabitacion";
-
-            DataTable dt = GetDataTable(query, parametros.ToArray());
             return HabitacionMapper_68SA.FromDataTable(dt);
         }
 

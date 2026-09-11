@@ -9,7 +9,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio.habitacion
 {
     public interface IHabitacionRepository_68SA
     {
-        List<Habitacion_68SA> GetAll(int? idTipoHabitacion = null, EstadoHabitacion? estado = null);
+        List<Habitacion_68SA> GetAll(int? idTipoHabitacion = null);
 
         List<Habitacion_68SA> GetDisponibles(DateTime fechaIngreso, DateTime fechaEgreso,
                                               int? idTipoHabitacion = null, int? capacidadMinima = null);

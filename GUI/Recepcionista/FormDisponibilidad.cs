@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service_08YS;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,14 +11,14 @@ using System.Windows.Forms;
 
 namespace GUI_08YS.Recepcionista
 {
-    public partial class FormDisponibilidad : Form
+    public partial class FormDisponibilidad : Form, IIdiomaObserver_08YS
     {
-        private readonly Action<Form> _abrirForm;
+        private readonly Action<Form> _openChildForm;
 
         public FormDisponibilidad(Action<Form> abrirForm)
         {
             InitializeComponent();
-            _abrirForm = abrirForm;
+            _openChildForm = abrirForm;
         }
 
         protected override CreateParams CreateParams
@@ -32,6 +33,7 @@ namespace GUI_08YS.Recepcionista
 
         private void calRangoReservas_RangeChanged(object sender, EventArgs e)
         {
+            btnContinuar.Enabled = calRangoReservas.RangeStart.HasValue && calRangoReservas.RangeEnd.HasValue;
             //if (calRangoReservas.RangeStart.HasValue && calRangoReservas.RangeEnd.HasValue)
             //{
             //    int noches = calRangoReservas.Nights ?? 0;
@@ -60,18 +62,28 @@ namespace GUI_08YS.Recepcionista
             DateTime fechaIngreso = calRangoReservas.RangeStart.Value;
             DateTime fechaEgreso = calRangoReservas.RangeEnd.Value;
 
-            // TODO: cuando exista FormControlHabitaciones_08YS, reemplazar el bloque de abajo por:
-            // _openChildForm(new FormControlHabitaciones_08YS(ModoHabitaciones.Reserva, fechaIngreso, fechaEgreso));
+            _openChildForm(new FormControlHabitaciones_68SA(_openChildForm, ModoHabitaciones.Reserva, fechaIngreso, fechaEgreso));
+        }
 
-            // Smoke test provisorio: confirma que la BLL ya devuelve datos reales para el rango elegido.
-            var habitacionBLL = BLL_08YS.BLLFactory_08YS.CreateHabitacionBLL();
-            var disponibles = habitacionBLL.GetDisponibles(fechaIngreso, fechaEgreso);
+        public void UpdateIdioma()
+        {
+            TraducirControles(this);
+        }
 
-            MessageBox.Show(
-                $"{disponibles.Count} habitación/es disponibles del {fechaIngreso:dd/MM/yyyy} al {fechaEgreso:dd/MM/yyyy}.",
-                "Disponibilidad",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                {
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControles(c);
+                }
+            }
         }
     }
 }

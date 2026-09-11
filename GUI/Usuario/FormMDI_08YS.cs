@@ -378,6 +378,7 @@ namespace GUI_08YS
         private void btnReservar_Click(object sender, EventArgs e)
         {
             OpenChildForm(new FormDisponibilidad(OpenChildForm));
+            //OpenChildForm(new FormControlHabitaciones_68SA(OpenChildForm, ModoHabitaciones.Gestion));
         }
 
         #endregion

@@ -20,7 +20,7 @@ namespace MPP_08YS
 
         public static Habitacion_68SA FromDataRow(DataRow row)
         {
-            return new Habitacion_68SA
+            var habitacion = new Habitacion_68SA
             {
                 Id = Convert.ToInt32(row["HabitacionID"]),
                 NroHabitacion = row["NroHabitacion"].ToString(),
@@ -38,8 +38,11 @@ namespace MPP_08YS
                     Descripcion = row["Descripcion"] == DBNull.Value ? null : row["Descripcion"].ToString(),
                     Capacidad = Convert.ToInt32(row["Capacidad"]),
                     TarifaNoche = Convert.ToDecimal(row["TarifaNoche"])
-                }
+                },
+                TieneReservaHoy = row.Table.Columns.Contains("TieneReservaHoy") && Convert.ToInt32(row["TieneReservaHoy"]) == 1,
             };
+
+            return habitacion;
         }
     }
 

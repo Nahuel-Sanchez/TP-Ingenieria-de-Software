@@ -105,8 +105,7 @@ namespace BLL_08YS
         {
             var factory = new SqlDbFactory_08YS();
             IReservaRepository_68SA reservaRepo = new SqlReservaRepository_68SA(factory);
-            IHabitacionRepository_68SA habitacionRepo = new SqlHabitacionRepository_68SA(factory);
-            return new ReservaBLL_68SA(reservaRepo, habitacionRepo, CreateHuespedBLL());
+            return new ReservaBLL_68SA(reservaRepo, CreateHuespedBLL());
         }
 
         public static PagoBLL_68SA CreatePagoBLL()

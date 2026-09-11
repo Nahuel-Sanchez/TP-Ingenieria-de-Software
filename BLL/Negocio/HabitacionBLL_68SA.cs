@@ -20,7 +20,10 @@ namespace BLL_08YS.Negocio
         // Modo Gestión
         public List<Habitacion_68SA> GetAll(int? idTipoHabitacion = null, EstadoHabitacion? estado = null)
         {
-            return _habitacionRepo.GetAll(idTipoHabitacion, estado);
+            var habitaciones = _habitacionRepo.GetAll(idTipoHabitacion);
+            return estado.HasValue
+                ? habitaciones.Where(h => h.EstadoVisual == estado.Value).ToList()
+                : habitaciones;
         }
 
         // Modo Reserva

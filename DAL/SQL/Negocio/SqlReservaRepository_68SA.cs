@@ -1,18 +1,15 @@
 ﻿using BE_08YS;
 using DAL_08YS.Interfaces_Repositories.Negocio;
+using DAL_08YS.Repositories_Interfaces;
 using MPP_08YS;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL_08YS.SQL.Negocio
 {
     public class SqlReservaRepository_68SA : Connection_08YS, IReservaRepository_68SA
     {
-        // Alias usados por ReservaMapper_08YS: NroHabitacion, DocumentoTitular, NombreTitular, ApellidoTitular
         private const string BaseSelect = @"
             SELECT r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
                    r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal,
@@ -26,32 +23,32 @@ namespace DAL_08YS.SQL.Negocio
 
         public int Crear(Reserva_68SA reserva)
         {
-            return ExecuteScalar<int>(
-                @"INSERT INTO Reservas (HuespedTitularID, HabitacionID, FechaIngreso, FechaEgreso, Estado,
-                                         CantidadAdultos, CantidadNinos, TarifaNoche, MontoTotal)
-                  VALUES (@HuespedTitularID, @HabitacionID, @FechaIngreso, @FechaEgreso, @Estado,
-                          @CantidadAdultos, @CantidadNinos, @TarifaNoche, @MontoTotal);
-                  SELECT CAST(SCOPE_IDENTITY() AS int);",
+            var idOutput = ParamOutput("@NuevaReservaID");
+            var disponibleOutput = ParamOutput("@Disponible");
+
+            ExecuteNonQuery("sp_CrearReserva",
                 new[]
                 {
                     Param("@HuespedTitularID", reserva.Titular.Id),
                     Param("@HabitacionID",     reserva.Habitacion.Id),
                     Param("@FechaIngreso",     reserva.FechaIngreso.Date),
                     Param("@FechaEgreso",      reserva.FechaEgreso.Date),
-                    Param("@Estado",           (int)reserva.Estado),
                     Param("@CantidadAdultos",  reserva.CantidadAdultos),
                     Param("@CantidadNinos",    reserva.CantidadNinos),
                     Param("@TarifaNoche",      reserva.TarifaNoche),
-                    Param("@MontoTotal",       reserva.MontoTotal)
-                });
+                    Param("@MontoTotal",       reserva.MontoTotal),
+                    idOutput,
+                    disponibleOutput
+                },
+                storedProcedure: true);
+
+            bool disponible = Convert.ToBoolean(disponibleOutput.Value);
+            return disponible ? Convert.ToInt32(idOutput.Value) : -1;
         }
 
         public Reserva_68SA GetById(int reservaId)
         {
-            DataTable dt = GetDataTable(
-                BaseSelect + " WHERE r.ReservaID = @Id",
-                new[] { Param("@Id", reservaId) });
-
+            DataTable dt = GetDataTable(BaseSelect + " WHERE r.ReservaID = @Id", new[] { Param("@Id", reservaId) });
             return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
         }
 
@@ -72,41 +69,31 @@ namespace DAL_08YS.SQL.Negocio
             return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
         }
 
-        public bool ExisteSolapamiento(int habitacionId, DateTime fechaIngreso, DateTime fechaEgreso)
+        public bool RegistrarCheckIn(int reservaId, DateTime fechaHora)
         {
-            return ExecuteScalar<int>(
-                @"SELECT COUNT(1) FROM Reservas
-                  WHERE HabitacionID = @HabitacionID
-                    AND Estado IN (0, 1) -- Confirmada, EnCurso
-                    AND FechaIngreso < @FechaEgreso
-                    AND FechaEgreso > @FechaIngreso",
-                new[]
-                {
-                    Param("@HabitacionID", habitacionId),
-                    Param("@FechaIngreso", fechaIngreso.Date),
-                    Param("@FechaEgreso",  fechaEgreso.Date)
-                }) > 0;
+            var resultado = ParamOutput("@Resultado");
+            ExecuteNonQuery("sp_RegistrarCheckIn",
+                new[] { Param("@ReservaID", reservaId), Param("@FechaHora", fechaHora), resultado },
+                storedProcedure: true);
+            return Convert.ToBoolean(resultado.Value);
         }
 
-        public void RegistrarCheckIn(int reservaId, DateTime fechaHora)
+        public bool RegistrarCheckOut(int reservaId, DateTime fechaHora)
         {
-            ExecuteNonQuery(
-                "UPDATE Reservas SET CheckIn = @Fecha, Estado = 1 WHERE ReservaID = @Id", // 1 = EnCurso
-                new[] { Param("@Fecha", fechaHora), Param("@Id", reservaId) });
+            var resultado = ParamOutput("@Resultado");
+            ExecuteNonQuery("sp_RegistrarCheckOut",
+                new[] { Param("@ReservaID", reservaId), Param("@FechaHora", fechaHora), resultado },
+                storedProcedure: true);
+            return Convert.ToBoolean(resultado.Value);
         }
 
-        public void RegistrarCheckOut(int reservaId, DateTime fechaHora)
+        public bool Cancelar(int reservaId)
         {
-            ExecuteNonQuery(
-                "UPDATE Reservas SET CheckOut = @Fecha, Estado = 2 WHERE ReservaID = @Id", // 2 = Finalizada
-                new[] { Param("@Fecha", fechaHora), Param("@Id", reservaId) });
-        }
-
-        public void Cancelar(int reservaId)
-        {
-            ExecuteNonQuery(
-                "UPDATE Reservas SET Estado = 3 WHERE ReservaID = @Id", // 3 = Cancelada
-                new[] { Param("@Id", reservaId) });
+            var resultado = ParamOutput("@Resultado");
+            ExecuteNonQuery("sp_CancelarReserva",
+                new[] { Param("@ReservaID", reservaId), resultado },
+                storedProcedure: true);
+            return Convert.ToBoolean(resultado.Value);
         }
 
         public void AgregarAcompanante(int reservaId, int huespedId)

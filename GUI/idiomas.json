@@ -241,7 +241,11 @@
 
     "Texto_GestionDe": "Gestión de",
     "Entidad_Familias": "Familias",
-    "Entidad_Roles": "Roles"
+    "Entidad_Roles": "Roles",
+
+    "lblTituloDisponibilidad": "Registrar reserva",
+    "btnContinuarDisponibilidad": "Continuar"
+
 
   },
   "en": {
@@ -485,6 +489,9 @@
 
     "Texto_GestionDe": "Management of",
     "Entidad_Familias": "Families",
-    "Entidad_Roles": "Roles"
+    "Entidad_Roles": "Roles",
+
+    "lblTituloDisponibilidad": "Register Booking",
+    "btnContinuarDisponibilidad": "Continue"
   }
 }
