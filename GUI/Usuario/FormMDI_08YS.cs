@@ -197,6 +197,7 @@ namespace GUI_08YS
         {
             AdministrativoDropDownMenu.IsMainMenu = true;
             PerfilDropDownMenu.IsMainMenu = true;
+            RecepcionDropDownMenu.IsMainMenu = true;
         }
 
         private void FormMDI_FormClosing(object sender, FormClosingEventArgs e)
@@ -375,10 +376,9 @@ namespace GUI_08YS
 
         #region Recepcionista
 
-        private void btnReservar_Click(object sender, EventArgs e)
+        private void btnRecepcion_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new FormDisponibilidad(OpenChildForm));
-            //OpenChildForm(new FormControlHabitaciones_68SA(OpenChildForm, ModoHabitaciones.Gestion));
+            RecepcionDropDownMenu.Show(btnRecepcion, btnRecepcion.Width, 0);
         }
 
         #endregion
@@ -446,6 +446,14 @@ namespace GUI_08YS
             TraductorManager_08YS.Instance.CambiarIdioma(idiomaSeleccionado);
         }
 
-        
+        private void reservarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormDisponibilidad(OpenChildForm));
+        }
+
+        private void controlDeHabitacionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormControlHabitaciones_68SA(OpenChildForm, ModoHabitaciones.Gestion));
+        }
     }
 }

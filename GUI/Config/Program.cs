@@ -38,6 +38,7 @@ namespace GUI_08YS
             EventCatalog_08YS.CatalogValidation();
             DVManager_08YS.Inicializar(BLLFactory_08YS.CreateDvBLL());
             Application.Run(new FormLogin_08YS());
+            //Application.Run(new FormReservar_68SA( new BE_08YS.Habitacion_68SA() { Estado = BE_08YS.EstadoHabitacion.Disponible, Tipo = new BE_08YS.TipoHabitacion() { Id = 1 , Capacidad = 2 , Nombre = "Simple" , TarifaNoche = 100.00m }, Id = 1 , NroHabitacion = "101" , Piso = new BE_08YS.Piso_68SA() { PisoId = 1, Numero = 1, Nombre = "Primer Piso" } , }, DateTime.Now, DateTime.Now.AddDays(2)));
         }
     }
 }

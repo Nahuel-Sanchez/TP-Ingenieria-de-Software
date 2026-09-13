@@ -44,7 +44,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnPerfil = new FontAwesome.Sharp.IconButton();
             this.btnAdministrativo = new FontAwesome.Sharp.IconButton();
-            this.btnReservar = new FontAwesome.Sharp.IconButton();
+            this.btnRecepcion = new FontAwesome.Sharp.IconButton();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panelLogo = new System.Windows.Forms.Panel();
@@ -63,6 +63,9 @@
             this.cambiarContraseñaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.RecepcionDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
+            this.reservarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.controlDeHabitacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panelIdioma.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -73,6 +76,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.AdministrativoDropDownMenu.SuspendLayout();
             this.PerfilDropDownMenu.SuspendLayout();
+            this.RecepcionDropDownMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // crearToolStripMenuItem
@@ -245,7 +249,7 @@
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.flowLayoutPanel1.Controls.Add(this.btnPerfil);
             this.flowLayoutPanel1.Controls.Add(this.btnAdministrativo);
-            this.flowLayoutPanel1.Controls.Add(this.btnReservar);
+            this.flowLayoutPanel1.Controls.Add(this.btnRecepcion);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -262,7 +266,7 @@
             this.btnPerfil.IconChar = FontAwesome.Sharp.IconChar.User;
             this.btnPerfil.IconColor = System.Drawing.Color.Gold;
             this.btnPerfil.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnPerfil.IconSize = 30;
+            this.btnPerfil.IconSize = 38;
             this.btnPerfil.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnPerfil.Location = new System.Drawing.Point(3, 2);
             this.btnPerfil.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -286,7 +290,7 @@
             this.btnAdministrativo.IconChar = FontAwesome.Sharp.IconChar.UserTag;
             this.btnAdministrativo.IconColor = System.Drawing.Color.Gold;
             this.btnAdministrativo.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnAdministrativo.IconSize = 30;
+            this.btnAdministrativo.IconSize = 38;
             this.btnAdministrativo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnAdministrativo.Location = new System.Drawing.Point(3, 66);
             this.btnAdministrativo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -301,29 +305,29 @@
             this.btnAdministrativo.UseVisualStyleBackColor = true;
             this.btnAdministrativo.Click += new System.EventHandler(this.btnAdministrativo_Click);
             // 
-            // btnReservar
+            // btnRecepcion
             // 
-            this.btnReservar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnReservar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReservar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReservar.ForeColor = System.Drawing.Color.Gold;
-            this.btnReservar.IconChar = FontAwesome.Sharp.IconChar.CalendarCheck;
-            this.btnReservar.IconColor = System.Drawing.Color.Gold;
-            this.btnReservar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnReservar.IconSize = 30;
-            this.btnReservar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReservar.Location = new System.Drawing.Point(3, 130);
-            this.btnReservar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnReservar.Name = "btnReservar";
-            this.btnReservar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnReservar.Size = new System.Drawing.Size(325, 60);
-            this.btnReservar.TabIndex = 5;
-            this.btnReservar.Tag = "btnReservar";
-            this.btnReservar.Text = "Reservar";
-            this.btnReservar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReservar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnReservar.UseVisualStyleBackColor = true;
-            this.btnReservar.Click += new System.EventHandler(this.btnReservar_Click);
+            this.btnRecepcion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnRecepcion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRecepcion.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRecepcion.ForeColor = System.Drawing.Color.Gold;
+            this.btnRecepcion.IconChar = FontAwesome.Sharp.IconChar.PersonWalkingLuggage;
+            this.btnRecepcion.IconColor = System.Drawing.Color.Gold;
+            this.btnRecepcion.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnRecepcion.IconSize = 38;
+            this.btnRecepcion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRecepcion.Location = new System.Drawing.Point(3, 130);
+            this.btnRecepcion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnRecepcion.Name = "btnRecepcion";
+            this.btnRecepcion.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnRecepcion.Size = new System.Drawing.Size(325, 60);
+            this.btnRecepcion.TabIndex = 5;
+            this.btnRecepcion.Tag = "btnRecepcion";
+            this.btnRecepcion.Text = "Recepcion";
+            this.btnRecepcion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRecepcion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnRecepcion.UseVisualStyleBackColor = true;
+            this.btnRecepcion.Click += new System.EventHandler(this.btnRecepcion_Click);
             // 
             // panel3
             // 
@@ -521,6 +525,33 @@
             this.cerrarSesionToolStripMenuItem1.Text = "Cerrar Sesion";
             this.cerrarSesionToolStripMenuItem1.Click += new System.EventHandler(this.cerrarSesionToolStripMenuItem1_Click);
             // 
+            // RecepcionDropDownMenu
+            // 
+            this.RecepcionDropDownMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.RecepcionDropDownMenu.IsMainMenu = false;
+            this.RecepcionDropDownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reservarToolStripMenuItem,
+            this.controlDeHabitacionesToolStripMenuItem});
+            this.RecepcionDropDownMenu.MenuItemHeight = 25;
+            this.RecepcionDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
+            this.RecepcionDropDownMenu.Name = "RecepcionDropDownMenu";
+            this.RecepcionDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
+            this.RecepcionDropDownMenu.Size = new System.Drawing.Size(240, 52);
+            // 
+            // reservarToolStripMenuItem
+            // 
+            this.reservarToolStripMenuItem.Name = "reservarToolStripMenuItem";
+            this.reservarToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
+            this.reservarToolStripMenuItem.Text = "Reservar";
+            this.reservarToolStripMenuItem.Click += new System.EventHandler(this.reservarToolStripMenuItem_Click);
+            // 
+            // controlDeHabitacionesToolStripMenuItem
+            // 
+            this.controlDeHabitacionesToolStripMenuItem.Name = "controlDeHabitacionesToolStripMenuItem";
+            this.controlDeHabitacionesToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
+            this.controlDeHabitacionesToolStripMenuItem.Text = "Control de Habitaciones";
+            this.controlDeHabitacionesToolStripMenuItem.Click += new System.EventHandler(this.controlDeHabitacionesToolStripMenuItem_Click);
+            // 
             // FormMDI_08YS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -548,6 +579,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.AdministrativoDropDownMenu.ResumeLayout(false);
             this.PerfilDropDownMenu.ResumeLayout(false);
+            this.RecepcionDropDownMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -583,10 +615,13 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private FontAwesome.Sharp.IconButton btnPerfil;
         private FontAwesome.Sharp.IconButton btnAdministrativo;
-        private FontAwesome.Sharp.IconButton btnReservar;
+        private FontAwesome.Sharp.IconButton btnRecepcion;
         private System.Windows.Forms.Panel panel3;
         private FontAwesome.Sharp.IconButton btnCerrarSesion;
         private System.Windows.Forms.ToolStripMenuItem gestionRespaldosToolStripMenuItem;
+        private DropdownMenuStrip_08YS RecepcionDropDownMenu;
+        private System.Windows.Forms.ToolStripMenuItem reservarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem controlDeHabitacionesToolStripMenuItem;
     }
 }
 

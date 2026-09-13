@@ -1,55 +1,61 @@
 ﻿using BE_08YS;
-using System;
+using FontAwesome.Sharp;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormAccionesHabitacion_68SA : Form
     {
-        public string AccionSeleccionada { get; private set; }
+        public AccionHabitacion? AccionSeleccionada { get; private set; }
 
-        public FormAccionesHabitacion_68SA(Habitacion_68SA habitacion, List<(string Texto, string Accion)> acciones)
+        public FormAccionesHabitacion_68SA(Habitacion_68SA habitacion, List<(string Texto, IconChar Icono, AccionHabitacion Accion)> acciones)
         {
             InitializeComponent();
 
             lblNumero.Text = habitacion.NroHabitacion;
-            lblTipo.Text = habitacion.Tipo.Nombre.ToUpperInvariant();
+            lblTipo.Text = habitacion.Tipo.Nombre;
 
-            foreach (var (texto, accion) in acciones)
+            var (texto, fondo, acento) = EstiloEstadoHabitacion_68SA.Obtener(habitacion.EstadoVisual);
+            pnlBadgeEstado.BackColor = fondo;
+            pnlPuntoEstado.BackColor = acento;
+            lblEstadoBadge.Text = texto;
+            lblEstadoBadge.ForeColor = acento;
+
+            foreach (var (accionTexto, icono, accion) in acciones)
             {
-                var boton = new Button
+                var boton = new IconButton
                 {
-                    Text = texto,
+                    Text = accionTexto,
                     Tag = accion,
-                    Width = flpAcciones.ClientSize.Width - 4,
-                    Height = 44,
+                    IconChar = icono,
+                    IconColor = Color.Gold,
+                    IconSize = 30,
+                    Size = new Size(594, 56),
+                    Margin = new Padding(0, 0, 0, 10),
                     FlatStyle = FlatStyle.Flat,
-                    BackColor = Color.FromArgb(15, 25, 55),
-                    ForeColor = Color.FromArgb(230, 230, 235),
-                    Font = new Font("Segoe UI", 10F),
+                    BackColor = Color.FromArgb(5, 15, 45),
+                    ForeColor = Color.Goldenrod,
+                    Font = new Font("Segoe UI", 11F),
                     TextAlign = ContentAlignment.MiddleLeft,
-                    Padding = new Padding(16, 0, 0, 0),
-                    Margin = new Padding(0, 0, 0, 6)
+                    ImageAlign = ContentAlignment.MiddleLeft,
+                    TextImageRelation = TextImageRelation.ImageBeforeText,
+                    Padding = new Padding(18, 0, 0, 0),
+                    UseVisualStyleBackColor = false
                 };
-                boton.FlatAppearance.BorderColor = Color.FromArgb(60, 75, 110);
-                boton.FlatAppearance.MouseOverBackColor = Color.FromArgb(25, 40, 80);
                 boton.Click += (s, e) =>
                 {
-                    AccionSeleccionada = (string)boton.Tag;
+                    AccionSeleccionada = (AccionHabitacion)boton.Tag;
                     DialogResult = DialogResult.OK;
                     Close();
                 };
                 flpAcciones.Controls.Add(boton);
             }
 
-            Height = 140 + acciones.Count * 50 + 50;
+            int alturaAcciones = acciones.Count * 66;
+            flpAcciones.Height = alturaAcciones;
+            ClientSize = new Size(ClientSize.Width, flpAcciones.Top + alturaAcciones + 24);
         }
 
         protected override CreateParams CreateParams
@@ -63,3 +69,5 @@ namespace GUI_08YS.Recepcionista
         }
     }
 }
+    
+

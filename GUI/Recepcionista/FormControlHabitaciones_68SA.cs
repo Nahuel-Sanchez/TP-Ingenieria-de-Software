@@ -1,6 +1,7 @@
 ﻿using BE_08YS;
 using BLL_08YS;
 using BLL_08YS.Negocio;
+using FontAwesome.Sharp;
 using Service_08YS;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,18 @@ namespace GUI_08YS.Recepcionista
     {
         Gestion,
         Reserva
+    }
+
+    public enum AccionHabitacion
+    {
+        Reservar,
+        CheckInDirecto,
+        CheckIn,
+        VerReserva,
+        CheckOut,
+        Servicio,
+        CambioHabitacion,
+        MarcarDisponible
     }
 
     public partial class FormControlHabitaciones_68SA : Form, IIdiomaObserver_08YS
@@ -160,10 +173,7 @@ namespace GUI_08YS.Recepcionista
         {
             if (_modo == ModoHabitaciones.Reserva)
             {
-                // TODO: reemplazar por el formulario real de alta de reserva cuando exista:
-                // _openChildForm(new FormReservar_68SA(habitacion, _fechaIngreso.Value, _fechaEgreso.Value));
-                MessageBox.Show($"Reservar habitación {habitacion.NroHabitacion} — formulario todavía no implementado.",
-                    "Reservar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _openChildForm(new FormReservar_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
                 return;
             }
 
@@ -174,48 +184,54 @@ namespace GUI_08YS.Recepcionista
 
         private void MostrarPopupAcciones(Habitacion_68SA habitacion)
         {
-            var acciones = new List<(string Texto, string Accion)>();
+            var acciones = new List<(string Texto, IconChar Icono, AccionHabitacion Accion)>();
 
             switch (habitacion.EstadoVisual)
             {
                 case EstadoHabitacion.Disponible:
-                    acciones.Add(("Reservar", "Reservar"));
-                    acciones.Add(("Check-in directo / Walk-in", "CheckInDirecto"));
+                    acciones.Add(("Reservar", IconChar.CalendarPlus, AccionHabitacion.Reservar));
+                    acciones.Add(("Check-in directo / Walk-in", IconChar.DoorOpen, AccionHabitacion.CheckInDirecto));
                     break;
                 case EstadoHabitacion.Reservada:
-                    acciones.Add(("Registrar check-in", "CheckIn"));
-                    acciones.Add(("Ver / Modificar reserva", "VerReserva"));
+                    acciones.Add(("Registrar check-in", IconChar.CalendarCheck, AccionHabitacion.CheckIn));
+                    acciones.Add(("Ver / Modificar reserva", IconChar.Eye, AccionHabitacion.VerReserva));
                     break;
                 case EstadoHabitacion.Ocupada:
-                    acciones.Add(("Registrar check-out", "CheckOut"));
-                    acciones.Add(("Servicio a la habitación", "Servicio"));
-                    acciones.Add(("Cambio de habitación", "CambioHabitacion"));
+                    acciones.Add(("Registrar check-out", IconChar.CalendarTimes, AccionHabitacion.CheckOut));
+                    acciones.Add(("Servicio a la habitación", IconChar.Bell, AccionHabitacion.Servicio));
+                    acciones.Add(("Cambio de habitación", IconChar.Retweet, AccionHabitacion.CambioHabitacion));
                     break;
                 case EstadoHabitacion.EnLimpieza:
                 case EstadoHabitacion.FueraDeServicio:
-                    acciones.Add(("Marcar como Disponible", "MarcarDisponible"));
+                    acciones.Add(("Marcar como Disponible", IconChar.CircleCheck, AccionHabitacion.MarcarDisponible));
                     break;
             }
 
             using (var popup = new FormAccionesHabitacion_68SA(habitacion, acciones))
             {
-                if (popup.ShowDialog(this) == DialogResult.OK)
-                    EjecutarAccion(popup.AccionSeleccionada, habitacion);
+                if (popup.ShowDialog(this) == DialogResult.OK && popup.AccionSeleccionada.HasValue)
+                    EjecutarAccion(popup.AccionSeleccionada.Value, habitacion);
             }
         }
 
-        private void EjecutarAccion(string accion, Habitacion_68SA habitacion)
+        private void EjecutarAccion(AccionHabitacion accion, Habitacion_68SA habitacion)
         {
-            if (accion == "MarcarDisponible")
+            switch (accion)
             {
-                _habitacionBLL.CambiarEstado(habitacion.Id, EstadoHabitacion.Disponible);
-                CargarHabitaciones();
-                return;
-            }
+                case AccionHabitacion.MarcarDisponible:
+                    _habitacionBLL.CambiarEstado(habitacion.Id, EstadoHabitacion.Disponible);
+                    CargarHabitaciones();
+                    break;
 
-            // TODO: cada una de estas va a abrir su propio formulario cuando se construyan
-            MessageBox.Show($"'{accion}' todavía no está implementado.", "Pendiente",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                case AccionHabitacion.Reservar:
+                    _openChildForm(new FormReservar_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
+                    break;
+
+                default:
+                    MessageBox.Show($"'{accion}' todavía no está implementado.", "Pendiente",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+            }
         }
 
         private static string TextoEstado(EstadoHabitacion estado)

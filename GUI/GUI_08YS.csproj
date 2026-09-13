@@ -93,6 +93,7 @@
       <DependentUpon>FormGestionRespaldos_08YS.cs</DependentUpon>
     </Compile>
     <Compile Include="PermissionFilter_08YS.cs" />
+    <Compile Include="Recepcionista\EstiloEstadoHabitacion_68SA.cs" />
     <Compile Include="Recepcionista\FormAccionesHabitacion_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +111,15 @@
     </Compile>
     <Compile Include="Recepcionista\FormDisponibilidad.Designer.cs">
       <DependentUpon>FormDisponibilidad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\FormReservar_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\FormReservar_68SA.Designer.cs">
+      <DependentUpon>FormReservar_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\IconNumericUpDown.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\RoundedPanel_68SA.cs">
       <SubType>Component</SubType>
@@ -197,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Recepcionista\FormDisponibilidad.resx">
       <DependentUpon>FormDisponibilidad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Recepcionista\FormReservar_68SA.resx">
+      <DependentUpon>FormReservar_68SA.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\UC_HabitacionCard_68SA.resx">
       <DependentUpon>UC_HabitacionCard_68SA.cs</DependentUpon>
