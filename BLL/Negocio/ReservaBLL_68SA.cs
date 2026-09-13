@@ -44,9 +44,14 @@ namespace BLL_08YS.Negocio
             return reserva;
         }
 
-        public Reserva_68SA GetConfirmadaPorDocumentoTitular(string documento)
+        public Reserva_68SA GetPorDocumentoTitularYEstado(string documento, EstadoReserva estado)
         {
-            return _reservaRepo.GetConfirmadaPorDocumentoTitular(documento);
+            return _reservaRepo.GetPorDocumentoTitularYEstado(documento, estado);
+        }
+
+        public Reserva_68SA GetConfirmadaHoyPorHabitacion(int habitacionId)
+        {
+            return _reservaRepo.GetConfirmadaHoyPorHabitacion(habitacionId);
         }
 
         public void RegistrarCheckIn(int reservaId, List<Huesped_68SA> acompanantes)

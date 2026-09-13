@@ -227,6 +227,17 @@ namespace GUI_08YS.Recepcionista
                     _openChildForm(new FormReservar_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
                     break;
 
+                case AccionHabitacion.CheckIn:
+                    var reservaDeHoy = BLLFactory_08YS.CreateReservaBLL().GetConfirmadaHoyPorHabitacion(habitacion.Id);
+                    if (reservaDeHoy == null)
+                    {
+                        MessageBox.Show("No se encontró una reserva vigente para hoy en esta habitación.", "Sin reserva",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    }
+                    _openChildForm(new FormCheckIn_68SA(_openChildForm, reservaDeHoy, _modo, _fechaIngreso, _fechaEgreso));
+                    break;
+
                 default:
                     MessageBox.Show($"'{accion}' todavía no está implementado.", "Pendiente",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);

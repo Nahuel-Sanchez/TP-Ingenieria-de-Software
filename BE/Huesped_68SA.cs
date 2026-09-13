@@ -25,5 +25,16 @@ namespace BE_08YS
         public DateTime FechaNacimiento { get; set; }
         public string Telefono { get; set; }
         public string Email { get; set; }
+
+        public int Edad
+        {
+            get
+            {
+                var today = DateTime.Today;
+                var age = today.Year - FechaNacimiento.Year;
+                if (FechaNacimiento.Date > today.AddYears(-age)) age--;
+                return age;
+            }
+        }
     }
 }

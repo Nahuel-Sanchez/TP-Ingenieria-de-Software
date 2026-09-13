@@ -66,6 +66,7 @@
             this.RecepcionDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.reservarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controlDeHabitacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panelIdioma.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -531,12 +532,13 @@
             this.RecepcionDropDownMenu.IsMainMenu = false;
             this.RecepcionDropDownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.reservarToolStripMenuItem,
-            this.controlDeHabitacionesToolStripMenuItem});
+            this.controlDeHabitacionesToolStripMenuItem,
+            this.checkInToolStripMenuItem});
             this.RecepcionDropDownMenu.MenuItemHeight = 25;
             this.RecepcionDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
             this.RecepcionDropDownMenu.Name = "RecepcionDropDownMenu";
             this.RecepcionDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
-            this.RecepcionDropDownMenu.Size = new System.Drawing.Size(240, 52);
+            this.RecepcionDropDownMenu.Size = new System.Drawing.Size(240, 104);
             // 
             // reservarToolStripMenuItem
             // 
@@ -551,6 +553,13 @@
             this.controlDeHabitacionesToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
             this.controlDeHabitacionesToolStripMenuItem.Text = "Control de Habitaciones";
             this.controlDeHabitacionesToolStripMenuItem.Click += new System.EventHandler(this.controlDeHabitacionesToolStripMenuItem_Click);
+            // 
+            // checkInToolStripMenuItem
+            // 
+            this.checkInToolStripMenuItem.Name = "checkInToolStripMenuItem";
+            this.checkInToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
+            this.checkInToolStripMenuItem.Text = "Check-In";
+            this.checkInToolStripMenuItem.Click += new System.EventHandler(this.checkInToolStripMenuItem_Click);
             // 
             // FormMDI_08YS
             // 
@@ -622,6 +631,7 @@
         private DropdownMenuStrip_08YS RecepcionDropDownMenu;
         private System.Windows.Forms.ToolStripMenuItem reservarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem controlDeHabitacionesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkInToolStripMenuItem;
     }
 }
 

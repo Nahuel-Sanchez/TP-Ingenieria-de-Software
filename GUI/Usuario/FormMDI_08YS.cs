@@ -455,5 +455,10 @@ namespace GUI_08YS
         {
             OpenChildForm(new FormControlHabitaciones_68SA(OpenChildForm, ModoHabitaciones.Gestion));
         }
+
+        private void checkInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormCheckIn_68SA(OpenChildForm, ModoHabitaciones.Gestion));
+        }
     }
 }

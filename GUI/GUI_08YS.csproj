@@ -100,6 +100,18 @@
     <Compile Include="Recepcionista\FormAccionesHabitacion_68SA.Designer.cs">
       <DependentUpon>FormAccionesHabitacion_68SA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Recepcionista\FormBuscarReserva_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\FormBuscarReserva_68SA.Designer.cs">
+      <DependentUpon>FormBuscarReserva_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\FormCheckIn_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\FormCheckIn_68SA.Designer.cs">
+      <DependentUpon>FormCheckIn_68SA.cs</DependentUpon>
+    </Compile>
     <Compile Include="Recepcionista\FormControlHabitaciones_68SA.cs">
       <SubType>Form</SubType>
     </Compile>

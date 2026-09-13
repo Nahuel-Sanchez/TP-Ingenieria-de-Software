@@ -376,7 +376,7 @@
             this.lblEtiquetaAdultos.Text = "Adultos";
             // 
             // nudNinos
-            // 
+            //
             this.nudNinos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.nudNinos.BorderColor = System.Drawing.Color.Goldenrod;
             this.nudNinos.BorderFocusColor = System.Drawing.Color.Goldenrod;

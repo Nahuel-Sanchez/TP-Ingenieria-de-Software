@@ -52,7 +52,7 @@ namespace DAL_08YS.SQL.Negocio
             return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
         }
 
-        public Reserva_68SA GetConfirmadaPorDocumentoTitular(string documento)
+        public Reserva_68SA GetPorDocumentoTitularYEstado(string documento, EstadoReserva estado)
         {
             string query = @"
                 SELECT TOP 1 r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
@@ -62,10 +62,22 @@ namespace DAL_08YS.SQL.Negocio
                 FROM Reservas r
                 INNER JOIN Habitaciones hab ON r.HabitacionID = hab.HabitacionID
                 INNER JOIN Huespedes hu ON r.HuespedTitularID = hu.HuespedID
-                WHERE hu.Documento = @Documento AND r.Estado = 0 -- Confirmada
+                WHERE hu.Documento = @Documento AND r.Estado = @Estado
                 ORDER BY r.FechaIngreso ASC";
 
-            DataTable dt = GetDataTable(query, new[] { Param("@Documento", documento) });
+            DataTable dt = GetDataTable(query, new[] { Param("@Documento", documento), Param("@Estado", (int)estado) });
+            return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
+        }
+
+        public Reserva_68SA GetConfirmadaHoyPorHabitacion(int habitacionId)
+        {
+            string query = BaseSelect + @"
+                WHERE r.HabitacionID = @HabitacionID
+                  AND r.Estado = 0 -- Confirmada
+                  AND r.FechaIngreso <= CAST(GETDATE() AS DATE)
+                  AND r.FechaEgreso > CAST(GETDATE() AS DATE)";
+
+            DataTable dt = GetDataTable(query, new[] { Param("@HabitacionID", habitacionId) });
             return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
         }
 

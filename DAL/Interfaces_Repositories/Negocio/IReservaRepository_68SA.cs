@@ -13,7 +13,8 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
         int Crear(Reserva_68SA reserva);
 
         Reserva_68SA GetById(int reservaId);
-        Reserva_68SA GetConfirmadaPorDocumentoTitular(string documento);
+        Reserva_68SA GetPorDocumentoTitularYEstado(string documento, EstadoReserva estado);
+        Reserva_68SA GetConfirmadaHoyPorHabitacion(int habitacionId);
 
         // Devuelven false si la reserva no estaba en el estado correcto para la operación
         bool RegistrarCheckIn(int reservaId, DateTime fechaHora);
