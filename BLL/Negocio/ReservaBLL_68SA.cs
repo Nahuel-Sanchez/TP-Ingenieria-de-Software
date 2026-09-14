@@ -59,6 +59,10 @@ namespace BLL_08YS.Negocio
         {
             if (acompanantes != null && acompanantes.Count > 0)
             {
+                var duplicado = acompanantes.GroupBy(a => a.Documento).FirstOrDefault(g => g.Count() > 1);
+                if (duplicado != null)
+                    throw new AcompananteDuplicadoException_68SA($"El documento {duplicado.Key} está cargado más de una vez entre los acompañantes.");
+
                 var reserva = _reservaRepo.GetById(reservaId);
                 if (reserva != null && acompanantes.Any(a => a.Documento == reserva.Titular.Documento))
                     throw new TitularEntreAcompanantesException_68SA();
@@ -91,6 +95,11 @@ namespace BLL_08YS.Negocio
         public List<Huesped_68SA> GetAcompanantes(int reservaId)
         {
             return _reservaRepo.GetAcompanantes(reservaId);
+        }
+
+        public Reserva_68SA GetEnCursoPorHabitacion(int habitacionId)
+        {
+            return _reservaRepo.GetEnCursoPorHabitacion(habitacionId);
         }
 
         public int ProcesarNoShows()

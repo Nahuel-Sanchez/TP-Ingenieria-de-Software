@@ -197,6 +197,15 @@ namespace GUI_08YS.Recepcionista
                 return;
             }
 
+            bool yaCargado = _filasAcompanantes.Any(f => f != fila && f.HuespedEncontrado != null && f.HuespedEncontrado.Documento == dni);
+            if (yaCargado)
+            {
+                fila.HuespedEncontrado = null;
+                fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
+                fila.Resultado.Text = "Ese documento ya está cargado en otra fila.";
+                return;
+            }
+
             var huesped = _huespedBLL.GetByDocumento(dni);
             if (huesped == null)
             {
@@ -273,6 +282,14 @@ namespace GUI_08YS.Recepcionista
                 Volver();
             }
             catch (EstadoReservaInvalidoException_68SA ex)
+            {
+                MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (AcompananteDuplicadoException_68SA ex)
+            {
+                MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (TitularEntreAcompanantesException_68SA ex)
             {
                 MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }

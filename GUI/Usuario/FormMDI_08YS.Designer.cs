@@ -68,6 +68,7 @@
             this.controlDeHabitacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timerNoShow = new System.Windows.Forms.Timer(this.components);
+            this.checkOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panelIdioma.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -534,12 +535,13 @@
             this.RecepcionDropDownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.reservarToolStripMenuItem,
             this.controlDeHabitacionesToolStripMenuItem,
-            this.checkInToolStripMenuItem});
+            this.checkInToolStripMenuItem,
+            this.checkOutToolStripMenuItem});
             this.RecepcionDropDownMenu.MenuItemHeight = 25;
             this.RecepcionDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
             this.RecepcionDropDownMenu.Name = "RecepcionDropDownMenu";
             this.RecepcionDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
-            this.RecepcionDropDownMenu.Size = new System.Drawing.Size(240, 76);
+            this.RecepcionDropDownMenu.Size = new System.Drawing.Size(240, 128);
             // 
             // reservarToolStripMenuItem
             // 
@@ -565,6 +567,13 @@
             // timerNoShow
             // 
             this.timerNoShow.Interval = 900000;
+            // 
+            // checkOutToolStripMenuItem
+            // 
+            this.checkOutToolStripMenuItem.Name = "checkOutToolStripMenuItem";
+            this.checkOutToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
+            this.checkOutToolStripMenuItem.Text = "Check-Out";
+            this.checkOutToolStripMenuItem.Click += new System.EventHandler(this.checkOutToolStripMenuItem_Click);
             // 
             // FormMDI_08YS
             // 
@@ -638,6 +647,7 @@
         private System.Windows.Forms.ToolStripMenuItem controlDeHabitacionesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkInToolStripMenuItem;
         private System.Windows.Forms.Timer timerNoShow;
+        private System.Windows.Forms.ToolStripMenuItem checkOutToolStripMenuItem;
     }
 }
 

@@ -59,4 +59,13 @@ namespace BLL_08YS.Negocio
         public TitularEntreAcompanantesException_68SA(string message) : base(message) { }
         public TitularEntreAcompanantesException_68SA(string message, Exception innerException) : base(message, innerException) { }
     }
+
+    public class AcompananteDuplicadoException_68SA : Exception
+    {
+        public AcompananteDuplicadoException_68SA()
+        : base("Hay un acompañante cargado más de una vez.") { }
+
+        public AcompananteDuplicadoException_68SA(string message) : base(message) { }
+        public AcompananteDuplicadoException_68SA(string message, Exception innerException) : base(message, innerException) { }
+    }
 }

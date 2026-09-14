@@ -238,6 +238,17 @@ namespace GUI_08YS.Recepcionista
                     _openChildForm(new FormCheckIn_68SA(_openChildForm, reservaDeHoy, _modo, _fechaIngreso, _fechaEgreso));
                     break;
 
+                case AccionHabitacion.CheckOut:
+                    var reservaEnCurso = BLLFactory_08YS.CreateReservaBLL().GetEnCursoPorHabitacion(habitacion.Id);
+                    if (reservaEnCurso == null)
+                    {
+                        MessageBox.Show("No se encontró una reserva En Curso para esta habitación.", "Sin reserva",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    }
+                    _openChildForm(new FormCheckOut_68SA(_openChildForm, reservaEnCurso, _modo, _fechaIngreso, _fechaEgreso));
+                    break;
+
                 default:
                     MessageBox.Show($"'{accion}' todavía no está implementado.", "Pendiente",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);

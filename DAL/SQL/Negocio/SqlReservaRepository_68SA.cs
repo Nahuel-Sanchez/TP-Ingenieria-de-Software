@@ -128,6 +128,15 @@ namespace DAL_08YS.SQL.Negocio
             return HuespedMapper_68SA.FromDataTable(dt);
         }
 
+        public Reserva_68SA GetEnCursoPorHabitacion(int habitacionId)
+        {
+            DataTable dt = GetDataTable(
+                BaseSelect + " WHERE r.HabitacionID = @HabitacionID AND r.Estado = 1", // EnCurso
+                new[] { Param("@HabitacionID", habitacionId) });
+
+            return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
+        }
+
         public int ProcesarNoShows()
         {
             var salida = ParamOutput("@CantidadCanceladas");
