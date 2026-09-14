@@ -115,6 +115,13 @@ namespace BLL_08YS
             return new PagoBLL_68SA(pagoRepo);
         }
 
+        public static ConfiguracionHotelBLL_68SA CreateConfiguracionHotelBLL()
+        {
+            var factory = new SqlDbFactory_08YS();
+            IConfiguracionHotelRepository_68SA repo = new SqlConfiguracionHotelRepository_68SA(factory);
+            return new ConfiguracionHotelBLL_68SA(repo);
+        }
+
         #endregion
     }
 }

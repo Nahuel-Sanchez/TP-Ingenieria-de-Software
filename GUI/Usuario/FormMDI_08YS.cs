@@ -1,4 +1,5 @@
 ﻿using BLL_08YS;
+using BLL_08YS.Negocio;
 using FontAwesome.Sharp;
 using GUI;
 using GUI_08YS.Admin;
@@ -33,6 +34,8 @@ namespace GUI_08YS
 
         public event Action CerrarSesion;
         private UserBLL_08YS _userBLL;
+        private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
+
 
         public FormMDI_08YS()
         {
@@ -46,6 +49,23 @@ namespace GUI_08YS
             TraductorManager_08YS.Instance.Suscribir(this);
             SessionManager_08YS.Instance.SesionInvalidada += OnSesionInvalidada;
             UpdateIdioma();
+
+            ProcesarNoShows();
+            timerNoShow.Tick += (s, e) => ProcesarNoShows();
+            timerNoShow.Start();
+        }
+
+        private void ProcesarNoShows()
+        {
+            try
+            {
+                _reservaBLL.ProcesarNoShows();
+            }
+            catch
+            {
+                // Si falla un tick (ej. problema de conexión momentáneo), no tumbamos el MDI —
+                // se reintenta solo en el próximo ciclo del timer.
+            }
         }
 
         private void OnSesionInvalidada()

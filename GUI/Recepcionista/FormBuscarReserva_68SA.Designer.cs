@@ -52,66 +52,102 @@
             this.pnlBorde.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlBorde.Location = new System.Drawing.Point(3, 3);
             this.pnlBorde.Name = "pnlBorde";
-            this.pnlBorde.Size = new System.Drawing.Size(554, 424);
+            this.pnlBorde.Size = new System.Drawing.Size(634, 453);
             this.pnlBorde.TabIndex = 0;
             // 
-            // pnlHeader
+            // btnSeleccionar
             // 
-            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
-            this.pnlHeader.Controls.Add(this.btnCerrar);
-            this.pnlHeader.Controls.Add(this.lblTitulo);
-            this.pnlHeader.Controls.Add(this.iconTitulo);
-            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(554, 70);
-            this.pnlHeader.TabIndex = 0;
+            this.btnSeleccionar.BackColor = System.Drawing.Color.Goldenrod;
+            this.btnSeleccionar.Enabled = false;
+            this.btnSeleccionar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSeleccionar.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSeleccionar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
+            this.btnSeleccionar.IconChar = FontAwesome.Sharp.IconChar.Check;
+            this.btnSeleccionar.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
+            this.btnSeleccionar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnSeleccionar.IconSize = 24;
+            this.btnSeleccionar.Location = new System.Drawing.Point(183, 305);
+            this.btnSeleccionar.Name = "btnSeleccionar";
+            this.btnSeleccionar.Size = new System.Drawing.Size(251, 49);
+            this.btnSeleccionar.TabIndex = 9;
+            this.btnSeleccionar.Text = "Seleccionar";
+            this.btnSeleccionar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSeleccionar.UseVisualStyleBackColor = false;
             // 
-            // btnCerrar
+            // pnlLinea2
             // 
-            this.btnCerrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
-            this.btnCerrar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCerrar.IconChar = FontAwesome.Sharp.IconChar.Xmark;
-            this.btnCerrar.IconColor = System.Drawing.Color.Gold;
-            this.btnCerrar.IconSize = 28;
-            this.btnCerrar.Location = new System.Drawing.Point(504, 16);
-            this.btnCerrar.Name = "btnCerrar";
-            this.btnCerrar.Size = new System.Drawing.Size(36, 36);
-            this.btnCerrar.TabIndex = 2;
-            this.btnCerrar.UseVisualStyleBackColor = false;
+            this.pnlLinea2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(75)))), ((int)(((byte)(110)))));
+            this.pnlLinea2.Location = new System.Drawing.Point(23, 288);
+            this.pnlLinea2.Name = "pnlLinea2";
+            this.pnlLinea2.Size = new System.Drawing.Size(549, 1);
+            this.pnlLinea2.TabIndex = 8;
             // 
-            // lblTitulo
+            // lblResultado
             // 
-            this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblTitulo.Location = new System.Drawing.Point(66, 22);
-            this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(260, 25);
-            this.lblTitulo.TabIndex = 1;
-            this.lblTitulo.Text = "Buscar reserva";
+            this.lblResultado.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblResultado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblResultado.Location = new System.Drawing.Point(23, 183);
+            this.lblResultado.Name = "lblResultado";
+            this.lblResultado.Size = new System.Drawing.Size(549, 85);
+            this.lblResultado.TabIndex = 7;
+            this.lblResultado.Text = "Ingresá el documento del titular y presioná Buscar.";
             // 
-            // iconTitulo
+            // pnlLinea1
             // 
-            this.iconTitulo.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlass;
-            this.iconTitulo.IconColor = System.Drawing.Color.Gold;
-            this.iconTitulo.IconSize = 34;
-            this.iconTitulo.Location = new System.Drawing.Point(18, 16);
-            this.iconTitulo.Name = "iconTitulo";
-            this.iconTitulo.Size = new System.Drawing.Size(38, 38);
-            this.iconTitulo.TabIndex = 0;
-            this.iconTitulo.TabStop = false;
+            this.pnlLinea1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(75)))), ((int)(((byte)(110)))));
+            this.pnlLinea1.Location = new System.Drawing.Point(23, 166);
+            this.pnlLinea1.Name = "pnlLinea1";
+            this.pnlLinea1.Size = new System.Drawing.Size(549, 1);
+            this.pnlLinea1.TabIndex = 6;
             // 
-            // lblEtiquetaTipoDocumento
+            // btnBuscar
             // 
-            this.lblEtiquetaTipoDocumento.AutoSize = true;
-            this.lblEtiquetaTipoDocumento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblEtiquetaTipoDocumento.Location = new System.Drawing.Point(20, 84);
-            this.lblEtiquetaTipoDocumento.Name = "lblEtiquetaTipoDocumento";
-            this.lblEtiquetaTipoDocumento.Size = new System.Drawing.Size(100, 15);
-            this.lblEtiquetaTipoDocumento.TabIndex = 1;
-            this.lblEtiquetaTipoDocumento.Text = "Tipo de Documento";
+            this.btnBuscar.BackColor = System.Drawing.Color.Goldenrod;
+            this.btnBuscar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBuscar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
+            this.btnBuscar.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlass;
+            this.btnBuscar.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
+            this.btnBuscar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnBuscar.IconSize = 24;
+            this.btnBuscar.Location = new System.Drawing.Point(439, 109);
+            this.btnBuscar.Name = "btnBuscar";
+            this.btnBuscar.Size = new System.Drawing.Size(133, 43);
+            this.btnBuscar.TabIndex = 5;
+            this.btnBuscar.Text = "Buscar";
+            this.btnBuscar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnBuscar.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.btnBuscar.UseVisualStyleBackColor = false;
+            // 
+            // txtDocumento
+            // 
+            this.txtDocumento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtDocumento.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtDocumento.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtDocumento.BorderWidth = 2;
+            this.txtDocumento.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDocumento.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtDocumento.IconChar = FontAwesome.Sharp.IconChar.Hashtag;
+            this.txtDocumento.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtDocumento.IconColorRight = System.Drawing.Color.DimGray;
+            this.txtDocumento.IconPadding = 4;
+            this.txtDocumento.IconSize = 24;
+            this.txtDocumento.Location = new System.Drawing.Point(197, 109);
+            this.txtDocumento.Name = "txtDocumento";
+            this.txtDocumento.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtDocumento.PlaceholderText = "N° Documento del titular";
+            this.txtDocumento.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtDocumento.Size = new System.Drawing.Size(229, 43);
+            this.txtDocumento.TabIndex = 4;
+            // 
+            // lblEtiquetaDocumento
+            // 
+            this.lblEtiquetaDocumento.AutoSize = true;
+            this.lblEtiquetaDocumento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblEtiquetaDocumento.Location = new System.Drawing.Point(197, 90);
+            this.lblEtiquetaDocumento.Name = "lblEtiquetaDocumento";
+            this.lblEtiquetaDocumento.Size = new System.Drawing.Size(93, 16);
+            this.lblEtiquetaDocumento.TabIndex = 3;
+            this.lblEtiquetaDocumento.Text = "N° Documento";
             // 
             // cmbTipoDocumento
             // 
@@ -130,108 +166,81 @@
             this.cmbTipoDocumento.IconChar = FontAwesome.Sharp.IconChar.IdCard;
             this.cmbTipoDocumento.IconColor = System.Drawing.Color.Goldenrod;
             this.cmbTipoDocumento.IconSize = 24;
-            this.cmbTipoDocumento.Location = new System.Drawing.Point(20, 102);
+            this.cmbTipoDocumento.Location = new System.Drawing.Point(23, 109);
             this.cmbTipoDocumento.Name = "cmbTipoDocumento";
-            this.cmbTipoDocumento.Size = new System.Drawing.Size(140, 40);
+            this.cmbTipoDocumento.SelectedItem = null;
+            this.cmbTipoDocumento.SelectedValue = null;
+            this.cmbTipoDocumento.Size = new System.Drawing.Size(160, 43);
             this.cmbTipoDocumento.TabIndex = 2;
             // 
-            // lblEtiquetaDocumento
+            // lblEtiquetaTipoDocumento
             // 
-            this.lblEtiquetaDocumento.AutoSize = true;
-            this.lblEtiquetaDocumento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblEtiquetaDocumento.Location = new System.Drawing.Point(172, 84);
-            this.lblEtiquetaDocumento.Name = "lblEtiquetaDocumento";
-            this.lblEtiquetaDocumento.Size = new System.Drawing.Size(90, 15);
-            this.lblEtiquetaDocumento.TabIndex = 3;
-            this.lblEtiquetaDocumento.Text = "N° Documento";
+            this.lblEtiquetaTipoDocumento.AutoSize = true;
+            this.lblEtiquetaTipoDocumento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblEtiquetaTipoDocumento.Location = new System.Drawing.Point(23, 90);
+            this.lblEtiquetaTipoDocumento.Name = "lblEtiquetaTipoDocumento";
+            this.lblEtiquetaTipoDocumento.Size = new System.Drawing.Size(126, 16);
+            this.lblEtiquetaTipoDocumento.TabIndex = 1;
+            this.lblEtiquetaTipoDocumento.Text = "Tipo de Documento";
             // 
-            // txtDocumento
+            // pnlHeader
             // 
-            this.txtDocumento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.txtDocumento.BorderColor = System.Drawing.Color.Goldenrod;
-            this.txtDocumento.BorderFocusColor = System.Drawing.Color.Goldenrod;
-            this.txtDocumento.BorderWidth = 2;
-            this.txtDocumento.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumento.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.txtDocumento.IconChar = FontAwesome.Sharp.IconChar.Hashtag;
-            this.txtDocumento.IconColor = System.Drawing.Color.Goldenrod;
-            this.txtDocumento.IconPadding = 4;
-            this.txtDocumento.IconSize = 24;
-            this.txtDocumento.Location = new System.Drawing.Point(172, 102);
-            this.txtDocumento.Name = "txtDocumento";
-            this.txtDocumento.PlaceholderColor = System.Drawing.Color.LightGray;
-            this.txtDocumento.PlaceholderText = "N° Documento del titular";
-            this.txtDocumento.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtDocumento.Size = new System.Drawing.Size(200, 40);
-            this.txtDocumento.TabIndex = 4;
+            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
+            this.pnlHeader.Controls.Add(this.btnCerrar);
+            this.pnlHeader.Controls.Add(this.lblTitulo);
+            this.pnlHeader.Controls.Add(this.iconTitulo);
+            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
+            this.pnlHeader.Name = "pnlHeader";
+            this.pnlHeader.Size = new System.Drawing.Size(634, 75);
+            this.pnlHeader.TabIndex = 0;
             // 
-            // btnBuscar
+            // btnCerrar
             // 
-            this.btnBuscar.BackColor = System.Drawing.Color.Goldenrod;
-            this.btnBuscar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBuscar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
-            this.btnBuscar.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlass;
-            this.btnBuscar.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
-            this.btnBuscar.IconSize = 24;
-            this.btnBuscar.Location = new System.Drawing.Point(384, 102);
-            this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(116, 40);
-            this.btnBuscar.TabIndex = 5;
-            this.btnBuscar.Text = "Buscar";
-            this.btnBuscar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnBuscar.UseVisualStyleBackColor = false;
+            this.btnCerrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
+            this.btnCerrar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCerrar.IconChar = FontAwesome.Sharp.IconChar.Remove;
+            this.btnCerrar.IconColor = System.Drawing.Color.Gold;
+            this.btnCerrar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnCerrar.IconSize = 28;
+            this.btnCerrar.Location = new System.Drawing.Point(576, 17);
+            this.btnCerrar.Name = "btnCerrar";
+            this.btnCerrar.Size = new System.Drawing.Size(41, 38);
+            this.btnCerrar.TabIndex = 2;
+            this.btnCerrar.UseVisualStyleBackColor = false;
             // 
-            // pnlLinea1
+            // lblTitulo
             // 
-            this.pnlLinea1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(75)))), ((int)(((byte)(110)))));
-            this.pnlLinea1.Location = new System.Drawing.Point(20, 156);
-            this.pnlLinea1.Name = "pnlLinea1";
-            this.pnlLinea1.Size = new System.Drawing.Size(480, 1);
-            this.pnlLinea1.TabIndex = 6;
+            this.lblTitulo.AutoSize = true;
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitulo.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblTitulo.Location = new System.Drawing.Point(75, 23);
+            this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Size = new System.Drawing.Size(165, 30);
+            this.lblTitulo.TabIndex = 1;
+            this.lblTitulo.Text = "Buscar reserva";
             // 
-            // lblResultado
+            // iconTitulo
             // 
-            this.lblResultado.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblResultado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblResultado.Location = new System.Drawing.Point(20, 172);
-            this.lblResultado.Name = "lblResultado";
-            this.lblResultado.Size = new System.Drawing.Size(480, 80);
-            this.lblResultado.TabIndex = 7;
-            this.lblResultado.Text = "Ingresá el documento del titular y presioná Buscar.";
-            // 
-            // pnlLinea2
-            // 
-            this.pnlLinea2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(75)))), ((int)(((byte)(110)))));
-            this.pnlLinea2.Location = new System.Drawing.Point(20, 270);
-            this.pnlLinea2.Name = "pnlLinea2";
-            this.pnlLinea2.Size = new System.Drawing.Size(480, 1);
-            this.pnlLinea2.TabIndex = 8;
-            // 
-            // btnSeleccionar
-            // 
-            this.btnSeleccionar.BackColor = System.Drawing.Color.Goldenrod;
-            this.btnSeleccionar.Enabled = false;
-            this.btnSeleccionar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSeleccionar.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSeleccionar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
-            this.btnSeleccionar.IconChar = FontAwesome.Sharp.IconChar.Check;
-            this.btnSeleccionar.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
-            this.btnSeleccionar.IconSize = 24;
-            this.btnSeleccionar.Location = new System.Drawing.Point(160, 286);
-            this.btnSeleccionar.Name = "btnSeleccionar";
-            this.btnSeleccionar.Size = new System.Drawing.Size(220, 46);
-            this.btnSeleccionar.TabIndex = 9;
-            this.btnSeleccionar.Text = "Seleccionar";
-            this.btnSeleccionar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnSeleccionar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSeleccionar.UseVisualStyleBackColor = false;
+            this.iconTitulo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
+            this.iconTitulo.ForeColor = System.Drawing.Color.Gold;
+            this.iconTitulo.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlass;
+            this.iconTitulo.IconColor = System.Drawing.Color.Gold;
+            this.iconTitulo.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.iconTitulo.IconSize = 41;
+            this.iconTitulo.Location = new System.Drawing.Point(21, 17);
+            this.iconTitulo.Name = "iconTitulo";
+            this.iconTitulo.Size = new System.Drawing.Size(43, 41);
+            this.iconTitulo.TabIndex = 0;
+            this.iconTitulo.TabStop = false;
             // 
             // FormBuscarReserva_68SA
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Goldenrod;
-            this.ClientSize = new System.Drawing.Size(560, 430);
+            this.ClientSize = new System.Drawing.Size(640, 459);
             this.Controls.Add(this.pnlBorde);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;

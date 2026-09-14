@@ -2,6 +2,7 @@
 using DAL_08YS.Interfaces_Repositories.Negocio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL_08YS.Negocio
 {
@@ -56,6 +57,13 @@ namespace BLL_08YS.Negocio
 
         public void RegistrarCheckIn(int reservaId, List<Huesped_68SA> acompanantes)
         {
+            if (acompanantes != null && acompanantes.Count > 0)
+            {
+                var reserva = _reservaRepo.GetById(reservaId);
+                if (reserva != null && acompanantes.Any(a => a.Documento == reserva.Titular.Documento))
+                    throw new TitularEntreAcompanantesException_68SA();
+            }
+
             if (!_reservaRepo.RegistrarCheckIn(reservaId, DateTime.Now))
                 throw new EstadoReservaInvalidoException_68SA("Solo se puede hacer check-in sobre una reserva Confirmada.");
 
@@ -83,6 +91,11 @@ namespace BLL_08YS.Negocio
         public List<Huesped_68SA> GetAcompanantes(int reservaId)
         {
             return _reservaRepo.GetAcompanantes(reservaId);
+        }
+
+        public int ProcesarNoShows()
+        {
+            return _reservaRepo.ProcesarNoShows();
         }
     }
 }

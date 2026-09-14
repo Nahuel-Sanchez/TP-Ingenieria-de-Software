@@ -127,5 +127,12 @@ namespace DAL_08YS.SQL.Negocio
 
             return HuespedMapper_68SA.FromDataTable(dt);
         }
+
+        public int ProcesarNoShows()
+        {
+            var salida = ParamOutput("@CantidadCanceladas");
+            ExecuteNonQuery("sp_ProcesarNoShows", new[] { salida }, storedProcedure: true);
+            return Convert.ToInt32(salida.Value);
+        }
     }
 }

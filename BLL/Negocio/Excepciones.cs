@@ -51,5 +51,12 @@ namespace BLL_08YS.Negocio
         public TitularMenorDeEdadException_68SA(string message, Exception innerException) : base(message, innerException) { }
     }
 
+    public class TitularEntreAcompanantesException_68SA : Exception
+    {
+        public TitularEntreAcompanantesException_68SA()
+        : base("El titular de la reserva no puede figurar también como acompañante.") { }
 
+        public TitularEntreAcompanantesException_68SA(string message) : base(message) { }
+        public TitularEntreAcompanantesException_68SA(string message, Exception innerException) : base(message, innerException) { }
+    }
 }

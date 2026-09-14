@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Negocio\ConfiguracionHotelBLL_68SA.cs" />
     <Compile Include="Negocio\Excepciones.cs" />
     <Compile Include="Negocio\HabitacionBLL_68SA.cs" />
     <Compile Include="Negocio\HuespedBLL_68SA.cs" />

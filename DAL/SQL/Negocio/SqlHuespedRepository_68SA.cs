@@ -51,5 +51,20 @@ namespace DAL_08YS.SQL.Negocio
                     Param("@Telefono",        huesped.Telefono)
                 });
         }
+
+        public Huesped_68SA GetPorClaveCompleta(string documento, TipoDocumento tipoDocumento, string nacionalidad)
+        {
+            DataTable dt = GetDataTable(
+                BaseSelect + @" WHERE Documento = @Documento AND TipoDocumento = @TipoDocumento
+                        AND (Nacionalidad = @Nacionalidad OR (Nacionalidad IS NULL AND @Nacionalidad IS NULL))",
+                new[]
+                {
+            Param("@Documento", documento),
+            Param("@TipoDocumento", (int)tipoDocumento),
+            Param("@Nacionalidad", (object)nacionalidad ?? DBNull.Value)
+                });
+
+            return dt.Rows.Count > 0 ? HuespedMapper_68SA.FromDataRow(dt.Rows[0]) : null;
+        }
     }
 }

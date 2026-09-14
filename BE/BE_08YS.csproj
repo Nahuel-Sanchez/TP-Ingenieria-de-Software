@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfiguracionHotel_68SA.cs" />
     <Compile Include="Habitacion_68SA.cs" />
     <Compile Include="Huesped_68SA.cs" />
     <Compile Include="Pago_68SA.cs" />

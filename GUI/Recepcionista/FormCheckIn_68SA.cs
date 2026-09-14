@@ -189,6 +189,14 @@ namespace GUI_08YS.Recepcionista
                 return;
             }
 
+            if (dni == _reserva.Titular.Documento)
+            {
+                fila.HuespedEncontrado = null;
+                fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
+                fila.Resultado.Text = "Ese documento es el del titular — no puede repetirse como acompañante.";
+                return;
+            }
+
             var huesped = _huespedBLL.GetByDocumento(dni);
             if (huesped == null)
             {

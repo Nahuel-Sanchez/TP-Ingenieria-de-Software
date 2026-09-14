@@ -12,5 +12,6 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
         Huesped_68SA GetByDocumento(string documento);
         bool Exists(string documento);
         int Create(Huesped_68SA huesped);
+        Huesped_68SA GetPorClaveCompleta(string documento, TipoDocumento tipoDocumento, string nacionalidad);
     }
 }

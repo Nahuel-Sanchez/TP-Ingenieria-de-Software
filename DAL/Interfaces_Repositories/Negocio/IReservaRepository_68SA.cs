@@ -23,5 +23,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
 
         void AgregarAcompanante(int reservaId, int huespedId);
         List<Huesped_68SA> GetAcompanantes(int reservaId);
+
+        int ProcesarNoShows();
     }
 }

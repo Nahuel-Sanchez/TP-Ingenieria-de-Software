@@ -30,7 +30,7 @@ namespace BLL_08YS.Negocio
         // PN1 paso 7: si el huésped ya existe lo reutiliza, si no lo da de alta
         public Huesped_68SA ObtenerOCrear(Huesped_68SA huesped)
         {
-            var existente = _huespedRepo.GetByDocumento(huesped.Documento);
+            var existente = _huespedRepo.GetPorClaveCompleta(huesped.Documento, huesped.TipoDocumento, huesped.Nacionalidad);
             if (existente != null)
                 return existente;
 
