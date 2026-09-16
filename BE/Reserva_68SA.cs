@@ -33,5 +33,9 @@ namespace BE_08YS
         public List<Huesped_68SA> Acompanantes { get; set; } = new List<Huesped_68SA>();
 
         public int Noches => (FechaEgreso - FechaIngreso).Days;
+
+        public int? UsuarioRegistroDni { get; set; }
+        public string UsuarioRegistroNombre { get; set; } // solo para mostrar (Nombre + Apellido), no se inserta directo
+        public DateTime FechaRegistro { get; set; }
     }
 }

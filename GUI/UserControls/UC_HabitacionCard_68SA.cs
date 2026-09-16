@@ -34,7 +34,7 @@ namespace GUI_08YS.Recepcionista
 
         private void AplicarEstiloEstado(EstadoHabitacion estado)
         {
-            var (texto, fondo, acento) = EstiloEstadoHabitacion_68SA.Obtener(estado);
+            var (texto, fondo, acento) = EstiloEstadoHabitacion_68SA.Get(estado);
             pnlEstado.BackColor = fondo;
             lblEstado.Text = texto;
             lblEstado.ForeColor = acento;

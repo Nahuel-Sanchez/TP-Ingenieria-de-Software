@@ -42,13 +42,15 @@ namespace GUI_08YS.Recepcionista
             if (!ValidarCampos()) return;
 
             string documento = txtDocumento.RealText.Trim();
+            var tipoDocumento = (TipoDocumento)cmbTipoDocumento.SelectedItem;
+            string nacionalidad = string.IsNullOrWhiteSpace(txtNacionalidad.RealText) ? null : txtNacionalidad.RealText.Trim();
 
             try
             {
-                if (_huespedBLL.Exists(documento))
+                if (_huespedBLL.ExistePorClaveCompleta(documento, tipoDocumento, nacionalidad))
                 {
                     MessageBox.Show(
-                        "Ya existe un huésped registrado con ese documento. Buscalo en lugar de registrarlo de nuevo.",
+                        "Ya existe un huésped registrado con ese tipo y número de documento (y esa nacionalidad). Buscalo en lugar de registrarlo de nuevo.",
                         "Huésped existente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -58,15 +60,13 @@ namespace GUI_08YS.Recepcionista
                     Nombre = txtNombre.RealText.Trim(),
                     Apellido = txtApellido.RealText.Trim(),
                     Documento = documento,
-                    TipoDocumento = (TipoDocumento)cmbTipoDocumento.SelectedItem,
-                    Nacionalidad = txtNacionalidad.RealText.Trim(),
+                    TipoDocumento = tipoDocumento,
+                    Nacionalidad = nacionalidad,
                     FechaNacimiento = dtpFechaNacimiento.Value.Value.Date,
                     Telefono = txtTelefono.RealText.Trim(),
                     Email = txtEmail.RealText.Trim()
                 };
 
-                // Si por alguna carrera ya existiera, ObtenerOCrear devuelve el existente
-                // en lugar de duplicarlo; en el camino normal, lo da de alta.
                 HuespedCreado = _huespedBLL.ObtenerOCrear(nuevoHuesped);
 
                 DialogResult = DialogResult.OK;

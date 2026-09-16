@@ -136,11 +136,17 @@
     <Compile Include="Recepcionista\FormRegistrarHuesped_68SA.Designer.cs">
       <DependentUpon>FormRegistrarHuesped_68SA.cs</DependentUpon>
     </Compile>
-    <Compile Include="Recepcionista\FormReservar_68SA.cs">
+    <Compile Include="Recepcionista\FormRegistrarReserva_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Recepcionista\FormReservar_68SA.Designer.cs">
-      <DependentUpon>FormReservar_68SA.cs</DependentUpon>
+    <Compile Include="Recepcionista\FormRegistrarReserva_68SA.Designer.cs">
+      <DependentUpon>FormRegistrarReserva_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\FormReservas_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\FormReservas_68SA.Designer.cs">
+      <DependentUpon>FormReservas_68SA.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\IconNumericUpDown.cs">
       <SubType>UserControl</SubType>
@@ -238,8 +244,8 @@
     <EmbeddedResource Include="Recepcionista\FormRegistrarHuesped_68SA.resx">
       <DependentUpon>FormRegistrarHuesped_68SA.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Recepcionista\FormReservar_68SA.resx">
-      <DependentUpon>FormReservar_68SA.cs</DependentUpon>
+    <EmbeddedResource Include="Recepcionista\FormRegistrarReserva_68SA.resx">
+      <DependentUpon>FormRegistrarReserva_68SA.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\UC_HabitacionCard_68SA.resx">
       <DependentUpon>UC_HabitacionCard_68SA.cs</DependentUpon>

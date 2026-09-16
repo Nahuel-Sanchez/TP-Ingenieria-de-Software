@@ -17,7 +17,7 @@ namespace GUI_08YS.Recepcionista
             lblNumero.Text = habitacion.NroHabitacion;
             lblTipo.Text = habitacion.Tipo.Nombre;
 
-            var (texto, fondo, acento) = EstiloEstadoHabitacion_68SA.Obtener(habitacion.EstadoVisual);
+            var (texto, fondo, acento) = EstiloEstadoHabitacion_68SA.Get(habitacion.EstadoVisual);
             pnlBadgeEstado.BackColor = fondo;
             pnlPuntoEstado.BackColor = acento;
             lblEstadoBadge.Text = texto;

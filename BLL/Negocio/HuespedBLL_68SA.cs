@@ -22,9 +22,9 @@ namespace BLL_08YS.Negocio
             return _huespedRepo.GetByDocumento(documento);
         }
 
-        public bool Exists(string documento)
+        public bool ExistePorClaveCompleta(string documento, TipoDocumento tipoDocumento, string nacionalidad)
         {
-            return _huespedRepo.Exists(documento);
+            return _huespedRepo.GetPorClaveCompleta(documento, tipoDocumento, nacionalidad) != null;
         }
 
         // PN1 paso 7: si el huésped ya existe lo reutiliza, si no lo da de alta

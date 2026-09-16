@@ -26,7 +26,8 @@ namespace GUI_08YS.Recepcionista
         CheckOut,
         Servicio,
         CambioHabitacion,
-        MarcarDisponible
+        MarcarDisponible,
+        PonerEnMantenimiento
     }
 
     public partial class FormControlHabitaciones_68SA : Form, IIdiomaObserver_08YS
@@ -173,7 +174,7 @@ namespace GUI_08YS.Recepcionista
         {
             if (_modo == ModoHabitaciones.Reserva)
             {
-                _openChildForm(new FormReservar_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
+                _openChildForm(new FormRegistrarReserva_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
                 return;
             }
 
@@ -207,6 +208,9 @@ namespace GUI_08YS.Recepcionista
                     break;
             }
 
+            if (habitacion.EstadoVisual != EstadoHabitacion.FueraDeServicio)
+                acciones.Add(("Poner en Mantenimiento", IconChar.Wrench, AccionHabitacion.PonerEnMantenimiento));
+
             using (var popup = new FormAccionesHabitacion_68SA(habitacion, acciones))
             {
                 if (popup.ShowDialog(this) == DialogResult.OK && popup.AccionSeleccionada.HasValue)
@@ -224,7 +228,7 @@ namespace GUI_08YS.Recepcionista
                     break;
 
                 case AccionHabitacion.Reservar:
-                    _openChildForm(new FormReservar_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
+                    _openChildForm(new FormRegistrarReserva_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
                     break;
 
                 case AccionHabitacion.CheckIn:
@@ -247,6 +251,18 @@ namespace GUI_08YS.Recepcionista
                         break;
                     }
                     _openChildForm(new FormCheckOut_68SA(_openChildForm, reservaEnCurso, _modo, _fechaIngreso, _fechaEgreso));
+                    break;
+
+                case AccionHabitacion.PonerEnMantenimiento:
+                    if (habitacion.EstadoVisual == EstadoHabitacion.Reservada || habitacion.EstadoVisual == EstadoHabitacion.Ocupada)
+                    {
+                        var confirmacion = MessageBox.Show(
+                            "Esta habitación tiene una reserva activa. Ponerla en mantenimiento no reubica al huésped ni modifica la reserva — eso todavía hay que resolverlo a mano. ¿Poner en mantenimiento igual?",
+                            "Reserva activa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if (confirmacion != DialogResult.Yes) break;
+                    }
+                    _habitacionBLL.CambiarEstado(habitacion.Id, EstadoHabitacion.FueraDeServicio);
+                    CargarHabitaciones();
                     break;
 
                 default:

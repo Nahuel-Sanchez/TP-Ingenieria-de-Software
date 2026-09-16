@@ -42,6 +42,7 @@ namespace GUI_08YS.Recepcionista
 
             cmbMetodoPagoFinal.Items.AddRange(Enum.GetValues(typeof(MetodoPago)).Cast<object>().ToArray());
             cmbMetodoPagoFinal.SelectedIndex = 0;
+            cmbMetodoPagoFinal.SelectedIndexChanged += (s, e) => ActualizarVisibilidadVueltoFinal();
             nudMontoRecibidoFinal.ValueChanged += (s, e) => ActualizarVueltoFinal();
 
             btnConfirmar.Click += BtnConfirmar_Click;
@@ -103,10 +104,13 @@ namespace GUI_08YS.Recepcionista
             {
                 nudMontoRecibidoFinal.Value = _saldoPendiente;
                 ActualizarVueltoFinal();
+                ActualizarVisibilidadVueltoFinal();
                 pnlCuenta.Height = 330;
             }
             else
             {
+                lblEtiquetaVueltoFinal.Visible = false;
+                lblVueltoFinal.Visible = false;
                 pnlCuenta.Height = 150;
             }
 
@@ -162,6 +166,13 @@ namespace GUI_08YS.Recepcionista
         private void Volver()
         {
             _openChildForm(new FormControlHabitaciones_68SA(_openChildForm, _modoOrigen, _fechaIngresoOrigen, _fechaEgresoOrigen));
+        }
+
+        private void ActualizarVisibilidadVueltoFinal()
+        {
+            bool esEfectivo = cmbMetodoPagoFinal.SelectedItem is MetodoPago metodo && metodo == MetodoPago.Efectivo;
+            lblEtiquetaVueltoFinal.Visible = esEfectivo;
+            lblVueltoFinal.Visible = esEfectivo;
         }
 
         public void UpdateIdioma()

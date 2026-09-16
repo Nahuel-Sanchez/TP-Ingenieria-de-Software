@@ -13,13 +13,45 @@ namespace DAL_08YS.SQL.Negocio
         private const string BaseSelect = @"
             SELECT r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
                    r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal,
+                   r.UsuarioRegistroDNI, r.FechaRegistro,
                    hab.NroHabitacion,
-                   hu.Documento AS DocumentoTitular, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular
+                   hu.Documento AS DocumentoTitular, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular,
+                   ureg.Nombre AS NombreUsuarioRegistro, ureg.Apellido AS ApellidoUsuarioRegistro
             FROM Reservas r
             INNER JOIN Habitaciones hab ON r.HabitacionID = hab.HabitacionID
-            INNER JOIN Huespedes hu ON r.HuespedTitularID = hu.HuespedID";
+            INNER JOIN Huespedes hu ON r.HuespedTitularID = hu.HuespedID
+            LEFT JOIN Users ureg ON r.UsuarioRegistroDNI = ureg.DNI";
 
         public SqlReservaRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
+
+        public List<Reserva_68SA> GetAll(DateTime? fechaDesde, DateTime? fechaHasta, EstadoReserva? estado)
+        {
+            var where = new List<string>();
+            var parametros = new List<IDbDataParameter>();
+
+            if (fechaDesde.HasValue)
+            {
+                where.Add("r.FechaIngreso >= @FechaDesde");
+                parametros.Add(Param("@FechaDesde", fechaDesde.Value.Date));
+            }
+            if (fechaHasta.HasValue)
+            {
+                where.Add("r.FechaIngreso <= @FechaHasta");
+                parametros.Add(Param("@FechaHasta", fechaHasta.Value.Date));
+            }
+            if (estado.HasValue)
+            {
+                where.Add("r.Estado = @Estado");
+                parametros.Add(Param("@Estado", (int)estado.Value));
+            }
+
+            string query = BaseSelect
+                + (where.Count > 0 ? " WHERE " + string.Join(" AND ", where) : "")
+                + " ORDER BY r.FechaIngreso DESC";
+
+            DataTable dt = GetDataTable(query, parametros.ToArray());
+            return ReservaMapper_68SA.FromDataTable(dt);
+        }
 
         public int Crear(Reserva_68SA reserva)
         {
@@ -29,16 +61,17 @@ namespace DAL_08YS.SQL.Negocio
             ExecuteNonQuery("sp_CrearReserva",
                 new[]
                 {
-                    Param("@HuespedTitularID", reserva.Titular.Id),
-                    Param("@HabitacionID",     reserva.Habitacion.Id),
-                    Param("@FechaIngreso",     reserva.FechaIngreso.Date),
-                    Param("@FechaEgreso",      reserva.FechaEgreso.Date),
-                    Param("@CantidadAdultos",  reserva.CantidadAdultos),
-                    Param("@CantidadNinos",    reserva.CantidadNinos),
-                    Param("@TarifaNoche",      reserva.TarifaNoche),
-                    Param("@MontoTotal",       reserva.MontoTotal),
-                    idOutput,
-                    disponibleOutput
+            Param("@HuespedTitularID", reserva.Titular.Id),
+            Param("@HabitacionID",     reserva.Habitacion.Id),
+            Param("@FechaIngreso",     reserva.FechaIngreso.Date),
+            Param("@FechaEgreso",      reserva.FechaEgreso.Date),
+            Param("@CantidadAdultos",  reserva.CantidadAdultos),
+            Param("@CantidadNinos",    reserva.CantidadNinos),
+            Param("@TarifaNoche",      reserva.TarifaNoche),
+            Param("@MontoTotal",       reserva.MontoTotal),
+            Param("@UsuarioRegistroDNI", (object)reserva.UsuarioRegistroDni ?? DBNull.Value),
+            idOutput,
+            disponibleOutput
                 },
                 storedProcedure: true);
 

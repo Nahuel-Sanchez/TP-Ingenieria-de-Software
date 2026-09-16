@@ -223,20 +223,35 @@ namespace GUI_08YS.Recepcionista
 
         private void AbrirRegistrarHuesped(FilaAcompanante fila)
         {
-            // TODO: cuando exista FormRegistrarHuesped_68SA, reemplazar por su apertura (ShowDialog),
-            // y al volver con OK, cargar el Huesped_68SA creado en 'fila' igual que en BuscarAcompanante:
-            //
-            // using (var formNuevo = new FormRegistrarHuesped_68SA(fila.Dni.RealText.Trim()))
-            // {
-            //     if (formNuevo.ShowDialog(this) == DialogResult.OK)
-            //     {
-            //         fila.HuespedEncontrado = formNuevo.HuespedCreado;
-            //         fila.Dni.Text = fila.HuespedEncontrado.Documento;
-            //         ... actualizar fila.Resultado igual que en BuscarAcompanante
-            //     }
-            // }
-            MessageBox.Show("Registrar huésped nuevo — formulario todavía no implementado.", "Pendiente",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (var formNuevo = new FormRegistrarHuesped_68SA(fila.Dni.RealText.Trim()))
+            {
+                if (formNuevo.ShowDialog(this) != DialogResult.OK) return;
+
+                var huesped = formNuevo.HuespedCreado;
+
+                if (huesped.Documento == _reserva.Titular.Documento)
+                {
+                    fila.HuespedEncontrado = null;
+                    fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
+                    fila.Resultado.Text = "Ese documento es el del titular — no puede repetirse como acompañante.";
+                    return;
+                }
+
+                bool yaCargado = _filasAcompanantes.Any(f => f != fila && f.HuespedEncontrado != null && f.HuespedEncontrado.Documento == huesped.Documento);
+                if (yaCargado)
+                {
+                    fila.HuespedEncontrado = null;
+                    fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
+                    fila.Resultado.Text = "Ese documento ya está cargado en otra fila.";
+                    return;
+                }
+
+                fila.Dni.Text = huesped.Documento;
+                fila.HuespedEncontrado = huesped;
+                int edad = HuespedBLL_68SA.CalcularEdad(huesped.FechaNacimiento);
+                fila.Resultado.ForeColor = Color.FromArgb(76, 217, 100);
+                fila.Resultado.Text = $"{huesped.Nombre} {huesped.Apellido} ({edad} años)";
+            }
         }
 
         // ---------- Confirmar ----------

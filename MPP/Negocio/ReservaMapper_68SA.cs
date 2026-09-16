@@ -49,6 +49,15 @@ namespace MPP_08YS
             if (row.Table.Columns.Contains("ApellidoTitular") && row["ApellidoTitular"] != DBNull.Value)
                 reserva.Titular.Apellido = row["ApellidoTitular"].ToString();
 
+            if (row.Table.Columns.Contains("UsuarioRegistroDNI") && row["UsuarioRegistroDNI"] != DBNull.Value)
+                reserva.UsuarioRegistroDni = Convert.ToInt32(row["UsuarioRegistroDNI"]);
+
+            if (row.Table.Columns.Contains("FechaRegistro") && row["FechaRegistro"] != DBNull.Value)
+                reserva.FechaRegistro = Convert.ToDateTime(row["FechaRegistro"]);
+
+            if (row.Table.Columns.Contains("NombreUsuarioRegistro") && row["NombreUsuarioRegistro"] != DBNull.Value)
+                reserva.UsuarioRegistroNombre = $"{row["NombreUsuarioRegistro"]} {row["ApellidoUsuarioRegistro"]}";
+
             return reserva;
         }
     }

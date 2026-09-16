@@ -10,7 +10,7 @@ namespace GUI_08YS.Recepcionista
 {
     public static class EstiloEstadoHabitacion_68SA
     {
-        public static (string Texto, Color Fondo, Color Acento) Obtener(EstadoHabitacion estado)
+        public static (string Texto, Color Fondo, Color Acento) Get(EstadoHabitacion estado)
         {
             switch (estado)
             {

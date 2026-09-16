@@ -1,6 +1,6 @@
 ﻿namespace GUI_08YS.Recepcionista
 {
-    partial class FormReservar_68SA
+    partial class FormRegistrarReserva_68SA
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -376,7 +376,7 @@
             this.lblEtiquetaAdultos.Text = "Adultos";
             // 
             // nudNinos
-            //
+            // 
             this.nudNinos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.nudNinos.BorderColor = System.Drawing.Color.Goldenrod;
             this.nudNinos.BorderFocusColor = System.Drawing.Color.Goldenrod;
@@ -992,6 +992,7 @@
             this.btnHuespedNuevo.Size = new System.Drawing.Size(64, 42);
             this.btnHuespedNuevo.TabIndex = 7;
             this.btnHuespedNuevo.UseVisualStyleBackColor = false;
+            this.btnHuespedNuevo.Click += new System.EventHandler(this.BtnHuespedNuevo_Click);
             // 
             // btnConsultarDocumento
             // 
@@ -1155,7 +1156,7 @@
             this.btnCancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnCancelar.UseVisualStyleBackColor = false;
             // 
-            // FormReservar_68SA
+            // FormRegistrarReserva_68SA
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(10)))), ((int)(((byte)(40)))));
@@ -1164,7 +1165,7 @@
             this.Controls.Add(this.pnlBotones);
             this.Controls.Add(this.pnlEncabezado);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "FormReservar_68SA";
+            this.Name = "FormRegistrarReserva_68SA";
             this.Text = "FormReservar_68SA";
             this.pnlEncabezado.ResumeLayout(false);
             this.pnlEncabezado.PerformLayout();

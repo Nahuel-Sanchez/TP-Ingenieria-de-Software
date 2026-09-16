@@ -9,6 +9,8 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
 {
     public interface IReservaRepository_68SA
     {
+        List<Reserva_68SA> GetAll(DateTime? fechaDesde, DateTime? fechaHasta, EstadoReserva? estado);
+
         // Devuelve el ReservaID nuevo, o -1 si la habitación dejó de estar disponible
         int Crear(Reserva_68SA reserva);
 

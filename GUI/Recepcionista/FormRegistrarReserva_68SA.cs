@@ -5,10 +5,9 @@ using Service_08YS;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-
 namespace GUI_08YS.Recepcionista
 {
-    public partial class FormReservar_68SA : Form, IIdiomaObserver_08YS
+    public partial class FormRegistrarReserva_68SA : Form, IIdiomaObserver_08YS
     {
         private readonly Action<Form> _openChildForm;
         private readonly Habitacion_68SA _habitacion;
@@ -23,7 +22,7 @@ namespace GUI_08YS.Recepcionista
 
         private Huesped_68SA _huespedSeleccionado;
 
-        public FormReservar_68SA(Action<Form> openChildForm, Habitacion_68SA habitacion, ModoHabitaciones modoOrigen,
+        public FormRegistrarReserva_68SA(Action<Form> openChildForm, Habitacion_68SA habitacion, ModoHabitaciones modoOrigen,
                                   DateTime? fechaIngreso = null, DateTime? fechaEgreso = null)
         {
             _openChildForm = openChildForm;
@@ -50,6 +49,8 @@ namespace GUI_08YS.Recepcionista
 
             cmbMetodoPago.Items.AddRange(Enum.GetValues(typeof(MetodoPago)).Cast<object>().ToArray());
             cmbMetodoPago.SelectedIndex = 0;
+            cmbMetodoPago.SelectedIndexChanged += (s, e) => ActualizarVisibilidadVuelto();
+            ActualizarVisibilidadVuelto();
 
             toolTip1.SetToolTip(btnHuespedNuevo, "Registrar huésped nuevo");
 
@@ -65,7 +66,6 @@ namespace GUI_08YS.Recepcionista
             ValidarComposicion();
 
             btnConsultarDocumento.Click += BtnConsultarDocumento_Click;
-            btnHuespedNuevo.Click += BtnHuespedNuevo_Click;
             nudMontoRecibido.ValueChanged += (s, e) => ActualizarVuelto();
             btnConfirmar.Click += BtnConfirmar_Click;
             btnCancelar.Click += (s, e) => Volver();
@@ -92,6 +92,13 @@ namespace GUI_08YS.Recepcionista
 
             nudMontoRecibido.Value = _montoTotal;
             ActualizarVuelto();
+        }
+
+        private void ActualizarVisibilidadVuelto()
+        {
+            bool esEfectivo = cmbMetodoPago.SelectedItem is MetodoPago metodo && metodo == MetodoPago.Efectivo;
+            lblVueltoEtiqueta.Visible = esEfectivo;
+            lblVuelto.Visible = esEfectivo;
         }
 
         private void ValidarComposicion()
@@ -127,17 +134,11 @@ namespace GUI_08YS.Recepcionista
 
         private void BtnHuespedNuevo_Click(object sender, EventArgs e)
         {
-            // TODO: cuando exista FormRegistrarHuesped_68SA, reemplazar esto por su apertura.
-            // Sugerencia: que sea un ShowDialog() (no _openChildForm) para no perder el estado
-            // de esta reserva en curso, y que devuelva el Huesped_68SA creado, algo así:
-            //
-            // using (var formNuevo = new FormRegistrarHuesped_68SA(txtDni.RealText.Trim()))
-            // {
-            //     if (formNuevo.ShowDialog(this) == DialogResult.OK)
-            //         CargarHuesped(formNuevo.HuespedCreado);
-            // }
-            MessageBox.Show("Registrar huésped nuevo — formulario todavía no implementado.", "Pendiente",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (var formNuevo = new FormRegistrarHuesped_68SA(txtDni.RealText.Trim()))
+            {
+                if (formNuevo.ShowDialog(this) == DialogResult.OK)
+                    CargarHuesped(formNuevo.HuespedCreado);
+            }
         }
 
         private void CargarHuesped(Huesped_68SA huesped)
@@ -254,5 +255,6 @@ namespace GUI_08YS.Recepcionista
         {
 
         }
+
     }
 }

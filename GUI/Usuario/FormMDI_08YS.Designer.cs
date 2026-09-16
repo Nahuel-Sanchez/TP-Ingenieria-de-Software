@@ -45,6 +45,7 @@
             this.btnPerfil = new FontAwesome.Sharp.IconButton();
             this.btnAdministrativo = new FontAwesome.Sharp.IconButton();
             this.btnRecepcion = new FontAwesome.Sharp.IconButton();
+            this.btnReservas = new FontAwesome.Sharp.IconButton();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panelLogo = new System.Windows.Forms.Panel();
@@ -67,8 +68,8 @@
             this.reservarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controlDeHabitacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.timerNoShow = new System.Windows.Forms.Timer(this.components);
             this.checkOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timerNoShow = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.panelIdioma.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -244,7 +245,7 @@
             this.panelLateral.Location = new System.Drawing.Point(0, 46);
             this.panelLateral.Margin = new System.Windows.Forms.Padding(4);
             this.panelLateral.Name = "panelLateral";
-            this.panelLateral.Size = new System.Drawing.Size(331, 919);
+            this.panelLateral.Size = new System.Drawing.Size(330, 920);
             this.panelLateral.TabIndex = 4;
             // 
             // flowLayoutPanel1
@@ -253,11 +254,12 @@
             this.flowLayoutPanel1.Controls.Add(this.btnPerfil);
             this.flowLayoutPanel1.Controls.Add(this.btnAdministrativo);
             this.flowLayoutPanel1.Controls.Add(this.btnRecepcion);
+            this.flowLayoutPanel1.Controls.Add(this.btnReservas);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(331, 789);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(330, 790);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // btnPerfil
@@ -332,14 +334,38 @@
             this.btnRecepcion.UseVisualStyleBackColor = true;
             this.btnRecepcion.Click += new System.EventHandler(this.btnRecepcion_Click);
             // 
+            // btnReservas
+            // 
+            this.btnReservas.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnReservas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReservas.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReservas.ForeColor = System.Drawing.Color.Gold;
+            this.btnReservas.IconChar = FontAwesome.Sharp.IconChar.CalendarWeek;
+            this.btnReservas.IconColor = System.Drawing.Color.Gold;
+            this.btnReservas.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.btnReservas.IconSize = 38;
+            this.btnReservas.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReservas.Location = new System.Drawing.Point(3, 194);
+            this.btnReservas.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnReservas.Name = "btnReservas";
+            this.btnReservas.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnReservas.Size = new System.Drawing.Size(325, 60);
+            this.btnReservas.TabIndex = 6;
+            this.btnReservas.Tag = "btnReservas";
+            this.btnReservas.Text = "Reservas";
+            this.btnReservas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReservas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnReservas.UseVisualStyleBackColor = true;
+            this.btnReservas.Click += new System.EventHandler(this.btnReservas_Click);
+            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.btnCerrarSesion);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 859);
+            this.panel3.Location = new System.Drawing.Point(0, 860);
             this.panel3.Name = "panel3";
             this.panel3.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.panel3.Size = new System.Drawing.Size(331, 60);
+            this.panel3.Size = new System.Drawing.Size(330, 60);
             this.panel3.TabIndex = 1;
             // 
             // btnCerrarSesion
@@ -359,7 +385,7 @@
             this.btnCerrarSesion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCerrarSesion.Name = "btnCerrarSesion";
             this.btnCerrarSesion.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnCerrarSesion.Size = new System.Drawing.Size(327, 60);
+            this.btnCerrarSesion.Size = new System.Drawing.Size(326, 60);
             this.btnCerrarSesion.TabIndex = 7;
             this.btnCerrarSesion.Tag = "btnCerrarSesion";
             this.btnCerrarSesion.Text = "  Cerrar Sesión";
@@ -377,7 +403,7 @@
             this.panelLogo.Location = new System.Drawing.Point(0, 0);
             this.panelLogo.Margin = new System.Windows.Forms.Padding(4);
             this.panelLogo.Name = "panelLogo";
-            this.panelLogo.Size = new System.Drawing.Size(331, 70);
+            this.panelLogo.Size = new System.Drawing.Size(330, 70);
             this.panelLogo.TabIndex = 0;
             // 
             // pictureBox2
@@ -419,10 +445,10 @@
             this.panel2.BackgroundImage = global::GUI_08YS.Properties.Resources.ChatGPT_Image_19_may_2026__22_23_23;
             this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(331, 46);
+            this.panel2.Location = new System.Drawing.Point(330, 46);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1469, 919);
+            this.panel2.Size = new System.Drawing.Size(1470, 920);
             this.panel2.TabIndex = 5;
             // 
             // AdministrativoDropDownMenu
@@ -541,7 +567,7 @@
             this.RecepcionDropDownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
             this.RecepcionDropDownMenu.Name = "RecepcionDropDownMenu";
             this.RecepcionDropDownMenu.PrimaryColor = System.Drawing.Color.Empty;
-            this.RecepcionDropDownMenu.Size = new System.Drawing.Size(240, 128);
+            this.RecepcionDropDownMenu.Size = new System.Drawing.Size(240, 100);
             // 
             // reservarToolStripMenuItem
             // 
@@ -564,10 +590,6 @@
             this.checkInToolStripMenuItem.Text = "Check-In";
             this.checkInToolStripMenuItem.Click += new System.EventHandler(this.checkInToolStripMenuItem_Click);
             // 
-            // timerNoShow
-            // 
-            this.timerNoShow.Interval = 900000;
-            // 
             // checkOutToolStripMenuItem
             // 
             this.checkOutToolStripMenuItem.Name = "checkOutToolStripMenuItem";
@@ -575,11 +597,15 @@
             this.checkOutToolStripMenuItem.Text = "Check-Out";
             this.checkOutToolStripMenuItem.Click += new System.EventHandler(this.checkOutToolStripMenuItem_Click);
             // 
+            // timerNoShow
+            // 
+            this.timerNoShow.Interval = 900000;
+            // 
             // FormMDI_08YS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1800, 965);
+            this.ClientSize = new System.Drawing.Size(1800, 966);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelLateral);
             this.Controls.Add(this.panel1);
@@ -648,6 +674,7 @@
         private System.Windows.Forms.ToolStripMenuItem checkInToolStripMenuItem;
         private System.Windows.Forms.Timer timerNoShow;
         private System.Windows.Forms.ToolStripMenuItem checkOutToolStripMenuItem;
+        private FontAwesome.Sharp.IconButton btnReservas;
     }
 }
 
