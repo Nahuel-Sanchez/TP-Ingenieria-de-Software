@@ -216,9 +216,8 @@ namespace GUI_08YS.Recepcionista
             }
 
             fila.HuespedEncontrado = huesped;
-            int edad = HuespedBLL_68SA.CalcularEdad(huesped.FechaNacimiento);
             fila.Resultado.ForeColor = Color.FromArgb(76, 217, 100);
-            fila.Resultado.Text = $"{huesped.Nombre} {huesped.Apellido} ({edad} años)";
+            fila.Resultado.Text = $"{huesped.Nombre} {huesped.Apellido} ({huesped.Edad} años)";
         }
 
         private void AbrirRegistrarHuesped(FilaAcompanante fila)
@@ -248,9 +247,8 @@ namespace GUI_08YS.Recepcionista
 
                 fila.Dni.Text = huesped.Documento;
                 fila.HuespedEncontrado = huesped;
-                int edad = HuespedBLL_68SA.CalcularEdad(huesped.FechaNacimiento);
                 fila.Resultado.ForeColor = Color.FromArgb(76, 217, 100);
-                fila.Resultado.Text = $"{huesped.Nombre} {huesped.Apellido} ({edad} años)";
+                fila.Resultado.Text = $"{huesped.Nombre} {huesped.Apellido} ({huesped.Edad} años)";
             }
         }
 
@@ -277,8 +275,8 @@ namespace GUI_08YS.Recepcionista
                 acompanantes.Add(fila.HuespedEncontrado);
             }
 
-            int adultosIngresados = 1 + acompanantes.Count(h => HuespedBLL_68SA.EsMayorDeEdad(h.FechaNacimiento)); // el titular siempre es adulto
-            int ninosIngresados = acompanantes.Count(h => !HuespedBLL_68SA.EsMayorDeEdad(h.FechaNacimiento));
+            int adultosIngresados = 1 + acompanantes.Count(h => HuespedBLL_68SA.EsMayorDeEdad(h)); // el titular siempre es adulto
+            int ninosIngresados = acompanantes.Count(h => !HuespedBLL_68SA.EsMayorDeEdad(h));
 
             if (adultosIngresados != _reserva.CantidadAdultos || ninosIngresados != _reserva.CantidadNinos)
             {

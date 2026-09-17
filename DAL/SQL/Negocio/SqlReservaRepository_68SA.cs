@@ -24,25 +24,60 @@ namespace DAL_08YS.SQL.Negocio
 
         public SqlReservaRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
 
-        public List<Reserva_68SA> GetAll(DateTime? fechaDesde, DateTime? fechaHasta, EstadoReserva? estado)
+        public List<Reserva_68SA> GetAll(ReservaFiltro_68SA filtro)
         {
             var where = new List<string>();
             var parametros = new List<IDbDataParameter>();
 
-            if (fechaDesde.HasValue)
+            if (!string.IsNullOrWhiteSpace(filtro.Huesped))
             {
-                where.Add("r.FechaIngreso >= @FechaDesde");
-                parametros.Add(Param("@FechaDesde", fechaDesde.Value.Date));
+                where.Add("(hu.Nombre LIKE @Huesped OR hu.Apellido LIKE @Huesped OR hu.Documento LIKE @Huesped)");
+                parametros.Add(Param("@Huesped", $"%{filtro.Huesped.Trim()}%"));
             }
-            if (fechaHasta.HasValue)
+            if (!string.IsNullOrWhiteSpace(filtro.Habitacion))
             {
-                where.Add("r.FechaIngreso <= @FechaHasta");
-                parametros.Add(Param("@FechaHasta", fechaHasta.Value.Date));
+                where.Add("hab.NroHabitacion LIKE @Habitacion");
+                parametros.Add(Param("@Habitacion", $"%{filtro.Habitacion.Trim()}%"));
             }
-            if (estado.HasValue)
+            if (!string.IsNullOrWhiteSpace(filtro.Registro))
+            {
+                where.Add("(ureg.Nombre LIKE @Registro OR ureg.Apellido LIKE @Registro)");
+                parametros.Add(Param("@Registro", $"%{filtro.Registro.Trim()}%"));
+            }
+            if (filtro.Estado.HasValue)
             {
                 where.Add("r.Estado = @Estado");
-                parametros.Add(Param("@Estado", (int)estado.Value));
+                parametros.Add(Param("@Estado", (int)filtro.Estado.Value));
+            }
+            if (filtro.FechaDesde.HasValue)
+            {
+                where.Add("r.FechaIngreso >= @FechaDesde");
+                parametros.Add(Param("@FechaDesde", filtro.FechaDesde.Value.Date));
+            }
+            if (filtro.FechaHasta.HasValue)
+            {
+                where.Add("r.FechaIngreso <= @FechaHasta");
+                parametros.Add(Param("@FechaHasta", filtro.FechaHasta.Value.Date.AddDays(1).AddTicks(-1)));
+            }
+            if (filtro.FechaEgresoDesde.HasValue)
+            {
+                where.Add("r.FechaEgreso >= @FechaEgresoDesde");
+                parametros.Add(Param("@FechaEgresoDesde", filtro.FechaEgresoDesde.Value.Date));
+            }
+            if (filtro.FechaEgresoHasta.HasValue)
+            {
+                where.Add("r.FechaEgreso <= @FechaEgresoHasta");
+                parametros.Add(Param("@FechaEgresoHasta", filtro.FechaEgresoHasta.Value.Date.AddDays(1).AddTicks(-1)));
+            }
+            if (filtro.CostoDesde.HasValue)
+            {
+                where.Add("r.MontoTotal >= @CostoDesde");
+                parametros.Add(Param("@CostoDesde", filtro.CostoDesde.Value));
+            }
+            if (filtro.CostoHasta.HasValue)
+            {
+                where.Add("r.MontoTotal <= @CostoHasta");
+                parametros.Add(Param("@CostoHasta", filtro.CostoHasta.Value));
             }
 
             string query = BaseSelect
@@ -112,6 +147,17 @@ namespace DAL_08YS.SQL.Negocio
 
             DataTable dt = GetDataTable(query, new[] { Param("@HabitacionID", habitacionId) });
             return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
+        }
+
+        public List<Reserva_68SA> GetEnRangoVisible(DateTime desde, DateTime hasta)
+        {
+            string query = BaseSelect + @"
+                WHERE r.Estado <> 3 -- excluye Canceladas
+                  AND r.FechaIngreso < @Hasta
+                  AND r.FechaEgreso > @Desde";
+
+            DataTable dt = GetDataTable(query, new[] { Param("@Desde", desde.Date), Param("@Hasta", hasta.Date) });
+            return ReservaMapper_68SA.FromDataTable(dt);
         }
 
         public bool RegistrarCheckIn(int reservaId, DateTime fechaHora)

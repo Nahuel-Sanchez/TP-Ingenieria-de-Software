@@ -18,16 +18,14 @@ namespace BLL_08YS.Negocio
             _huespedBLL = huespedBLL;
         }
 
-        public List<Reserva_68SA> GetAll(DateTime? fechaDesde, DateTime? fechaHasta, EstadoReserva? estado)
-        {
-            return _reservaRepo.GetAll(fechaDesde, fechaHasta, estado);
-        }
+        public List<Reserva_68SA> GetTodas(ReservaFiltro_68SA filtro)
+            => _reservaRepo.GetAll(filtro);
 
         public int Crear(Reserva_68SA reserva)
         {
             HabitacionBLL_68SA.ValidarRango(reserva.FechaIngreso, reserva.FechaEgreso);
 
-            if (!HuespedBLL_68SA.EsMayorDeEdad(reserva.Titular.FechaNacimiento))
+            if (!HuespedBLL_68SA.EsMayorDeEdad(reserva.Titular))
                 throw new TitularMenorDeEdadException_68SA();
 
             reserva.Titular = _huespedBLL.ObtenerOCrear(reserva.Titular);
@@ -60,6 +58,11 @@ namespace BLL_08YS.Negocio
         public Reserva_68SA GetConfirmadaHoyPorHabitacion(int habitacionId)
         {
             return _reservaRepo.GetConfirmadaHoyPorHabitacion(habitacionId);
+        }
+
+        public List<Reserva_68SA> GetEnRangoVisible(DateTime desde, DateTime hasta)
+        {
+            return _reservaRepo.GetEnRangoVisible(desde, hasta);
         }
 
         public void RegistrarCheckIn(int reservaId, List<Huesped_68SA> acompanantes)

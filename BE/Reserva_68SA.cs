@@ -38,4 +38,19 @@ namespace BE_08YS
         public string UsuarioRegistroNombre { get; set; } // solo para mostrar (Nombre + Apellido), no se inserta directo
         public DateTime FechaRegistro { get; set; }
     }
+
+    public class ReservaFiltro_68SA
+    {
+        public string Huesped { get; set; }
+        public string Habitacion { get; set; }
+        public string Registro { get; set; }
+        public EstadoReserva? Estado { get; set; }
+        public DateTime? FechaDesde { get; set; }
+        public DateTime? FechaHasta { get; set; }
+
+        public DateTime? FechaEgresoDesde { get; set; }
+        public DateTime? FechaEgresoHasta { get; set; }
+        public decimal? CostoDesde { get; set; }
+        public decimal? CostoHasta { get; set; }
+    }
 }

@@ -148,6 +148,12 @@
     <Compile Include="Recepcionista\FormReservas_68SA.Designer.cs">
       <DependentUpon>FormReservas_68SA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Recepcionista\UC_CalendarioReservas_68SA.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\UC_CalendarioReservas_68SA.Designer.cs">
+      <DependentUpon>UC_CalendarioReservas_68SA.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\IconNumericUpDown.cs">
       <SubType>UserControl</SubType>
     </Compile>

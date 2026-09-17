@@ -9,7 +9,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
 {
     public interface IReservaRepository_68SA
     {
-        List<Reserva_68SA> GetAll(DateTime? fechaDesde, DateTime? fechaHasta, EstadoReserva? estado);
+        List<Reserva_68SA> GetAll(ReservaFiltro_68SA filtro);
 
         // Devuelve el ReservaID nuevo, o -1 si la habitación dejó de estar disponible
         int Crear(Reserva_68SA reserva);
@@ -17,6 +17,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
         Reserva_68SA GetById(int reservaId);
         Reserva_68SA GetPorDocumentoTitularYEstado(string documento, EstadoReserva estado);
         Reserva_68SA GetConfirmadaHoyPorHabitacion(int habitacionId);
+        List<Reserva_68SA> GetEnRangoVisible(DateTime desde, DateTime hasta);
 
         // Devuelven false si la reserva no estaba en el estado correcto para la operación
         bool RegistrarCheckIn(int reservaId, DateTime fechaHora);

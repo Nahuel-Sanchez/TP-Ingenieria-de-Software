@@ -38,24 +38,15 @@ namespace BLL_08YS.Negocio
             return huesped;
         }
 
-        public static int CalcularEdad(DateTime fechaNacimiento)
+        public static bool EsMayorDeEdad(Huesped_68SA huesped)
         {
-            int edad = DateTime.Today.Year - fechaNacimiento.Year;
-            if (fechaNacimiento.Date > DateTime.Today.AddYears(-edad))
-                edad--;
-            return edad;
-        }
-
-        public static bool EsMayorDeEdad(DateTime fechaNacimiento)
-        {
-            return CalcularEdad(fechaNacimiento) >= 18;
+            return huesped.Edad >= 18;
         }
 
         // Disponible para cuando se clasifiquen acompañantes al check-in (PN1: "niños de 2 a 11 años")
-        public static bool EsNino(DateTime fechaNacimiento)
+        public static bool EsNino(Huesped_68SA huesped)
         {
-            int edad = CalcularEdad(fechaNacimiento);
-            return edad >= 2 && edad <= 11;
+            return huesped.Edad >= 2 && huesped.Edad <= 11;
         }
     }
 }
