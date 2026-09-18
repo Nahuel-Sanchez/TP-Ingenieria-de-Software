@@ -28,6 +28,7 @@ namespace BE_08YS
 
         public decimal TarifaNoche { get; set; }
         public decimal MontoTotal { get; set; }
+        public decimal MontoOriginal { get; set; }
 
         // Se completa recién en el check-in, no al momento de reservar (PN1)
         public List<Huesped_68SA> Acompanantes { get; set; } = new List<Huesped_68SA>();

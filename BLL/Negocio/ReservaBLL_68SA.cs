@@ -116,5 +116,26 @@ namespace BLL_08YS.Negocio
         {
             return _reservaRepo.ProcesarNoShows();
         }
+
+        // Renovación: extiende la estadía cambiando únicamente la fecha de egreso.
+        // No cobra en el momento — el costo adicional queda reflejado en MontoTotal y
+        // se liquida como saldo pendiente en el check-out (FormCheckOut_68SA ya lo calcula solo).
+        public void ExtenderEstadia(int reservaId, DateTime nuevaFechaEgreso)
+        {
+            var reserva = _reservaRepo.GetById(reservaId);
+            if (reserva == null)
+                throw new ReservaNoEncontradaException_68SA();
+
+            if (reserva.Estado != EstadoReserva.EnCurso)
+                throw new EstadoReservaInvalidoException_68SA("Solo se puede renovar una estadía En Curso.");
+
+            if (nuevaFechaEgreso.Date <= reserva.FechaEgreso.Date)
+                throw new RangoFechasInvalidoException_68SA("La nueva fecha de egreso debe ser posterior a la actual.");
+
+            bool disponible = _reservaRepo.ExtenderEstadia(reservaId, nuevaFechaEgreso);
+            if (!disponible)
+                throw new HabitacionNoDisponibleException_68SA("La habitación ya tiene otra reserva que se solapa con esa fecha.");
+        }
+
     }
 }

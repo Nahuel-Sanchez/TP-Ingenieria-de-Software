@@ -12,7 +12,7 @@ namespace DAL_08YS.SQL.Negocio
     {
         private const string BaseSelect = @"
             SELECT r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
-                   r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal,
+                   r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.MontoOriginal,
                    r.UsuarioRegistroDNI, r.FechaRegistro,
                    hab.NroHabitacion,
                    hu.Documento AS DocumentoTitular, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular,
@@ -222,5 +222,15 @@ namespace DAL_08YS.SQL.Negocio
             ExecuteNonQuery("sp_ProcesarNoShows", new[] { salida }, storedProcedure: true);
             return Convert.ToInt32(salida.Value);
         }
+
+        public bool ExtenderEstadia(int reservaId, DateTime nuevaFechaEgreso)
+        {
+            var disponibleOutput = ParamOutput("@Disponible");
+            ExecuteNonQuery("sp_ExtenderEstadia",
+                new[] { Param("@ReservaID", reservaId), Param("@NuevaFechaEgreso", nuevaFechaEgreso.Date), disponibleOutput },
+                storedProcedure: true);
+            return Convert.ToBoolean(disponibleOutput.Value);
+        }
+
     }
 }

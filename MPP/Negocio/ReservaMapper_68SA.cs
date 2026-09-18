@@ -37,6 +37,10 @@ namespace MPP_08YS
                 Titular = new Huesped_68SA { Id = Convert.ToInt32(row["HuespedTitularID"]) }
             };
 
+            reserva.MontoOriginal = row.Table.Columns.Contains("MontoOriginal") && row["MontoOriginal"] != DBNull.Value
+                                        ? Convert.ToDecimal(row["MontoOriginal"])
+                                        : reserva.MontoTotal;
+
             if (row.Table.Columns.Contains("NroHabitacion") && row["NroHabitacion"] != DBNull.Value)
                 reserva.Habitacion.NroHabitacion = row["NroHabitacion"].ToString();
 

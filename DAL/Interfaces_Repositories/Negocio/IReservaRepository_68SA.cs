@@ -29,5 +29,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
         Reserva_68SA GetEnCursoPorHabitacion(int habitacionId);
 
         int ProcesarNoShows();
+
+        bool ExtenderEstadia(int reservaId, DateTime nuevaFechaEgreso);
     }
 }

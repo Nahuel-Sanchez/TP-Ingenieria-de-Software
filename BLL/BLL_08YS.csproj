@@ -46,6 +46,7 @@
     <Compile Include="Negocio\Excepciones.cs" />
     <Compile Include="Negocio\HabitacionBLL_68SA.cs" />
     <Compile Include="Negocio\HuespedBLL_68SA.cs" />
+    <Compile Include="Negocio\MetricasBLL_68SA.cs" />
     <Compile Include="Negocio\PagoBLL_68SA.cs" />
     <Compile Include="Negocio\PisoBLL_68SA.cs" />
     <Compile Include="Negocio\ReservaBLL_68SA.cs" />

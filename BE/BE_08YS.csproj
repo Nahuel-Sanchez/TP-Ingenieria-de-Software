@@ -44,6 +44,10 @@
     <Compile Include="ConfiguracionHotel_68SA.cs" />
     <Compile Include="Habitacion_68SA.cs" />
     <Compile Include="Huesped_68SA.cs" />
+    <Compile Include="Metricas\OcupacionPorTipoItem_68SA.cs" />
+    <Compile Include="Metricas\ResumenHuespedes_68SA.cs" />
+    <Compile Include="Metricas\ResumenIngresos_68SA.cs" />
+    <Compile Include="Metricas\ResumenOcupacion_68SA.cs" />
     <Compile Include="Pago_68SA.cs" />
     <Compile Include="Piso_68SA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

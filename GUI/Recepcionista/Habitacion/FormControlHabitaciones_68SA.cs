@@ -26,6 +26,7 @@ namespace GUI_08YS.Recepcionista
         CheckOut,
         Servicio,
         CambioHabitacion,
+        Renovar,
         MarcarDisponible,
         PonerEnMantenimiento
     }
@@ -201,6 +202,7 @@ namespace GUI_08YS.Recepcionista
                     acciones.Add(("Registrar check-out", IconChar.CalendarTimes, AccionHabitacion.CheckOut));
                     acciones.Add(("Servicio a la habitación", IconChar.Bell, AccionHabitacion.Servicio));
                     acciones.Add(("Cambio de habitación", IconChar.Retweet, AccionHabitacion.CambioHabitacion));
+                    acciones.Add(("Renovar estadía", IconChar.ArrowRotateRight, AccionHabitacion.Renovar));
                     break;
                 case EstadoHabitacion.EnLimpieza:
                 case EstadoHabitacion.FueraDeServicio:
@@ -263,6 +265,21 @@ namespace GUI_08YS.Recepcionista
                     }
                     _habitacionBLL.CambiarEstado(habitacion.Id, EstadoHabitacion.FueraDeServicio);
                     CargarHabitaciones();
+                    break;
+
+                case AccionHabitacion.Renovar:
+                    var reservaParaRenovar = BLLFactory_08YS.CreateReservaBLL().GetEnCursoPorHabitacion(habitacion.Id);
+                    if (reservaParaRenovar == null)
+                    {
+                        MessageBox.Show("No se encontró una reserva En Curso para esta habitación.", "Sin reserva",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    }
+                    using (var popupRenovar = new FormRenovarEstadia_68SA(reservaParaRenovar, habitacion))
+                    {
+                        if (popupRenovar.ShowDialog(this) == DialogResult.OK)
+                            CargarHabitaciones();
+                    }
                     break;
 
                 default:

@@ -122,6 +122,13 @@ namespace BLL_08YS
             return new ConfiguracionHotelBLL_68SA(repo);
         }
 
+        public static MetricasBLL_68SA CreateMetricasBLL()
+        {
+            var factory = new SqlDbFactory_08YS();
+            IMetricasRepository_68SA repo = new SqlMetricasRepository_68SA(factory);
+            return new MetricasBLL_68SA(repo);
+        }
+
         #endregion
     }
 }

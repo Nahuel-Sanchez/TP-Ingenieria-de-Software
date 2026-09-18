@@ -70,6 +70,7 @@
             this.checkInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timerNoShow = new System.Windows.Forms.Timer(this.components);
+            this.btnDashboard = new FontAwesome.Sharp.IconButton();
             this.panel1.SuspendLayout();
             this.panelIdioma.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -255,6 +256,7 @@
             this.flowLayoutPanel1.Controls.Add(this.btnAdministrativo);
             this.flowLayoutPanel1.Controls.Add(this.btnRecepcion);
             this.flowLayoutPanel1.Controls.Add(this.btnReservas);
+            this.flowLayoutPanel1.Controls.Add(this.btnDashboard);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -601,6 +603,30 @@
             // 
             this.timerNoShow.Interval = 900000;
             // 
+            // btnDashboard
+            // 
+            this.btnDashboard.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDashboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDashboard.ForeColor = System.Drawing.Color.Gold;
+            this.btnDashboard.IconChar = FontAwesome.Sharp.IconChar.ChartColumn;
+            this.btnDashboard.IconColor = System.Drawing.Color.Gold;
+            this.btnDashboard.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.btnDashboard.IconSize = 38;
+            this.btnDashboard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDashboard.Location = new System.Drawing.Point(3, 258);
+            this.btnDashboard.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDashboard.Name = "btnDashboard";
+            this.btnDashboard.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnDashboard.Size = new System.Drawing.Size(325, 60);
+            this.btnDashboard.TabIndex = 7;
+            this.btnDashboard.Tag = "btnDashboard";
+            this.btnDashboard.Text = "Dashboard";
+            this.btnDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDashboard.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnDashboard.UseVisualStyleBackColor = true;
+            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
+            // 
             // FormMDI_08YS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -675,6 +701,7 @@
         private System.Windows.Forms.Timer timerNoShow;
         private System.Windows.Forms.ToolStripMenuItem checkOutToolStripMenuItem;
         private FontAwesome.Sharp.IconButton btnReservas;
+        private FontAwesome.Sharp.IconButton btnDashboard;
     }
 }
 

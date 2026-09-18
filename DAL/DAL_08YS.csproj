@@ -49,6 +49,7 @@
     <Compile Include="Interfaces_Repositories\Negocio\habitacion\ITipoHabitacionRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\IConfiguracionHotelRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\IHuespedRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\IMetricasRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\IPagoRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\IReservaRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Sistema\IBackupRepository_08YS.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="SQL\Negocio\SqlConfiguracionHotelRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlHabitacionRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlHuespedRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlMetricasRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlPagoRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlPisoRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlReservaRepository_68SA.cs" />

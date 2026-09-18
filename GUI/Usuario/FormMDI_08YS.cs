@@ -4,6 +4,7 @@ using FontAwesome.Sharp;
 using GUI;
 using GUI_08YS.Admin;
 using GUI_08YS.Recepcionista;
+using GUI_08YS.Recepcionista.Dashboard;
 using Service_08YS;
 using Service_08YS.Entities.Acceso;
 using System;
@@ -504,6 +505,11 @@ namespace GUI_08YS
         private void btnReservas_Click(object sender, EventArgs e)
         {
             OpenChildForm(new FormReservas_68SA(OpenChildForm));
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormDashboard_68SA());
         }
     }
 }
