@@ -144,7 +144,7 @@ namespace BLL_08YS
 
             var conflictos = new List<string>();
 
-            string plantillaConflictoLinea = TraductorManager_08YS.Instance.GetTexto("bll_propagacion_conflicto_linea");
+            string plantillaConflictoLinea = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_propagacion_conflicto_linea");
 
             foreach (int fid in familiaIds)
                 if (familiasDict.TryGetValue(fid, out var f))
@@ -163,7 +163,7 @@ namespace BLL_08YS
 
             if (conflictos.Any())
             {
-                string plantillaEncabezado = TraductorManager_08YS.Instance.GetTexto("bll_propagacion_conflicto_encabezado");
+                string plantillaEncabezado = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_propagacion_conflicto_encabezado");
                 throw new InvalidOperationException(
                     plantillaEncabezado + "\n\n" + string.Join("\n", conflictos));
             }

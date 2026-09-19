@@ -103,7 +103,7 @@
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(451, 62);
             this.lblTitulo.TabIndex = 2;
-            this.lblTitulo.Tag = "lblAltaModificacion";
+            this.lblTitulo.Tag = "AccesoAltaMod_lblAltaModificacion";
             this.lblTitulo.Text = "Alta / Modificacion";
             this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -154,7 +154,7 @@
             this.btnCancelar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnCancelar.Size = new System.Drawing.Size(251, 52);
             this.btnCancelar.TabIndex = 61;
-            this.btnCancelar.Tag = "btnCancelar";
+            this.btnCancelar.Tag = "Comun_btnCancelar";
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -179,7 +179,7 @@
             this.btnGuardar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnGuardar.Size = new System.Drawing.Size(251, 52);
             this.btnGuardar.TabIndex = 60;
-            this.btnGuardar.Tag = "btnGuardar";
+            this.btnGuardar.Tag = "AccesoAltaMod_btnGuardar";
             this.btnGuardar.Text = "Guardar";
             this.btnGuardar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnGuardar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -234,7 +234,7 @@
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(125, 38);
             this.lblNombre.TabIndex = 3;
-            this.lblNombre.Tag = "lblNombre";
+            this.lblNombre.Tag = "AccesoAltaMod_lblNombre";
             this.lblNombre.Text = "Nombre";
             this.lblNombre.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -358,7 +358,7 @@
             this.lblDisponibles.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
             this.lblDisponibles.Size = new System.Drawing.Size(170, 39);
             this.lblDisponibles.TabIndex = 4;
-            this.lblDisponibles.Tag = "lblDisponibles";
+            this.lblDisponibles.Tag = "AccesoAltaMod_lblDisponibles";
             this.lblDisponibles.Text = "Disponibles";
             this.lblDisponibles.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
@@ -418,7 +418,7 @@
             this.btnAgregar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnAgregar.Size = new System.Drawing.Size(171, 50);
             this.btnAgregar.TabIndex = 61;
-            this.btnAgregar.Tag = "btnAgregar";
+            this.btnAgregar.Tag = "AccesoAltaMod_btnAgregar";
             this.btnAgregar.Text = "Agregar";
             this.btnAgregar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnAgregar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -444,7 +444,7 @@
             this.btnEliminar.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.btnEliminar.Size = new System.Drawing.Size(171, 50);
             this.btnEliminar.TabIndex = 62;
-            this.btnEliminar.Tag = "btnEliminar";
+            this.btnEliminar.Tag = "Comun_btnEliminar";
             this.btnEliminar.Text = "  Eliminar";
             this.btnEliminar.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnEliminar.UseVisualStyleBackColor = false;
@@ -543,7 +543,7 @@
             this.lblAsignados.Padding = new System.Windows.Forms.Padding(4, 0, 0, 2);
             this.lblAsignados.Size = new System.Drawing.Size(154, 39);
             this.lblAsignados.TabIndex = 3;
-            this.lblAsignados.Tag = "lblAsignados";
+            this.lblAsignados.Tag = "AccesoAltaMod_lblAsignados";
             this.lblAsignados.Text = "Asignados";
             this.lblAsignados.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
@@ -576,6 +576,7 @@
             this.lblDescripcion.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.lblDescripcion.Location = new System.Drawing.Point(15, 42);
             this.lblDescripcion.Name = "lblDescripcion";
+            this.lblDescripcion.Tag = "AccesoAltaMod_lblDescripcion";
             this.lblDescripcion.Padding = new System.Windows.Forms.Padding(5);
             this.lblDescripcion.Size = new System.Drawing.Size(150, 41);
             this.lblDescripcion.TabIndex = 8;
@@ -594,7 +595,7 @@
             this.lblDetalle.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
             this.lblDetalle.Size = new System.Drawing.Size(301, 37);
             this.lblDetalle.TabIndex = 5;
-            this.lblDetalle.Tag = "lblDetalleSeleccionado";
+            this.lblDetalle.Tag = "AccesoAltaMod_lblDetalleSeleccionado";
             this.lblDetalle.Text = "Detalle del seleccionado";
             this.lblDetalle.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 

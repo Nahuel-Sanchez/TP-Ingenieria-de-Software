@@ -34,7 +34,19 @@ namespace GUI_08YS.Recepcionista.Dashboard
 
         public void UpdateIdioma()
         {
-            // Pendiente junto con el resto de las traducciones de estos forms.
+            TraducirControles(this);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
         }
 
         #endregion
@@ -78,13 +90,13 @@ namespace GUI_08YS.Recepcionista.Dashboard
             ResumenOcupacion_68SA resumen = _metricasBLL.GetResumenOcupacion();
 
             lblValorDisponibles.Text = resumen.Disponibles.ToString();
-            lblSubDisponibles.Text = $"de {resumen.Total} hab.";
+            lblSubDisponibles.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Dashboard_txtDeXHab"), resumen.Total);
 
             lblValorOcupadasDash.Text = resumen.Ocupadas.ToString();
-            lblSubOcupadasDash.Text = $"de {resumen.Total} hab.";
+            lblSubOcupadasDash.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Dashboard_txtDeXHab"), resumen.Total);
 
             lblValorLimpieza.Text = resumen.EnLimpieza.ToString();
-            lblSubLimpieza.Text = $"de {resumen.Total} hab.";
+            lblSubLimpieza.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Dashboard_txtDeXHab"), resumen.Total);
 
             lblValorTasaOcupacion.Text = $"{resumen.TasaOcupacionPorcentaje:0.##}%";
         }
@@ -98,7 +110,7 @@ namespace GUI_08YS.Recepcionista.Dashboard
 
             if (desde > hasta)
             {
-                MessageBox.Show("La fecha Desde no puede ser posterior a Hasta.", "Filtro inválido",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Dashboard_msgFiltroInvalido"), TraductorManager_08YS.Instance.GetTexto("Reservas_tituloFiltroInvalido"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }

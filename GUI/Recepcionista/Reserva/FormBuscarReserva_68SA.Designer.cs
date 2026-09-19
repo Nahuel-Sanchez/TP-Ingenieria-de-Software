@@ -68,6 +68,7 @@
             this.btnSeleccionar.IconSize = 24;
             this.btnSeleccionar.Location = new System.Drawing.Point(183, 305);
             this.btnSeleccionar.Name = "btnSeleccionar";
+            this.btnSeleccionar.Tag = "BuscarReserva_btnSeleccionar";
             this.btnSeleccionar.Size = new System.Drawing.Size(251, 49);
             this.btnSeleccionar.TabIndex = 9;
             this.btnSeleccionar.Text = "Seleccionar";
@@ -88,6 +89,7 @@
             this.lblResultado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResultado.Location = new System.Drawing.Point(23, 183);
             this.lblResultado.Name = "lblResultado";
+            this.lblResultado.Tag = "BuscarReserva_lblResultado";
             this.lblResultado.Size = new System.Drawing.Size(549, 85);
             this.lblResultado.TabIndex = 7;
             this.lblResultado.Text = "Ingresá el documento del titular y presioná Buscar.";
@@ -111,6 +113,7 @@
             this.btnBuscar.IconSize = 24;
             this.btnBuscar.Location = new System.Drawing.Point(439, 109);
             this.btnBuscar.Name = "btnBuscar";
+            this.btnBuscar.Tag = "BuscarReserva_btnBuscar";
             this.btnBuscar.Size = new System.Drawing.Size(133, 43);
             this.btnBuscar.TabIndex = 5;
             this.btnBuscar.Text = "Buscar";
@@ -145,6 +148,7 @@
             this.lblEtiquetaDocumento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaDocumento.Location = new System.Drawing.Point(197, 90);
             this.lblEtiquetaDocumento.Name = "lblEtiquetaDocumento";
+            this.lblEtiquetaDocumento.Tag = "BuscarReserva_lblEtiquetaDocumento";
             this.lblEtiquetaDocumento.Size = new System.Drawing.Size(93, 16);
             this.lblEtiquetaDocumento.TabIndex = 3;
             this.lblEtiquetaDocumento.Text = "N° Documento";
@@ -179,6 +183,7 @@
             this.lblEtiquetaTipoDocumento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaTipoDocumento.Location = new System.Drawing.Point(23, 90);
             this.lblEtiquetaTipoDocumento.Name = "lblEtiquetaTipoDocumento";
+            this.lblEtiquetaTipoDocumento.Tag = "BuscarReserva_lblEtiquetaTipoDocumento";
             this.lblEtiquetaTipoDocumento.Size = new System.Drawing.Size(126, 16);
             this.lblEtiquetaTipoDocumento.TabIndex = 1;
             this.lblEtiquetaTipoDocumento.Text = "Tipo de Documento";

@@ -103,6 +103,7 @@
             this.lblTitulo.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblTitulo.Location = new System.Drawing.Point(66, 22);
             this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Tag = "RenovarEstadia_lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(200, 25);
             this.lblTitulo.TabIndex = 1;
             this.lblTitulo.Text = "Renovar Estadía";
@@ -124,6 +125,7 @@
             this.lblEtiquetaHabitacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaHabitacion.Location = new System.Drawing.Point(20, 88);
             this.lblEtiquetaHabitacion.Name = "lblEtiquetaHabitacion";
+            this.lblEtiquetaHabitacion.Tag = "RenovarEstadia_lblEtiquetaHabitacion";
             this.lblEtiquetaHabitacion.Size = new System.Drawing.Size(70, 15);
             this.lblEtiquetaHabitacion.TabIndex = 1;
             this.lblEtiquetaHabitacion.Text = "Habitación:";
@@ -145,6 +147,7 @@
             this.lblEtiquetaTitular.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaTitular.Location = new System.Drawing.Point(20, 114);
             this.lblEtiquetaTitular.Name = "lblEtiquetaTitular";
+            this.lblEtiquetaTitular.Tag = "RenovarEstadia_lblEtiquetaTitular";
             this.lblEtiquetaTitular.Size = new System.Drawing.Size(50, 15);
             this.lblEtiquetaTitular.TabIndex = 3;
             this.lblEtiquetaTitular.Text = "Titular:";
@@ -165,6 +168,7 @@
             this.lblEtiquetaFechaActual.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaFechaActual.Location = new System.Drawing.Point(20, 140);
             this.lblEtiquetaFechaActual.Name = "lblEtiquetaFechaActual";
+            this.lblEtiquetaFechaActual.Tag = "RenovarEstadia_lblEtiquetaFechaActual";
             this.lblEtiquetaFechaActual.Size = new System.Drawing.Size(110, 15);
             this.lblEtiquetaFechaActual.TabIndex = 5;
             this.lblEtiquetaFechaActual.Text = "Egreso Actual:";
@@ -185,6 +189,7 @@
             this.lblEtiquetaTarifa.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaTarifa.Location = new System.Drawing.Point(20, 166);
             this.lblEtiquetaTarifa.Name = "lblEtiquetaTarifa";
+            this.lblEtiquetaTarifa.Tag = "RenovarEstadia_lblEtiquetaTarifa";
             this.lblEtiquetaTarifa.Size = new System.Drawing.Size(95, 15);
             this.lblEtiquetaTarifa.TabIndex = 7;
             this.lblEtiquetaTarifa.Text = "Tarifa/noche:";
@@ -213,6 +218,7 @@
             this.lblEtiquetaNuevaFecha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaNuevaFecha.Location = new System.Drawing.Point(20, 212);
             this.lblEtiquetaNuevaFecha.Name = "lblEtiquetaNuevaFecha";
+            this.lblEtiquetaNuevaFecha.Tag = "RenovarEstadia_lblEtiquetaNuevaFecha";
             this.lblEtiquetaNuevaFecha.Size = new System.Drawing.Size(130, 15);
             this.lblEtiquetaNuevaFecha.TabIndex = 10;
             this.lblEtiquetaNuevaFecha.Text = "Nueva Fecha de Egreso";
@@ -245,6 +251,7 @@
             this.lblEtiquetaNoches.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaNoches.Location = new System.Drawing.Point(20, 284);
             this.lblEtiquetaNoches.Name = "lblEtiquetaNoches";
+            this.lblEtiquetaNoches.Tag = "RenovarEstadia_lblEtiquetaNoches";
             this.lblEtiquetaNoches.Size = new System.Drawing.Size(120, 15);
             this.lblEtiquetaNoches.TabIndex = 12;
             this.lblEtiquetaNoches.Text = "Noches adicionales:";
@@ -266,6 +273,7 @@
             this.lblEtiquetaCostoAdicional.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblEtiquetaCostoAdicional.Location = new System.Drawing.Point(20, 312);
             this.lblEtiquetaCostoAdicional.Name = "lblEtiquetaCostoAdicional";
+            this.lblEtiquetaCostoAdicional.Tag = "RenovarEstadia_lblEtiquetaCostoAdicional";
             this.lblEtiquetaCostoAdicional.Size = new System.Drawing.Size(130, 20);
             this.lblEtiquetaCostoAdicional.TabIndex = 14;
             this.lblEtiquetaCostoAdicional.Text = "Costo Adicional:";
@@ -305,6 +313,7 @@
             this.btnConfirmar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnConfirmar.Location = new System.Drawing.Point(214, 0);
             this.btnConfirmar.Name = "btnConfirmar";
+            this.btnConfirmar.Tag = "RenovarEstadia_btnConfirmar";
             this.btnConfirmar.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
             this.btnConfirmar.Size = new System.Drawing.Size(180, 64);
             this.btnConfirmar.TabIndex = 1;
@@ -326,6 +335,7 @@
             this.btnCancelar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCancelar.Location = new System.Drawing.Point(74, 0);
             this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Tag = "RenovarEstadia_btnCancelar";
             this.btnCancelar.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
             this.btnCancelar.Size = new System.Drawing.Size(140, 64);
             this.btnCancelar.TabIndex = 0;

@@ -63,7 +63,7 @@ namespace GUI_08YS.Recepcionista
 
         private void BtnBuscarReserva_Click(object sender, EventArgs e)
         {
-            using (var popup = new FormBuscarReserva_68SA(EstadoReserva.Confirmada, "Buscar reserva para check-in", IconChar.DoorOpen))
+            using (var popup = new FormBuscarReserva_68SA(EstadoReserva.Confirmada, TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloBuscarReserva"), IconChar.DoorOpen))
             {
                 if (popup.ShowDialog(this) == DialogResult.OK)
                 {
@@ -78,9 +78,9 @@ namespace GUI_08YS.Recepcionista
             _reserva = reserva;
 
             lblResHabitacion.Text = reserva.Habitacion.NroHabitacion;
-            lblResTitular.Text = $"{reserva.Titular.Nombre} {reserva.Titular.Apellido} (DNI {reserva.Titular.Documento})";
+            lblResTitular.Text = $"{reserva.Titular.Nombre} {reserva.Titular.Apellido} ({TraductorManager_08YS.Instance.GetTexto("Comun_abrevDni")} {reserva.Titular.Documento})";
             lblResFechas.Text = $"{reserva.FechaIngreso:dd/MM/yyyy} → {reserva.FechaEgreso:dd/MM/yyyy}";
-            lblResComposicion.Text = $"{reserva.CantidadAdultos} adulto(s), {reserva.CantidadNinos} niño(s)";
+            lblResComposicion.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_txtAdultosNinos"), reserva.CantidadAdultos, reserva.CantidadNinos);
 
             var habitacion = BLLFactory_08YS.CreateHabitacionBLL().GetById(reserva.Habitacion.Id);
             lblResTipo.Text = habitacion.Tipo.Nombre;
@@ -126,7 +126,7 @@ namespace GUI_08YS.Recepcionista
                     IconPadding = 4,
                     IconSize = 18,
                     PlaceholderColor = Color.LightGray,
-                    PlaceholderText = "DNI",
+                    PlaceholderText = TraductorManager_08YS.Instance.GetTexto("Comun_placeholderDni"),
                     ScrollBars = ScrollBars.None,
                     Font = new Font("Segoe UI", 9F)
                 };
@@ -154,7 +154,7 @@ namespace GUI_08YS.Recepcionista
                     Size = new Size(340, 24),
                     ForeColor = Color.FromArgb(160, 165, 180),
                     Font = new Font("Segoe UI", 9F),
-                    Text = "Sin buscar."
+                    Text = TraductorManager_08YS.Instance.GetTexto("CheckIn_txtSinBuscar")
                 };
                 panel.Controls.Add(resultado);
                 fila.Resultado = resultado;
@@ -170,7 +170,7 @@ namespace GUI_08YS.Recepcionista
                     Size = new Size(40, 40),
                     UseVisualStyleBackColor = false
                 };
-                toolTip1.SetToolTip(btnNuevo, "Registrar huésped nuevo");
+                toolTip1.SetToolTip(btnNuevo, TraductorManager_08YS.Instance.GetTexto("Comun_tooltipRegistrarHuespedNuevo"));
                 btnNuevo.Click += (s, e) => AbrirRegistrarHuesped(fila);
                 panel.Controls.Add(btnNuevo);
 
@@ -184,7 +184,7 @@ namespace GUI_08YS.Recepcionista
             string dni = fila.Dni.RealText.Trim();
             if (string.IsNullOrEmpty(dni))
             {
-                MessageBox.Show("Ingresá el DNI del acompañante.", "Datos incompletos",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgIngreseDniAcompanante"), TraductorManager_08YS.Instance.GetTexto("Comun_msgDatosIncompletos"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -193,7 +193,7 @@ namespace GUI_08YS.Recepcionista
             {
                 fila.HuespedEncontrado = null;
                 fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
-                fila.Resultado.Text = "Ese documento es el del titular — no puede repetirse como acompañante.";
+                fila.Resultado.Text = TraductorManager_08YS.Instance.GetTexto("CheckIn_msgDocumentoEsDelTitular");
                 return;
             }
 
@@ -202,7 +202,7 @@ namespace GUI_08YS.Recepcionista
             {
                 fila.HuespedEncontrado = null;
                 fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
-                fila.Resultado.Text = "Ese documento ya está cargado en otra fila.";
+                fila.Resultado.Text = TraductorManager_08YS.Instance.GetTexto("CheckIn_msgDocumentoYaCargado");
                 return;
             }
 
@@ -211,13 +211,13 @@ namespace GUI_08YS.Recepcionista
             {
                 fila.HuespedEncontrado = null;
                 fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
-                fila.Resultado.Text = "No encontrado — registralo con el ícono de al lado.";
+                fila.Resultado.Text = TraductorManager_08YS.Instance.GetTexto("CheckIn_msgAcompananteNoEncontrado");
                 return;
             }
 
             fila.HuespedEncontrado = huesped;
             fila.Resultado.ForeColor = Color.FromArgb(76, 217, 100);
-            fila.Resultado.Text = $"{huesped.Nombre} {huesped.Apellido} ({huesped.Edad} años)";
+            fila.Resultado.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_txtEdadAnios"), huesped.Nombre, huesped.Apellido, huesped.Edad);
         }
 
         private void AbrirRegistrarHuesped(FilaAcompanante fila)
@@ -232,7 +232,7 @@ namespace GUI_08YS.Recepcionista
                 {
                     fila.HuespedEncontrado = null;
                     fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
-                    fila.Resultado.Text = "Ese documento es el del titular — no puede repetirse como acompañante.";
+                    fila.Resultado.Text = TraductorManager_08YS.Instance.GetTexto("CheckIn_msgDocumentoEsDelTitular");
                     return;
                 }
 
@@ -241,14 +241,14 @@ namespace GUI_08YS.Recepcionista
                 {
                     fila.HuespedEncontrado = null;
                     fila.Resultado.ForeColor = Color.FromArgb(235, 90, 90);
-                    fila.Resultado.Text = "Ese documento ya está cargado en otra fila.";
+                    fila.Resultado.Text = TraductorManager_08YS.Instance.GetTexto("CheckIn_msgDocumentoYaCargado");
                     return;
                 }
 
                 fila.Dni.Text = huesped.Documento;
                 fila.HuespedEncontrado = huesped;
                 fila.Resultado.ForeColor = Color.FromArgb(76, 217, 100);
-                fila.Resultado.Text = $"{huesped.Nombre} {huesped.Apellido} ({huesped.Edad} años)";
+                fila.Resultado.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_txtEdadAnios"), huesped.Nombre, huesped.Apellido, huesped.Edad);
             }
         }
 
@@ -258,7 +258,7 @@ namespace GUI_08YS.Recepcionista
         {
             if (_reserva == null)
             {
-                MessageBox.Show("Buscá y encontrá una reserva antes de confirmar el check-in.", "Falta la reserva",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgFaltaReserva"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloFaltaReserva"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -268,7 +268,7 @@ namespace GUI_08YS.Recepcionista
             {
                 if (fila.HuespedEncontrado == null)
                 {
-                    MessageBox.Show("Buscá (o registrá) a todos los acompañantes antes de confirmar.", "Faltan acompañantes",
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgFaltanAcompanantes"), TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloFaltanAcompanantes"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -281,30 +281,30 @@ namespace GUI_08YS.Recepcionista
             if (adultosIngresados != _reserva.CantidadAdultos || ninosIngresados != _reserva.CantidadNinos)
             {
                 MessageBox.Show(
-                    $"La reserva espera {_reserva.CantidadAdultos} adulto(s) y {_reserva.CantidadNinos} niño(s), " +
-                    $"pero según las edades cargadas hay {adultosIngresados} adulto(s) y {ninosIngresados} niño(s).",
-                    "La composición no coincide", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    string.Format(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgComposicionNoCoincide"),
+                        _reserva.CantidadAdultos, _reserva.CantidadNinos, adultosIngresados, ninosIngresados),
+                    TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloComposicionNoCoincide"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             try
             {
                 _reservaBLL.RegistrarCheckIn(_reserva.Id, acompanantes);
-                MessageBox.Show($"Check-in registrado para la habitación {_reserva.Habitacion.NroHabitacion}.",
-                    "Check-in confirmado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgCheckInRegistrado"), _reserva.Habitacion.NroHabitacion),
+                    TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloCheckInConfirmado"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Volver();
             }
-            catch (EstadoReservaInvalidoException_68SA ex)
+            catch (EstadoReservaInvalidoException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excEstadoReservaInvalido"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (AcompananteDuplicadoException_68SA ex)
+            catch (AcompananteDuplicadoException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excAcompananteDuplicado"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (TitularEntreAcompanantesException_68SA ex)
+            catch (TitularEntreAcompanantesException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excTitularEntreAcompanantes"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -315,7 +315,19 @@ namespace GUI_08YS.Recepcionista
 
         public void UpdateIdioma()
         {
-            // Pendiente junto con el resto de las traducciones de estos forms.
+            TraducirControles(this);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
         }
     }
 }

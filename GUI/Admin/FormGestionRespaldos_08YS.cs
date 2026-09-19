@@ -79,7 +79,7 @@ namespace GUI_08YS.Admin
         {
             using (var dialog = new FolderBrowserDialog())
             {
-                dialog.Description = TraductorManager_08YS.Instance.GetTexto("backup_seleccionar_carpeta");
+                dialog.Description = TraductorManager_08YS.Instance.GetTexto("Backups_backup_seleccionar_carpeta");
                 dialog.ShowNewFolderButton = true;
                 dialog.SelectedPath = txtCarpetaDestino.Text;
 
@@ -109,7 +109,7 @@ namespace GUI_08YS.Admin
                 {
                     case ResultadoValidacion_08YS.TipoResultado.Ok:
                         MostrarValidacionCarpeta(true, false,
-                            TraductorManager_08YS.Instance.GetTexto("backup_carpeta_valida"));
+                            TraductorManager_08YS.Instance.GetTexto("Backups_backup_carpeta_valida"));
                         btnRealizarBackUp.Enabled = true;
                         break;
 
@@ -170,7 +170,7 @@ namespace GUI_08YS.Admin
                 string rutaCreada = _bll.RealizarBackup(carpeta);
 
                 MostrarResultadoBackup(true,
-                    $"{TraductorManager_08YS.Instance.GetTexto("backup_ok")}\n{Path.GetFileName(rutaCreada)}");
+                    $"{TraductorManager_08YS.Instance.GetTexto("Backups_backup_ok")}\n{Path.GetFileName(rutaCreada)}");
             }
             catch (InvalidOperationException ex)
             {
@@ -179,7 +179,7 @@ namespace GUI_08YS.Admin
             catch (Exception ex)
             {
                 MostrarResultadoBackup(false,
-                    TraductorManager_08YS.Instance.GetTexto("backup_error") + "\n" + ex.Message);
+                    TraductorManager_08YS.Instance.GetTexto("Backups_backup_error") + "\n" + ex.Message);
             }
             finally
             {
@@ -212,7 +212,7 @@ namespace GUI_08YS.Admin
         {
             using (var dialog = new OpenFileDialog())
             {
-                dialog.Title = TraductorManager_08YS.Instance.GetTexto("restore_seleccionar_archivo");
+                dialog.Title = TraductorManager_08YS.Instance.GetTexto("Comun_restore_seleccionar_archivo");
                 dialog.Filter = "Archivos de backup (*.bak)|*.bak|Todos los archivos (*.*)|*.*";
                 dialog.FilterIndex = 1;
 
@@ -231,7 +231,7 @@ namespace GUI_08YS.Admin
                 // Mostrar info del archivo seleccionado
                 var info = new FileInfo(dialog.FileName);
                 lblInfoArchivo.Text = string.Format(
-                    TraductorManager_08YS.Instance.GetTexto("restore_info_archivo"),
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_info_archivo"),
                     info.Name,
                     (info.Length / (1024.0 * 1024)).ToString("F1"),
                     info.LastWriteTime.ToString("dd/MM/yyyy HH:mm:ss"));
@@ -248,8 +248,8 @@ namespace GUI_08YS.Admin
 
             // Confirmación doble por la gravedad de la operación
             var confirmacion = MessageBox.Show(
-                TraductorManager_08YS.Instance.GetTexto("restore_confirm_mensaje"),
-                TraductorManager_08YS.Instance.GetTexto("restore_confirm_titulo"),
+                TraductorManager_08YS.Instance.GetTexto("Backups_restore_confirm_mensaje"),
+                TraductorManager_08YS.Instance.GetTexto("Backups_restore_confirm_titulo"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2); // "No" como opción por defecto
@@ -265,7 +265,7 @@ namespace GUI_08YS.Admin
 
                 // Restore exitoso: avisar y reiniciar
                 MessageBox.Show(
-                    TraductorManager_08YS.Instance.GetTexto("restore_ok"),
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_ok"),
                     "",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -281,7 +281,7 @@ namespace GUI_08YS.Admin
             {
                 btnRealizarRestore.Enabled = true;
                 MostrarResultadoRestore(false,
-                    TraductorManager_08YS.Instance.GetTexto("restore_error") + "\n" + ex.Message);
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_error") + "\n" + ex.Message);
             }
             finally { Cursor = Cursors.Default; }
         }

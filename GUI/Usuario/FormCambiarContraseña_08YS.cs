@@ -51,9 +51,9 @@ namespace GUI_08YS
         public void UpdateIdioma()
         {
             // 1. Cargamos las traducciones vigentes desde el diccionario de recursos
-            _hintActual = TraductorManager_08YS.Instance.GetTexto("txtPwdActual_hint");
-            _hintNueva = TraductorManager_08YS.Instance.GetTexto("txtPwdNueva_hint");
-            _hintConfirmar = TraductorManager_08YS.Instance.GetTexto("txtPwdConfirmar_hint");
+            _hintActual = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdActual_hint");
+            _hintNueva = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdNueva_hint");
+            _hintConfirmar = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdConfirmar_hint");
 
             // 2. Traducimos etiquetas y botones usando Tags
             TraducirControles(this);
@@ -195,23 +195,23 @@ namespace GUI_08YS
             try
             {
                 _userBLL.CambiarContraseña(txtContraseñaActual.Text, txtNuevaContraseña.Text);
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_pwd_changed"));
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CambiarPassword_msg_pwd_changed"));
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (PwdActualIncorrectaException_08YS)
             {
                 // Buscamos la clave de traducción exacta para este error de negocio
-                string mensajeTraducido = TraductorManager_08YS.Instance.GetTexto("msg_pwd_actual_incorrecta");
-                string tituloError = TraductorManager_08YS.Instance.GetTexto("error_validacion");
+                string mensajeTraducido = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_msg_pwd_actual_incorrecta");
+                string tituloError = TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion");
 
                 MessageBox.Show(mensajeTraducido, tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
                 // Error inesperado del sistema
-                string msgInesperado = TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado");
-                string tituloError = TraductorManager_08YS.Instance.GetTexto("error");
+                string msgInesperado = TraductorManager_08YS.Instance.GetTexto("Comun_msg_error_inesperado");
+                string tituloError = TraductorManager_08YS.Instance.GetTexto("Comun_error");
 
                 MessageBox.Show($"{msgInesperado}: {ex.Message}", tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -221,17 +221,17 @@ namespace GUI_08YS
         {
             if (string.IsNullOrWhiteSpace(txtContraseñaActual.Text) || string.IsNullOrWhiteSpace(txtNuevaContraseña.Text) || string.IsNullOrWhiteSpace(txtConfirmarContraseña.Text))
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_completar_campos"));
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_msg_completar_campos"));
                 return false;
             }
             if (txtNuevaContraseña.Text != txtConfirmarContraseña.Text)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_pwd_no_coinciden"));
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CambiarPassword_msg_pwd_no_coinciden"));
                 return false;
             }
             if (txtNuevaContraseña.Text == txtContraseñaActual.Text)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_pwd_igual_actual"));
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CambiarPassword_msg_pwd_igual_actual"));
                 return false;
             }
             return true;

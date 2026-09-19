@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Service_08YS.Entities.Bitacora;
 
-namespace DAL_08YS.Repositories_Interfaces
+namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IBitacoraRepository_08YS
     {

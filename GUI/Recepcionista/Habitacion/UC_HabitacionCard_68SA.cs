@@ -1,4 +1,5 @@
 ﻿using BE_08YS;
+using Service_08YS;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,7 +28,7 @@ namespace GUI_08YS.Recepcionista
             Habitacion = habitacion;
             lblNumero.Text = habitacion.NroHabitacion;
             lblTipo.Text = habitacion.Tipo.Nombre;
-            lblCapacidad.Text = $"Max: {habitacion.Tipo.Capacidad}";
+            lblCapacidad.Text = $"{TraductorManager_08YS.Instance.GetTexto("HabitacionCard_lblCapacidadPrefijo")}: {habitacion.Tipo.Capacidad}";
 
             AplicarEstiloEstado(forzarDisponible ? EstadoHabitacion.Disponible : habitacion.EstadoVisual);
         }

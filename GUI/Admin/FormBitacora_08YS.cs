@@ -52,10 +52,10 @@ namespace GUI
         {
             if (dgvEventos.Columns.Count > 0)
             {
-                if (dgvEventos.Columns.Contains("Evento")) dgvEventos.Columns["Evento"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaEvento");
-                if (dgvEventos.Columns.Contains("FechaHora")) dgvEventos.Columns["FechaHora"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaFechaHora");
-                if (dgvEventos.Columns.Contains("Modulo")) dgvEventos.Columns["Modulo"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaModulo");
-                if (dgvEventos.Columns.Contains("Criticidad")) dgvEventos.Columns["Criticidad"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaCriticidad");
+                if (dgvEventos.Columns.Contains("Evento")) dgvEventos.Columns["Evento"].HeaderText = TraductorManager_08YS.Instance.GetTexto("Bitacora_ColumnaEvento");
+                if (dgvEventos.Columns.Contains("FechaHora")) dgvEventos.Columns["FechaHora"].HeaderText = TraductorManager_08YS.Instance.GetTexto("Bitacora_ColumnaFechaHora");
+                if (dgvEventos.Columns.Contains("Modulo")) dgvEventos.Columns["Modulo"].HeaderText = TraductorManager_08YS.Instance.GetTexto("Bitacora_ColumnaModulo");
+                if (dgvEventos.Columns.Contains("Criticidad")) dgvEventos.Columns["Criticidad"].HeaderText = TraductorManager_08YS.Instance.GetTexto("Bitacora_ColumnaCriticidad");
             }
         }
         private void TraducirControles(Control contenedor)
@@ -181,7 +181,7 @@ namespace GUI
         {
             if (dgvEventos.Rows.Count == 0)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_no_datos_exportar"), TraductorManager_08YS.Instance.GetTexto("atencion"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_no_datos_exportar"), TraductorManager_08YS.Instance.GetTexto("Comun_atencion"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -231,31 +231,31 @@ namespace GUI
             DateTime? desde = dtpDesde.Value.HasValue ? dtpDesde.Value.Value.Date : (DateTime?)null;
             DateTime? hasta = dtpHasta.Value.HasValue ? dtpHasta.Value.Value.Date : (DateTime?)null;
 
-            string tituloError = TraductorManager_08YS.Instance.GetTexto("error_validacion");
+            string tituloError = TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion");
 
             if (!desde.HasValue && hasta.HasValue)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fecha_partida_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_partida_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (desde.HasValue && !hasta.HasValue)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fecha_fin_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_fin_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (desde.HasValue && desde.Value > DateTime.Today)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fecha_partida_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_partida_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (hasta.HasValue && hasta.Value > DateTime.Today)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fecha_fin_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_fin_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_fechas_invertidas"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fechas_invertidas"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true;

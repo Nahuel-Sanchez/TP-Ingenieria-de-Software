@@ -91,8 +91,8 @@ namespace GUI_08YS
 
             IdiomaCombobox.Items.Clear();
             // Obtenemos los nombres de los idiomas traducidos dinámicamente
-            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("idioma_es")); // "Español"
-            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("idioma_en")); // "Inglés"
+            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("Comun_idioma_es")); // "Español"
+            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("Comun_idioma_en")); // "Inglés"
 
             // Si es la primera carga, inicializamos según la sesión del usuario
             if (indexTemporal < 0)
@@ -236,8 +236,8 @@ namespace GUI_08YS
 
         private void OnSesionInvalidada()
         {
-            MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_sesion_invalidada"),
-                            TraductorManager_08YS.Instance.GetTexto("sesion_invalidada"),
+            MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("MDI_msg_sesion_invalidada"),
+                            TraductorManager_08YS.Instance.GetTexto("MDI_sesion_invalidada"),
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning);
             this.Close();
@@ -393,8 +393,8 @@ namespace GUI_08YS
 
         private void cerrarSesionToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var respuesta = MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_cerrar_sesion"),
-                                        TraductorManager_08YS.Instance.GetTexto("cerrar_sesion"),
+            var respuesta = MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("MDI_msg_cerrar_sesion"),
+                                        TraductorManager_08YS.Instance.GetTexto("MDI_cerrar_sesion"),
                                          MessageBoxButtons.YesNo,
                                          MessageBoxIcon.Question);
 
@@ -452,8 +452,8 @@ namespace GUI_08YS
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            var respuesta = MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_cerrar_sesion"),
-                                       TraductorManager_08YS.Instance.GetTexto("cerrar_sesion"),
+            var respuesta = MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("MDI_msg_cerrar_sesion"),
+                                       TraductorManager_08YS.Instance.GetTexto("MDI_cerrar_sesion"),
                                         MessageBoxButtons.YesNo,
                                         MessageBoxIcon.Question);
 

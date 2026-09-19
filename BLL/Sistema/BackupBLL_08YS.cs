@@ -57,18 +57,18 @@ namespace BLL_08YS
             catch
             {
                 return ResultadoValidacion_08YS.Error(
-                    TraductorManager_08YS.Instance.GetTexto("backup_error_ruta_invalida"));
+                    TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_ruta_invalida"));
             }
 
             // 2. Ruta demasiado larga (deja margen para el nombre de archivo)
             if (carpeta.Length > 200)
                 return ResultadoValidacion_08YS.Error(
-                    TraductorManager_08YS.Instance.GetTexto("backup_error_ruta_larga"));
+                    TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_ruta_larga"));
 
             // 3. Ruta de red: SQL Server puede no alcanzarla si no está configurado
             if (carpeta.StartsWith(@"\\"))
                 return ResultadoValidacion_08YS.Advertencia(
-                    TraductorManager_08YS.Instance.GetTexto("backup_advertencia_red"));
+                    TraductorManager_08YS.Instance.GetTexto("Backups_backup_advertencia_red"));
 
             // 4. Crear la carpeta si no existe
             try { AsegurarCarpetaExiste(carpeta); }
@@ -76,7 +76,7 @@ namespace BLL_08YS
             {
                 return ResultadoValidacion_08YS.Error(
                     string.Format(
-                        TraductorManager_08YS.Instance.GetTexto("backup_error_crear_carpeta"),
+                        TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_crear_carpeta"),
                         ex.Message));
             }
 
@@ -89,7 +89,7 @@ namespace BLL_08YS
                 if (espacioLibre < minimo)
                     return ResultadoValidacion_08YS.Error(
                         string.Format(
-                            TraductorManager_08YS.Instance.GetTexto("backup_error_espacio"),
+                            TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_espacio"),
                             (espacioLibre / (1024.0 * 1024)).ToString("F0")));
             }
             catch { /* Si no puede leer el drive, continúa — el backup dirá si hay problema */ }
@@ -117,18 +117,18 @@ namespace BLL_08YS
         {
             if (!File.Exists(rutaBak))
                 throw new InvalidOperationException(
-                    TraductorManager_08YS.Instance.GetTexto("restore_archivo_no_existe"));
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_archivo_no_existe"));
 
             if (!rutaBak.EndsWith(".bak", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException(
-                    TraductorManager_08YS.Instance.GetTexto("restore_formato_invalido"));
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_formato_invalido"));
 
             // Verificar que el archivo sea legible (no esté en uso o corrupto a nivel filesystem)
             try { using (File.OpenRead(rutaBak)) { } }
             catch (IOException)
             {
                 throw new InvalidOperationException(
-                    TraductorManager_08YS.Instance.GetTexto("restore_archivo_en_uso"));
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_archivo_en_uso"));
             }
 
             try
@@ -165,15 +165,15 @@ namespace BLL_08YS
                     return TradducirErrorPermiso(ex);
 
                 case 112:  // Disk full
-                    return TraductorManager_08YS.Instance.GetTexto("backup_error_disco_lleno_sql");
+                    return TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_disco_lleno_sql");
 
                 case 945:  // DB cannot be opened — damaged or in recovery
                 case 926:  // DB suspect
-                    return TraductorManager_08YS.Instance.GetTexto("backup_error_bd_no_disponible");
+                    return TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_bd_no_disponible");
 
                 default:
                     return string.Format(
-                        TraductorManager_08YS.Instance.GetTexto("backup_error_sql"),
+                        TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_sql"),
                         ex.Number, ex.Message);
             }
         }
@@ -185,21 +185,21 @@ namespace BLL_08YS
                 case 3234: // Logical file is not part of this database
                 case 3013: // Backup or restore operation is terminating abnormally
                 case 4305: // Too recent to apply to database
-                    return TraductorManager_08YS.Instance.GetTexto("restore_error_archivo_invalido");
+                    return TraductorManager_08YS.Instance.GetTexto("Backups_restore_error_archivo_invalido");
 
                 case 112:
-                    return TraductorManager_08YS.Instance.GetTexto("backup_error_disco_lleno_sql");
+                    return TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_disco_lleno_sql");
 
                 default:
                     return string.Format(
-                        TraductorManager_08YS.Instance.GetTexto("restore_error_sql"),
+                        TraductorManager_08YS.Instance.GetTexto("Backups_restore_error_sql"),
                         ex.Number, ex.Message);
             }
         }
 
         private string TradducirErrorPermiso(SqlException ex)
             => string.Format(
-                TraductorManager_08YS.Instance.GetTexto("backup_error_permisos"),
+                TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_permisos"),
                 @"NT SERVICE\MSSQL$SQLEXPRESS");
     }
 }

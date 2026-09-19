@@ -100,7 +100,7 @@
             this.btnRegistrar.Name = "btnRegistrar";
             this.btnRegistrar.Size = new System.Drawing.Size(183, 49);
             this.btnRegistrar.TabIndex = 21;
-            this.btnRegistrar.Tag = "btnRegistrar";
+            this.btnRegistrar.Tag = "RegistrarHuesped_btnRegistrar";
             this.btnRegistrar.Text = "Registrar";
             this.btnRegistrar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnRegistrar.UseVisualStyleBackColor = false;
@@ -120,7 +120,7 @@
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(183, 49);
             this.btnCancelar.TabIndex = 20;
-            this.btnCancelar.Tag = "btnCancelar";
+            this.btnCancelar.Tag = "RegistrarHuesped_btnCancelar";
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnCancelar.UseVisualStyleBackColor = false;
@@ -141,7 +141,7 @@
             this.lblEtiquetaEmail.Name = "lblEtiquetaEmail";
             this.lblEtiquetaEmail.Size = new System.Drawing.Size(41, 16);
             this.lblEtiquetaEmail.TabIndex = 17;
-            this.lblEtiquetaEmail.Tag = "lblEmail";
+            this.lblEtiquetaEmail.Tag = "RegistrarHuesped_lblEmail";
             this.lblEtiquetaEmail.Text = "Email";
             // 
             // txtEmail
@@ -174,7 +174,7 @@
             this.lblEtiquetaTelefono.Name = "lblEtiquetaTelefono";
             this.lblEtiquetaTelefono.Size = new System.Drawing.Size(61, 16);
             this.lblEtiquetaTelefono.TabIndex = 15;
-            this.lblEtiquetaTelefono.Tag = "lblTelefono";
+            this.lblEtiquetaTelefono.Tag = "RegistrarHuesped_lblTelefono";
             this.lblEtiquetaTelefono.Text = "Teléfono";
             // 
             // txtTelefono
@@ -207,7 +207,7 @@
             this.lblEtiquetaFechaNacimiento.Name = "lblEtiquetaFechaNacimiento";
             this.lblEtiquetaFechaNacimiento.Size = new System.Drawing.Size(135, 16);
             this.lblEtiquetaFechaNacimiento.TabIndex = 13;
-            this.lblEtiquetaFechaNacimiento.Tag = "lblFechaNacimiento";
+            this.lblEtiquetaFechaNacimiento.Tag = "RegistrarHuesped_lblFechaNacimiento";
             this.lblEtiquetaFechaNacimiento.Text = "Fecha de Nacimiento";
             // 
             // dtpFechaNacimiento
@@ -244,7 +244,7 @@
             this.lblEtiquetaNacionalidad.Name = "lblEtiquetaNacionalidad";
             this.lblEtiquetaNacionalidad.Size = new System.Drawing.Size(88, 16);
             this.lblEtiquetaNacionalidad.TabIndex = 11;
-            this.lblEtiquetaNacionalidad.Tag = "lblNacionalidad";
+            this.lblEtiquetaNacionalidad.Tag = "RegistrarHuesped_lblNacionalidad";
             this.lblEtiquetaNacionalidad.Text = "Nacionalidad";
             // 
             // txtNacionalidad
@@ -277,7 +277,7 @@
             this.lblEtiquetaDocumento.Name = "lblEtiquetaDocumento";
             this.lblEtiquetaDocumento.Size = new System.Drawing.Size(93, 16);
             this.lblEtiquetaDocumento.TabIndex = 9;
-            this.lblEtiquetaDocumento.Tag = "lblNroDocumento";
+            this.lblEtiquetaDocumento.Tag = "RegistrarHuesped_lblNroDocumento";
             this.lblEtiquetaDocumento.Text = "N° Documento";
             // 
             // txtDocumento
@@ -310,7 +310,7 @@
             this.lblEtiquetaTipoDocumento.Name = "lblEtiquetaTipoDocumento";
             this.lblEtiquetaTipoDocumento.Size = new System.Drawing.Size(126, 16);
             this.lblEtiquetaTipoDocumento.TabIndex = 7;
-            this.lblEtiquetaTipoDocumento.Tag = "lblTipoDocumento";
+            this.lblEtiquetaTipoDocumento.Tag = "RegistrarHuesped_lblTipoDocumento";
             this.lblEtiquetaTipoDocumento.Text = "Tipo de Documento";
             // 
             // cmbTipoDocumento
@@ -347,7 +347,7 @@
             this.lblEtiquetaApellido.Name = "lblEtiquetaApellido";
             this.lblEtiquetaApellido.Size = new System.Drawing.Size(57, 16);
             this.lblEtiquetaApellido.TabIndex = 5;
-            this.lblEtiquetaApellido.Tag = "lblApellido";
+            this.lblEtiquetaApellido.Tag = "RegistrarHuesped_lblApellido";
             this.lblEtiquetaApellido.Text = "Apellido";
             // 
             // txtApellido
@@ -380,7 +380,7 @@
             this.lblEtiquetaNombre.Name = "lblEtiquetaNombre";
             this.lblEtiquetaNombre.Size = new System.Drawing.Size(56, 16);
             this.lblEtiquetaNombre.TabIndex = 3;
-            this.lblEtiquetaNombre.Tag = "lblNombre";
+            this.lblEtiquetaNombre.Tag = "RegistrarHuesped_lblNombre";
             this.lblEtiquetaNombre.Text = "Nombre";
             // 
             // txtNombre
@@ -442,7 +442,7 @@
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(205, 30);
             this.lblTitulo.TabIndex = 1;
-            this.lblTitulo.Tag = "lblRegistrarHuesped";
+            this.lblTitulo.Tag = "RegistrarHuesped_lblTitulo";
             this.lblTitulo.Text = "Registrar Huésped";
             // 
             // iconTitulo

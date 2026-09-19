@@ -3,7 +3,6 @@ using DAL_08YS;
 using DAL_08YS.Interfaces_Repositories;
 using DAL_08YS.Interfaces_Repositories.Negocio;
 using DAL_08YS.Interfaces_Repositories.Negocio.habitacion;
-using DAL_08YS.Repositories_Interfaces;
 using DAL_08YS.SQL;
 using DAL_08YS.SQL.Negocio;
 using Service_08YS;
@@ -91,35 +90,35 @@ namespace BLL_08YS
         {
             var factory = new SqlDbFactory_08YS();
             IHabitacionRepository_68SA habitacionRepo = new SqlHabitacionRepository_68SA(factory);
-            return new HabitacionBLL_68SA(habitacionRepo);
+            return new HabitacionBLL_68SA(habitacionRepo, CreateBitacoraBLL());
         }
 
         public static HuespedBLL_68SA CreateHuespedBLL()
         {
             var factory = new SqlDbFactory_08YS();
             IHuespedRepository_68SA huespedRepo = new SqlHuespedRepository_68SA(factory);
-            return new HuespedBLL_68SA(huespedRepo);
+            return new HuespedBLL_68SA(huespedRepo, CreateBitacoraBLL());
         }
 
         public static ReservaBLL_68SA CreateReservaBLL()
         {
             var factory = new SqlDbFactory_08YS();
             IReservaRepository_68SA reservaRepo = new SqlReservaRepository_68SA(factory);
-            return new ReservaBLL_68SA(reservaRepo, CreateHuespedBLL());
+            return new ReservaBLL_68SA(reservaRepo, CreateHuespedBLL(), CreateBitacoraBLL());
         }
 
         public static PagoBLL_68SA CreatePagoBLL()
         {
             var factory = new SqlDbFactory_08YS();
             IPagoRepository_68SA pagoRepo = new SqlPagoRepository_68SA(factory);
-            return new PagoBLL_68SA(pagoRepo);
+            return new PagoBLL_68SA(pagoRepo, CreateBitacoraBLL());
         }
 
         public static ConfiguracionHotelBLL_68SA CreateConfiguracionHotelBLL()
         {
             var factory = new SqlDbFactory_08YS();
             IConfiguracionHotelRepository_68SA repo = new SqlConfiguracionHotelRepository_68SA(factory);
-            return new ConfiguracionHotelBLL_68SA(repo);
+            return new ConfiguracionHotelBLL_68SA(repo, CreateBitacoraBLL());
         }
 
         public static MetricasBLL_68SA CreateMetricasBLL()

@@ -1,6 +1,7 @@
 ﻿using BE_08YS;
 using BLL_08YS;
 using BLL_08YS.Negocio;
+using Service_08YS;
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -24,6 +25,8 @@ namespace GUI_08YS.Recepcionista
         public FormRegistrarHuesped_68SA(string documentoPrellenado = null)
         {
             InitializeComponent();
+            TraducirControles(this);
+            Text = TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_lblTitulo");
 
             cmbTipoDocumento.DataSource = Enum.GetValues(typeof(TipoDocumento));
             cmbTipoDocumento.SelectedIndex = -1;
@@ -50,8 +53,8 @@ namespace GUI_08YS.Recepcionista
                 if (_huespedBLL.ExistePorClaveCompleta(documento, tipoDocumento, nacionalidad))
                 {
                     MessageBox.Show(
-                        "Ya existe un huésped registrado con ese tipo y número de documento (y esa nacionalidad). Buscalo en lugar de registrarlo de nuevo.",
-                        "Huésped existente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_msgHuespedExistente"),
+                        TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_tituloHuespedExistente"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -80,41 +83,41 @@ namespace GUI_08YS.Recepcionista
 
         private bool ValidarCampos()
         {
-            const string tituloError = "Datos incompletos";
+            string tituloError = TraductorManager_08YS.Instance.GetTexto("Comun_msgDatosIncompletos");
 
             if (string.IsNullOrWhiteSpace(txtNombre.RealText))
             {
-                MessageBox.Show("Ingresá el nombre del huésped.", tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_msgIngreseNombre"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtApellido.RealText))
             {
-                MessageBox.Show("Ingresá el apellido del huésped.", tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_msgIngreseApellido"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (cmbTipoDocumento.SelectedItem == null)
             {
-                MessageBox.Show("Seleccioná el tipo de documento.", tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_msgSeleccioneTipoDocumento"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtDocumento.RealText))
             {
-                MessageBox.Show("Ingresá el número de documento.", tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_msgIngreseDocumento"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (!dtpFechaNacimiento.Value.HasValue)
             {
-                MessageBox.Show("Seleccioná la fecha de nacimiento.", tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_msgSeleccioneFechaNacimiento"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (dtpFechaNacimiento.Value.Value.Date > DateTime.Today)
             {
-                MessageBox.Show("La fecha de nacimiento no puede ser futura.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_msgFechaNacimientoFutura"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloErrorValidacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             if (!string.IsNullOrWhiteSpace(txtEmail.RealText) && !EsEmailValido(txtEmail.RealText.Trim()))
             {
-                MessageBox.Show("El email ingresado no tiene un formato válido.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_msgEmailInvalido"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloErrorValidacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -124,6 +127,18 @@ namespace GUI_08YS.Recepcionista
         private static bool EsEmailValido(string email)
         {
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
         }
     }
 }

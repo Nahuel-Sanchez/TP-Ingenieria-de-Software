@@ -18,7 +18,12 @@ namespace Service_08YS.Entities.Bitacora
     {
         Usuarios,
         Login,
-        Perfiles
+        Perfiles,
+        Reservas,
+        Habitaciones,
+        Huespedes,
+        Pagos,
+        Configuracion
     }
 
     public enum Evento
@@ -38,7 +43,18 @@ namespace Service_08YS.Entities.Bitacora
         FamiliaModificada,
         RolCreado,
         RolEliminado,
-        RolModificado
+        RolModificado,
+        ReservaCreada,
+        ReservaCheckInRegistrado,
+        ReservaCheckOutRegistrado,
+        ReservaCancelada,
+        ReservaEstadiaExtendida,
+        ReservaNoShowProcesado,
+        HabitacionPuestaEnMantenimiento,
+        HabitacionEstadoCambiado,
+        HuespedRegistrado,
+        PagoRegistrado,
+        ConfiguracionHotelActualizada
     }
 
     public class BitacoraEvento_08YS

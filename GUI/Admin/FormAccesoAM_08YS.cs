@@ -77,15 +77,15 @@ namespace GUI_08YS.Admin
         public void UpdateIdioma()
         {
             TraducirControles(this);
-            string claveOperacion = _operacion == OperacionAM.Alta ? "Operacion_Alta" : "Operacion_Modificacion";
-            string claveEntidad = _tipo == TipoEntidad.Familia ? "Entidad_Familia" : "Entidad_Rol";
+            string claveOperacion = _operacion == OperacionAM.Alta ? "AccesoAltaMod_Operacion_Alta" : "AccesoAltaMod_Operacion_Modificacion";
+            string claveEntidad = _tipo == TipoEntidad.Familia ? "AccesoAltaMod_Entidad_Familia" : "AccesoAltaMod_Entidad_Rol";
             string operacionTraducida = TraductorManager_08YS.Instance.GetTexto(claveOperacion);
             string entidadTraducida = TraductorManager_08YS.Instance.GetTexto(claveEntidad);
 
             // Asignamos al Label del título respetando el idioma actual
             lblTitulo.Text = $"{operacionTraducida} {entidadTraducida}";
 
-            txtNombre.PlaceholderText = TraductorManager_08YS.Instance.GetTexto("txtNombreAcceso_hint");
+            txtNombre.PlaceholderText = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_txtNombreAcceso_hint");
 
             TraducirColumnas();
         }
@@ -107,7 +107,7 @@ namespace GUI_08YS.Admin
                 if (columna.Name.Equals("Nombre", StringComparison.OrdinalIgnoreCase) ||
                     columna.DataPropertyName.Equals("Nombre", StringComparison.OrdinalIgnoreCase))
                 {
-                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaNombre");
+                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("Comun_ColumnaNombre");
                 }
 
                 // Evalúa discrepancias entre "Tipo", "TipoDisplay" o el DataPropertyName del wrapper ComponentRow
@@ -115,7 +115,7 @@ namespace GUI_08YS.Admin
                     columna.Name.Equals("TipoDisplay", StringComparison.OrdinalIgnoreCase) ||
                     columna.DataPropertyName.Equals("TipoDisplay", StringComparison.OrdinalIgnoreCase))
                 {
-                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaTipo");
+                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("Comun_ColumnaTipo");
                 }
             }
         }
@@ -258,14 +258,14 @@ namespace GUI_08YS.Admin
         {
             if (dgvDisponibles.CurrentRow == null)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_seleccionar_componente_add"), TraductorManager_08YS.Instance.GetTexto("sin_seleccion"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_seleccionar_componente_add"), TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_sin_seleccion"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             var candidato = (dgvDisponibles.CurrentRow.DataBoundItem as ComponentRow)?.Componente;
             if (candidato == null)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_error_obtener_componente"), TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_error_obtener_componente"), TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -280,7 +280,7 @@ namespace GUI_08YS.Admin
                 case ResultadoEvaluacion_08YS.Tipo.SugerenciaReemplazo:
                     var confirm = MessageBox.Show(
                         resultado.Mensaje, // Viene directo con lógica traducida desde la BLL o formateada
-                        TraductorManager_08YS.Instance.GetTexto("reemplazo_sugerido"),
+                        TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_reemplazo_sugerido"),
                         MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Question);
 
@@ -294,7 +294,7 @@ namespace GUI_08YS.Admin
                     break;
 
                 case ResultadoEvaluacion_08YS.Tipo.ConflictoIrresoluble:
-                    MessageBox.Show(resultado.Mensaje, TraductorManager_08YS.Instance.GetTexto("no_se_puede_agregar"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(resultado.Mensaje, TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_no_se_puede_agregar"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
         }
@@ -313,14 +313,14 @@ namespace GUI_08YS.Admin
         {
             if (dgvSeleccionados.CurrentRow == null)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_seleccionar_componente_del"), TraductorManager_08YS.Instance.GetTexto("sin_seleccion"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_seleccionar_componente_del"), TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_sin_seleccion"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             var componente = (dgvSeleccionados.CurrentRow.DataBoundItem as ComponentRow)?.Componente;
             if (componente == null)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_error_obtener_componente"), TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_error_obtener_componente"), TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -343,12 +343,12 @@ namespace GUI_08YS.Admin
                     if (_operacion == OperacionAM.Alta)
                     {
                         _familiaBLL.Crear(nombre, _seleccionados);
-                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_familia_creada_exito"), TraductorManager_08YS.Instance.GetTexto("exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_familia_creada_exito"), TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
                         _familiaBLL.Modificar(_familiaAEditar.FamiliaID, nombre, _seleccionados);
-                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_familia_modificada_exito"), TraductorManager_08YS.Instance.GetTexto("exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_familia_modificada_exito"), TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 else
@@ -356,12 +356,12 @@ namespace GUI_08YS.Admin
                     if (_operacion == OperacionAM.Alta)
                     {
                         _rolBLL.Crear(nombre, _seleccionados);
-                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_rol_creado_exito"), TraductorManager_08YS.Instance.GetTexto("exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_rol_creado_exito"), TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
                         _rolBLL.Modificar(_rolAEditar.RolID, nombre, _seleccionados);
-                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_rol_modificado_exito"), TraductorManager_08YS.Instance.GetTexto("exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_rol_modificado_exito"), TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_exito"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
 
@@ -369,18 +369,18 @@ namespace GUI_08YS.Admin
             }
             catch (NombreDuplicadoException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_nombre_acceso_duplicado"),
-                                TraductorManager_08YS.Instance.GetTexto("error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_nombre_acceso_duplicado"),
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (PermisosDuplicadosException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_permisos_identicos_error"),
-                                TraductorManager_08YS.Instance.GetTexto("error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_permisos_identicos_error"),
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado")}{ex.Message}",
-                                TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("Comun_msg_error_inesperado")}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -396,7 +396,7 @@ namespace GUI_08YS.Admin
             if (componente is Permiso_08YS permiso)
             {
                 lblDescripcion.Text = string.IsNullOrWhiteSpace(permiso.Descripcion)
-                    ? TraductorManager_08YS.Instance.GetTexto("msg_sin_descripcion")
+                    ? TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_msg_sin_descripcion")
                     : permiso.Descripcion;
                 lblDescripcion.Visible = true;
                 trvDetalle.Visible = false;

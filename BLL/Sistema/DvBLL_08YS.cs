@@ -32,9 +32,11 @@ namespace BLL_08YS
     public class DvBLL_08YS
     {
         public static readonly string[] TablasMonitoreadas =
-        {
+{
             "Users", "Roles", "Familias", "Permisos",
-            "FamiliaPermiso", "FamiliaIntegrada", "RolFamilia", "RolPermiso"
+            "FamiliaPermiso", "FamiliaIntegrada", "RolFamilia", "RolPermiso",
+            "Pisos", "TiposHabitacion", "Habitaciones", "Huespedes",
+            "Reservas", "Acompanantes", "Pagos", "ConfiguracionHotel"
         };
 
         private readonly IDvRepository_08YS _repo;

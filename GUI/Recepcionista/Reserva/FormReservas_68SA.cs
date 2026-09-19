@@ -59,7 +59,7 @@ namespace GUI_08YS.Recepcionista
             btnCalVistaSemana.Click += (s, e) => CambiarVistaCalendario(ModoCalendarioReservas.Semana);
             btnCalVistaMes.Click += (s, e) => CambiarVistaCalendario(ModoCalendarioReservas.Mes);
             ucCalendario.ReservaClickeada += (s, reserva) =>
-                MessageBox.Show($"Detalle de la reserva #{reserva.Id} — todavía no implementado.", "Pendiente",
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("Reservas_msgDetallePendiente"), reserva.Id), TraductorManager_08YS.Instance.GetTexto("Comun_tituloPendiente"),
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             btnFiltrar.Click += (s, e) => CargarLista();
@@ -197,10 +197,10 @@ namespace GUI_08YS.Recepcionista
             string columna = dgvReservas.Columns[e.ColumnIndex].Name;
 
             if (columna == "colEditar")
-                MessageBox.Show("Editar reserva — todavía no implementado.", "Pendiente",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Reservas_msgEditarPendiente"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloPendiente"),
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (columna == "colImprimir")
-                MessageBox.Show("Imprimir / generar comprobante — todavía no implementado.", "Pendiente",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Reservas_msgImprimirPendiente"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloPendiente"),
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (columna == "colCancelar" && item.PuedeCancelar)
                 CancelarReserva(item.ReservaId);
@@ -291,13 +291,13 @@ namespace GUI_08YS.Recepcionista
 
             if (filtro.FechaDesde.HasValue && filtro.FechaHasta.HasValue && filtro.FechaDesde > filtro.FechaHasta)
             {
-                MessageBox.Show("La fecha de ingreso desde no puede ser posterior a la fecha de ingreso hasta.", "Filtro inválido",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Reservas_msgFiltroIngresoInvalido"), TraductorManager_08YS.Instance.GetTexto("Reservas_tituloFiltroInvalido"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (filtro.FechaEgresoDesde.HasValue && filtro.FechaEgresoHasta.HasValue && filtro.FechaEgresoDesde > filtro.FechaEgresoHasta)
             {
-                MessageBox.Show("La fecha de egreso desde no puede ser posterior a la fecha de egreso hasta.", "Filtro inválido",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Reservas_msgFiltroEgresoInvalido"), TraductorManager_08YS.Instance.GetTexto("Reservas_tituloFiltroInvalido"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -381,24 +381,24 @@ namespace GUI_08YS.Recepcionista
             var canceladas = reservas.Where(r => r.Estado == EstadoReserva.Cancelada).ToList();
 
             lblMontoVigentes.Text = $"${vigentes.Sum(r => r.MontoTotal):N2}";
-            lblCantVigentes.Text = $"Cantidad: {vigentes.Count}";
+            lblCantVigentes.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {vigentes.Count}";
 
             lblMontoPendientes.Text = $"${pendientes.Sum(r => r.MontoTotal):N2}";
-            lblCantPendientes.Text = $"Cantidad: {pendientes.Count}";
+            lblCantPendientes.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {pendientes.Count}";
 
             lblMontoOcupadas.Text = $"${ocupadas.Sum(r => r.MontoTotal):N2}";
-            lblCantOcupadas.Text = $"Cantidad: {ocupadas.Count}";
+            lblCantOcupadas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {ocupadas.Count}";
 
             lblMontoFinalizadas.Text = $"${finalizadas.Sum(r => r.MontoTotal):N2}";
-            lblCantFinalizadas.Text = $"Cantidad: {finalizadas.Count}";
+            lblCantFinalizadas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {finalizadas.Count}";
 
             lblMontoCanceladas.Text = $"${canceladas.Sum(r => r.MontoTotal):N2}";
-            lblCantCanceladas.Text = $"Cantidad: {canceladas.Count}";
+            lblCantCanceladas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {canceladas.Count}";
         }
 
         private void CancelarReserva(int reservaId)
         {
-            var confirmacion = MessageBox.Show("¿Cancelar esta reserva?", "Confirmar",
+            var confirmacion = MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Reservas_msgConfirmarCancelar"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloConfirmar"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (confirmacion != DialogResult.Yes) return;
 
@@ -407,9 +407,9 @@ namespace GUI_08YS.Recepcionista
                 _reservaBLL.Cancelar(reservaId);
                 CargarLista();
             }
-            catch (EstadoReservaInvalidoException_68SA ex)
+            catch (EstadoReservaInvalidoException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo cancelar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excEstadoReservaInvalido"), TraductorManager_08YS.Instance.GetTexto("Reservas_tituloNoSePudoCancelar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -417,17 +417,29 @@ namespace GUI_08YS.Recepcionista
         {
             switch (estado)
             {
-                case EstadoReserva.Confirmada: return "Pendiente";
-                case EstadoReserva.EnCurso: return "Ocupada";
-                case EstadoReserva.Finalizada: return "Finalizada";
-                case EstadoReserva.Cancelada: return "Cancelada";
+                case EstadoReserva.Confirmada: return TraductorManager_08YS.Instance.GetTexto("Reservas_estadoPendiente");
+                case EstadoReserva.EnCurso: return TraductorManager_08YS.Instance.GetTexto("Reservas_estadoOcupada");
+                case EstadoReserva.Finalizada: return TraductorManager_08YS.Instance.GetTexto("Reservas_estadoFinalizada");
+                case EstadoReserva.Cancelada: return TraductorManager_08YS.Instance.GetTexto("Reservas_estadoCancelada");
                 default: return estado.ToString();
             }
         }
 
         public void UpdateIdioma()
         {
-            // Pendiente junto con el resto de las traducciones de estos forms.
+            TraducirControles(this);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
         }
     }
 

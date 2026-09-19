@@ -92,7 +92,7 @@
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(496, 62);
             this.lblTitulo.TabIndex = 1;
-            this.lblTitulo.Tag = "backup_titulo";
+            this.lblTitulo.Tag = "Backups_backup_titulo";
             this.lblTitulo.Text = "Gestión de Respaldos";
             this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -169,7 +169,7 @@
             this.btnRealizarBackUp.Padding = new System.Windows.Forms.Padding(5, 0, 10, 0);
             this.btnRealizarBackUp.Size = new System.Drawing.Size(670, 50);
             this.btnRealizarBackUp.TabIndex = 61;
-            this.btnRealizarBackUp.Tag = "backup_btn_realizar";
+            this.btnRealizarBackUp.Tag = "Backups_backup_btn_realizar";
             this.btnRealizarBackUp.Text = "Realizar BackUp";
             this.btnRealizarBackUp.UseVisualStyleBackColor = false;
             this.btnRealizarBackUp.Click += new System.EventHandler(this.btnRealizarBackUp_Click);
@@ -198,7 +198,7 @@
             this.lblNombreLabel.Padding = new System.Windows.Forms.Padding(0, 25, 0, 0);
             this.lblNombreLabel.Size = new System.Drawing.Size(308, 57);
             this.lblNombreLabel.TabIndex = 3;
-            this.lblNombreLabel.Tag = "backup_nombre_label";
+            this.lblNombreLabel.Tag = "Backups_backup_nombre_label";
             this.lblNombreLabel.Text = "El nombre del archivo será:";
             // 
             // pnlCarpeta
@@ -269,7 +269,7 @@
             this.lblBackupDesc.Padding = new System.Windows.Forms.Padding(0, 15, 0, 0);
             this.lblBackupDesc.Size = new System.Drawing.Size(519, 40);
             this.lblBackupDesc.TabIndex = 1;
-            this.lblBackupDesc.Tag = "backup_crear_desc";
+            this.lblBackupDesc.Tag = "Backups_backup_crear_desc";
             this.lblBackupDesc.Text = "Seleccioná la carpeta donde se guardará el archivo de backup";
             // 
             // lblBackupTitulo
@@ -283,7 +283,7 @@
             this.lblBackupTitulo.Name = "lblBackupTitulo";
             this.lblBackupTitulo.Size = new System.Drawing.Size(202, 38);
             this.lblBackupTitulo.TabIndex = 0;
-            this.lblBackupTitulo.Tag = "backup_crear_titulo";
+            this.lblBackupTitulo.Tag = "Backups_backup_crear_titulo";
             this.lblBackupTitulo.Text = "Crear respaldo";
             // 
             // panel3
@@ -314,7 +314,7 @@
             this.btnRealizarRestore.Padding = new System.Windows.Forms.Padding(5, 0, 10, 0);
             this.btnRealizarRestore.Size = new System.Drawing.Size(696, 50);
             this.btnRealizarRestore.TabIndex = 61;
-            this.btnRealizarRestore.Tag = "backup_btn_restaurar";
+            this.btnRealizarRestore.Tag = "Backups_backup_btn_restaurar";
             this.btnRealizarRestore.Text = "Restaurar Backup";
             this.btnRealizarRestore.UseVisualStyleBackColor = false;
             this.btnRealizarRestore.Click += new System.EventHandler(this.btnRealizarRestore_Click);
@@ -428,7 +428,7 @@
             this.lblRestoreLabel.Padding = new System.Windows.Forms.Padding(0, 25, 0, 0);
             this.lblRestoreLabel.Size = new System.Drawing.Size(429, 57);
             this.lblRestoreLabel.TabIndex = 4;
-            this.lblRestoreLabel.Tag = "backup_restore_label";
+            this.lblRestoreLabel.Tag = "Backups_backup_restore_label";
             this.lblRestoreLabel.Text = "Seleccioná el archivo de backup (.bak)";
             // 
             // pnlWarning
@@ -453,7 +453,7 @@
             this.lblWarning.Name = "lblWarning";
             this.lblWarning.Size = new System.Drawing.Size(635, 84);
             this.lblWarning.TabIndex = 2;
-            this.lblWarning.Tag = "backup_warning";
+            this.lblWarning.Tag = "Backups_backup_warning";
             this.lblWarning.Text = "Restaurar reemplazará completamente la base de datos actual con el\r\ncontenido del" +
     " backup seleccionado. Esta operación no puede \r\ndeshacerse. El sistema se reinic" +
     "iará automáticamente al finalizar.";
@@ -485,7 +485,7 @@
             this.lblRestoreTitulo.Name = "lblRestoreTitulo";
             this.lblRestoreTitulo.Size = new System.Drawing.Size(254, 38);
             this.lblRestoreTitulo.TabIndex = 1;
-            this.lblRestoreTitulo.Tag = "backup_restore_titulo";
+            this.lblRestoreTitulo.Tag = "Backups_backup_restore_titulo";
             this.lblRestoreTitulo.Text = "Restaurar respaldo";
             // 
             // FormGestionRespaldos_08YS

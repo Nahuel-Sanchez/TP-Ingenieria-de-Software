@@ -86,7 +86,7 @@ namespace GUI
             this.rbBloqueados.Size = new System.Drawing.Size(99, 20);
             this.rbBloqueados.TabIndex = 60;
             this.rbBloqueados.TabStop = true;
-            this.rbBloqueados.Tag = "rbBloqueados";
+            this.rbBloqueados.Tag = "GestionUsuarios_rbBloqueados";
             this.rbBloqueados.Text = "Bloqueados";
             this.rbBloqueados.UseVisualStyleBackColor = false;
             this.rbBloqueados.CheckedChanged += new System.EventHandler(this.rbBloqueados_CheckedChanged);
@@ -101,7 +101,7 @@ namespace GUI
             this.lblActivo.Name = "lblActivo";
             this.lblActivo.Size = new System.Drawing.Size(44, 16);
             this.lblActivo.TabIndex = 59;
-            this.lblActivo.Tag = "lblActivo";
+            this.lblActivo.Tag = "GestionUsuarios_lblActivo";
             this.lblActivo.Text = "Activo";
             // 
             // lblBloqueado
@@ -114,7 +114,7 @@ namespace GUI
             this.lblBloqueado.Name = "lblBloqueado";
             this.lblBloqueado.Size = new System.Drawing.Size(74, 16);
             this.lblBloqueado.TabIndex = 58;
-            this.lblBloqueado.Tag = "lblBloqueado";
+            this.lblBloqueado.Tag = "GestionUsuarios_lblBloqueado";
             this.lblBloqueado.Text = "Bloqueado";
             // 
             // lblLogin
@@ -140,7 +140,7 @@ namespace GUI
             this.lblRol.Name = "lblRol";
             this.lblRol.Size = new System.Drawing.Size(28, 16);
             this.lblRol.TabIndex = 56;
-            this.lblRol.Tag = "lblRol";
+            this.lblRol.Tag = "GestionUsuarios_lblRol";
             this.lblRol.Text = "Rol";
             // 
             // lblNombres
@@ -153,7 +153,7 @@ namespace GUI
             this.lblNombres.Name = "lblNombres";
             this.lblNombres.Size = new System.Drawing.Size(63, 16);
             this.lblNombres.TabIndex = 55;
-            this.lblNombres.Tag = "lblNombres";
+            this.lblNombres.Tag = "GestionUsuarios_lblNombres";
             this.lblNombres.Text = "Nombres";
             // 
             // lblEmail
@@ -164,6 +164,7 @@ namespace GUI
             this.lblEmail.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblEmail.Location = new System.Drawing.Point(16, 531);
             this.lblEmail.Name = "lblEmail";
+            this.lblEmail.Tag = "GestionUsuarios_lblEmail";
             this.lblEmail.Size = new System.Drawing.Size(41, 16);
             this.lblEmail.TabIndex = 54;
             this.lblEmail.Text = "Email";
@@ -178,7 +179,7 @@ namespace GUI
             this.lblApellidos.Name = "lblApellidos";
             this.lblApellidos.Size = new System.Drawing.Size(64, 16);
             this.lblApellidos.TabIndex = 53;
-            this.lblApellidos.Tag = "lblApellidos";
+            this.lblApellidos.Tag = "GestionUsuarios_lblApellidos";
             this.lblApellidos.Text = "Apellidos";
             // 
             // lblDNI
@@ -189,6 +190,7 @@ namespace GUI
             this.lblDNI.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblDNI.Location = new System.Drawing.Point(16, 410);
             this.lblDNI.Name = "lblDNI";
+            this.lblDNI.Tag = "GestionUsuarios_lblDNI";
             this.lblDNI.Size = new System.Drawing.Size(30, 16);
             this.lblDNI.TabIndex = 52;
             this.lblDNI.Text = "DNI";
@@ -259,7 +261,7 @@ namespace GUI
             this.btnSalir.Name = "btnSalir";
             this.btnSalir.Size = new System.Drawing.Size(98, 46);
             this.btnSalir.TabIndex = 43;
-            this.btnSalir.Tag = "btnSalir";
+            this.btnSalir.Tag = "GestionUsuarios_btnSalir";
             this.btnSalir.Text = "Salir";
             this.btnSalir.UseVisualStyleBackColor = false;
             this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
@@ -272,7 +274,7 @@ namespace GUI
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(98, 46);
             this.btnCancelar.TabIndex = 42;
-            this.btnCancelar.Tag = "btnCancelar";
+            this.btnCancelar.Tag = "Comun_btnCancelar";
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = false;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
@@ -285,7 +287,7 @@ namespace GUI
             this.btnAplicar.Name = "btnAplicar";
             this.btnAplicar.Size = new System.Drawing.Size(98, 46);
             this.btnAplicar.TabIndex = 41;
-            this.btnAplicar.Tag = "btnAplicar";
+            this.btnAplicar.Tag = "GestionUsuarios_btnAplicar";
             this.btnAplicar.Text = "Aplicar";
             this.btnAplicar.UseVisualStyleBackColor = false;
             this.btnAplicar.Click += new System.EventHandler(this.btnAplicar_Click);
@@ -298,7 +300,7 @@ namespace GUI
             this.btnActDes.Name = "btnActDes";
             this.btnActDes.Size = new System.Drawing.Size(98, 46);
             this.btnActDes.TabIndex = 40;
-            this.btnActDes.Tag = "btnActivarDesactivar";
+            this.btnActDes.Tag = "GestionUsuarios_btnActivarDesactivar";
             this.btnActDes.Text = "Act./Desact.";
             this.btnActDes.UseVisualStyleBackColor = false;
             this.btnActDes.Click += new System.EventHandler(this.btnActDes_Click);
@@ -311,7 +313,7 @@ namespace GUI
             this.btnModificar.Name = "btnModificar";
             this.btnModificar.Size = new System.Drawing.Size(98, 46);
             this.btnModificar.TabIndex = 39;
-            this.btnModificar.Tag = "btnModificar";
+            this.btnModificar.Tag = "Comun_btnModificar";
             this.btnModificar.Text = "Modificar";
             this.btnModificar.UseVisualStyleBackColor = false;
             this.btnModificar.Click += new System.EventHandler(this.btnModificar_Click);
@@ -324,7 +326,7 @@ namespace GUI
             this.btnDesbloquear.Name = "btnDesbloquear";
             this.btnDesbloquear.Size = new System.Drawing.Size(98, 46);
             this.btnDesbloquear.TabIndex = 38;
-            this.btnDesbloquear.Tag = "btnDesbloquear";
+            this.btnDesbloquear.Tag = "GestionUsuarios_btnDesbloquear";
             this.btnDesbloquear.Text = "Desbloquear";
             this.btnDesbloquear.UseVisualStyleBackColor = false;
             this.btnDesbloquear.Click += new System.EventHandler(this.btnDesbloquear_Click);
@@ -337,7 +339,7 @@ namespace GUI
             this.btnCrear.Name = "btnCrear";
             this.btnCrear.Size = new System.Drawing.Size(98, 46);
             this.btnCrear.TabIndex = 37;
-            this.btnCrear.Tag = "btnCrear";
+            this.btnCrear.Tag = "Comun_btnCrear";
             this.btnCrear.Text = "Crear";
             this.btnCrear.UseVisualStyleBackColor = false;
             this.btnCrear.Click += new System.EventHandler(this.btnCrear_Click);
@@ -353,7 +355,7 @@ namespace GUI
             this.rbActivos.Size = new System.Drawing.Size(69, 20);
             this.rbActivos.TabIndex = 36;
             this.rbActivos.TabStop = true;
-            this.rbActivos.Tag = "rbActivos";
+            this.rbActivos.Tag = "GestionUsuarios_rbActivos";
             this.rbActivos.Text = "Activos";
             this.rbActivos.UseVisualStyleBackColor = false;
             this.rbActivos.CheckedChanged += new System.EventHandler(this.rbActivos_CheckedChanged);
@@ -369,7 +371,7 @@ namespace GUI
             this.rbTodos.Size = new System.Drawing.Size(65, 20);
             this.rbTodos.TabIndex = 35;
             this.rbTodos.TabStop = true;
-            this.rbTodos.Tag = "rbTodos";
+            this.rbTodos.Tag = "GestionUsuarios_rbTodos";
             this.rbTodos.Text = "Todos";
             this.rbTodos.UseVisualStyleBackColor = false;
             this.rbTodos.CheckedChanged += new System.EventHandler(this.rbTodos_CheckedChanged);
@@ -419,7 +421,7 @@ namespace GUI
             this.lblCantUsuarios.Name = "lblCantUsuarios";
             this.lblCantUsuarios.Size = new System.Drawing.Size(137, 16);
             this.lblCantUsuarios.TabIndex = 33;
-            this.lblCantUsuarios.Tag = "lblNumeroUsuarios";
+            this.lblCantUsuarios.Tag = "GestionUsuarios_lblNumeroUsuarios";
             this.lblCantUsuarios.Text = "Numero de Usuarios: ";
             // 
             // lblTitulo
@@ -432,7 +434,7 @@ namespace GUI
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(134, 36);
             this.lblTitulo.TabIndex = 32;
-            this.lblTitulo.Tag = "lblUsuarios";
+            this.lblTitulo.Tag = "GestionUsuarios_lblUsuarios";
             this.lblTitulo.Text = "Usuarios";
             // 
             // iconPictureBox1

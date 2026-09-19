@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL_08YS.Repositories_Interfaces
+namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IUserRepository_08YS
     {

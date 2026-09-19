@@ -57,7 +57,7 @@ namespace GUI_08YS.Recepcionista
 
         private void BtnBuscarReserva_Click(object sender, EventArgs e)
         {
-            using (var popup = new FormBuscarReserva_68SA(EstadoReserva.EnCurso, "Buscar reserva para check-out", IconChar.DoorClosed))
+            using (var popup = new FormBuscarReserva_68SA(EstadoReserva.EnCurso, TraductorManager_08YS.Instance.GetTexto("CheckOut_tituloBuscarReserva"), IconChar.DoorClosed))
             {
                 if (popup.ShowDialog(this) == DialogResult.OK)
                 {
@@ -72,9 +72,9 @@ namespace GUI_08YS.Recepcionista
             _reserva = reserva;
 
             lblResHabitacion.Text = reserva.Habitacion.NroHabitacion;
-            lblResTitular.Text = $"{reserva.Titular.Nombre} {reserva.Titular.Apellido} (DNI {reserva.Titular.Documento})";
+            lblResTitular.Text = $"{reserva.Titular.Nombre} {reserva.Titular.Apellido} ({TraductorManager_08YS.Instance.GetTexto("Comun_abrevDni")} {reserva.Titular.Documento})";
             lblResFechas.Text = $"{reserva.FechaIngreso:dd/MM/yyyy} → {reserva.FechaEgreso:dd/MM/yyyy}";
-            lblResComposicion.Text = $"{reserva.CantidadAdultos} adulto(s), {reserva.CantidadNinos} niño(s)";
+            lblResComposicion.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_txtAdultosNinos"), reserva.CantidadAdultos, reserva.CantidadNinos);
 
             var habitacion = BLLFactory_08YS.CreateHabitacionBLL().GetById(reserva.Habitacion.Id);
             lblResTipo.Text = habitacion.Tipo.Nombre;
@@ -128,15 +128,15 @@ namespace GUI_08YS.Recepcionista
         {
             if (_reserva == null)
             {
-                MessageBox.Show("Buscá y encontrá una reserva antes de confirmar el check-out.", "Falta la reserva",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CheckOut_msgFaltaReserva"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloFaltaReserva"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (_saldoPendiente > 0 && nudMontoRecibidoFinal.Value < _saldoPendiente)
             {
-                MessageBox.Show($"El monto recibido (${nudMontoRecibidoFinal.Value:N2}) es menor al saldo pendiente (${_saldoPendiente:N2}).",
-                    "Pago insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_msgPagoInsuficiente"), nudMontoRecibidoFinal.Value, _saldoPendiente),
+                    TraductorManager_08YS.Instance.GetTexto("Comun_tituloPagoInsuficiente"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -153,13 +153,13 @@ namespace GUI_08YS.Recepcionista
                 }
 
                 _reservaBLL.RegistrarCheckOut(_reserva.Id);
-                MessageBox.Show($"Check-out registrado para la habitación {_reserva.Habitacion.NroHabitacion}.",
-                    "Check-out confirmado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("CheckOut_msgCheckOutRegistrado"), _reserva.Habitacion.NroHabitacion),
+                    TraductorManager_08YS.Instance.GetTexto("CheckOut_tituloCheckOutConfirmado"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Volver();
             }
-            catch (EstadoReservaInvalidoException_68SA ex)
+            catch (EstadoReservaInvalidoException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excEstadoReservaInvalido"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -177,7 +177,19 @@ namespace GUI_08YS.Recepcionista
 
         public void UpdateIdioma()
         {
-            // Pendiente junto con el resto de las traducciones de estos forms.
+            TraducirControles(this);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
         }
     }
 }

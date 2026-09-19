@@ -81,7 +81,7 @@
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(194, 62);
             this.lblTitulo.TabIndex = 1;
-            this.lblTitulo.Tag = "lblGestion";
+            this.lblTitulo.Tag = "GestionAcceso_lblGestion";
             this.lblTitulo.Text = "Gestion";
             this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -133,7 +133,7 @@
             this.btnEliminar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnEliminar.Size = new System.Drawing.Size(251, 52);
             this.btnEliminar.TabIndex = 60;
-            this.btnEliminar.Tag = "btnEliminar";
+            this.btnEliminar.Tag = "Comun_btnEliminar";
             this.btnEliminar.Text = "Eliminar";
             this.btnEliminar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEliminar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -158,7 +158,7 @@
             this.btnModificar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnModificar.Size = new System.Drawing.Size(251, 52);
             this.btnModificar.TabIndex = 60;
-            this.btnModificar.Tag = "btnModificar";
+            this.btnModificar.Tag = "Comun_btnModificar";
             this.btnModificar.Text = "Modificar";
             this.btnModificar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnModificar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -183,7 +183,7 @@
             this.btnCrear.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnCrear.Size = new System.Drawing.Size(251, 52);
             this.btnCrear.TabIndex = 59;
-            this.btnCrear.Tag = "btnCrear";
+            this.btnCrear.Tag = "Comun_btnCrear";
             this.btnCrear.Text = "Crear";
             this.btnCrear.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCrear.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -307,7 +307,7 @@
             this.label1.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
             this.label1.Size = new System.Drawing.Size(114, 40);
             this.label1.TabIndex = 2;
-            this.label1.Tag = "lblListado";
+            this.label1.Tag = "GestionAcceso_lblListado";
             this.label1.Text = "Listado";
             this.label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
@@ -342,7 +342,7 @@
             this.lblDetalle.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
             this.lblDetalle.Size = new System.Drawing.Size(113, 40);
             this.lblDetalle.TabIndex = 3;
-            this.lblDetalle.Tag = "lblDetalle";
+            this.lblDetalle.Tag = "GestionAcceso_lblDetalle";
             this.lblDetalle.Text = "Detalle";
             this.lblDetalle.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 

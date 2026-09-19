@@ -55,8 +55,8 @@ namespace GUI_08YS.Recepcionista
             InitializeComponent();
 
             Text = _modo == ModoHabitaciones.Reserva
-                ? $"Habitaciones disponibles — {fechaIngreso:dd/MM} al {fechaEgreso:dd/MM}"
-                : "Control de Habitaciones";
+                ? $"{TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloReserva")} — {fechaIngreso:dd/MM} al {fechaEgreso:dd/MM}"
+                : TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloGestion");
 
             pnlFilaEstado.Visible = _modo == ModoHabitaciones.Gestion;
 
@@ -73,7 +73,7 @@ namespace GUI_08YS.Recepcionista
         {
             flpChipsTipo.Controls.Clear();
 
-            var chipTodos = CrearChip("Todos", null, () => _filtroTipoId = null);
+            var chipTodos = CrearChip(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_chipTodos"), null, () => _filtroTipoId = null);
             chipTodos.Checked = true;
             flpChipsTipo.Controls.Add(chipTodos);
 
@@ -88,7 +88,7 @@ namespace GUI_08YS.Recepcionista
         {
             flpChipsEstado.Controls.Clear();
 
-            var chipTodos = CrearChip("Todos", null, () => _filtroEstado = null);
+            var chipTodos = CrearChip(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_chipTodos"), null, () => _filtroEstado = null);
             chipTodos.Checked = true;
             flpChipsEstado.Controls.Add(chipTodos);
 
@@ -141,7 +141,7 @@ namespace GUI_08YS.Recepcionista
             {
                 var lblPiso = new Label
                 {
-                    Text = $"PISO {grupoPiso.Key}",
+                    Text = $"{TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_piso")} {grupoPiso.Key}",
                     ForeColor = Color.FromArgb(160, 165, 180),
                     Font = new Font(Font, FontStyle.Bold),
                     AutoSize = true,
@@ -191,27 +191,27 @@ namespace GUI_08YS.Recepcionista
             switch (habitacion.EstadoVisual)
             {
                 case EstadoHabitacion.Disponible:
-                    acciones.Add(("Reservar", IconChar.CalendarPlus, AccionHabitacion.Reservar));
-                    acciones.Add(("Check-in directo / Walk-in", IconChar.DoorOpen, AccionHabitacion.CheckInDirecto));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accReservar"), IconChar.CalendarPlus, AccionHabitacion.Reservar));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accCheckInDirecto"), IconChar.DoorOpen, AccionHabitacion.CheckInDirecto));
                     break;
                 case EstadoHabitacion.Reservada:
-                    acciones.Add(("Registrar check-in", IconChar.CalendarCheck, AccionHabitacion.CheckIn));
-                    acciones.Add(("Ver / Modificar reserva", IconChar.Eye, AccionHabitacion.VerReserva));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accCheckIn"), IconChar.CalendarCheck, AccionHabitacion.CheckIn));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accVerReserva"), IconChar.Eye, AccionHabitacion.VerReserva));
                     break;
                 case EstadoHabitacion.Ocupada:
-                    acciones.Add(("Registrar check-out", IconChar.CalendarTimes, AccionHabitacion.CheckOut));
-                    acciones.Add(("Servicio a la habitación", IconChar.Bell, AccionHabitacion.Servicio));
-                    acciones.Add(("Cambio de habitación", IconChar.Retweet, AccionHabitacion.CambioHabitacion));
-                    acciones.Add(("Renovar estadía", IconChar.ArrowRotateRight, AccionHabitacion.Renovar));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accCheckOut"), IconChar.CalendarTimes, AccionHabitacion.CheckOut));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accServicio"), IconChar.Bell, AccionHabitacion.Servicio));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accCambioHabitacion"), IconChar.Retweet, AccionHabitacion.CambioHabitacion));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accRenovarEstadia"), IconChar.ArrowRotateRight, AccionHabitacion.Renovar));
                     break;
                 case EstadoHabitacion.EnLimpieza:
                 case EstadoHabitacion.FueraDeServicio:
-                    acciones.Add(("Marcar como Disponible", IconChar.CircleCheck, AccionHabitacion.MarcarDisponible));
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accMarcarDisponible"), IconChar.CircleCheck, AccionHabitacion.MarcarDisponible));
                     break;
             }
 
             if (habitacion.EstadoVisual != EstadoHabitacion.FueraDeServicio)
-                acciones.Add(("Poner en Mantenimiento", IconChar.Wrench, AccionHabitacion.PonerEnMantenimiento));
+                acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accPonerEnMantenimiento"), IconChar.Wrench, AccionHabitacion.PonerEnMantenimiento));
 
             using (var popup = new FormAccionesHabitacion_68SA(habitacion, acciones))
             {
@@ -237,7 +237,8 @@ namespace GUI_08YS.Recepcionista
                     var reservaDeHoy = BLLFactory_08YS.CreateReservaBLL().GetConfirmadaHoyPorHabitacion(habitacion.Id);
                     if (reservaDeHoy == null)
                     {
-                        MessageBox.Show("No se encontró una reserva vigente para hoy en esta habitación.", "Sin reserva",
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_msgSinReservaHoy"),
+                            TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloSinReserva"),
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
                     }
@@ -248,7 +249,8 @@ namespace GUI_08YS.Recepcionista
                     var reservaEnCurso = BLLFactory_08YS.CreateReservaBLL().GetEnCursoPorHabitacion(habitacion.Id);
                     if (reservaEnCurso == null)
                     {
-                        MessageBox.Show("No se encontró una reserva En Curso para esta habitación.", "Sin reserva",
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_msgSinReservaEnCurso"),
+                            TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloSinReserva"),
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
                     }
@@ -259,8 +261,8 @@ namespace GUI_08YS.Recepcionista
                     if (habitacion.EstadoVisual == EstadoHabitacion.Reservada || habitacion.EstadoVisual == EstadoHabitacion.Ocupada)
                     {
                         var confirmacion = MessageBox.Show(
-                            "Esta habitación tiene una reserva activa. Ponerla en mantenimiento no reubica al huésped ni modifica la reserva — eso todavía hay que resolverlo a mano. ¿Poner en mantenimiento igual?",
-                            "Reserva activa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_msgConfirmarMantenimiento"),
+                            TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloReservaActiva"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (confirmacion != DialogResult.Yes) break;
                     }
                     _habitacionBLL.CambiarEstado(habitacion.Id, EstadoHabitacion.FueraDeServicio);
@@ -271,7 +273,8 @@ namespace GUI_08YS.Recepcionista
                     var reservaParaRenovar = BLLFactory_08YS.CreateReservaBLL().GetEnCursoPorHabitacion(habitacion.Id);
                     if (reservaParaRenovar == null)
                     {
-                        MessageBox.Show("No se encontró una reserva En Curso para esta habitación.", "Sin reserva",
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_msgSinReservaEnCurso"),
+                            TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloSinReserva"),
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
                     }
@@ -283,7 +286,8 @@ namespace GUI_08YS.Recepcionista
                     break;
 
                 default:
-                    MessageBox.Show($"'{accion}' todavía no está implementado.", "Pendiente",
+                    MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_msgAccionPendiente"), accion),
+                        TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloPendiente"),
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
             }
@@ -293,11 +297,11 @@ namespace GUI_08YS.Recepcionista
         {
             switch (estado)
             {
-                case EstadoHabitacion.Disponible: return "Disponible";
-                case EstadoHabitacion.Ocupada: return "Ocupada";
-                case EstadoHabitacion.Reservada: return "Reservada";
-                case EstadoHabitacion.EnLimpieza: return "Limpieza";
-                case EstadoHabitacion.FueraDeServicio: return "Fuera de Servicio";
+                case EstadoHabitacion.Disponible: return TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_estadoDisponible");
+                case EstadoHabitacion.Ocupada: return TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_estadoOcupada");
+                case EstadoHabitacion.Reservada: return TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_estadoReservada");
+                case EstadoHabitacion.EnLimpieza: return TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_estadoLimpieza");
+                case EstadoHabitacion.FueraDeServicio: return TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_estadoFueraServicio");
                 default: return estado.ToString();
             }
         }

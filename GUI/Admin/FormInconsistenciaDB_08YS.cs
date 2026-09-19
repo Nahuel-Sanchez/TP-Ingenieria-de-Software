@@ -59,8 +59,8 @@ namespace GUI_08YS.Admin
         private void btnRecalcular_Click(object sender, EventArgs e)
         {
             var confirm = MessageBox.Show(
-            TraductorManager_08YS.Instance.GetTexto("dv_confirm_recalcular"),
-            TraductorManager_08YS.Instance.GetTexto("dv_confirm_titulo"),
+            TraductorManager_08YS.Instance.GetTexto("InconsistenciaDB_dv_confirm_recalcular"),
+            TraductorManager_08YS.Instance.GetTexto("InconsistenciaDB_dv_confirm_titulo"),
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Warning,
             MessageBoxDefaultButton.Button2);
@@ -73,7 +73,7 @@ namespace GUI_08YS.Admin
                 _dvBLL.Recalcular();
 
                 MessageBox.Show(
-                    TraductorManager_08YS.Instance.GetTexto("dv_recalcular_ok"),
+                    TraductorManager_08YS.Instance.GetTexto("InconsistenciaDB_dv_recalcular_ok"),
                     string.Empty,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -86,7 +86,7 @@ namespace GUI_08YS.Admin
             {
                 MessageBox.Show(
                     ex.Message,
-                    TraductorManager_08YS.Instance.GetTexto("error_critico"),
+                    TraductorManager_08YS.Instance.GetTexto("Comun_error_critico"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -101,14 +101,14 @@ namespace GUI_08YS.Admin
             // Mostrar info del archivo + confirmación final
             var info = new FileInfo(rutaBak);
             string mensajeConfirm = string.Format(
-                TraductorManager_08YS.Instance.GetTexto("dv_restore_confirm"),
+                TraductorManager_08YS.Instance.GetTexto("InconsistenciaDB_dv_restore_confirm"),
                 info.Name,
                 (info.Length / (1024.0 * 1024)).ToString("F1"),
                 info.LastWriteTime.ToString("dd/MM/yyyy HH:mm:ss"));
 
             var confirm = MessageBox.Show(
                 mensajeConfirm,
-                TraductorManager_08YS.Instance.GetTexto("dv_confirm_titulo"),
+                TraductorManager_08YS.Instance.GetTexto("InconsistenciaDB_dv_confirm_titulo"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2);
@@ -125,7 +125,7 @@ namespace GUI_08YS.Admin
 
                 // Restore exitoso: el repositorio ya hizo ClearAllPools
                 MessageBox.Show(
-                    TraductorManager_08YS.Instance.GetTexto("dv_restore_ok"),
+                    TraductorManager_08YS.Instance.GetTexto("InconsistenciaDB_dv_restore_ok"),
                     string.Empty,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -148,8 +148,8 @@ namespace GUI_08YS.Admin
             {
                 // Error técnico de SQL Server u otro inesperado
                 MessageBox.Show(
-                    TraductorManager_08YS.Instance.GetTexto("dv_restore_error") + "\n\n" + ex.Message,
-                    TraductorManager_08YS.Instance.GetTexto("error_critico"),
+                    TraductorManager_08YS.Instance.GetTexto("InconsistenciaDB_dv_restore_error") + "\n\n" + ex.Message,
+                    TraductorManager_08YS.Instance.GetTexto("Comun_error_critico"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -163,7 +163,7 @@ namespace GUI_08YS.Admin
         {
             using (var dialog = new OpenFileDialog())
             {
-                dialog.Title = TraductorManager_08YS.Instance.GetTexto("restore_seleccionar_archivo");
+                dialog.Title = TraductorManager_08YS.Instance.GetTexto("Comun_restore_seleccionar_archivo");
                 dialog.Filter = "Archivos de backup (*.bak)|*.bak|Todos los archivos (*.*)|*.*";
                 dialog.FilterIndex = 1;
                 dialog.InitialDirectory = BackupBLL_08YS.CarpetaDefault;

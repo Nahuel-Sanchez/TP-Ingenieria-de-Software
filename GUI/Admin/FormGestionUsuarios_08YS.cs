@@ -45,11 +45,11 @@ namespace GUI
         {
             if (dgvUsuarios.Columns.Count > 0)
             {
-                if (dgvUsuarios.Columns.Contains("Rol")) dgvUsuarios.Columns["Rol"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaRol");
-                if (dgvUsuarios.Columns.Contains("Nombre")) dgvUsuarios.Columns["Nombre"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaNombre");
-                if (dgvUsuarios.Columns.Contains("Apellido")) dgvUsuarios.Columns["Apellido"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaApellido");
-                if (dgvUsuarios.Columns.Contains("Activo")) dgvUsuarios.Columns["Activo"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaActivo");
-                if (dgvUsuarios.Columns.Contains("Bloqueado")) dgvUsuarios.Columns["Bloqueado"].HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaBloqueado");
+                if (dgvUsuarios.Columns.Contains("Rol")) dgvUsuarios.Columns["Rol"].HeaderText = TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_ColumnaRol");
+                if (dgvUsuarios.Columns.Contains("Nombre")) dgvUsuarios.Columns["Nombre"].HeaderText = TraductorManager_08YS.Instance.GetTexto("Comun_ColumnaNombre");
+                if (dgvUsuarios.Columns.Contains("Apellido")) dgvUsuarios.Columns["Apellido"].HeaderText = TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_ColumnaApellido");
+                if (dgvUsuarios.Columns.Contains("Activo")) dgvUsuarios.Columns["Activo"].HeaderText = TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_ColumnaActivo");
+                if (dgvUsuarios.Columns.Contains("Bloqueado")) dgvUsuarios.Columns["Bloqueado"].HeaderText = TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_ColumnaBloqueado");
             }
         }
         
@@ -104,7 +104,7 @@ namespace GUI
                     btnAplicar.Enabled = false;
                     btnCancelar.Enabled = false;
                     btnDesbloquear.Enabled = ValidarSiEstaBloqueado();
-                    txtMensaje.Text = TraductorManager_08YS.Instance.GetTexto("modo_consulta_msg");
+                    txtMensaje.Text = TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_modo_consulta_msg");
                     break;
 
                 case EstadoUI.Insertando:
@@ -121,7 +121,7 @@ namespace GUI
                     txtLogin.Enabled = false;
                     txtBloqueado.Enabled = false;
                     txtActivo.Enabled = false;
-                    txtMensaje.Text = TraductorManager_08YS.Instance.GetTexto("modo_insercion_msg");
+                    txtMensaje.Text = TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_modo_insercion_msg");
                     txtDNI.Focus();
                     break;
                 case EstadoUI.Editando:
@@ -139,7 +139,7 @@ namespace GUI
                     txtActivo.Enabled = false;
                     txtEmail.Enabled = true;
                     cmbRol.Enabled = true;
-                    txtMensaje.Text = TraductorManager_08YS.Instance.GetTexto("modo_edicion_msg");
+                    txtMensaje.Text = TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_modo_edicion_msg");
                     txtEmail.Focus();
                     break;
             }
@@ -277,14 +277,14 @@ namespace GUI
                 if (user.Activo)
                 {
                   
-                    btnActDes.Tag = "btnDesactivar";
+                    btnActDes.Tag = "GestionUsuarios_btnDesactivar";
                     btnActDes.BackColor = Color.LightCoral; // Un tono rojo suave
                     btnActDes.ForeColor = Color.White;      // Texto blanco para contraste
                 }
                 else
                 {
                    
-                    btnActDes.Tag = "btnActivar";
+                    btnActDes.Tag = "GestionUsuarios_btnActivar";
                     btnActDes.BackColor = Color.MediumSeaGreen; // Un tono verde suave
                     btnActDes.ForeColor = Color.White;
                 }
@@ -307,15 +307,15 @@ namespace GUI
         {
             if (dgvUsuarios.CurrentRow == null)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_seleccionar_usuario"),
-                                                TraductorManager_08YS.Instance.GetTexto("atencion"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_seleccionar_usuario"),
+                                                TraductorManager_08YS.Instance.GetTexto("Comun_atencion"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             var user = (User_08YS)dgvUsuarios.CurrentRow.DataBoundItem;
 
             // Usamos string.Format para incrustar el nombre dinámico dentro de la traducción
-            string pregunta = string.Format(TraductorManager_08YS.Instance.GetTexto("msg_desbloquear_preg"), user.Nombre);
-            DialogResult resp = MessageBox.Show(pregunta, TraductorManager_08YS.Instance.GetTexto("confirmar"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            string pregunta = string.Format(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_desbloquear_preg"), user.Nombre);
+            DialogResult resp = MessageBox.Show(pregunta, TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_confirmar"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (resp == DialogResult.Yes)
             {
@@ -323,14 +323,14 @@ namespace GUI
                 {
                     _bll.DesbloquearUsuario(user.Username);
 
-                    string exito = string.Format(TraductorManager_08YS.Instance.GetTexto("msg_desbloquear_exito"), user.Nombre);
+                    string exito = string.Format(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_desbloquear_exito"), user.Nombre);
                     MessageBox.Show(exito);
                     CargarGrilla();
                     CambiarEstado(EstadoUI.Consulta);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("error") + ": " + ex.Message);
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_error") + ": " + ex.Message);
                 }
             }
         }
@@ -343,11 +343,11 @@ namespace GUI
 
             // Traducimos el verbo dinámico primero
             string accion = user.Activo
-                ? TraductorManager_08YS.Instance.GetTexto("desactivar")
-                : TraductorManager_08YS.Instance.GetTexto("activar");
+                ? TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_desactivar")
+                : TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_activar");
 
-            string pregunta = string.Format(TraductorManager_08YS.Instance.GetTexto("msg_alternar_activo_preg"), accion, user.Username);
-            DialogResult resp = MessageBox.Show(pregunta, TraductorManager_08YS.Instance.GetTexto("confirmar_estado"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            string pregunta = string.Format(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_alternar_activo_preg"), accion, user.Username);
+            DialogResult resp = MessageBox.Show(pregunta, TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_confirmar_estado"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (resp == DialogResult.Yes)
             {
@@ -355,7 +355,7 @@ namespace GUI
                 {
                     _bll.AlternarEstado(user.Username);
 
-                    string exito = string.Format(TraductorManager_08YS.Instance.GetTexto("msg_actualizado_exito"), user.Username);
+                    string exito = string.Format(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_actualizado_exito"), user.Username);
                     MessageBox.Show(exito);
 
                     CargarGrilla();
@@ -363,13 +363,13 @@ namespace GUI
                 }
                 catch (UserAutoEstadoException_08YS)
                 {
-                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_error_auto_estado"),
-                                    TraductorManager_08YS.Instance.GetTexto("operacion_invalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_user_auto_estado"),
+                                    TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_operacion_invalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado")}{ex.Message}",
-                                    TraductorManager_08YS.Instance.GetTexto("error_critico"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("Comun_msg_error_inesperado")}{ex.Message}",
+                                    TraductorManager_08YS.Instance.GetTexto("Comun_error_critico"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -377,16 +377,16 @@ namespace GUI
         {
             var validaciones = new (bool condicion, string mensaje)[]
             {
-                (!ValidarCampos(), TraductorManager_08YS.Instance.GetTexto("msg_completar_campos")),
-                (!ValidarCorreo(txtEmail.Text), TraductorManager_08YS.Instance.GetTexto("msg_email_invalido")),
-                (!ValidarDNI(txtDNI.Text), TraductorManager_08YS.Instance.GetTexto("msg_dni_invalido"))
+                (!ValidarCampos(), TraductorManager_08YS.Instance.GetTexto("Comun_msg_completar_campos")),
+                (!ValidarCorreo(txtEmail.Text), TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_email_invalido")),
+                (!ValidarDNI(txtDNI.Text), TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_dni_invalido"))
             };
 
             var fallo = validaciones.FirstOrDefault(v => v.condicion);
 
             if (fallo.mensaje != null)
             {
-                MessageBox.Show(fallo.mensaje, TraductorManager_08YS.Instance.GetTexto("error_validacion"));
+                MessageBox.Show(fallo.mensaje, TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion"));
                 return;
             }
 
@@ -397,22 +397,22 @@ namespace GUI
 
                 CargarGrilla();
                 CambiarEstado(EstadoUI.Consulta);
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_operacion_exito"));
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_operacion_exito"));
             }
             catch (UserDniDuplicadoException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_dni_duplicado"),
-                                TraductorManager_08YS.Instance.GetTexto("error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_user_dni_duplicado"),
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (UserAutoModificacionException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_auto_modificacion"),
-                                TraductorManager_08YS.Instance.GetTexto("operacion_invalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_msg_user_auto_modificacion"),
+                                TraductorManager_08YS.Instance.GetTexto("GestionUsuarios_operacion_invalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado")}{ex.Message}",
-                                TraductorManager_08YS.Instance.GetTexto("error_critico"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("Comun_msg_error_inesperado")}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error_critico"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void btnCancelar_Click(object sender, EventArgs e)

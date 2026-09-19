@@ -1,6 +1,6 @@
 ﻿using BE_08YS;
 using DAL_08YS.Interfaces_Repositories.Negocio;
-using DAL_08YS.Repositories_Interfaces;
+using DAL_08YS.Interfaces_Repositories;
 using MPP_08YS;
 using System;
 using System.Collections.Generic;

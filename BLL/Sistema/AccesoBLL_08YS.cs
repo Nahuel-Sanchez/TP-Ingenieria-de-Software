@@ -51,7 +51,7 @@ namespace BLL_08YS
                 var nombres = _permisoRepo.GetAll()
                     .Where(p => permsEnConflicto.Contains(p.PermisoID))
                     .Select(p => p.Nombre);
-                string plantillaConflicto = TraductorManager_08YS.Instance.GetTexto("bll_composite_conflicto");
+                string plantillaConflicto = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_composite_conflicto");
                 return new ResultadoEvaluacion_08YS
                 {
                     Resultado = ResultadoEvaluacion_08YS.Tipo.ConflictoIrresoluble,
@@ -62,7 +62,7 @@ namespace BLL_08YS
             if (contemplados.Any())
             {
                 var nombresReemplazar = contemplados.Select(i => $"'{i.Nombre}'");
-                string plantillaSugerencia = TraductorManager_08YS.Instance.GetTexto("bll_composite_sugerencia");
+                string plantillaSugerencia = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_composite_sugerencia");
                 return new ResultadoEvaluacion_08YS
                 {
                     Resultado = ResultadoEvaluacion_08YS.Tipo.SugerenciaReemplazo,
@@ -77,10 +77,10 @@ namespace BLL_08YS
         protected void ValidarDatosEntrada(string nombre, HashSet<AccessComponent_08YS> componentes)
         {
             if (string.IsNullOrWhiteSpace(nombre))
-                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("bll_val_nombre_vacio"));
+                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_val_nombre_vacio"));
 
             if (componentes == null || !componentes.Any())
-                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("bll_val_sin_componentes"));
+                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_val_sin_componentes"));
         }
     }
 }

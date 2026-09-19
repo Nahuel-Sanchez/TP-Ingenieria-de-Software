@@ -1,5 +1,6 @@
 ﻿using BE_08YS;
 using FontAwesome.Sharp;
+using Service_08YS;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -13,6 +14,7 @@ namespace GUI_08YS.Recepcionista
         public FormAccionesHabitacion_68SA(Habitacion_68SA habitacion, List<(string Texto, IconChar Icono, AccionHabitacion Accion)> acciones)
         {
             InitializeComponent();
+            TraducirControles(this);
 
             lblNumero.Text = habitacion.NroHabitacion;
             lblTipo.Text = habitacion.Tipo.Nombre;
@@ -56,6 +58,18 @@ namespace GUI_08YS.Recepcionista
             int alturaAcciones = acciones.Count * 66;
             flpAcciones.Height = alturaAcciones;
             ClientSize = new Size(ClientSize.Width, flpAcciones.Top + alturaAcciones + 24);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
         }
 
         protected override CreateParams CreateParams

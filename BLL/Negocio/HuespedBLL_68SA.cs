@@ -1,5 +1,6 @@
 ﻿using BE_08YS;
 using DAL_08YS.Interfaces_Repositories.Negocio;
+using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,12 @@ namespace BLL_08YS.Negocio
     public class HuespedBLL_68SA
     {
         private readonly IHuespedRepository_68SA _huespedRepo;
+        private readonly BitacoraBLL_08YS _bitacoraBll;
 
-        public HuespedBLL_68SA(IHuespedRepository_68SA huespedRepo)
+        public HuespedBLL_68SA(IHuespedRepository_68SA huespedRepo, BitacoraBLL_08YS bitacoraBll)
         {
             _huespedRepo = huespedRepo;
+            _bitacoraBll = bitacoraBll;
         }
 
         public Huesped_68SA GetByDocumento(string documento)
@@ -27,7 +30,6 @@ namespace BLL_08YS.Negocio
             return _huespedRepo.GetPorClaveCompleta(documento, tipoDocumento, nacionalidad) != null;
         }
 
-        // PN1 paso 7: si el huésped ya existe lo reutiliza, si no lo da de alta
         public Huesped_68SA ObtenerOCrear(Huesped_68SA huesped)
         {
             var existente = _huespedRepo.GetPorClaveCompleta(huesped.Documento, huesped.TipoDocumento, huesped.Nacionalidad);
@@ -35,6 +37,8 @@ namespace BLL_08YS.Negocio
                 return existente;
 
             huesped.Id = _huespedRepo.Create(huesped);
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.HuespedRegistrado, targetUsername: huesped.Documento);
             return huesped;
         }
 
@@ -43,7 +47,6 @@ namespace BLL_08YS.Negocio
             return huesped.Edad >= 18;
         }
 
-        // Disponible para cuando se clasifiquen acompañantes al check-in (PN1: "niños de 2 a 11 años")
         public static bool EsNino(Huesped_68SA huesped)
         {
             return huesped.Edad >= 2 && huesped.Edad <= 11;

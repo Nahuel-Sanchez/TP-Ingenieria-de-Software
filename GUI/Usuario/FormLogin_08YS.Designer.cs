@@ -150,6 +150,7 @@
             this.Titulo.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.Titulo.Location = new System.Drawing.Point(88, 14);
             this.Titulo.Name = "Titulo";
+            this.Titulo.Tag = "Login_Titulo";
             this.Titulo.Size = new System.Drawing.Size(173, 15);
             this.Titulo.TabIndex = 0;
             this.Titulo.Text = "Login - Horizon Hotel && Resort";
@@ -177,7 +178,7 @@
             this.lblDescripcionLogin.Name = "lblDescripcionLogin";
             this.lblDescripcionLogin.Size = new System.Drawing.Size(186, 20);
             this.lblDescripcionLogin.TabIndex = 4;
-            this.lblDescripcionLogin.Tag = "lblDescripcionLogin";
+            this.lblDescripcionLogin.Tag = "Login_lblDescripcionLogin";
             this.lblDescripcionLogin.Text = "Excelencia en cada estadía";
             // 
             // iconPictureBox2
@@ -273,7 +274,7 @@
             this.btn_Acceder.Padding = new System.Windows.Forms.Padding(55, 0, 20, 0);
             this.btn_Acceder.Size = new System.Drawing.Size(320, 55);
             this.btn_Acceder.TabIndex = 3;
-            this.btn_Acceder.Tag = "btn_Acceder";
+            this.btn_Acceder.Tag = "Login_btn_Acceder";
             this.btn_Acceder.Text = "Acceder";
             this.btn_Acceder.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btn_Acceder.UseVisualStyleBackColor = false;
@@ -288,6 +289,7 @@
             this.lblLogin.Location = new System.Drawing.Point(192, 30);
             this.lblLogin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLogin.Name = "lblLogin";
+            this.lblLogin.Tag = "Login_lblLogin";
             this.lblLogin.Size = new System.Drawing.Size(142, 55);
             this.lblLogin.TabIndex = 7;
             this.lblLogin.Text = "Login";
@@ -343,7 +345,7 @@
             this.txtPassword.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtPassword.Size = new System.Drawing.Size(320, 41);
             this.txtPassword.TabIndex = 2;
-            this.txtPassword.Tag = "txtPassword";
+            this.txtPassword.Tag = "Login_txtPassword";
             this.txtPassword.IconRightClick += new System.EventHandler(this.txtPassword_IconRightClick);
             // 
             // txtUsername
@@ -366,7 +368,7 @@
             this.txtUsername.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtUsername.Size = new System.Drawing.Size(320, 41);
             this.txtUsername.TabIndex = 1;
-            this.txtUsername.Tag = "txtUsername";
+            this.txtUsername.Tag = "Login_txtUsername";
             // 
             // FormLogin_08YS
             // 

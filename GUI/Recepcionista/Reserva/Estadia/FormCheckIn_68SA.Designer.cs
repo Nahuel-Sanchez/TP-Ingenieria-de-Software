@@ -72,6 +72,7 @@
             this.lblEncabezado.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblEncabezado.Location = new System.Drawing.Point(72, 24);
             this.lblEncabezado.Name = "lblEncabezado";
+            this.lblEncabezado.Tag = "CheckIn_lblEncabezado";
             this.lblEncabezado.Size = new System.Drawing.Size(200, 30);
             this.lblEncabezado.TabIndex = 1;
             this.lblEncabezado.Text = "Registrar Check-in";
@@ -122,6 +123,7 @@
             this.btnBuscarReserva.IconSize = 26;
             this.btnBuscarReserva.Location = new System.Drawing.Point(220, 38);
             this.btnBuscarReserva.Name = "btnBuscarReserva";
+            this.btnBuscarReserva.Tag = "CheckIn_btnBuscarReserva";
             this.btnBuscarReserva.Size = new System.Drawing.Size(260, 46);
             this.btnBuscarReserva.TabIndex = 0;
             this.btnBuscarReserva.Text = "Buscar Reserva por DNI";
@@ -158,6 +160,7 @@
             this.lblSeccionReserva.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblSeccionReserva.Location = new System.Drawing.Point(16, 12);
             this.lblSeccionReserva.Name = "lblSeccionReserva";
+            this.lblSeccionReserva.Tag = "CheckIn_lblSeccionReserva";
             this.lblSeccionReserva.Size = new System.Drawing.Size(260, 19);
             this.lblSeccionReserva.TabIndex = 0;
             this.lblSeccionReserva.Text = "DATOS DE LA RESERVA";
@@ -176,6 +179,7 @@
             this.lblResEtiquetaHabitacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaHabitacion.Location = new System.Drawing.Point(16, 50);
             this.lblResEtiquetaHabitacion.Name = "lblResEtiquetaHabitacion";
+            this.lblResEtiquetaHabitacion.Tag = "CheckIn_lblResEtiquetaHabitacion";
             this.lblResEtiquetaHabitacion.Size = new System.Drawing.Size(70, 15);
             this.lblResEtiquetaHabitacion.TabIndex = 2;
             this.lblResEtiquetaHabitacion.Text = "Habitación:";
@@ -197,6 +201,7 @@
             this.lblResEtiquetaTipo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaTipo.Location = new System.Drawing.Point(350, 50);
             this.lblResEtiquetaTipo.Name = "lblResEtiquetaTipo";
+            this.lblResEtiquetaTipo.Tag = "CheckIn_lblResEtiquetaTipo";
             this.lblResEtiquetaTipo.Size = new System.Drawing.Size(34, 15);
             this.lblResEtiquetaTipo.TabIndex = 4;
             this.lblResEtiquetaTipo.Text = "Tipo:";
@@ -217,6 +222,7 @@
             this.lblResEtiquetaTitular.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaTitular.Location = new System.Drawing.Point(16, 78);
             this.lblResEtiquetaTitular.Name = "lblResEtiquetaTitular";
+            this.lblResEtiquetaTitular.Tag = "CheckIn_lblResEtiquetaTitular";
             this.lblResEtiquetaTitular.Size = new System.Drawing.Size(50, 15);
             this.lblResEtiquetaTitular.TabIndex = 6;
             this.lblResEtiquetaTitular.Text = "Titular:";
@@ -237,6 +243,7 @@
             this.lblResEtiquetaFechas.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaFechas.Location = new System.Drawing.Point(16, 106);
             this.lblResEtiquetaFechas.Name = "lblResEtiquetaFechas";
+            this.lblResEtiquetaFechas.Tag = "CheckIn_lblResEtiquetaFechas";
             this.lblResEtiquetaFechas.Size = new System.Drawing.Size(50, 15);
             this.lblResEtiquetaFechas.TabIndex = 8;
             this.lblResEtiquetaFechas.Text = "Fechas:";
@@ -257,6 +264,7 @@
             this.lblResEtiquetaComposicion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaComposicion.Location = new System.Drawing.Point(16, 134);
             this.lblResEtiquetaComposicion.Name = "lblResEtiquetaComposicion";
+            this.lblResEtiquetaComposicion.Tag = "CheckIn_lblResEtiquetaComposicion";
             this.lblResEtiquetaComposicion.Size = new System.Drawing.Size(90, 15);
             this.lblResEtiquetaComposicion.TabIndex = 10;
             this.lblResEtiquetaComposicion.Text = "Composición:";
@@ -291,6 +299,7 @@
             this.lblSeccionAcompanantes.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblSeccionAcompanantes.Location = new System.Drawing.Point(16, 12);
             this.lblSeccionAcompanantes.Name = "lblSeccionAcompanantes";
+            this.lblSeccionAcompanantes.Tag = "CheckIn_lblSeccionAcompanantes";
             this.lblSeccionAcompanantes.Size = new System.Drawing.Size(220, 19);
             this.lblSeccionAcompanantes.TabIndex = 0;
             this.lblSeccionAcompanantes.Text = "ACOMPAÑANTES";
@@ -338,6 +347,7 @@
             this.btnConfirmar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnConfirmar.Location = new System.Drawing.Point(560, 0);
             this.btnConfirmar.Name = "btnConfirmar";
+            this.btnConfirmar.Tag = "CheckIn_btnConfirmar";
             this.btnConfirmar.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
             this.btnConfirmar.Size = new System.Drawing.Size(200, 64);
             this.btnConfirmar.TabIndex = 1;
@@ -359,6 +369,7 @@
             this.btnCancelar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCancelar.Location = new System.Drawing.Point(420, 0);
             this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Tag = "CheckIn_btnCancelar";
             this.btnCancelar.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
             this.btnCancelar.Size = new System.Drawing.Size(140, 64);
             this.btnCancelar.TabIndex = 0;

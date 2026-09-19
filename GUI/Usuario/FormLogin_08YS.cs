@@ -56,8 +56,8 @@ namespace GUI_08YS
 
         public void UpdateIdioma()
         {
-            _userPlaceholder = TraductorManager_08YS.Instance.GetTexto("txtUsername_hint");
-            _passPlaceholder = TraductorManager_08YS.Instance.GetTexto("txtPassword_hint");
+            _userPlaceholder = TraductorManager_08YS.Instance.GetTexto("Login_txtUsername_hint");
+            _passPlaceholder = TraductorManager_08YS.Instance.GetTexto("Login_txtPassword_hint");
 
             // Traducimos el resto de la interfaz (Labels, botones, etc.)
             TraducirControles(this);
@@ -91,8 +91,8 @@ namespace GUI_08YS
             IdiomaCombobox.Items.Clear();
 
             // Insertamos las traducciones dinámicas directo desde el archivo de traducción activo
-            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("idioma_es")); // "Español" o "Spanish"
-            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("idioma_en")); // "Inglés" o "English"
+            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("Comun_idioma_es")); // "Español" o "Spanish"
+            IdiomaCombobox.Items.Add(TraductorManager_08YS.Instance.GetTexto("Comun_idioma_en")); // "Inglés" o "English"
 
             // Restauramos la selección previa de manera segura
             if (indexTemporal >= 0)
@@ -138,8 +138,8 @@ namespace GUI_08YS
             string passwordInput = _passTienePlaceholder ? "" : txtPassword.Text.Trim();
             if (string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_completar_campos"),
-                                TraductorManager_08YS.Instance.GetTexto("error_validacion"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_msg_completar_campos"),
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -158,8 +158,8 @@ namespace GUI_08YS
                         var formDV = new FormInconsistenciaDB_08YS();
                         formDV.ShowDialog(this);
                     }
-                    else MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_dv_inconsistente"),
-                                         TraductorManager_08YS.Instance.GetTexto("error_critico"),
+                    else MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Login_msg_dv_inconsistente"),
+                                         TraductorManager_08YS.Instance.GetTexto("Comun_error_critico"),
                                          MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     return;
@@ -170,8 +170,8 @@ namespace GUI_08YS
                 if (passwordDefault)
                 {
                     MessageBox.Show(
-                        TraductorManager_08YS.Instance.GetTexto("msg_pwd_cambio_req"),
-                        TraductorManager_08YS.Instance.GetTexto("pwd_cambio_req"),
+                        TraductorManager_08YS.Instance.GetTexto("Login_msg_pwd_cambio_req"),
+                        TraductorManager_08YS.Instance.GetTexto("Login_pwd_cambio_req"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
 
@@ -183,8 +183,8 @@ namespace GUI_08YS
                         SessionManager_08YS.Instance.CerrarSesion();
                         ResetearCamposAForcePlaceholder();
                         MessageBox.Show(
-                            TraductorManager_08YS.Instance.GetTexto("msg_sesion_reiniciada"),
-                            TraductorManager_08YS.Instance.GetTexto("sesion_reiniciada"),
+                            TraductorManager_08YS.Instance.GetTexto("Login_msg_sesion_reiniciada"),
+                            TraductorManager_08YS.Instance.GetTexto("Login_sesion_reiniciada"),
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
 
@@ -211,8 +211,8 @@ namespace GUI_08YS
                     }
                     catch (LogoutPersistenceException_08YS)
                     {
-                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_logout_fallido"),
-                                        TraductorManager_08YS.Instance.GetTexto("error_critico"),
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Login_msg_logout_fallido"),
+                                        TraductorManager_08YS.Instance.GetTexto("Comun_error_critico"),
                                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     this.Show();
@@ -223,39 +223,39 @@ namespace GUI_08YS
             }
             catch (InvalidOperationException)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_ya_hay_login"),
-                                TraductorManager_08YS.Instance.GetTexto("error_sesion"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Login_msg_ya_hay_login"),
+                                TraductorManager_08YS.Instance.GetTexto("Login_error_sesion"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (AuthenticationException)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_error_credenciales"),
-                                TraductorManager_08YS.Instance.GetTexto("error_autenticacion"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Login_msg_error_credenciales"),
+                                TraductorManager_08YS.Instance.GetTexto("Login_error_autenticacion"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
             catch (UserBloqueadoException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_bloqueado"),
-                                TraductorManager_08YS.Instance.GetTexto("acceso_denegado"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Login_msg_user_bloqueado"),
+                                TraductorManager_08YS.Instance.GetTexto("Login_acceso_denegado"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
             catch (UserNoRegistradoException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_no_registrado"),
-                                TraductorManager_08YS.Instance.GetTexto("usuario_invalido"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Login_msg_user_no_registrado"),
+                                TraductorManager_08YS.Instance.GetTexto("Login_usuario_invalido"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             catch (UserDesactivadoException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_user_desactivado"),
-                                TraductorManager_08YS.Instance.GetTexto("usuario_suspendido"),
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Login_msg_user_desactivado"),
+                                TraductorManager_08YS.Instance.GetTexto("Login_usuario_suspendido"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                string msgBase = TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado");
+                string msgBase = TraductorManager_08YS.Instance.GetTexto("Comun_msg_error_inesperado");
                 MessageBox.Show($"{msgBase}{ex.Message}",
-                                TraductorManager_08YS.Instance.GetTexto("error_critico"),
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error_critico"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

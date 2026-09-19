@@ -153,6 +153,7 @@
             this.lblEtiqueta.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblEtiqueta.Location = new System.Drawing.Point(12, 10);
             this.lblEtiqueta.Name = "lblEtiqueta";
+            this.lblEtiqueta.Tag = "HabitacionCard_lblEtiqueta";
             this.lblEtiqueta.Size = new System.Drawing.Size(78, 18);
             this.lblEtiqueta.TabIndex = 0;
             this.lblEtiqueta.Text = "Habitación";

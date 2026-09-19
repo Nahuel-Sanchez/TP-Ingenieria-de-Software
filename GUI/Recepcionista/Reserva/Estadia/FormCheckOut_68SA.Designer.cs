@@ -82,6 +82,7 @@
             this.lblEncabezado.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblEncabezado.Location = new System.Drawing.Point(72, 24);
             this.lblEncabezado.Name = "lblEncabezado";
+            this.lblEncabezado.Tag = "CheckOut_lblEncabezado";
             this.lblEncabezado.Size = new System.Drawing.Size(200, 30);
             this.lblEncabezado.TabIndex = 1;
             this.lblEncabezado.Text = "Registrar Check-out";
@@ -132,6 +133,7 @@
             this.btnBuscarReserva.IconSize = 26;
             this.btnBuscarReserva.Location = new System.Drawing.Point(220, 38);
             this.btnBuscarReserva.Name = "btnBuscarReserva";
+            this.btnBuscarReserva.Tag = "CheckOut_btnBuscarReserva";
             this.btnBuscarReserva.Size = new System.Drawing.Size(260, 46);
             this.btnBuscarReserva.TabIndex = 0;
             this.btnBuscarReserva.Text = "Buscar Reserva por DNI";
@@ -168,6 +170,7 @@
             this.lblSeccionReserva.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblSeccionReserva.Location = new System.Drawing.Point(16, 12);
             this.lblSeccionReserva.Name = "lblSeccionReserva";
+            this.lblSeccionReserva.Tag = "CheckOut_lblSeccionReserva";
             this.lblSeccionReserva.Size = new System.Drawing.Size(260, 19);
             this.lblSeccionReserva.TabIndex = 0;
             this.lblSeccionReserva.Text = "DATOS DE LA RESERVA";
@@ -186,6 +189,7 @@
             this.lblResEtiquetaHabitacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaHabitacion.Location = new System.Drawing.Point(16, 50);
             this.lblResEtiquetaHabitacion.Name = "lblResEtiquetaHabitacion";
+            this.lblResEtiquetaHabitacion.Tag = "CheckOut_lblResEtiquetaHabitacion";
             this.lblResEtiquetaHabitacion.Size = new System.Drawing.Size(70, 15);
             this.lblResEtiquetaHabitacion.TabIndex = 2;
             this.lblResEtiquetaHabitacion.Text = "Habitación:";
@@ -207,6 +211,7 @@
             this.lblResEtiquetaTipo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaTipo.Location = new System.Drawing.Point(350, 50);
             this.lblResEtiquetaTipo.Name = "lblResEtiquetaTipo";
+            this.lblResEtiquetaTipo.Tag = "CheckOut_lblResEtiquetaTipo";
             this.lblResEtiquetaTipo.Size = new System.Drawing.Size(34, 15);
             this.lblResEtiquetaTipo.TabIndex = 4;
             this.lblResEtiquetaTipo.Text = "Tipo:";
@@ -227,6 +232,7 @@
             this.lblResEtiquetaTitular.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaTitular.Location = new System.Drawing.Point(16, 78);
             this.lblResEtiquetaTitular.Name = "lblResEtiquetaTitular";
+            this.lblResEtiquetaTitular.Tag = "CheckOut_lblResEtiquetaTitular";
             this.lblResEtiquetaTitular.Size = new System.Drawing.Size(50, 15);
             this.lblResEtiquetaTitular.TabIndex = 6;
             this.lblResEtiquetaTitular.Text = "Titular:";
@@ -247,6 +253,7 @@
             this.lblResEtiquetaFechas.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaFechas.Location = new System.Drawing.Point(16, 106);
             this.lblResEtiquetaFechas.Name = "lblResEtiquetaFechas";
+            this.lblResEtiquetaFechas.Tag = "CheckOut_lblResEtiquetaFechas";
             this.lblResEtiquetaFechas.Size = new System.Drawing.Size(50, 15);
             this.lblResEtiquetaFechas.TabIndex = 8;
             this.lblResEtiquetaFechas.Text = "Fechas:";
@@ -267,6 +274,7 @@
             this.lblResEtiquetaComposicion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblResEtiquetaComposicion.Location = new System.Drawing.Point(16, 134);
             this.lblResEtiquetaComposicion.Name = "lblResEtiquetaComposicion";
+            this.lblResEtiquetaComposicion.Tag = "CheckOut_lblResEtiquetaComposicion";
             this.lblResEtiquetaComposicion.Size = new System.Drawing.Size(90, 15);
             this.lblResEtiquetaComposicion.TabIndex = 10;
             this.lblResEtiquetaComposicion.Text = "Composición:";
@@ -313,6 +321,7 @@
             this.lblSeccionCuenta.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblSeccionCuenta.Location = new System.Drawing.Point(16, 12);
             this.lblSeccionCuenta.Name = "lblSeccionCuenta";
+            this.lblSeccionCuenta.Tag = "CheckOut_lblSeccionCuenta";
             this.lblSeccionCuenta.Size = new System.Drawing.Size(100, 19);
             this.lblSeccionCuenta.TabIndex = 0;
             this.lblSeccionCuenta.Text = "CUENTA";
@@ -331,6 +340,7 @@
             this.lblEtiquetaMontoTotal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaMontoTotal.Location = new System.Drawing.Point(16, 50);
             this.lblEtiquetaMontoTotal.Name = "lblEtiquetaMontoTotal";
+            this.lblEtiquetaMontoTotal.Tag = "CheckOut_lblEtiquetaMontoTotal";
             this.lblEtiquetaMontoTotal.Size = new System.Drawing.Size(80, 15);
             this.lblEtiquetaMontoTotal.TabIndex = 2;
             this.lblEtiquetaMontoTotal.Text = "Monto Total:";
@@ -351,6 +361,7 @@
             this.lblEtiquetaTotalPagado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaTotalPagado.Location = new System.Drawing.Point(16, 78);
             this.lblEtiquetaTotalPagado.Name = "lblEtiquetaTotalPagado";
+            this.lblEtiquetaTotalPagado.Tag = "CheckOut_lblEtiquetaTotalPagado";
             this.lblEtiquetaTotalPagado.Size = new System.Drawing.Size(90, 15);
             this.lblEtiquetaTotalPagado.TabIndex = 4;
             this.lblEtiquetaTotalPagado.Text = "Total Pagado:";
@@ -380,6 +391,7 @@
             this.lblEtiquetaSaldo.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblEtiquetaSaldo.Location = new System.Drawing.Point(16, 118);
             this.lblEtiquetaSaldo.Name = "lblEtiquetaSaldo";
+            this.lblEtiquetaSaldo.Tag = "CheckOut_lblEtiquetaSaldo";
             this.lblEtiquetaSaldo.Size = new System.Drawing.Size(120, 22);
             this.lblEtiquetaSaldo.TabIndex = 7;
             this.lblEtiquetaSaldo.Text = "Saldo Pendiente:";
@@ -401,6 +413,7 @@
             this.lblEtiquetaMetodoPagoFinal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaMetodoPagoFinal.Location = new System.Drawing.Point(16, 156);
             this.lblEtiquetaMetodoPagoFinal.Name = "lblEtiquetaMetodoPagoFinal";
+            this.lblEtiquetaMetodoPagoFinal.Tag = "CheckOut_lblEtiquetaMetodoPagoFinal";
             this.lblEtiquetaMetodoPagoFinal.Size = new System.Drawing.Size(90, 15);
             this.lblEtiquetaMetodoPagoFinal.TabIndex = 9;
             this.lblEtiquetaMetodoPagoFinal.Text = "Método de Pago";
@@ -433,6 +446,7 @@
             this.lblEtiquetaMontoRecibidoFinal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaMontoRecibidoFinal.Location = new System.Drawing.Point(16, 224);
             this.lblEtiquetaMontoRecibidoFinal.Name = "lblEtiquetaMontoRecibidoFinal";
+            this.lblEtiquetaMontoRecibidoFinal.Tag = "CheckOut_lblEtiquetaMontoRecibidoFinal";
             this.lblEtiquetaMontoRecibidoFinal.Size = new System.Drawing.Size(105, 15);
             this.lblEtiquetaMontoRecibidoFinal.TabIndex = 11;
             this.lblEtiquetaMontoRecibidoFinal.Text = "Monto Recibido";
@@ -462,6 +476,7 @@
             this.lblEtiquetaVueltoFinal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(210)))));
             this.lblEtiquetaVueltoFinal.Location = new System.Drawing.Point(16, 292);
             this.lblEtiquetaVueltoFinal.Name = "lblEtiquetaVueltoFinal";
+            this.lblEtiquetaVueltoFinal.Tag = "CheckOut_lblEtiquetaVueltoFinal";
             this.lblEtiquetaVueltoFinal.Size = new System.Drawing.Size(50, 15);
             this.lblEtiquetaVueltoFinal.TabIndex = 13;
             this.lblEtiquetaVueltoFinal.Text = "Vuelto:";
@@ -501,6 +516,7 @@
             this.btnConfirmar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnConfirmar.Location = new System.Drawing.Point(560, 0);
             this.btnConfirmar.Name = "btnConfirmar";
+            this.btnConfirmar.Tag = "CheckOut_btnConfirmar";
             this.btnConfirmar.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
             this.btnConfirmar.Size = new System.Drawing.Size(200, 64);
             this.btnConfirmar.TabIndex = 1;
@@ -522,6 +538,7 @@
             this.btnCancelar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCancelar.Location = new System.Drawing.Point(420, 0);
             this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Tag = "CheckOut_btnCancelar";
             this.btnCancelar.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
             this.btnCancelar.Size = new System.Drawing.Size(140, 64);
             this.btnCancelar.TabIndex = 0;

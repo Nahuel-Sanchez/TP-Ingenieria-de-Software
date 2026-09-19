@@ -52,7 +52,7 @@ namespace GUI_08YS.Recepcionista
             cmbMetodoPago.SelectedIndexChanged += (s, e) => ActualizarVisibilidadVuelto();
             ActualizarVisibilidadVuelto();
 
-            toolTip1.SetToolTip(btnHuespedNuevo, "Registrar huésped nuevo");
+            toolTip1.SetToolTip(btnHuespedNuevo, TraductorManager_08YS.Instance.GetTexto("Comun_tooltipRegistrarHuespedNuevo"));
 
             dtpFechaIngreso.MinDate = DateTime.Today;
             dtpFechaIngreso.Value = fechaIngreso ?? DateTime.Today;
@@ -87,7 +87,7 @@ namespace GUI_08YS.Recepcionista
             int noches = (egreso - ingreso).Days;
             _montoTotal = _habitacion.Tipo.TarifaNoche * noches;
 
-            lblResNoches.Text = $"{noches} {(noches == 1 ? "noche" : "noches")}";
+            lblResNoches.Text = $"{noches} {(noches == 1 ? TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_txtNoche") : TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_txtNoches"))}";
             lblResMontoTotal.Text = $"${_montoTotal:N2}";
 
             nudMontoRecibido.Value = _montoTotal;
@@ -108,7 +108,7 @@ namespace GUI_08YS.Recepcionista
 
             lblComposicionAdvertencia.Visible = total > capacidad;
             if (total > capacidad)
-                lblComposicionAdvertencia.Text = $"La suma de adultos y niños supera la capacidad máxima ({capacidad}).";
+                lblComposicionAdvertencia.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgCapacidadSuperada"), capacidad);
         }
 
         private void BtnConsultarDocumento_Click(object sender, EventArgs e)
@@ -116,7 +116,7 @@ namespace GUI_08YS.Recepcionista
             string dni = txtDni.RealText.Trim();
             if (string.IsNullOrEmpty(dni))
             {
-                MessageBox.Show("Ingresá un DNI para buscar.", "Datos incompletos",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgIngreseDni"), TraductorManager_08YS.Instance.GetTexto("Comun_msgDatosIncompletos"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -124,8 +124,8 @@ namespace GUI_08YS.Recepcionista
             var huesped = _huespedBLL.GetByDocumento(dni);
             if (huesped == null)
             {
-                MessageBox.Show("No se encontró un huésped con ese documento. Usá el botón de al lado para registrarlo.",
-                    "Huésped no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_msgHuespedNoEncontrado"),
+                    TraductorManager_08YS.Instance.GetTexto("Comun_tituloHuespedNoEncontrado"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -165,22 +165,22 @@ namespace GUI_08YS.Recepcionista
         {
             if (_huespedSeleccionado == null)
             {
-                MessageBox.Show("Consultá el documento del titular antes de confirmar.", "Falta el titular",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgFaltaTitular"), TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloFaltaTitular"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if ((int)nudAdultos.Value + (int)nudNinos.Value > _habitacion.Tipo.Capacidad)
             {
-                MessageBox.Show($"La composición supera la capacidad de la habitación (máx. {_habitacion.Tipo.Capacidad}).",
-                    "Capacidad excedida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgCapacidadExcedida"), _habitacion.Tipo.Capacidad),
+                    TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloCapacidadExcedida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (nudMontoRecibido.Value < _montoTotal)
             {
-                MessageBox.Show($"El monto recibido (${nudMontoRecibido.Value:N2}) es menor al total (${_montoTotal:N2}).",
-                    "Pago insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_msgPagoInsuficiente"), nudMontoRecibido.Value, _montoTotal),
+                    TraductorManager_08YS.Instance.GetTexto("Comun_tituloPagoInsuficiente"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -206,23 +206,23 @@ namespace GUI_08YS.Recepcionista
                     MetodoPago = (MetodoPago)cmbMetodoPago.SelectedItem
                 });
 
-                MessageBox.Show($"Reserva #{reservaId} confirmada para la habitación {_habitacion.NroHabitacion}.",
-                    "Reserva confirmada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgReservaConfirmada"), reservaId, _habitacion.NroHabitacion),
+                    TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloReservaConfirmada"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Volver();
             }
-            catch (TitularMenorDeEdadException_68SA ex)
+            catch (TitularMenorDeEdadException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excTitularMenorDeEdad"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (HabitacionNoDisponibleException_68SA ex)
+            catch (HabitacionNoDisponibleException_68SA)
             {
-                MessageBox.Show(ex.Message + " Volvé a la lista para elegir otra.", "No se pudo confirmar",
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excHabitacionNoDisponible"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Volver();
             }
-            catch (RangoFechasInvalidoException_68SA ex)
+            catch (RangoFechasInvalidoException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo confirmar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excRangoFechasInvalido"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -233,7 +233,19 @@ namespace GUI_08YS.Recepcionista
 
         public void UpdateIdioma()
         {
-            // Pendiente junto con el resto de las traducciones de estos forms.
+            TraducirControles(this);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
         }
 
         private void pnlColReserva_Paint(object sender, PaintEventArgs e)

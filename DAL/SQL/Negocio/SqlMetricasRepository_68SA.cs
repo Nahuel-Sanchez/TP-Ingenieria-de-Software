@@ -1,7 +1,7 @@
 ﻿using BE_08YS;
 using BE_08YS.Metricas;
 using DAL_08YS.Interfaces_Repositories.Negocio;
-using DAL_08YS.Repositories_Interfaces;
+using DAL_08YS.Interfaces_Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data;

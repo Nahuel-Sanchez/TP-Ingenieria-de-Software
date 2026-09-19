@@ -67,7 +67,7 @@
             this.lblCriticidad.Name = "lblCriticidad";
             this.lblCriticidad.Size = new System.Drawing.Size(142, 32);
             this.lblCriticidad.TabIndex = 43;
-            this.lblCriticidad.Tag = "lblCriticidad";
+            this.lblCriticidad.Tag = "Bitacora_lblCriticidad";
             this.lblCriticidad.Text = "Criticidad:";
             // 
             // lblFechaFin
@@ -80,7 +80,7 @@
             this.lblFechaFin.Name = "lblFechaFin";
             this.lblFechaFin.Size = new System.Drawing.Size(151, 30);
             this.lblFechaFin.TabIndex = 42;
-            this.lblFechaFin.Tag = "lblHasta";
+            this.lblFechaFin.Tag = "Bitacora_lblHasta";
             this.lblFechaFin.Text = "Hasta:";
             // 
             // lblEvento
@@ -94,7 +94,7 @@
             this.lblEvento.Name = "lblEvento";
             this.lblEvento.Size = new System.Drawing.Size(111, 32);
             this.lblEvento.TabIndex = 41;
-            this.lblEvento.Tag = "lblEvento";
+            this.lblEvento.Tag = "Bitacora_lblEvento";
             this.lblEvento.Text = "Evento:";
             // 
             // lblModulo
@@ -108,7 +108,7 @@
             this.lblModulo.Name = "lblModulo";
             this.lblModulo.Size = new System.Drawing.Size(116, 32);
             this.lblModulo.TabIndex = 40;
-            this.lblModulo.Tag = "lblModulo";
+            this.lblModulo.Tag = "Bitacora_lblModulo";
             this.lblModulo.Text = "Modulo:";
             // 
             // lblFechaIni
@@ -121,7 +121,7 @@
             this.lblFechaIni.Name = "lblFechaIni";
             this.lblFechaIni.Size = new System.Drawing.Size(224, 30);
             this.lblFechaIni.TabIndex = 39;
-            this.lblFechaIni.Tag = "lblDesde";
+            this.lblFechaIni.Tag = "Bitacora_lblDesde";
             this.lblFechaIni.Text = "Desde:";
             // 
             // lblLogin
@@ -164,7 +164,7 @@
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(672, 79);
             this.lblTitulo.TabIndex = 54;
-            this.lblTitulo.Tag = "lblAuditoriaEventos";
+            this.lblTitulo.Tag = "Bitacora_lblAuditoriaEventos";
             this.lblTitulo.Text = "Auditoria de eventos";
             // 
             // dgvEventos
@@ -229,7 +229,7 @@
             this.btnLimpiar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnLimpiar.Size = new System.Drawing.Size(280, 65);
             this.btnLimpiar.TabIndex = 57;
-            this.btnLimpiar.Tag = "btnLimpiar";
+            this.btnLimpiar.Tag = "Bitacora_btnLimpiar";
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLimpiar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -253,7 +253,7 @@
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnFiltrar.Size = new System.Drawing.Size(280, 65);
             this.btnFiltrar.TabIndex = 58;
-            this.btnFiltrar.Tag = "btnContinuar";
+            this.btnFiltrar.Tag = "Bitacora_btnFiltrar";
             this.btnFiltrar.Text = "Filtrar";
             this.btnFiltrar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltrar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -277,7 +277,7 @@
             this.btnExportar.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnExportar.Size = new System.Drawing.Size(280, 65);
             this.btnExportar.TabIndex = 59;
-            this.btnExportar.Tag = "btnExportar";
+            this.btnExportar.Tag = "Bitacora_btnExportar";
             this.btnExportar.Text = "Exportar";
             this.btnExportar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnExportar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -295,7 +295,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(240, 36);
             this.label1.TabIndex = 64;
-            this.label1.Tag = "lblRangoFechas";
+            this.label1.Tag = "Bitacora_lblRangoFechas";
             this.label1.Text = "Rango de fechas";
             // 
             // label2

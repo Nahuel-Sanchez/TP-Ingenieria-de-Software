@@ -1,4 +1,4 @@
-﻿using DAL_08YS.Repositories_Interfaces;
+﻿using DAL_08YS.Interfaces_Repositories;
 using MPP_08YS;
 using Service_08YS;
 using System;

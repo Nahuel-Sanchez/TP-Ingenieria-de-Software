@@ -1,6 +1,7 @@
 ﻿using BE_08YS;
 using BLL_08YS;
 using BLL_08YS.Negocio;
+using Service_08YS;
 using System;
 using System.Windows.Forms;
 
@@ -15,6 +16,7 @@ namespace GUI_08YS.Recepcionista
         {
             _reserva = reserva;
             InitializeComponent();
+            TraducirControles(this);
 
             lblHabitacion.Text = habitacion.NroHabitacion;
             lblTitular.Text = $"{reserva.Titular.Nombre} {reserva.Titular.Apellido}";
@@ -35,7 +37,7 @@ namespace GUI_08YS.Recepcionista
             if (!dtpNuevaFechaEgreso.Value.HasValue) return;
 
             int noches = (dtpNuevaFechaEgreso.Value.Value.Date - _reserva.FechaEgreso.Date).Days;
-            lblNochesAdicionales.Text = $"{noches} {(noches == 1 ? "noche" : "noches")}";
+            lblNochesAdicionales.Text = $"{noches} {(noches == 1 ? TraductorManager_08YS.Instance.GetTexto("RenovarEstadia_txtNoche") : TraductorManager_08YS.Instance.GetTexto("RenovarEstadia_txtNoches"))}";
             lblCostoAdicional.Text = $"${noches * _reserva.TarifaNoche:N2}";
         }
 
@@ -47,22 +49,34 @@ namespace GUI_08YS.Recepcionista
             {
                 _reservaBLL.ExtenderEstadia(_reserva.Id, dtpNuevaFechaEgreso.Value.Value.Date);
                 MessageBox.Show(
-                    "Estadía renovada correctamente. El costo adicional queda como saldo a cobrar en el check-out.",
-                    "Renovación confirmada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    TraductorManager_08YS.Instance.GetTexto("RenovarEstadia_msgRenovacionConfirmada"),
+                    TraductorManager_08YS.Instance.GetTexto("RenovarEstadia_tituloRenovacionConfirmada"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
                 Close();
             }
-            catch (HabitacionNoDisponibleException_68SA ex)
+            catch (HabitacionNoDisponibleException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo renovar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excHabitacionNoDisponible"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoRenovar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (EstadoReservaInvalidoException_68SA ex)
+            catch (EstadoReservaInvalidoException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo renovar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excEstadoReservaInvalido"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoRenovar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (RangoFechasInvalidoException_68SA ex)
+            catch (RangoFechasInvalidoException_68SA)
             {
-                MessageBox.Show(ex.Message, "No se pudo renovar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excRangoFechasInvalido"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoRenovar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
             }
         }
     }

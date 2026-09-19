@@ -23,22 +23,34 @@ namespace Service_08YS.Entities.Bitacora
         private static readonly Dictionary<Evento, EventoMetadata_08YS> _catalogo =
             new Dictionary<Evento, EventoMetadata_08YS>
             {
-                { Evento.LoginExitoso,           new EventoMetadata_08YS(   Modulo.Login,          Criticidad.Bajo)          },
-                { Evento.LoginFallido,           new EventoMetadata_08YS(   Modulo.Login,          Criticidad.Medio)         },
-                { Evento.UsuarioBloqueado,       new EventoMetadata_08YS(   Modulo.Login,          Criticidad.Critico)       },
-                { Evento.UsuarioCreado,          new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Medio)         },
-                { Evento.UsuarioDesbloqueado,    new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Medio)         },
-                { Evento.UsuarioDeshabilitado,   new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto)          },
-                { Evento.UsuarioHabilitado,      new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto)          },
-                { Evento.UsuarioEmailModificado,      new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Bajo)          },
-                { Evento.CambioContraseña,       new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Medio)         },
-                { Evento.UsuarioRolModificado,   new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto)          },
-                { Evento.FamiliaCreada,          new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          },
-                { Evento.FamiliaModificada,      new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          },
-                { Evento.FamiliaEliminada,       new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          },
-                { Evento.RolCreado,              new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          },
-                { Evento.RolModificado,          new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          },
-                { Evento.RolEliminado,           new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto)          }
+                { Evento.LoginExitoso,           new EventoMetadata_08YS(   Modulo.Login,          Criticidad.Bajo      )          },
+                { Evento.LoginFallido,           new EventoMetadata_08YS(   Modulo.Login,          Criticidad.Medio     )          },
+                { Evento.UsuarioBloqueado,       new EventoMetadata_08YS(   Modulo.Login,          Criticidad.Critico   )          },
+                { Evento.UsuarioCreado,          new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Medio     )          },
+                { Evento.UsuarioDesbloqueado,    new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Medio     )          },
+                { Evento.UsuarioDeshabilitado,   new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto      )          },
+                { Evento.UsuarioHabilitado,      new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto      )          },
+                { Evento.UsuarioEmailModificado, new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Bajo      )          },
+                { Evento.CambioContraseña,       new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Medio     )          },
+                { Evento.UsuarioRolModificado,   new EventoMetadata_08YS(   Modulo.Usuarios,       Criticidad.Alto      )          },
+                { Evento.FamiliaCreada,          new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto      )          },
+                { Evento.FamiliaModificada,      new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto      )          },
+                { Evento.FamiliaEliminada,       new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto      )          },
+                { Evento.RolCreado,              new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto      )          },
+                { Evento.RolModificado,          new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto      )          },
+                { Evento.RolEliminado,           new EventoMetadata_08YS(   Modulo.Perfiles,       Criticidad.Alto      )          },
+                //NEGOCIO
+                { Evento.ReservaCreada,                     new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Medio  )         },
+                { Evento.ReservaCheckInRegistrado,          new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Medio  )         },
+                { Evento.ReservaCheckOutRegistrado,         new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Medio  )         },
+                { Evento.ReservaCancelada,                  new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Alto   )         },
+                { Evento.ReservaEstadiaExtendida,           new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Medio  )         },
+                { Evento.ReservaNoShowProcesado,            new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Alto   )         },
+                { Evento.HabitacionPuestaEnMantenimiento,   new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Alto   )         },
+                { Evento.HabitacionEstadoCambiado,          new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Bajo   )         },
+                { Evento.HuespedRegistrado,                 new EventoMetadata_08YS(   Modulo.Huespedes,      Criticidad.Bajo   )         },
+                { Evento.PagoRegistrado,                    new EventoMetadata_08YS(   Modulo.Pagos,          Criticidad.Alto   )         },
+                { Evento.ConfiguracionHotelActualizada,     new EventoMetadata_08YS(   Modulo.Configuracion,  Criticidad.Alto   )         }
             };
 
         public static EventoMetadata_08YS GetMetadata(Evento evento) => _catalogo[evento];

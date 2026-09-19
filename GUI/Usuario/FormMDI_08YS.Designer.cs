@@ -87,18 +87,21 @@
             // crearToolStripMenuItem
             // 
             this.crearToolStripMenuItem.Name = "crearToolStripMenuItem";
+            this.crearToolStripMenuItem.Tag = "MDI_crearToolStripMenuItem";
             this.crearToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
             this.crearToolStripMenuItem.Text = "Crear";
             // 
             // modificarToolStripMenuItem
             // 
             this.modificarToolStripMenuItem.Name = "modificarToolStripMenuItem";
+            this.modificarToolStripMenuItem.Tag = "MDI_modificarToolStripMenuItem";
             this.modificarToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
             this.modificarToolStripMenuItem.Text = "Modificar";
             // 
             // desbloquearToolStripMenuItem
             // 
             this.desbloquearToolStripMenuItem.Name = "desbloquearToolStripMenuItem";
+            this.desbloquearToolStripMenuItem.Tag = "MDI_desbloquearToolStripMenuItem";
             this.desbloquearToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
             this.desbloquearToolStripMenuItem.Text = "Desbloquear";
             // 
@@ -231,6 +234,7 @@
             this.Titulo.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.Titulo.Location = new System.Drawing.Point(89, 12);
             this.Titulo.Name = "Titulo";
+            this.Titulo.Tag = "MDI_Titulo";
             this.Titulo.Size = new System.Drawing.Size(279, 16);
             this.Titulo.TabIndex = 0;
             this.Titulo.Text = "Sistema de Hotelería - Horizon Hotel && Resort";
@@ -281,7 +285,7 @@
             this.btnPerfil.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnPerfil.Size = new System.Drawing.Size(325, 60);
             this.btnPerfil.TabIndex = 3;
-            this.btnPerfil.Tag = "btnPerfil";
+            this.btnPerfil.Tag = "MDI_btnPerfil";
             this.btnPerfil.Text = "Perfil";
             this.btnPerfil.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnPerfil.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -305,7 +309,7 @@
             this.btnAdministrativo.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnAdministrativo.Size = new System.Drawing.Size(325, 60);
             this.btnAdministrativo.TabIndex = 4;
-            this.btnAdministrativo.Tag = "btnAdministrativo";
+            this.btnAdministrativo.Tag = "MDI_btnAdministrativo";
             this.btnAdministrativo.Text = "Administrativo";
             this.btnAdministrativo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnAdministrativo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -329,7 +333,7 @@
             this.btnRecepcion.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnRecepcion.Size = new System.Drawing.Size(325, 60);
             this.btnRecepcion.TabIndex = 5;
-            this.btnRecepcion.Tag = "btnRecepcion";
+            this.btnRecepcion.Tag = "MDI_btnRecepcion";
             this.btnRecepcion.Text = "Recepcion";
             this.btnRecepcion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnRecepcion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -353,7 +357,7 @@
             this.btnReservas.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnReservas.Size = new System.Drawing.Size(325, 60);
             this.btnReservas.TabIndex = 6;
-            this.btnReservas.Tag = "btnReservas";
+            this.btnReservas.Tag = "MDI_btnReservas";
             this.btnReservas.Text = "Reservas";
             this.btnReservas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReservas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -389,7 +393,7 @@
             this.btnCerrarSesion.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnCerrarSesion.Size = new System.Drawing.Size(326, 60);
             this.btnCerrarSesion.TabIndex = 7;
-            this.btnCerrarSesion.Tag = "btnCerrarSesion";
+            this.btnCerrarSesion.Tag = "MDI_btnCerrarSesion";
             this.btnCerrarSesion.Text = "  Cerrar Sesión";
             this.btnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCerrarSesion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -472,7 +476,7 @@
             // 
             this.gestionUsuarioToolStripMenuItem.Name = "gestionUsuarioToolStripMenuItem";
             this.gestionUsuarioToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
-            this.gestionUsuarioToolStripMenuItem.Tag = "menuGestionUsuario";
+            this.gestionUsuarioToolStripMenuItem.Tag = "MDI_menuGestionUsuario";
             this.gestionUsuarioToolStripMenuItem.Text = "GestionUsuario";
             this.gestionUsuarioToolStripMenuItem.Click += new System.EventHandler(this.gestionUsuarioToolStripMenuItem_Click);
             // 
@@ -480,7 +484,7 @@
             // 
             this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
             this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
-            this.bitacoraToolStripMenuItem.Tag = "menuBitacora";
+            this.bitacoraToolStripMenuItem.Tag = "MDI_menuBitacora";
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
             // 
@@ -491,14 +495,14 @@
             this.familiasToolStripMenuItem});
             this.gestionAccesosToolStripMenuItem.Name = "gestionAccesosToolStripMenuItem";
             this.gestionAccesosToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
-            this.gestionAccesosToolStripMenuItem.Tag = "menuGestionAccesos";
+            this.gestionAccesosToolStripMenuItem.Tag = "MDI_menuGestionAccesos";
             this.gestionAccesosToolStripMenuItem.Text = "Gestion Accesos";
             // 
             // rolesToolStripMenuItem
             // 
             this.rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
             this.rolesToolStripMenuItem.Size = new System.Drawing.Size(145, 26);
-            this.rolesToolStripMenuItem.Tag = "menuRoles";
+            this.rolesToolStripMenuItem.Tag = "MDI_menuRoles";
             this.rolesToolStripMenuItem.Text = "Roles";
             this.rolesToolStripMenuItem.Click += new System.EventHandler(this.rolesToolStripMenuItem_Click);
             // 
@@ -506,7 +510,7 @@
             // 
             this.familiasToolStripMenuItem.Name = "familiasToolStripMenuItem";
             this.familiasToolStripMenuItem.Size = new System.Drawing.Size(145, 26);
-            this.familiasToolStripMenuItem.Tag = "menuFamilias";
+            this.familiasToolStripMenuItem.Tag = "MDI_menuFamilias";
             this.familiasToolStripMenuItem.Text = "Familias";
             this.familiasToolStripMenuItem.Click += new System.EventHandler(this.familiasToolStripMenuItem_Click);
             // 
@@ -514,7 +518,7 @@
             // 
             this.gestionRespaldosToolStripMenuItem.Name = "gestionRespaldosToolStripMenuItem";
             this.gestionRespaldosToolStripMenuItem.Size = new System.Drawing.Size(200, 24);
-            this.gestionRespaldosToolStripMenuItem.Tag = "menuRespaldos";
+            this.gestionRespaldosToolStripMenuItem.Tag = "MDI_menuRespaldos";
             this.gestionRespaldosToolStripMenuItem.Text = "Gestion Respaldos";
             this.gestionRespaldosToolStripMenuItem.Click += new System.EventHandler(this.gestionRespaldosToolStripMenuItem_Click);
             // 
@@ -536,7 +540,7 @@
             // 
             this.cambiarContraseñaToolStripMenuItem.Name = "cambiarContraseñaToolStripMenuItem";
             this.cambiarContraseñaToolStripMenuItem.Size = new System.Drawing.Size(212, 24);
-            this.cambiarContraseñaToolStripMenuItem.Tag = "menuCambiarContraseña";
+            this.cambiarContraseñaToolStripMenuItem.Tag = "MDI_menuCambiarContraseña";
             this.cambiarContraseñaToolStripMenuItem.Text = "Cambiar Contraseña";
             this.cambiarContraseñaToolStripMenuItem.Click += new System.EventHandler(this.cambiarContraseñaToolStripMenuItem_Click);
             // 
@@ -544,7 +548,7 @@
             // 
             this.ReLoginToolStripMenuItem.Name = "ReLoginToolStripMenuItem";
             this.ReLoginToolStripMenuItem.Size = new System.Drawing.Size(212, 24);
-            this.ReLoginToolStripMenuItem.Tag = "menuRelogin";
+            this.ReLoginToolStripMenuItem.Tag = "MDI_menuRelogin";
             this.ReLoginToolStripMenuItem.Text = "ReLogin";
             this.ReLoginToolStripMenuItem.Click += new System.EventHandler(this.ReLoginToolStripMenuItem_Click);
             // 
@@ -552,7 +556,7 @@
             // 
             this.cerrarSesionToolStripMenuItem1.Name = "cerrarSesionToolStripMenuItem1";
             this.cerrarSesionToolStripMenuItem1.Size = new System.Drawing.Size(212, 24);
-            this.cerrarSesionToolStripMenuItem1.Tag = "menuCerrarSesion";
+            this.cerrarSesionToolStripMenuItem1.Tag = "MDI_menuCerrarSesion";
             this.cerrarSesionToolStripMenuItem1.Text = "Cerrar Sesion";
             this.cerrarSesionToolStripMenuItem1.Click += new System.EventHandler(this.cerrarSesionToolStripMenuItem1_Click);
             // 
@@ -574,6 +578,7 @@
             // reservarToolStripMenuItem
             // 
             this.reservarToolStripMenuItem.Name = "reservarToolStripMenuItem";
+            this.reservarToolStripMenuItem.Tag = "MDI_reservarToolStripMenuItem";
             this.reservarToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
             this.reservarToolStripMenuItem.Text = "Reservar";
             this.reservarToolStripMenuItem.Click += new System.EventHandler(this.reservarToolStripMenuItem_Click);
@@ -581,6 +586,7 @@
             // controlDeHabitacionesToolStripMenuItem
             // 
             this.controlDeHabitacionesToolStripMenuItem.Name = "controlDeHabitacionesToolStripMenuItem";
+            this.controlDeHabitacionesToolStripMenuItem.Tag = "MDI_controlDeHabitacionesToolStripMenuItem";
             this.controlDeHabitacionesToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
             this.controlDeHabitacionesToolStripMenuItem.Text = "Control de Habitaciones";
             this.controlDeHabitacionesToolStripMenuItem.Click += new System.EventHandler(this.controlDeHabitacionesToolStripMenuItem_Click);
@@ -588,6 +594,7 @@
             // checkInToolStripMenuItem
             // 
             this.checkInToolStripMenuItem.Name = "checkInToolStripMenuItem";
+            this.checkInToolStripMenuItem.Tag = "MDI_checkInToolStripMenuItem";
             this.checkInToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
             this.checkInToolStripMenuItem.Text = "Check-In";
             this.checkInToolStripMenuItem.Click += new System.EventHandler(this.checkInToolStripMenuItem_Click);
@@ -595,6 +602,7 @@
             // checkOutToolStripMenuItem
             // 
             this.checkOutToolStripMenuItem.Name = "checkOutToolStripMenuItem";
+            this.checkOutToolStripMenuItem.Tag = "MDI_checkOutToolStripMenuItem";
             this.checkOutToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
             this.checkOutToolStripMenuItem.Text = "Check-Out";
             this.checkOutToolStripMenuItem.Click += new System.EventHandler(this.checkOutToolStripMenuItem_Click);
@@ -620,7 +628,7 @@
             this.btnDashboard.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
             this.btnDashboard.Size = new System.Drawing.Size(325, 60);
             this.btnDashboard.TabIndex = 7;
-            this.btnDashboard.Tag = "btnDashboard";
+            this.btnDashboard.Tag = "MDI_btnDashboard";
             this.btnDashboard.Text = "Dashboard";
             this.btnDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnDashboard.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;

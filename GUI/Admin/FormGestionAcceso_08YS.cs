@@ -68,8 +68,8 @@ namespace GUI_08YS.Admin
             TraducirControles(this);
 
             // 2. AHORA asignamos los títulos dinámicos consultando las claves del TraductorManager
-            string claveEntidad = _modo == TipoEntidad.Familia ? "Entidad_Familias" : "Entidad_Roles";
-            string gestionTraducida = TraductorManager_08YS.Instance.GetTexto("Texto_GestionDe"); // Debería retornar "Gestión de"
+            string claveEntidad = _modo == TipoEntidad.Familia ? "GestionAcceso_Entidad_Familias" : "GestionAcceso_Entidad_Roles";
+            string gestionTraducida = TraductorManager_08YS.Instance.GetTexto("GestionAcceso_Texto_GestionDe"); // Debería retornar "Gestión de"
             string entidadTraducida = TraductorManager_08YS.Instance.GetTexto(claveEntidad);     // Retorna "Familias" o "Roles"
 
             // Armamos la cadena final en base al idioma actual
@@ -92,7 +92,7 @@ namespace GUI_08YS.Admin
                 if (columna.Name.Equals("Nombre", StringComparison.OrdinalIgnoreCase) ||
                     columna.DataPropertyName.Equals("Nombre", StringComparison.OrdinalIgnoreCase))
                 {
-                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaNombre");
+                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("Comun_ColumnaNombre");
                 }
 
                 // 2. Traducir la columna del Tipo (mapeada a 'TipoDisplay' en tu objeto anónimo)
@@ -100,7 +100,7 @@ namespace GUI_08YS.Admin
                     columna.Name.Equals("TipoDisplay", StringComparison.OrdinalIgnoreCase) ||
                     columna.DataPropertyName.Equals("TipoDisplay", StringComparison.OrdinalIgnoreCase))
                 {
-                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("ColumnaTipo");
+                    columna.HeaderText = TraductorManager_08YS.Instance.GetTexto("Comun_ColumnaTipo");
                 }
             }
         }
@@ -180,8 +180,8 @@ namespace GUI_08YS.Admin
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("msg_error_cargar_datos")}{ex.Message}",
-                                TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("GestionAcceso_msg_error_cargar_datos")}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             TraducirColumnas();
         }
@@ -241,10 +241,10 @@ namespace GUI_08YS.Admin
             string nombre = row.Nombre;
             object entidad = row.Entidad;
 
-            string pregunta = string.Format(TraductorManager_08YS.Instance.GetTexto("msg_eliminar_preg"), nombre);
+            string pregunta = string.Format(TraductorManager_08YS.Instance.GetTexto("GestionAcceso_msg_eliminar_preg"), nombre);
             var confirmacion = MessageBox.Show(
                 pregunta,
-                TraductorManager_08YS.Instance.GetTexto("confirmar_eliminacion"),
+                TraductorManager_08YS.Instance.GetTexto("GestionAcceso_confirmar_eliminacion"),
                 MessageBoxButtons.OKCancel,
                 MessageBoxIcon.Warning);
 
@@ -261,13 +261,13 @@ namespace GUI_08YS.Admin
             }
             catch (ComponenteEnUsoException_08YS)
             {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("msg_componente_en_uso_error"),
-                                TraductorManager_08YS.Instance.GetTexto("no_se_puede_eliminar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("GestionAcceso_msg_componente_en_uso_error"),
+                                TraductorManager_08YS.Instance.GetTexto("GestionAcceso_no_se_puede_eliminar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("msg_error_inesperado")}{ex.Message}",
-                                TraductorManager_08YS.Instance.GetTexto("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("Comun_msg_error_inesperado")}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

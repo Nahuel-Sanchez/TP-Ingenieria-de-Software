@@ -1,6 +1,7 @@
 ﻿using BE_08YS;
 using DAL_08YS.Interfaces_Repositories.Negocio;
 using Service_08YS;
+using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,14 @@ namespace BLL_08YS.Negocio
     {
         private readonly IReservaRepository_68SA _reservaRepo;
         private readonly HuespedBLL_68SA _huespedBLL;
+        private readonly BitacoraBLL_08YS _bitacoraBll;
 
-        public ReservaBLL_68SA(IReservaRepository_68SA reservaRepo, HuespedBLL_68SA huespedBLL)
+        public ReservaBLL_68SA(IReservaRepository_68SA reservaRepo, HuespedBLL_68SA huespedBLL, BitacoraBLL_08YS bitacoraBll)
         {
             _reservaRepo = reservaRepo;
             _huespedBLL = huespedBLL;
+            _bitacoraBll = bitacoraBll;
         }
-
-        public List<Reserva_68SA> GetTodas(ReservaFiltro_68SA filtro)
-            => _reservaRepo.GetAll(filtro);
 
         public int Crear(Reserva_68SA reserva)
         {
@@ -30,15 +30,22 @@ namespace BLL_08YS.Negocio
 
             reserva.Titular = _huespedBLL.ObtenerOCrear(reserva.Titular);
             reserva.MontoTotal = reserva.TarifaNoche * reserva.Noches;
-            reserva.UsuarioRegistroDni = SessionManager_08YS.Instance.Current?.DNI;
+            reserva.UsuarioRegistroDni = SessionManager_08YS.Instance.Current.DNI;
 
             int nuevoId = _reservaRepo.Crear(reserva);
             if (nuevoId == -1)
                 throw new HabitacionNoDisponibleException_68SA();
 
             reserva.Id = nuevoId;
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.ReservaCreada, targetUsername: reserva.Id.ToString());
+
             return reserva.Id;
         }
+
+        #region GETs
+        public List<Reserva_68SA> GetTodas(ReservaFiltro_68SA filtro)
+            => _reservaRepo.GetAll(filtro);
 
         public Reserva_68SA GetById(int reservaId)
         {
@@ -65,6 +72,18 @@ namespace BLL_08YS.Negocio
             return _reservaRepo.GetEnRangoVisible(desde, hasta);
         }
 
+        public List<Huesped_68SA> GetAcompanantes(int reservaId)
+        {
+            return _reservaRepo.GetAcompanantes(reservaId);
+        }
+
+        public Reserva_68SA GetEnCursoPorHabitacion(int habitacionId)
+        {
+            return _reservaRepo.GetEnCursoPorHabitacion(habitacionId);
+        }
+
+        #endregion
+
         public void RegistrarCheckIn(int reservaId, List<Huesped_68SA> acompanantes)
         {
             if (acompanantes != null && acompanantes.Count > 0)
@@ -81,6 +100,9 @@ namespace BLL_08YS.Negocio
             if (!_reservaRepo.RegistrarCheckIn(reservaId, DateTime.Now))
                 throw new EstadoReservaInvalidoException_68SA("Solo se puede hacer check-in sobre una reserva Confirmada.");
 
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.ReservaCheckInRegistrado, targetUsername: reservaId.ToString());
+
             if (acompanantes == null) return;
 
             foreach (var acompanante in acompanantes)
@@ -88,33 +110,42 @@ namespace BLL_08YS.Negocio
                 var registrado = _huespedBLL.ObtenerOCrear(acompanante);
                 _reservaRepo.AgregarAcompanante(reservaId, registrado.Id);
             }
+            DVManager_08YS.Recalcular();
         }
 
         public void RegistrarCheckOut(int reservaId)
         {
             if (!_reservaRepo.RegistrarCheckOut(reservaId, DateTime.Now))
                 throw new EstadoReservaInvalidoException_68SA("Solo se puede hacer check-out sobre una reserva En Curso.");
+
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.ReservaCheckOutRegistrado, targetUsername: reservaId.ToString());
         }
 
         public void Cancelar(int reservaId)
         {
             if (!_reservaRepo.Cancelar(reservaId))
                 throw new EstadoReservaInvalidoException_68SA("Solo se puede cancelar una reserva Confirmada (sin check-in todavía).");
-        }
 
-        public List<Huesped_68SA> GetAcompanantes(int reservaId)
-        {
-            return _reservaRepo.GetAcompanantes(reservaId);
-        }
-
-        public Reserva_68SA GetEnCursoPorHabitacion(int habitacionId)
-        {
-            return _reservaRepo.GetEnCursoPorHabitacion(habitacionId);
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.ReservaCancelada, targetUsername: reservaId.ToString());
         }
 
         public int ProcesarNoShows()
         {
-            return _reservaRepo.ProcesarNoShows();
+            int cantidad = _reservaRepo.ProcesarNoShows();
+
+            // Es un proceso automático (login / timer), puede no haber sesión activa;
+            // RegistrarEvento ya cubre ese caso resolviendo a "Desconocido".
+            // No hay un ID de reserva puntual (el repo devuelve solo el conteo), así que
+            // se registra un único evento agregado, sin target, cuando procesó algo.
+            if (cantidad > 0)
+            {
+                DVManager_08YS.Recalcular();
+                _bitacoraBll.RegistrarEvento(Evento.ReservaNoShowProcesado);
+            }
+
+            return cantidad;
         }
 
         // Renovación: extiende la estadía cambiando únicamente la fecha de egreso.
@@ -135,6 +166,9 @@ namespace BLL_08YS.Negocio
             bool disponible = _reservaRepo.ExtenderEstadia(reservaId, nuevaFechaEgreso);
             if (!disponible)
                 throw new HabitacionNoDisponibleException_68SA("La habitación ya tiene otra reserva que se solapa con esa fecha.");
+
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.ReservaEstadiaExtendida, targetUsername: reservaId.ToString());
         }
 
     }

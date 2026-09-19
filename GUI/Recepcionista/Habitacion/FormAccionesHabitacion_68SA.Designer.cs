@@ -95,6 +95,7 @@
             this.lblTitulo.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblTitulo.Location = new System.Drawing.Point(72, 24);
             this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Tag = "AccionesHabitacion_lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(280, 30);
             this.lblTitulo.TabIndex = 1;
             this.lblTitulo.Text = "Acciones - Habitación";
@@ -125,6 +126,7 @@
             this.lblEtiquetaHabitacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaHabitacion.Location = new System.Drawing.Point(20, 96);
             this.lblEtiquetaHabitacion.Name = "lblEtiquetaHabitacion";
+            this.lblEtiquetaHabitacion.Tag = "AccionesHabitacion_lblEtiquetaHabitacion";
             this.lblEtiquetaHabitacion.Size = new System.Drawing.Size(66, 13);
             this.lblEtiquetaHabitacion.TabIndex = 2;
             this.lblEtiquetaHabitacion.Text = "HABITACIÓN";
@@ -155,6 +157,7 @@
             this.lblEtiquetaTipo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaTipo.Location = new System.Drawing.Point(175, 96);
             this.lblEtiquetaTipo.Name = "lblEtiquetaTipo";
+            this.lblEtiquetaTipo.Tag = "AccionesHabitacion_lblEtiquetaTipo";
             this.lblEtiquetaTipo.Size = new System.Drawing.Size(28, 13);
             this.lblEtiquetaTipo.TabIndex = 5;
             this.lblEtiquetaTipo.Text = "TIPO";
@@ -185,6 +188,7 @@
             this.lblEtiquetaEstado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaEstado.Location = new System.Drawing.Point(425, 96);
             this.lblEtiquetaEstado.Name = "lblEtiquetaEstado";
+            this.lblEtiquetaEstado.Tag = "AccionesHabitacion_lblEtiquetaEstado";
             this.lblEtiquetaEstado.Size = new System.Drawing.Size(40, 13);
             this.lblEtiquetaEstado.TabIndex = 8;
             this.lblEtiquetaEstado.Text = "ESTADO";

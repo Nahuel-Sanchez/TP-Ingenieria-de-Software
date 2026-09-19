@@ -48,7 +48,7 @@
             this.lblContraseñaActual.Name = "lblContraseñaActual";
             this.lblContraseñaActual.Size = new System.Drawing.Size(104, 15);
             this.lblContraseñaActual.TabIndex = 3;
-            this.lblContraseñaActual.Tag = "lblPasswordActual";
+            this.lblContraseñaActual.Tag = "CambiarPassword_lblPasswordActual";
             this.lblContraseñaActual.Text = "Contraseña Actual";
             // 
             // label2
@@ -61,7 +61,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(104, 15);
             this.label2.TabIndex = 4;
-            this.label2.Tag = "lblPasswordNueva";
+            this.label2.Tag = "CambiarPassword_lblPasswordNueva";
             this.label2.Text = "Nueva Contraseña";
             // 
             // lblConfirmarContraseña
@@ -74,7 +74,7 @@
             this.lblConfirmarContraseña.Name = "lblConfirmarContraseña";
             this.lblConfirmarContraseña.Size = new System.Drawing.Size(124, 15);
             this.lblConfirmarContraseña.TabIndex = 5;
-            this.lblConfirmarContraseña.Tag = "lblConfirmarPassword";
+            this.lblConfirmarContraseña.Tag = "CambiarPassword_lblConfirmarPassword";
             this.lblConfirmarContraseña.Text = "Confirmar Contraseña";
             // 
             // lblUsuario
@@ -87,7 +87,7 @@
             this.lblUsuario.Name = "lblUsuario";
             this.lblUsuario.Size = new System.Drawing.Size(50, 15);
             this.lblUsuario.TabIndex = 6;
-            this.lblUsuario.Tag = "lblUsuario";
+            this.lblUsuario.Tag = "CambiarPassword_lblUsuario";
             this.lblUsuario.Text = "Usuario:";
             // 
             // btnCambiarContraseña
@@ -107,7 +107,7 @@
             this.btnCambiarContraseña.Padding = new System.Windows.Forms.Padding(4, 0, 15, 0);
             this.btnCambiarContraseña.Size = new System.Drawing.Size(199, 46);
             this.btnCambiarContraseña.TabIndex = 60;
-            this.btnCambiarContraseña.Tag = "btnCambiarContraseña";
+            this.btnCambiarContraseña.Tag = "CambiarPassword_btnCambiarContraseña";
             this.btnCambiarContraseña.Text = "Cambiar contraseña";
             this.btnCambiarContraseña.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCambiarContraseña.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -135,7 +135,7 @@
             this.txtConfirmarContraseña.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtConfirmarContraseña.Size = new System.Drawing.Size(199, 32);
             this.txtConfirmarContraseña.TabIndex = 10;
-            this.txtConfirmarContraseña.Tag = "txtPwdConfirmar";
+            this.txtConfirmarContraseña.Tag = "CambiarPassword_txtPwdConfirmar";
             // 
             // txtNuevaContraseña
             // 
@@ -158,7 +158,7 @@
             this.txtNuevaContraseña.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtNuevaContraseña.Size = new System.Drawing.Size(199, 32);
             this.txtNuevaContraseña.TabIndex = 9;
-            this.txtNuevaContraseña.Tag = "txtPwdNueva";
+            this.txtNuevaContraseña.Tag = "CambiarPassword_txtPwdNueva";
             // 
             // txtContraseñaActual
             // 
@@ -181,7 +181,7 @@
             this.txtContraseñaActual.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtContraseñaActual.Size = new System.Drawing.Size(199, 32);
             this.txtContraseñaActual.TabIndex = 8;
-            this.txtContraseñaActual.Tag = "txtPwdActual";
+            this.txtContraseñaActual.Tag = "CambiarPassword_txtPwdActual";
             // 
             // FormCambiarContraseña_08YS
             // 
