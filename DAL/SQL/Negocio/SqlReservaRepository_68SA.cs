@@ -10,17 +10,27 @@ namespace DAL_08YS.SQL.Negocio
 {
     public class SqlReservaRepository_68SA : Connection_08YS, IReservaRepository_68SA
     {
-        private const string BaseSelect = @"
-            SELECT r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
-                   r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.MontoOriginal,
-                   r.UsuarioRegistroDNI, r.FechaRegistro,
-                   hab.NroHabitacion,
-                   hu.Documento AS DocumentoTitular, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular,
-                   ureg.Nombre AS NombreUsuarioRegistro, ureg.Apellido AS ApellidoUsuarioRegistro
+        private const string BaseColumnas = @"
+            r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
+            r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.MontoOriginal,
+            r.UsuarioRegistroDNI, r.FechaRegistro,
+            hab.NroHabitacion,
+            hu.Documento AS DocumentoTitular, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular,
+            ureg.Nombre AS NombreUsuarioRegistro, ureg.Apellido AS ApellidoUsuarioRegistro";
+
+        private const string BaseFrom = @"
             FROM Reservas r
             INNER JOIN Habitaciones hab ON r.HabitacionID = hab.HabitacionID
             INNER JOIN Huespedes hu ON r.HuespedTitularID = hu.HuespedID
             LEFT JOIN Users ureg ON r.UsuarioRegistroDNI = ureg.DNI";
+
+        private const string BaseSelect = "SELECT " + BaseColumnas + BaseFrom;
+
+        // Solo para el listado: trae el total pagado en la misma consulta (evita una query por fila)
+        private const string ListadoSelect =
+            "SELECT " + BaseColumnas + ", ISNULL(pg.MontoPagado, 0) AS MontoPagado" + BaseFrom + @"
+             LEFT JOIN (SELECT ReservaID, SUM(Monto) AS MontoPagado FROM Pagos GROUP BY ReservaID) pg
+             ON pg.ReservaID = r.ReservaID";
 
         public SqlReservaRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
 
@@ -29,6 +39,7 @@ namespace DAL_08YS.SQL.Negocio
             var where = new List<string>();
             var parametros = new List<IDbDataParameter>();
 
+            #region filtros if
             if (!string.IsNullOrWhiteSpace(filtro.Huesped))
             {
                 where.Add("(hu.Nombre LIKE @Huesped OR hu.Apellido LIKE @Huesped OR hu.Documento LIKE @Huesped)");
@@ -79,8 +90,9 @@ namespace DAL_08YS.SQL.Negocio
                 where.Add("r.MontoTotal <= @CostoHasta");
                 parametros.Add(Param("@CostoHasta", filtro.CostoHasta.Value));
             }
+            #endregion
 
-            string query = BaseSelect
+            string query = ListadoSelect
                 + (where.Count > 0 ? " WHERE " + string.Join(" AND ", where) : "")
                 + " ORDER BY r.FechaIngreso DESC";
 

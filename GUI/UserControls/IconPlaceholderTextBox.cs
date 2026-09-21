@@ -323,7 +323,11 @@ namespace CustomControls
         public string PlaceholderText
         {
             get => _innerTextBox.PlaceholderText;
-            set => _innerTextBox.PlaceholderText = value;
+            set
+            {
+                _innerTextBox.PlaceholderText = value;
+                Invalidate(); // el placeholder lo pinta OnPaint de este control, no el TextBox interno
+            }
         }
 
         [Category("Placeholder")]
@@ -331,7 +335,11 @@ namespace CustomControls
         public Color PlaceholderColor
         {
             get => _innerTextBox.PlaceholderColor;
-            set => _innerTextBox.PlaceholderColor = value;
+            set
+            {
+                _innerTextBox.PlaceholderColor = value;
+                Invalidate();
+            }
         }
 
         [Category("Placeholder")]

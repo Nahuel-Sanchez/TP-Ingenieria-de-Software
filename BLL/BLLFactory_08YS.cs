@@ -76,14 +76,14 @@ namespace BLL_08YS
         {
             var factory = new SqlDbFactory_08YS();
             IPisoRepository_68SA pisoRepo = new SqlPisoRepository_68SA(factory);
-            return new PisoBLL_68SA(pisoRepo);
+            return new PisoBLL_68SA(pisoRepo, CreateBitacoraBLL());
         }
 
         public static TipoHabitacionBLL_68SA CreateTipoHabitacionBLL()
         {
             var factory = new SqlDbFactory_08YS();
             ITipoHabitacionRepository_68SA tipoRepo = new SqlTipoHabitacionRepository_68SA(factory);
-            return new TipoHabitacionBLL_68SA(tipoRepo);
+            return new TipoHabitacionBLL_68SA(tipoRepo, CreateBitacoraBLL());
         }
 
         public static HabitacionBLL_68SA CreateHabitacionBLL()

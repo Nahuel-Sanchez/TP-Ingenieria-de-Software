@@ -17,5 +17,12 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio.habitacion
         Habitacion_68SA GetById(int habitacionId);
 
         void CambiarEstado(int habitacionId, EstadoHabitacion nuevoEstado);
+
+        List<Habitacion_68SA> GetListado(HabitacionFiltro_68SA filtro); 
+        int Crear(Habitacion_68SA habitacion);
+        void Modificar(Habitacion_68SA habitacion);
+        bool Eliminar(int habitacionId);    // false si no existe o tiene reservas
+        bool ExisteNumero(string nroHabitacion, int? excluirHabitacionId = null);
+        bool TieneReservasActivas(int habitacionId);
     }
 }

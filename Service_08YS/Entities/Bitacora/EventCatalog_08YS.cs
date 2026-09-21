@@ -50,7 +50,19 @@ namespace Service_08YS.Entities.Bitacora
                 { Evento.HabitacionEstadoCambiado,          new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Bajo   )         },
                 { Evento.HuespedRegistrado,                 new EventoMetadata_08YS(   Modulo.Huespedes,      Criticidad.Bajo   )         },
                 { Evento.PagoRegistrado,                    new EventoMetadata_08YS(   Modulo.Pagos,          Criticidad.Alto   )         },
-                { Evento.ConfiguracionHotelActualizada,     new EventoMetadata_08YS(   Modulo.Configuracion,  Criticidad.Alto   )         }
+                { Evento.ConfiguracionHotelActualizada,     new EventoMetadata_08YS(   Modulo.Configuracion,  Criticidad.Alto   )         },
+                { Evento.HabitacionCreada,                  new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Medio  )         },
+                { Evento.HabitacionModificada,              new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Medio  )         },
+                { Evento.HabitacionEliminada,               new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Alto   )         },
+                { Evento.TipoHabitacionCreado,              new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Medio  )         },
+                { Evento.TipoHabitacionModificado,          new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Medio  )         },
+                { Evento.TipoHabitacionEliminado,           new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Alto   )         },
+                { Evento.PisoCreado,                        new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Medio  )         },
+                { Evento.PisoModificado,                    new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Medio  )         },
+                { Evento.PisoEliminado,                     new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Alto   )         },
+                { Evento.HuespedModificado,                 new EventoMetadata_08YS(   Modulo.Huespedes,      Criticidad.Bajo   )         },
+                { Evento.HuespedEliminado,                  new EventoMetadata_08YS(   Modulo.Huespedes,      Criticidad.Alto   )         },
+                { Evento.ReservaModificada,                 new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Medio  )         }
             };
 
         public static EventoMetadata_08YS GetMetadata(Evento evento) => _catalogo[evento];

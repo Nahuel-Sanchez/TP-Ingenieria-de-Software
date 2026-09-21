@@ -46,6 +46,10 @@
             this.btnAdministrativo = new FontAwesome.Sharp.IconButton();
             this.btnRecepcion = new FontAwesome.Sharp.IconButton();
             this.btnReservas = new FontAwesome.Sharp.IconButton();
+            this.btnHabitaciones = new FontAwesome.Sharp.IconButton();
+            this.btnHuespedes = new FontAwesome.Sharp.IconButton();
+            this.btnDashboard = new FontAwesome.Sharp.IconButton();
+            this.btnHotelConfig = new FontAwesome.Sharp.IconButton();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panelLogo = new System.Windows.Forms.Panel();
@@ -53,6 +57,7 @@
             this.lblNombreApellido = new System.Windows.Forms.Label();
             this.lblRolSistema = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.timerNoShow = new System.Windows.Forms.Timer(this.components);
             this.AdministrativoDropDownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
             this.gestionUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,8 +74,10 @@
             this.controlDeHabitacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.timerNoShow = new System.Windows.Forms.Timer(this.components);
-            this.btnDashboard = new FontAwesome.Sharp.IconButton();
+            this.HabitacionesDropdownMenu = new GUI_08YS.DropdownMenuStrip_08YS(this.components);
+            this.habitacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tiposDeHabitacionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panelIdioma.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -82,27 +89,28 @@
             this.AdministrativoDropDownMenu.SuspendLayout();
             this.PerfilDropDownMenu.SuspendLayout();
             this.RecepcionDropDownMenu.SuspendLayout();
+            this.HabitacionesDropdownMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // crearToolStripMenuItem
             // 
             this.crearToolStripMenuItem.Name = "crearToolStripMenuItem";
-            this.crearToolStripMenuItem.Tag = "MDI_crearToolStripMenuItem";
             this.crearToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
+            this.crearToolStripMenuItem.Tag = "MDI_crearToolStripMenuItem";
             this.crearToolStripMenuItem.Text = "Crear";
             // 
             // modificarToolStripMenuItem
             // 
             this.modificarToolStripMenuItem.Name = "modificarToolStripMenuItem";
-            this.modificarToolStripMenuItem.Tag = "MDI_modificarToolStripMenuItem";
             this.modificarToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
+            this.modificarToolStripMenuItem.Tag = "MDI_modificarToolStripMenuItem";
             this.modificarToolStripMenuItem.Text = "Modificar";
             // 
             // desbloquearToolStripMenuItem
             // 
             this.desbloquearToolStripMenuItem.Name = "desbloquearToolStripMenuItem";
-            this.desbloquearToolStripMenuItem.Tag = "MDI_desbloquearToolStripMenuItem";
             this.desbloquearToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
+            this.desbloquearToolStripMenuItem.Tag = "MDI_desbloquearToolStripMenuItem";
             this.desbloquearToolStripMenuItem.Text = "Desbloquear";
             // 
             // panel1
@@ -234,9 +242,9 @@
             this.Titulo.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.Titulo.Location = new System.Drawing.Point(89, 12);
             this.Titulo.Name = "Titulo";
-            this.Titulo.Tag = "MDI_Titulo";
             this.Titulo.Size = new System.Drawing.Size(279, 16);
             this.Titulo.TabIndex = 0;
+            this.Titulo.Tag = "MDI_Titulo";
             this.Titulo.Text = "Sistema de Hotelería - Horizon Hotel && Resort";
             // 
             // panelLateral
@@ -260,7 +268,10 @@
             this.flowLayoutPanel1.Controls.Add(this.btnAdministrativo);
             this.flowLayoutPanel1.Controls.Add(this.btnRecepcion);
             this.flowLayoutPanel1.Controls.Add(this.btnReservas);
+            this.flowLayoutPanel1.Controls.Add(this.btnHabitaciones);
+            this.flowLayoutPanel1.Controls.Add(this.btnHuespedes);
             this.flowLayoutPanel1.Controls.Add(this.btnDashboard);
+            this.flowLayoutPanel1.Controls.Add(this.btnHotelConfig);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -364,6 +375,102 @@
             this.btnReservas.UseVisualStyleBackColor = true;
             this.btnReservas.Click += new System.EventHandler(this.btnReservas_Click);
             // 
+            // btnHabitaciones
+            // 
+            this.btnHabitaciones.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnHabitaciones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHabitaciones.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHabitaciones.ForeColor = System.Drawing.Color.Gold;
+            this.btnHabitaciones.IconChar = FontAwesome.Sharp.IconChar.DoorOpen;
+            this.btnHabitaciones.IconColor = System.Drawing.Color.Gold;
+            this.btnHabitaciones.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.btnHabitaciones.IconSize = 38;
+            this.btnHabitaciones.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHabitaciones.Location = new System.Drawing.Point(3, 258);
+            this.btnHabitaciones.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnHabitaciones.Name = "btnHabitaciones";
+            this.btnHabitaciones.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnHabitaciones.Size = new System.Drawing.Size(325, 60);
+            this.btnHabitaciones.TabIndex = 8;
+            this.btnHabitaciones.Tag = "MDI_btnHabitaciones";
+            this.btnHabitaciones.Text = "Habitaciones";
+            this.btnHabitaciones.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHabitaciones.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHabitaciones.UseVisualStyleBackColor = true;
+            this.btnHabitaciones.Click += new System.EventHandler(this.btnHabitaciones_Click);
+            // 
+            // btnHuespedes
+            // 
+            this.btnHuespedes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnHuespedes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHuespedes.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHuespedes.ForeColor = System.Drawing.Color.Gold;
+            this.btnHuespedes.IconChar = FontAwesome.Sharp.IconChar.PeopleGroup;
+            this.btnHuespedes.IconColor = System.Drawing.Color.Gold;
+            this.btnHuespedes.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.btnHuespedes.IconSize = 38;
+            this.btnHuespedes.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHuespedes.Location = new System.Drawing.Point(3, 322);
+            this.btnHuespedes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnHuespedes.Name = "btnHuespedes";
+            this.btnHuespedes.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnHuespedes.Size = new System.Drawing.Size(325, 60);
+            this.btnHuespedes.TabIndex = 9;
+            this.btnHuespedes.Tag = "MDI_btnHuespedes";
+            this.btnHuespedes.Text = "Huespedes";
+            this.btnHuespedes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHuespedes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHuespedes.UseVisualStyleBackColor = true;
+            this.btnHuespedes.Click += new System.EventHandler(this.btnHuespedes_Click);
+            // 
+            // btnDashboard
+            // 
+            this.btnDashboard.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDashboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDashboard.ForeColor = System.Drawing.Color.Gold;
+            this.btnDashboard.IconChar = FontAwesome.Sharp.IconChar.ChartColumn;
+            this.btnDashboard.IconColor = System.Drawing.Color.Gold;
+            this.btnDashboard.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.btnDashboard.IconSize = 38;
+            this.btnDashboard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDashboard.Location = new System.Drawing.Point(3, 386);
+            this.btnDashboard.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDashboard.Name = "btnDashboard";
+            this.btnDashboard.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnDashboard.Size = new System.Drawing.Size(325, 60);
+            this.btnDashboard.TabIndex = 7;
+            this.btnDashboard.Tag = "MDI_btnDashboard";
+            this.btnDashboard.Text = "Dashboard";
+            this.btnDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDashboard.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnDashboard.UseVisualStyleBackColor = true;
+            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
+            // 
+            // btnHotelConfig
+            // 
+            this.btnHotelConfig.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnHotelConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHotelConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHotelConfig.ForeColor = System.Drawing.Color.Gold;
+            this.btnHotelConfig.IconChar = FontAwesome.Sharp.IconChar.Hotel;
+            this.btnHotelConfig.IconColor = System.Drawing.Color.Gold;
+            this.btnHotelConfig.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.btnHotelConfig.IconSize = 38;
+            this.btnHotelConfig.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHotelConfig.Location = new System.Drawing.Point(3, 450);
+            this.btnHotelConfig.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnHotelConfig.Name = "btnHotelConfig";
+            this.btnHotelConfig.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
+            this.btnHotelConfig.Size = new System.Drawing.Size(325, 60);
+            this.btnHotelConfig.TabIndex = 10;
+            this.btnHotelConfig.Tag = "MDI_btnHotelConfig";
+            this.btnHotelConfig.Text = "Configuracion Hotel";
+            this.btnHotelConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHotelConfig.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHotelConfig.UseVisualStyleBackColor = true;
+            this.btnHotelConfig.Click += new System.EventHandler(this.btnHotelConfig_Click);
+            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.btnCerrarSesion);
@@ -456,6 +563,10 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1470, 920);
             this.panel2.TabIndex = 5;
+            // 
+            // timerNoShow
+            // 
+            this.timerNoShow.Interval = 900000;
             // 
             // AdministrativoDropDownMenu
             // 
@@ -578,62 +689,72 @@
             // reservarToolStripMenuItem
             // 
             this.reservarToolStripMenuItem.Name = "reservarToolStripMenuItem";
-            this.reservarToolStripMenuItem.Tag = "MDI_reservarToolStripMenuItem";
             this.reservarToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
+            this.reservarToolStripMenuItem.Tag = "MDI_menuReservar";
             this.reservarToolStripMenuItem.Text = "Reservar";
             this.reservarToolStripMenuItem.Click += new System.EventHandler(this.reservarToolStripMenuItem_Click);
             // 
             // controlDeHabitacionesToolStripMenuItem
             // 
             this.controlDeHabitacionesToolStripMenuItem.Name = "controlDeHabitacionesToolStripMenuItem";
-            this.controlDeHabitacionesToolStripMenuItem.Tag = "MDI_controlDeHabitacionesToolStripMenuItem";
             this.controlDeHabitacionesToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
+            this.controlDeHabitacionesToolStripMenuItem.Tag = "MDI_menuControlHabitaciones";
             this.controlDeHabitacionesToolStripMenuItem.Text = "Control de Habitaciones";
             this.controlDeHabitacionesToolStripMenuItem.Click += new System.EventHandler(this.controlDeHabitacionesToolStripMenuItem_Click);
             // 
             // checkInToolStripMenuItem
             // 
             this.checkInToolStripMenuItem.Name = "checkInToolStripMenuItem";
-            this.checkInToolStripMenuItem.Tag = "MDI_checkInToolStripMenuItem";
             this.checkInToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
+            this.checkInToolStripMenuItem.Tag = "MDI_menuCheckIn";
             this.checkInToolStripMenuItem.Text = "Check-In";
             this.checkInToolStripMenuItem.Click += new System.EventHandler(this.checkInToolStripMenuItem_Click);
             // 
             // checkOutToolStripMenuItem
             // 
             this.checkOutToolStripMenuItem.Name = "checkOutToolStripMenuItem";
-            this.checkOutToolStripMenuItem.Tag = "MDI_checkOutToolStripMenuItem";
             this.checkOutToolStripMenuItem.Size = new System.Drawing.Size(239, 24);
+            this.checkOutToolStripMenuItem.Tag = "MDI_menuCheckOut";
             this.checkOutToolStripMenuItem.Text = "Check-Out";
             this.checkOutToolStripMenuItem.Click += new System.EventHandler(this.checkOutToolStripMenuItem_Click);
             // 
-            // timerNoShow
+            // HabitacionesDropdownMenu
             // 
-            this.timerNoShow.Interval = 900000;
+            this.HabitacionesDropdownMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.HabitacionesDropdownMenu.IsMainMenu = false;
+            this.HabitacionesDropdownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.habitacionesToolStripMenuItem,
+            this.tiposDeHabitacionToolStripMenuItem,
+            this.pisosToolStripMenuItem});
+            this.HabitacionesDropdownMenu.MenuItemHeight = 25;
+            this.HabitacionesDropdownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
+            this.HabitacionesDropdownMenu.Name = "HabitacionesDropdownMenu";
+            this.HabitacionesDropdownMenu.PrimaryColor = System.Drawing.Color.Empty;
+            this.HabitacionesDropdownMenu.Size = new System.Drawing.Size(213, 104);
             // 
-            // btnDashboard
+            // habitacionesToolStripMenuItem
             // 
-            this.btnDashboard.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDashboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDashboard.ForeColor = System.Drawing.Color.Gold;
-            this.btnDashboard.IconChar = FontAwesome.Sharp.IconChar.ChartColumn;
-            this.btnDashboard.IconColor = System.Drawing.Color.Gold;
-            this.btnDashboard.IconFont = FontAwesome.Sharp.IconFont.Solid;
-            this.btnDashboard.IconSize = 38;
-            this.btnDashboard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDashboard.Location = new System.Drawing.Point(3, 258);
-            this.btnDashboard.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnDashboard.Name = "btnDashboard";
-            this.btnDashboard.Padding = new System.Windows.Forms.Padding(5, 0, 20, 0);
-            this.btnDashboard.Size = new System.Drawing.Size(325, 60);
-            this.btnDashboard.TabIndex = 7;
-            this.btnDashboard.Tag = "MDI_btnDashboard";
-            this.btnDashboard.Text = "Dashboard";
-            this.btnDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDashboard.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnDashboard.UseVisualStyleBackColor = true;
-            this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
+            this.habitacionesToolStripMenuItem.Name = "habitacionesToolStripMenuItem";
+            this.habitacionesToolStripMenuItem.Size = new System.Drawing.Size(212, 24);
+            this.habitacionesToolStripMenuItem.Tag = "MDI_menuHabitaciones";
+            this.habitacionesToolStripMenuItem.Text = "Habitaciones";
+            this.habitacionesToolStripMenuItem.Click += new System.EventHandler(this.habitacionesToolStripMenuItem_Click);
+            // 
+            // tiposDeHabitacionToolStripMenuItem
+            // 
+            this.tiposDeHabitacionToolStripMenuItem.Name = "tiposDeHabitacionToolStripMenuItem";
+            this.tiposDeHabitacionToolStripMenuItem.Size = new System.Drawing.Size(212, 24);
+            this.tiposDeHabitacionToolStripMenuItem.Tag = "MDI_menuTiposHabitacion";
+            this.tiposDeHabitacionToolStripMenuItem.Text = "Tipos de Habitacion";
+            this.tiposDeHabitacionToolStripMenuItem.Click += new System.EventHandler(this.tiposDeHabitacionToolStripMenuItem_Click);
+            // 
+            // pisosToolStripMenuItem
+            // 
+            this.pisosToolStripMenuItem.Name = "pisosToolStripMenuItem";
+            this.pisosToolStripMenuItem.Size = new System.Drawing.Size(212, 24);
+            this.pisosToolStripMenuItem.Tag = "MDI_menuPisos";
+            this.pisosToolStripMenuItem.Text = "Pisos";
+            this.pisosToolStripMenuItem.Click += new System.EventHandler(this.pisosToolStripMenuItem_Click);
             // 
             // FormMDI_08YS
             // 
@@ -663,6 +784,7 @@
             this.AdministrativoDropDownMenu.ResumeLayout(false);
             this.PerfilDropDownMenu.ResumeLayout(false);
             this.RecepcionDropDownMenu.ResumeLayout(false);
+            this.HabitacionesDropdownMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -710,6 +832,13 @@
         private System.Windows.Forms.ToolStripMenuItem checkOutToolStripMenuItem;
         private FontAwesome.Sharp.IconButton btnReservas;
         private FontAwesome.Sharp.IconButton btnDashboard;
+        private FontAwesome.Sharp.IconButton btnHabitaciones;
+        private DropdownMenuStrip_08YS HabitacionesDropdownMenu;
+        private System.Windows.Forms.ToolStripMenuItem habitacionesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tiposDeHabitacionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pisosToolStripMenuItem;
+        private FontAwesome.Sharp.IconButton btnHuespedes;
+        private FontAwesome.Sharp.IconButton btnHotelConfig;
     }
 }
 

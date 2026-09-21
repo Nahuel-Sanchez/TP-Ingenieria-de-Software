@@ -62,6 +62,9 @@ namespace MPP_08YS
             if (row.Table.Columns.Contains("NombreUsuarioRegistro") && row["NombreUsuarioRegistro"] != DBNull.Value)
                 reserva.UsuarioRegistroNombre = $"{row["NombreUsuarioRegistro"]} {row["ApellidoUsuarioRegistro"]}";
 
+            if (row.Table.Columns.Contains("MontoPagado") && row["MontoPagado"] != DBNull.Value)
+                reserva.MontoPagado = Convert.ToDecimal(row["MontoPagado"]);
+
             return reserva;
         }
     }

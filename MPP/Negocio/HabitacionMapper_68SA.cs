@@ -42,6 +42,12 @@ namespace MPP_08YS
                 TieneReservaHoy = row.Table.Columns.Contains("TieneReservaHoy") && Convert.ToInt32(row["TieneReservaHoy"]) == 1,
             };
 
+            if (row.Table.Columns.Contains("CantidadReservas") && row["CantidadReservas"] != DBNull.Value)
+                habitacion.CantidadReservas = Convert.ToInt32(row["CantidadReservas"]);
+
+            if (row.Table.Columns.Contains("CantidadReservasActivas") && row["CantidadReservasActivas"] != DBNull.Value)
+                habitacion.CantidadReservasActivas = Convert.ToInt32(row["CantidadReservasActivas"]);
+
             return habitacion;
         }
     }
@@ -58,12 +64,17 @@ namespace MPP_08YS
 
         public static Piso_68SA FromDataRow(DataRow row)
         {
-            return new Piso_68SA
+            var piso = new Piso_68SA
             {
                 PisoId = Convert.ToInt32(row["PisoID"]),
                 Numero = Convert.ToInt32(row["Numero"]),
                 Nombre = row["Nombre"].ToString()
             };
+
+            if (row.Table.Columns.Contains("CantidadHabitaciones") && row["CantidadHabitaciones"] != DBNull.Value)
+                piso.CantidadHabitaciones = Convert.ToInt32(row["CantidadHabitaciones"]);
+
+            return piso;
         }
     }
 
@@ -79,7 +90,7 @@ namespace MPP_08YS
 
         public static TipoHabitacion FromDataRow(DataRow row)
         {
-            return new TipoHabitacion
+            var tipo = new TipoHabitacion
             {
                 Id = Convert.ToInt32(row["TipoHabitacionID"]),
                 Nombre = row["Nombre"].ToString(),
@@ -87,6 +98,11 @@ namespace MPP_08YS
                 Capacidad = Convert.ToInt32(row["Capacidad"]),
                 TarifaNoche = Convert.ToDecimal(row["TarifaNoche"])
             };
+
+            if (row.Table.Columns.Contains("CantidadHabitaciones") && row["CantidadHabitaciones"] != DBNull.Value)
+                tipo.CantidadHabitaciones = Convert.ToInt32(row["CantidadHabitaciones"]);
+
+            return tipo;
         }
     }
 }

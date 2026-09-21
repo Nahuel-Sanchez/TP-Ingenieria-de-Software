@@ -54,7 +54,19 @@ namespace Service_08YS.Entities.Bitacora
         HabitacionEstadoCambiado,
         HuespedRegistrado,
         PagoRegistrado,
-        ConfiguracionHotelActualizada
+        ConfiguracionHotelActualizada,
+        HabitacionCreada,
+        HabitacionModificada,
+        HabitacionEliminada,
+        TipoHabitacionCreado,
+        TipoHabitacionModificado,
+        TipoHabitacionEliminado,
+        PisoCreado,
+        PisoModificado,
+        PisoEliminado,
+        HuespedModificado,
+        HuespedEliminado,
+        ReservaModificada
     }
 
     public class BitacoraEvento_08YS

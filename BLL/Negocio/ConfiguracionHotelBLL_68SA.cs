@@ -24,6 +24,19 @@ namespace BLL_08YS.Negocio
 
         public void Actualizar(ConfiguracionHotel_68SA configuracion)
         {
+            if (configuracion == null) throw new ArgumentNullException(nameof(configuracion));
+
+            // Columnas time(7): la hora tiene que caer dentro de un mismo día
+            var dia = TimeSpan.FromHours(24);
+            if (configuracion.HoraCheckIn < TimeSpan.Zero || configuracion.HoraCheckIn >= dia
+                || configuracion.HoraCheckOut < TimeSpan.Zero || configuracion.HoraCheckOut >= dia)
+                throw new DatosInvalidosException_68SA("Las horas de check-in y check-out deben estar entre las 00:00 y las 23:59.");
+
+            // GraciaNoShowHoras es decimal(5,2)
+            configuracion.GraciaNoShowHoras = Math.Round(configuracion.GraciaNoShowHoras, 2);
+            if (configuracion.GraciaNoShowHoras < 0 || configuracion.GraciaNoShowHoras > 999.99m)
+                throw new DatosInvalidosException_68SA("La tolerancia de no-show debe estar entre 0 y 999,99 horas.");
+
             _repo.Actualizar(configuracion);
             DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.ConfiguracionHotelActualizada);

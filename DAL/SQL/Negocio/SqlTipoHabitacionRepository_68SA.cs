@@ -31,5 +31,101 @@ namespace DAL_08YS.SQL.Negocio
 
             return dt.Rows.Count > 0 ? TipoHabitacionMapper_08YS.FromDataRow(dt.Rows[0]) : null;
         }
+
+        public List<TipoHabitacion> GetAll(TipoHabitacionFiltro_68SA filtro)
+        {
+            var where = new List<string>();
+            var parametros = new List<IDbDataParameter>();
+
+            if (!string.IsNullOrWhiteSpace(filtro.Nombre))
+            {
+                where.Add("t.Nombre LIKE @Nombre");
+                parametros.Add(Param("@Nombre", $"%{filtro.Nombre.Trim()}%"));
+            }
+            if (!string.IsNullOrWhiteSpace(filtro.Descripcion))
+            {
+                where.Add("t.Descripcion LIKE @Descripcion");
+                parametros.Add(Param("@Descripcion", $"%{filtro.Descripcion.Trim()}%"));
+            }
+            if (filtro.Capacidad.HasValue)
+            {
+                where.Add("t.Capacidad = @Capacidad");
+                parametros.Add(Param("@Capacidad", filtro.Capacidad.Value));
+            }
+            if (filtro.TarifaDesde.HasValue)
+            {
+                where.Add("t.TarifaNoche >= @TarifaDesde");
+                parametros.Add(Param("@TarifaDesde", filtro.TarifaDesde.Value));
+            }
+            if (filtro.TarifaHasta.HasValue)
+            {
+                where.Add("t.TarifaNoche <= @TarifaHasta");
+                parametros.Add(Param("@TarifaHasta", filtro.TarifaHasta.Value));
+            }
+
+            // La cantidad de habitaciones viaja en la misma consulta (sin una query por fila)
+            string query = @"
+        SELECT t.TipoHabitacionID, t.Nombre, t.Descripcion, t.Capacidad, t.TarifaNoche,
+               (SELECT COUNT(1) FROM Habitaciones h WHERE h.TipoHabitacionID = t.TipoHabitacionID) AS CantidadHabitaciones
+        FROM TiposHabitacion t"
+                + (where.Count > 0 ? " WHERE " + string.Join(" AND ", where) : "")
+                + " ORDER BY t.Nombre";
+
+            return TipoHabitacionMapper_08YS.FromDataTable(GetDataTable(query, parametros.ToArray()));
+        }
+
+        public int Crear(TipoHabitacion tipo)
+        {
+            return ExecuteScalar<int>(
+                @"INSERT INTO TiposHabitacion (Nombre, Descripcion, Capacidad, TarifaNoche)
+          VALUES (@Nombre, @Descripcion, @Capacidad, @TarifaNoche);
+          SELECT CAST(SCOPE_IDENTITY() AS int);",
+                new[]
+                {
+            Param("@Nombre", tipo.Nombre),
+            Param("@Descripcion", (object)tipo.Descripcion ?? DBNull.Value),
+            Param("@Capacidad", tipo.Capacidad),
+            Param("@TarifaNoche", tipo.TarifaNoche)
+                });
+        }
+
+        public void Modificar(TipoHabitacion tipo)
+        {
+            ExecuteNonQuery(
+                @"UPDATE TiposHabitacion
+          SET Nombre = @Nombre, Descripcion = @Descripcion, Capacidad = @Capacidad, TarifaNoche = @TarifaNoche
+          WHERE TipoHabitacionID = @Id",
+                new[]
+                {
+            Param("@Nombre", tipo.Nombre),
+            Param("@Descripcion", (object)tipo.Descripcion ?? DBNull.Value),
+            Param("@Capacidad", tipo.Capacidad),
+            Param("@TarifaNoche", tipo.TarifaNoche),
+            Param("@Id", tipo.Id)
+                });
+        }
+
+        public bool Eliminar(int tipoHabitacionId)
+        {
+            return ExecuteNonQuery(
+                @"DELETE FROM TiposHabitacion
+          WHERE TipoHabitacionID = @Id
+            AND NOT EXISTS (SELECT 1 FROM Habitaciones WHERE TipoHabitacionID = @Id)",
+                new[] { Param("@Id", tipoHabitacionId) });
+        }
+
+        public bool ExisteNombre(string nombre, int? excluirTipoId = null)
+        {
+            string query = "SELECT COUNT(1) FROM TiposHabitacion WHERE Nombre = @Nombre";
+            var parametros = new List<IDbDataParameter> { Param("@Nombre", nombre) };
+
+            if (excluirTipoId.HasValue)
+            {
+                query += " AND TipoHabitacionID <> @Excluir";
+                parametros.Add(Param("@Excluir", excluirTipoId.Value));
+            }
+
+            return ExecuteScalar<int>(query, parametros.ToArray()) > 0;
+        }
     }
 }

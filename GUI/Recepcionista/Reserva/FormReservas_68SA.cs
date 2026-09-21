@@ -20,7 +20,6 @@ namespace GUI_08YS.Recepcionista
         private readonly Action<Form> _openChildForm;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
         private readonly HabitacionBLL_68SA _habitacionBLL = BLLFactory_08YS.CreateHabitacionBLL();
-        private readonly PagoBLL_68SA _pagoBLL = BLLFactory_08YS.CreatePagoBLL();
 
         private DateTime _fechaBaseCalendario = DateTime.Today;
         private ModoCalendarioReservas _modoCalendario = ModoCalendarioReservas.Semana;
@@ -305,25 +304,21 @@ namespace GUI_08YS.Recepcionista
             var reservas = _reservaBLL.GetTodas(filtro);
             ActualizarTarjetas(reservas);
 
-            var items = reservas.Select(r =>
+            var items = reservas.Select(r => new ReservaListItem_68SA
             {
-                decimal adelanto = _pagoBLL.GetTotalPagado(r.Id);
-                return new ReservaListItem_68SA
-                {
-                    ReservaId = r.Id,
-                    Huesped = $"{r.Titular.Nombre} {r.Titular.Apellido}",
-                    Documento = r.Titular.Documento,
-                    Habitacion = r.Habitacion.NroHabitacion,
-                    RegistradoPor = r.UsuarioRegistroNombre,
-                    FechaRegistro = r.FechaRegistro,
-                    FechaEntrada = r.FechaIngreso,
-                    FechaSalida = r.FechaEgreso,
-                    Costo = r.MontoTotal,
-                    Adelanto = adelanto,
-                    Saldo = Math.Max(0, r.MontoTotal - adelanto),
-                    Estado = TextoEstadoReserva(r.Estado),
-                    PuedeCancelar = r.Estado == EstadoReserva.Confirmada
-                };
+                ReservaId = r.Id,
+                Huesped = $"{r.Titular.Nombre} {r.Titular.Apellido}",
+                Documento = r.Titular.Documento,
+                Habitacion = r.Habitacion.NroHabitacion,
+                RegistradoPor = r.UsuarioRegistroNombre,
+                FechaRegistro = r.FechaRegistro,
+                FechaEntrada = r.FechaIngreso,
+                FechaSalida = r.FechaEgreso,
+                Costo = r.MontoTotal,
+                Adelanto = r.MontoPagado,
+                Saldo = Math.Max(0, r.MontoTotal - r.MontoPagado),
+                Estado = TextoEstadoReserva(r.Estado),
+                PuedeCancelar = r.Estado == EstadoReserva.Confirmada
             }).ToList();
 
             dgvReservas.DataSource = null;

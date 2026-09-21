@@ -217,14 +217,11 @@ namespace GUI_08YS
             AdministrativoDropDownMenu.IsMainMenu = true;
             PerfilDropDownMenu.IsMainMenu = true;
             RecepcionDropDownMenu.IsMainMenu = true;
+            HabitacionesDropdownMenu.IsMainMenu = true;
         }
 
         private void FormMDI_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //if (MessageBox.Show($"{Resources.ContinuarCierreSesion} \n\n{Resources.ConfirmarCierreSesion}", Resources.Advertencia, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
-            //{
-            //    e.Cancel = true;
-            //}
             SessionManager_08YS.Instance.SesionInvalidada -= OnSesionInvalidada;
 
             if (SessionManager_08YS.Instance.IsLogged)
@@ -510,6 +507,36 @@ namespace GUI_08YS
         private void btnDashboard_Click(object sender, EventArgs e)
         {
             OpenChildForm(new FormDashboard_68SA());
+        }
+
+        private void btnHabitaciones_Click(object sender, EventArgs e)
+        {
+            HabitacionesDropdownMenu.Show(btnHabitaciones, btnHabitaciones.Width, 0);
+        }
+
+        private void pisosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormPisos_68SA());
+        }
+
+        private void tiposDeHabitacionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormTiposHabitacion_68SA());
+        }
+
+        private void habitacionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormHabitaciones_68SA());
+        }
+
+        private void btnHuespedes_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormHuespedes_68SA());
+        }
+
+        private void btnHotelConfig_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormConfiguracionHotel_68SA());
         }
     }
 }

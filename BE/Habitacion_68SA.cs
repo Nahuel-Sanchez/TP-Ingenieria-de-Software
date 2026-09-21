@@ -30,6 +30,17 @@ namespace BE_08YS
         public EstadoHabitacion EstadoVisual =>
             Estado == EstadoHabitacion.Disponible && TieneReservaHoy ? EstadoHabitacion.Reservada : Estado;
 
+        //para listado
+        public int CantidadReservas { get; set; }   // todas, incluido el historial
+        public int CantidadReservasActivas { get; set; }
+
+    }
+    public class HabitacionFiltro_68SA
+    {
+        public string NroHabitacion { get; set; }
+        public int? PisoId { get; set; }
+        public int? TipoHabitacionId { get; set; }
+        public EstadoHabitacion? Estado { get; set; } // se compara contra EstadoVisual (mismo criterio que Control de habitaciones)
     }
 
     public class TipoHabitacion
@@ -39,5 +50,17 @@ namespace BE_08YS
         public string Descripcion { get; set; }
         public int Capacidad { get; set; }
         public decimal TarifaNoche { get; set; }
+
+        // para listado
+        public int CantidadHabitaciones { get; set; }
+    }
+
+    public class TipoHabitacionFiltro_68SA
+    {
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        public int? Capacidad { get; set; }
+        public decimal? TarifaDesde { get; set; }
+        public decimal? TarifaHasta { get; set; }
     }
 }

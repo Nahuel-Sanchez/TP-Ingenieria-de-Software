@@ -36,5 +36,22 @@ namespace BE_08YS
                 return age;
             }
         }
+
+        //para listado
+        public int CantidadReservas { get; set; }
+    }
+
+    public class HuespedFiltro_68SA
+    {
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Documento { get; set; }
+        public TipoDocumento? TipoDocumento { get; set; }
+        public string Nacionalidad { get; set; }
+        public string Email { get; set; }
+        public string Telefono { get; set; }
+        public DateTime? NacimientoDesde { get; set; }
+        public DateTime? NacimientoHasta { get; set; }
+        public int Maximo { get; set; } // tope de filas: lo fija el BLL (HuespedBLL_68SA.LimiteListado)
     }
 }

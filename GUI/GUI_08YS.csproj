@@ -103,6 +103,54 @@
     <Compile Include="Recepcionista\Dashboard\UC_DonutChart_68SA.Designer.cs">
       <DependentUpon>UC_DonutChart_68SA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Recepcionista\FormConfiguracionHotel_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\FormConfiguracionHotel_68SA.Designer.cs">
+      <DependentUpon>FormConfiguracionHotel_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\FormEditarHabitacion_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\FormEditarHabitacion_68SA.Designer.cs">
+      <DependentUpon>FormEditarHabitacion_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\FormHabitaciones_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\FormHabitaciones_68SA.Designer.cs">
+      <DependentUpon>FormHabitaciones_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Huesped\FormHuespedes_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Huesped\FormHuespedes_68SA.Designer.cs">
+      <DependentUpon>FormHuespedes_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\Pisos\FormEditarPiso_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\Pisos\FormEditarPiso_68SA.Designer.cs">
+      <DependentUpon>FormEditarPiso_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\Tipos\FormEditarTipoHabitacion_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\Tipos\FormEditarTipoHabitacion_68SA.Designer.cs">
+      <DependentUpon>FormEditarTipoHabitacion_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\Pisos\FormPisos_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\Pisos\FormPisos_68SA.Designer.cs">
+      <DependentUpon>FormPisos_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\Tipos\FormTiposHabitacion_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Habitacion\Tipos\FormTiposHabitacion_68SA.Designer.cs">
+      <DependentUpon>FormTiposHabitacion_68SA.cs</DependentUpon>
+    </Compile>
     <Compile Include="Recepcionista\Habitacion\EstiloEstadoHabitacion_68SA.cs" />
     <Compile Include="Recepcionista\Habitacion\FormAccionesHabitacion_68SA.cs">
       <SubType>Form</SubType>
@@ -140,10 +188,10 @@
     <Compile Include="Recepcionista\Reserva\FormDisponibilidad.Designer.cs">
       <DependentUpon>FormDisponibilidad.cs</DependentUpon>
     </Compile>
-    <Compile Include="Recepcionista\FormRegistrarHuesped_68SA.cs">
+    <Compile Include="Recepcionista\Huesped\FormRegistrarHuesped_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Recepcionista\FormRegistrarHuesped_68SA.Designer.cs">
+    <Compile Include="Recepcionista\Huesped\FormRegistrarHuesped_68SA.Designer.cs">
       <DependentUpon>FormRegistrarHuesped_68SA.cs</DependentUpon>
     </Compile>
     <Compile Include="Recepcionista\Reserva\FormRegistrarReserva_68SA.cs">
@@ -170,9 +218,11 @@
     <Compile Include="Recepcionista\Reserva\UC_CalendarioReservas_68SA.Designer.cs">
       <DependentUpon>UC_CalendarioReservas_68SA.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CrudEstilo_68SA.cs" />
     <Compile Include="UserControls\IconNumericUpDown.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UserControls\ItemCombo_68SA.cs" />
     <Compile Include="UserControls\RoundedPanel_68SA.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -251,6 +301,9 @@
     <EmbeddedResource Include="Admin\FormGestionRespaldos_08YS.resx">
       <DependentUpon>FormGestionRespaldos_08YS.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Recepcionista\Huesped\FormHuespedes_68SA.resx">
+      <DependentUpon>FormHuespedes_68SA.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Recepcionista\Habitacion\FormAccionesHabitacion_68SA.resx">
       <DependentUpon>FormAccionesHabitacion_68SA.cs</DependentUpon>
     </EmbeddedResource>
@@ -263,7 +316,7 @@
     <EmbeddedResource Include="Recepcionista\Reserva\FormDisponibilidad.resx">
       <DependentUpon>FormDisponibilidad.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Recepcionista\FormRegistrarHuesped_68SA.resx">
+    <EmbeddedResource Include="Recepcionista\Huesped\FormRegistrarHuesped_68SA.resx">
       <DependentUpon>FormRegistrarHuesped_68SA.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Recepcionista\Reserva\FormRegistrarReserva_68SA.resx">

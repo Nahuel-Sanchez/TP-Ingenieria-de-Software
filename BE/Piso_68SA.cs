@@ -11,5 +11,15 @@ namespace BE_08YS
         public int PisoId { get; set; }
         public int Numero { get; set; }
         public string Nombre { get; set; }
+
+        //Para listado
+        public int CantidadHabitaciones { get; set; }
+    }
+
+    public class PisoFiltro_68SA
+    {
+        public string Numero { get; set; }
+        public string Nombre { get; set; }
     }
 }
+

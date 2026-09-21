@@ -65,5 +65,74 @@ namespace BLL_08YS.Negocio
             if (fechaEgreso.Date <= fechaIngreso.Date)
                 throw new RangoFechasInvalidoException_68SA("La fecha de egreso debe ser posterior a la fecha de ingreso.");
         }
+
+        // CRUD
+        public List<Habitacion_68SA> GetListado(HabitacionFiltro_68SA filtro)
+        {
+            filtro = filtro ?? new HabitacionFiltro_68SA();
+            var habitaciones = _habitacionRepo.GetListado(filtro);
+
+            // Mismo criterio que GetAll(tipo, estado): el estado se compara contra EstadoVisual
+            return filtro.Estado.HasValue
+                ? habitaciones.Where(h => h.EstadoVisual == filtro.Estado.Value).ToList()
+                : habitaciones;
+        }
+
+        public int Crear(Habitacion_68SA habitacion)
+        {
+            Validar(habitacion);
+
+            if (_habitacionRepo.ExisteNumero(habitacion.NroHabitacion))
+                throw new HabitacionNumeroDuplicadoException_68SA();
+
+            habitacion.Id = _habitacionRepo.Crear(habitacion);
+            _bitacoraBll.RegistrarEvento(Evento.HabitacionCreada, targetUsername: habitacion.Id.ToString());
+            return habitacion.Id;
+        }
+
+        public void Modificar(Habitacion_68SA habitacion)
+        {
+            Validar(habitacion);
+
+            var actual = _habitacionRepo.GetById(habitacion.Id);
+            if (actual == null)
+                throw new HabitacionNoEncontradaException_68SA();
+
+            if (_habitacionRepo.ExisteNumero(habitacion.NroHabitacion, habitacion.Id))
+                throw new HabitacionNumeroDuplicadoException_68SA();
+
+            // Cambiar el tipo con reservas Confirmada/En curso las dejaría con tarifa y capacidad de otro tipo
+            if (actual.Tipo.Id != habitacion.Tipo.Id && _habitacionRepo.TieneReservasActivas(habitacion.Id))
+                throw new HabitacionConReservasActivasException_68SA();
+
+            _habitacionRepo.Modificar(habitacion);
+            _bitacoraBll.RegistrarEvento(Evento.HabitacionModificada, targetUsername: habitacion.Id.ToString());
+        }
+
+        public void Eliminar(int habitacionId)
+        {
+            if (_habitacionRepo.GetById(habitacionId) == null)
+                throw new HabitacionNoEncontradaException_68SA();
+
+            if (!_habitacionRepo.Eliminar(habitacionId))
+                throw new HabitacionConReservasException_68SA();
+
+            _bitacoraBll.RegistrarEvento(Evento.HabitacionEliminada, targetUsername: habitacionId.ToString());
+        }
+
+        private static void Validar(Habitacion_68SA habitacion)
+        {
+            if (habitacion == null) throw new ArgumentNullException(nameof(habitacion));
+
+            habitacion.NroHabitacion = habitacion.NroHabitacion?.Trim();
+            if (string.IsNullOrEmpty(habitacion.NroHabitacion))
+                throw new DatosInvalidosException_68SA("El número de habitación es obligatorio.");
+            if (habitacion.NroHabitacion.Length > 10)
+                throw new DatosInvalidosException_68SA("El número de habitación no puede superar los 10 caracteres.");
+            if (habitacion.Piso == null || habitacion.Piso.PisoId <= 0)
+                throw new DatosInvalidosException_68SA("Debe seleccionar un piso.");
+            if (habitacion.Tipo == null || habitacion.Tipo.Id <= 0)
+                throw new DatosInvalidosException_68SA("Debe seleccionar un tipo de habitación.");
+        }
     }
 }

@@ -261,7 +261,7 @@
             this.txtNacionalidad.IconPadding = 4;
             this.txtNacionalidad.IconSize = 22;
             this.txtNacionalidad.Location = new System.Drawing.Point(23, 279);
-            this.txtNacionalidad.MaxLength = 60;
+            this.txtNacionalidad.MaxLength = 50;
             this.txtNacionalidad.Name = "txtNacionalidad";
             this.txtNacionalidad.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtNacionalidad.PlaceholderText = "Nacionalidad";

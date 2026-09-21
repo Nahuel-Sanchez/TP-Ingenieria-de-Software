@@ -20,7 +20,7 @@ namespace MPP_08YS
 
         public static Huesped_68SA FromDataRow(DataRow row)
         {
-            return new Huesped_68SA
+            var huesped = new Huesped_68SA
             {
                 Id = Convert.ToInt32(row["HuespedID"]),
                 Nombre = row["Nombre"].ToString(),
@@ -32,6 +32,11 @@ namespace MPP_08YS
                 Email = row["Email"] == DBNull.Value ? null : row["Email"].ToString(),
                 Telefono = row["Telefono"] == DBNull.Value ? null : row["Telefono"].ToString()
             };
+
+            if (row.Table.Columns.Contains("CantidadReservas") && row["CantidadReservas"] != DBNull.Value)
+                huesped.CantidadReservas = Convert.ToInt32(row["CantidadReservas"]);
+
+            return huesped;
         }
     }
 }

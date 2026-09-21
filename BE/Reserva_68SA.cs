@@ -29,6 +29,7 @@ namespace BE_08YS
         public decimal TarifaNoche { get; set; }
         public decimal MontoTotal { get; set; }
         public decimal MontoOriginal { get; set; }
+        public decimal MontoPagado { get; set; }
 
         // Se completa recién en el check-in, no al momento de reservar (PN1)
         public List<Huesped_68SA> Acompanantes { get; set; } = new List<Huesped_68SA>();
@@ -36,7 +37,7 @@ namespace BE_08YS
         public int Noches => (FechaEgreso - FechaIngreso).Days;
 
         public int? UsuarioRegistroDni { get; set; }
-        public string UsuarioRegistroNombre { get; set; } // solo para mostrar (Nombre + Apellido), no se inserta directo
+        public string UsuarioRegistroNombre { get; set; } // solo para mostrar (Nombre + Apellido)
         public DateTime FechaRegistro { get; set; }
     }
 
