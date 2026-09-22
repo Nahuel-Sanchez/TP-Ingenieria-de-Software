@@ -11,7 +11,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
     {
         ResumenOcupacion_68SA GetResumenOcupacion();
         List<OcupacionPorTipoItem_68SA> GetOcupacionPorTipo();
-        ResumenIngresos_68SA GetResumenIngresos(DateTime? desde, DateTime? hasta);
-        ResumenHuespedes_68SA GetResumenHuespedes(DateTime desde, DateTime hasta);
+        ResumenIngresos_68SA GetResumenIngresos(DateTime? desde, DateTime? hasta); 
+        ResumenHuespedes_68SA GetResumenHuespedes(DateTime? desde, DateTime? hasta);
     }
 }

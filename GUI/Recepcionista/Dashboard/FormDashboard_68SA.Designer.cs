@@ -1,6 +1,6 @@
 ﻿using GUI_08YS.Recepcionista.Dashboard;
 
-namespace GUI_08YS.Recepcionista.Dashboard
+namespace GUI_08YS.Recepcionista
 {
     partial class FormDashboard_68SA
     {
@@ -26,9 +26,7 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.btnTabGeneral = new FontAwesome.Sharp.IconButton();
             this.pnlContenido = new System.Windows.Forms.Panel();
             this.flpHuespedes = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblHuespedesPlaceholder = new System.Windows.Forms.Label();
             this.flpOcupacion = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblOcupacionPlaceholder = new System.Windows.Forms.Label();
             this.flpGeneral = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlCardsOcupacion = new System.Windows.Forms.TableLayoutPanel();
             this.pnlCardDisponibles = new GUI_08YS.UserControls.RoundedPanel_68SA();
@@ -46,12 +44,22 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblTituloLimpieza = new System.Windows.Forms.Label();
             this.lblValorLimpieza = new System.Windows.Forms.Label();
             this.lblSubLimpieza = new System.Windows.Forms.Label();
+            this.pnlCardMantenimiento = new GUI_08YS.UserControls.RoundedPanel_68SA();
+            this.iconMantenimiento = new FontAwesome.Sharp.IconPictureBox();
+            this.lblTituloMantenimiento = new System.Windows.Forms.Label();
+            this.lblValorMantenimiento = new System.Windows.Forms.Label();
+            this.lblSubMantenimiento = new System.Windows.Forms.Label();
             this.pnlCardTasaOcupacion = new GUI_08YS.UserControls.RoundedPanel_68SA();
             this.iconTasaOcupacion = new FontAwesome.Sharp.IconPictureBox();
             this.lblTituloTasaOcupacion = new System.Windows.Forms.Label();
             this.lblValorTasaOcupacion = new System.Windows.Forms.Label();
             this.lblSubTasaOcupacion = new System.Windows.Forms.Label();
             this.pnlFiltroFechasGeneral = new GUI_08YS.UserControls.RoundedPanel_68SA();
+            this.btnFiltroHistorico = new FontAwesome.Sharp.IconButton();
+            this.btnFiltroEsteMes = new FontAwesome.Sharp.IconButton();
+            this.btnFiltro30Dias = new FontAwesome.Sharp.IconButton();
+            this.btnFiltro7Dias = new FontAwesome.Sharp.IconButton();
+            this.btnFiltroHoy = new FontAwesome.Sharp.IconButton();
             this.btnActualizarGeneral = new FontAwesome.Sharp.IconButton();
             this.dtpHastaGeneral = new CustomControls.IconDateTimePicker();
             this.lblEtiquetaHastaGeneral = new System.Windows.Forms.Label();
@@ -93,6 +101,8 @@ namespace GUI_08YS.Recepcionista.Dashboard
             ((System.ComponentModel.ISupportInitialize)(this.iconOcupadasDash)).BeginInit();
             this.pnlCardLimpieza.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconLimpieza)).BeginInit();
+            this.pnlCardMantenimiento.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.iconMantenimiento)).BeginInit();
             this.pnlCardTasaOcupacion.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconTasaOcupacion)).BeginInit();
             this.pnlFiltroFechasGeneral.SuspendLayout();
@@ -126,7 +136,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblEncabezado.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblEncabezado.Location = new System.Drawing.Point(72, 24);
             this.lblEncabezado.Name = "lblEncabezado";
-            this.lblEncabezado.Tag = "Dashboard_lblEncabezado";
             this.lblEncabezado.Size = new System.Drawing.Size(180, 30);
             this.lblEncabezado.TabIndex = 1;
             this.lblEncabezado.Text = "Panel de Control";
@@ -166,7 +175,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.btnTabGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnTabGeneral.Location = new System.Drawing.Point(20, 6);
             this.btnTabGeneral.Name = "btnTabGeneral";
-            this.btnTabGeneral.Tag = "Dashboard_btnTabGeneral";
             this.btnTabGeneral.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnTabGeneral.Size = new System.Drawing.Size(140, 38);
             this.btnTabGeneral.TabIndex = 0;
@@ -187,7 +195,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.btnTabOcupacion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnTabOcupacion.Location = new System.Drawing.Point(170, 6);
             this.btnTabOcupacion.Name = "btnTabOcupacion";
-            this.btnTabOcupacion.Tag = "Dashboard_btnTabOcupacion";
             this.btnTabOcupacion.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnTabOcupacion.Size = new System.Drawing.Size(160, 38);
             this.btnTabOcupacion.TabIndex = 1;
@@ -208,7 +215,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.btnTabHuespedes.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnTabHuespedes.Location = new System.Drawing.Point(340, 6);
             this.btnTabHuespedes.Name = "btnTabHuespedes";
-            this.btnTabHuespedes.Tag = "Dashboard_btnTabHuespedes";
             this.btnTabHuespedes.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnTabHuespedes.Size = new System.Drawing.Size(160, 38);
             this.btnTabHuespedes.TabIndex = 2;
@@ -247,15 +253,17 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             // pnlCardsOcupacion
             // 
-            this.pnlCardsOcupacion.ColumnCount = 4;
-            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.pnlCardsOcupacion.ColumnCount = 5;
+            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.pnlCardsOcupacion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.pnlCardsOcupacion.Controls.Add(this.pnlCardDisponibles, 0, 0);
             this.pnlCardsOcupacion.Controls.Add(this.pnlCardOcupadas, 1, 0);
             this.pnlCardsOcupacion.Controls.Add(this.pnlCardLimpieza, 2, 0);
-            this.pnlCardsOcupacion.Controls.Add(this.pnlCardTasaOcupacion, 3, 0);
+            this.pnlCardsOcupacion.Controls.Add(this.pnlCardMantenimiento, 3, 0);
+            this.pnlCardsOcupacion.Controls.Add(this.pnlCardTasaOcupacion, 4, 0);
             this.pnlCardsOcupacion.Location = new System.Drawing.Point(3, 3);
             this.pnlCardsOcupacion.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.pnlCardsOcupacion.Name = "pnlCardsOcupacion";
@@ -276,38 +284,37 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.pnlCardDisponibles.Location = new System.Drawing.Point(3, 3);
             this.pnlCardDisponibles.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.pnlCardDisponibles.Name = "pnlCardDisponibles";
-            this.pnlCardDisponibles.Size = new System.Drawing.Size(341, 120);
+            this.pnlCardDisponibles.Size = new System.Drawing.Size(269, 120);
             this.pnlCardDisponibles.TabIndex = 0;
             // 
             // iconDisponibles
             // 
             this.iconDisponibles.IconChar = FontAwesome.Sharp.IconChar.DoorOpen;
             this.iconDisponibles.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(217)))), ((int)(((byte)(100)))));
-            this.iconDisponibles.IconSize = 32;
-            this.iconDisponibles.Location = new System.Drawing.Point(280, 38);
+            this.iconDisponibles.IconSize = 30;
+            this.iconDisponibles.Location = new System.Drawing.Point(212, 40);
             this.iconDisponibles.Name = "iconDisponibles";
-            this.iconDisponibles.Size = new System.Drawing.Size(40, 40);
+            this.iconDisponibles.Size = new System.Drawing.Size(38, 38);
             this.iconDisponibles.TabIndex = 3;
             this.iconDisponibles.TabStop = false;
             // 
             // lblTituloDisponibles
             // 
             this.lblTituloDisponibles.AutoSize = true;
-            this.lblTituloDisponibles.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloDisponibles.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTituloDisponibles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblTituloDisponibles.Location = new System.Drawing.Point(16, 14);
+            this.lblTituloDisponibles.Location = new System.Drawing.Point(14, 14);
             this.lblTituloDisponibles.Name = "lblTituloDisponibles";
-            this.lblTituloDisponibles.Tag = "Dashboard_lblTituloDisponibles";
-            this.lblTituloDisponibles.Size = new System.Drawing.Size(150, 13);
+            this.lblTituloDisponibles.Size = new System.Drawing.Size(120, 13);
             this.lblTituloDisponibles.TabIndex = 0;
-            this.lblTituloDisponibles.Text = "HABITACIONES DISPONIBLES";
+            this.lblTituloDisponibles.Text = "DISPONIBLES";
             // 
             // lblValorDisponibles
             // 
             this.lblValorDisponibles.AutoSize = true;
             this.lblValorDisponibles.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValorDisponibles.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblValorDisponibles.Location = new System.Drawing.Point(16, 34);
+            this.lblValorDisponibles.Location = new System.Drawing.Point(14, 34);
             this.lblValorDisponibles.Name = "lblValorDisponibles";
             this.lblValorDisponibles.Size = new System.Drawing.Size(40, 27);
             this.lblValorDisponibles.TabIndex = 1;
@@ -317,9 +324,8 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             this.lblSubDisponibles.AutoSize = true;
             this.lblSubDisponibles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblSubDisponibles.Location = new System.Drawing.Point(16, 76);
+            this.lblSubDisponibles.Location = new System.Drawing.Point(14, 76);
             this.lblSubDisponibles.Name = "lblSubDisponibles";
-            this.lblSubDisponibles.Tag = "Dashboard_lblSubDisponibles";
             this.lblSubDisponibles.Size = new System.Drawing.Size(90, 15);
             this.lblSubDisponibles.TabIndex = 2;
             this.lblSubDisponibles.Text = "de 0 hab.";
@@ -333,41 +339,40 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.pnlCardOcupadas.Controls.Add(this.lblSubOcupadasDash);
             this.pnlCardOcupadas.CornerRadius = 12;
             this.pnlCardOcupadas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCardOcupadas.Location = new System.Drawing.Point(359, 3);
+            this.pnlCardOcupadas.Location = new System.Drawing.Point(287, 3);
             this.pnlCardOcupadas.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.pnlCardOcupadas.Name = "pnlCardOcupadas";
-            this.pnlCardOcupadas.Size = new System.Drawing.Size(341, 120);
+            this.pnlCardOcupadas.Size = new System.Drawing.Size(269, 120);
             this.pnlCardOcupadas.TabIndex = 1;
             // 
             // iconOcupadasDash
             // 
             this.iconOcupadasDash.IconChar = FontAwesome.Sharp.IconChar.Bed;
             this.iconOcupadasDash.IconColor = System.Drawing.Color.Goldenrod;
-            this.iconOcupadasDash.IconSize = 32;
-            this.iconOcupadasDash.Location = new System.Drawing.Point(280, 38);
+            this.iconOcupadasDash.IconSize = 30;
+            this.iconOcupadasDash.Location = new System.Drawing.Point(212, 40);
             this.iconOcupadasDash.Name = "iconOcupadasDash";
-            this.iconOcupadasDash.Size = new System.Drawing.Size(40, 40);
+            this.iconOcupadasDash.Size = new System.Drawing.Size(38, 38);
             this.iconOcupadasDash.TabIndex = 3;
             this.iconOcupadasDash.TabStop = false;
             // 
             // lblTituloOcupadasDash
             // 
             this.lblTituloOcupadasDash.AutoSize = true;
-            this.lblTituloOcupadasDash.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloOcupadasDash.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTituloOcupadasDash.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblTituloOcupadasDash.Location = new System.Drawing.Point(16, 14);
+            this.lblTituloOcupadasDash.Location = new System.Drawing.Point(14, 14);
             this.lblTituloOcupadasDash.Name = "lblTituloOcupadasDash";
-            this.lblTituloOcupadasDash.Tag = "Dashboard_lblTituloOcupadasDash";
-            this.lblTituloOcupadasDash.Size = new System.Drawing.Size(140, 13);
+            this.lblTituloOcupadasDash.Size = new System.Drawing.Size(110, 13);
             this.lblTituloOcupadasDash.TabIndex = 0;
-            this.lblTituloOcupadasDash.Text = "HABITACIONES OCUPADAS";
+            this.lblTituloOcupadasDash.Text = "OCUPADAS";
             // 
             // lblValorOcupadasDash
             // 
             this.lblValorOcupadasDash.AutoSize = true;
             this.lblValorOcupadasDash.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValorOcupadasDash.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblValorOcupadasDash.Location = new System.Drawing.Point(16, 34);
+            this.lblValorOcupadasDash.Location = new System.Drawing.Point(14, 34);
             this.lblValorOcupadasDash.Name = "lblValorOcupadasDash";
             this.lblValorOcupadasDash.Size = new System.Drawing.Size(40, 27);
             this.lblValorOcupadasDash.TabIndex = 1;
@@ -377,9 +382,8 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             this.lblSubOcupadasDash.AutoSize = true;
             this.lblSubOcupadasDash.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblSubOcupadasDash.Location = new System.Drawing.Point(16, 76);
+            this.lblSubOcupadasDash.Location = new System.Drawing.Point(14, 76);
             this.lblSubOcupadasDash.Name = "lblSubOcupadasDash";
-            this.lblSubOcupadasDash.Tag = "Dashboard_lblSubOcupadasDash";
             this.lblSubOcupadasDash.Size = new System.Drawing.Size(90, 15);
             this.lblSubOcupadasDash.TabIndex = 2;
             this.lblSubOcupadasDash.Text = "de 0 hab.";
@@ -393,31 +397,30 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.pnlCardLimpieza.Controls.Add(this.lblSubLimpieza);
             this.pnlCardLimpieza.CornerRadius = 12;
             this.pnlCardLimpieza.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCardLimpieza.Location = new System.Drawing.Point(715, 3);
+            this.pnlCardLimpieza.Location = new System.Drawing.Point(571, 3);
             this.pnlCardLimpieza.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.pnlCardLimpieza.Name = "pnlCardLimpieza";
-            this.pnlCardLimpieza.Size = new System.Drawing.Size(341, 120);
+            this.pnlCardLimpieza.Size = new System.Drawing.Size(269, 120);
             this.pnlCardLimpieza.TabIndex = 2;
             // 
             // iconLimpieza
             // 
             this.iconLimpieza.IconChar = FontAwesome.Sharp.IconChar.Broom;
             this.iconLimpieza.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(155)))), ((int)(((byte)(235)))));
-            this.iconLimpieza.IconSize = 32;
-            this.iconLimpieza.Location = new System.Drawing.Point(280, 38);
+            this.iconLimpieza.IconSize = 30;
+            this.iconLimpieza.Location = new System.Drawing.Point(212, 40);
             this.iconLimpieza.Name = "iconLimpieza";
-            this.iconLimpieza.Size = new System.Drawing.Size(40, 40);
+            this.iconLimpieza.Size = new System.Drawing.Size(38, 38);
             this.iconLimpieza.TabIndex = 3;
             this.iconLimpieza.TabStop = false;
             // 
             // lblTituloLimpieza
             // 
             this.lblTituloLimpieza.AutoSize = true;
-            this.lblTituloLimpieza.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloLimpieza.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTituloLimpieza.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblTituloLimpieza.Location = new System.Drawing.Point(16, 14);
+            this.lblTituloLimpieza.Location = new System.Drawing.Point(14, 14);
             this.lblTituloLimpieza.Name = "lblTituloLimpieza";
-            this.lblTituloLimpieza.Tag = "Dashboard_lblTituloLimpieza";
             this.lblTituloLimpieza.Size = new System.Drawing.Size(90, 13);
             this.lblTituloLimpieza.TabIndex = 0;
             this.lblTituloLimpieza.Text = "POR LIMPIEZA";
@@ -427,7 +430,7 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblValorLimpieza.AutoSize = true;
             this.lblValorLimpieza.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValorLimpieza.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblValorLimpieza.Location = new System.Drawing.Point(16, 34);
+            this.lblValorLimpieza.Location = new System.Drawing.Point(14, 34);
             this.lblValorLimpieza.Name = "lblValorLimpieza";
             this.lblValorLimpieza.Size = new System.Drawing.Size(40, 27);
             this.lblValorLimpieza.TabIndex = 1;
@@ -437,12 +440,69 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             this.lblSubLimpieza.AutoSize = true;
             this.lblSubLimpieza.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblSubLimpieza.Location = new System.Drawing.Point(16, 76);
+            this.lblSubLimpieza.Location = new System.Drawing.Point(14, 76);
             this.lblSubLimpieza.Name = "lblSubLimpieza";
-            this.lblSubLimpieza.Tag = "Dashboard_lblSubLimpieza";
             this.lblSubLimpieza.Size = new System.Drawing.Size(90, 15);
             this.lblSubLimpieza.TabIndex = 2;
             this.lblSubLimpieza.Text = "de 0 hab.";
+            // 
+            // pnlCardMantenimiento
+            // 
+            this.pnlCardMantenimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
+            this.pnlCardMantenimiento.Controls.Add(this.iconMantenimiento);
+            this.pnlCardMantenimiento.Controls.Add(this.lblTituloMantenimiento);
+            this.pnlCardMantenimiento.Controls.Add(this.lblValorMantenimiento);
+            this.pnlCardMantenimiento.Controls.Add(this.lblSubMantenimiento);
+            this.pnlCardMantenimiento.CornerRadius = 12;
+            this.pnlCardMantenimiento.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlCardMantenimiento.Location = new System.Drawing.Point(855, 3);
+            this.pnlCardMantenimiento.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+            this.pnlCardMantenimiento.Name = "pnlCardMantenimiento";
+            this.pnlCardMantenimiento.Size = new System.Drawing.Size(269, 120);
+            this.pnlCardMantenimiento.TabIndex = 3;
+            // 
+            // iconMantenimiento
+            // 
+            this.iconMantenimiento.IconChar = FontAwesome.Sharp.IconChar.Wrench;
+            this.iconMantenimiento.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(140)))), ((int)(((byte)(60)))));
+            this.iconMantenimiento.IconSize = 30;
+            this.iconMantenimiento.Location = new System.Drawing.Point(212, 40);
+            this.iconMantenimiento.Name = "iconMantenimiento";
+            this.iconMantenimiento.Size = new System.Drawing.Size(38, 38);
+            this.iconMantenimiento.TabIndex = 3;
+            this.iconMantenimiento.TabStop = false;
+            // 
+            // lblTituloMantenimiento
+            // 
+            this.lblTituloMantenimiento.AutoSize = true;
+            this.lblTituloMantenimiento.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloMantenimiento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblTituloMantenimiento.Location = new System.Drawing.Point(14, 14);
+            this.lblTituloMantenimiento.Name = "lblTituloMantenimiento";
+            this.lblTituloMantenimiento.Size = new System.Drawing.Size(100, 13);
+            this.lblTituloMantenimiento.TabIndex = 0;
+            this.lblTituloMantenimiento.Text = "EN MANTENIMIENTO";
+            // 
+            // lblValorMantenimiento
+            // 
+            this.lblValorMantenimiento.AutoSize = true;
+            this.lblValorMantenimiento.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblValorMantenimiento.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lblValorMantenimiento.Location = new System.Drawing.Point(14, 34);
+            this.lblValorMantenimiento.Name = "lblValorMantenimiento";
+            this.lblValorMantenimiento.Size = new System.Drawing.Size(40, 27);
+            this.lblValorMantenimiento.TabIndex = 1;
+            this.lblValorMantenimiento.Text = "0";
+            // 
+            // lblSubMantenimiento
+            // 
+            this.lblSubMantenimiento.AutoSize = true;
+            this.lblSubMantenimiento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblSubMantenimiento.Location = new System.Drawing.Point(14, 76);
+            this.lblSubMantenimiento.Name = "lblSubMantenimiento";
+            this.lblSubMantenimiento.Size = new System.Drawing.Size(90, 15);
+            this.lblSubMantenimiento.TabIndex = 2;
+            this.lblSubMantenimiento.Text = "de 0 hab.";
             // 
             // pnlCardTasaOcupacion
             // 
@@ -453,32 +513,31 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.pnlCardTasaOcupacion.Controls.Add(this.lblSubTasaOcupacion);
             this.pnlCardTasaOcupacion.CornerRadius = 12;
             this.pnlCardTasaOcupacion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCardTasaOcupacion.Location = new System.Drawing.Point(1071, 3);
+            this.pnlCardTasaOcupacion.Location = new System.Drawing.Point(1139, 3);
             this.pnlCardTasaOcupacion.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.pnlCardTasaOcupacion.Name = "pnlCardTasaOcupacion";
-            this.pnlCardTasaOcupacion.Size = new System.Drawing.Size(350, 120);
-            this.pnlCardTasaOcupacion.TabIndex = 3;
+            this.pnlCardTasaOcupacion.Size = new System.Drawing.Size(282, 120);
+            this.pnlCardTasaOcupacion.TabIndex = 4;
             // 
             // iconTasaOcupacion
             // 
             this.iconTasaOcupacion.IconChar = FontAwesome.Sharp.IconChar.Gauge;
             this.iconTasaOcupacion.IconColor = System.Drawing.Color.Gold;
-            this.iconTasaOcupacion.IconSize = 32;
-            this.iconTasaOcupacion.Location = new System.Drawing.Point(288, 38);
+            this.iconTasaOcupacion.IconSize = 30;
+            this.iconTasaOcupacion.Location = new System.Drawing.Point(224, 40);
             this.iconTasaOcupacion.Name = "iconTasaOcupacion";
-            this.iconTasaOcupacion.Size = new System.Drawing.Size(40, 40);
+            this.iconTasaOcupacion.Size = new System.Drawing.Size(38, 38);
             this.iconTasaOcupacion.TabIndex = 3;
             this.iconTasaOcupacion.TabStop = false;
             // 
             // lblTituloTasaOcupacion
             // 
             this.lblTituloTasaOcupacion.AutoSize = true;
-            this.lblTituloTasaOcupacion.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloTasaOcupacion.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTituloTasaOcupacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblTituloTasaOcupacion.Location = new System.Drawing.Point(16, 14);
+            this.lblTituloTasaOcupacion.Location = new System.Drawing.Point(14, 14);
             this.lblTituloTasaOcupacion.Name = "lblTituloTasaOcupacion";
-            this.lblTituloTasaOcupacion.Tag = "Dashboard_lblTituloTasaOcupacion";
-            this.lblTituloTasaOcupacion.Size = new System.Drawing.Size(110, 13);
+            this.lblTituloTasaOcupacion.Size = new System.Drawing.Size(105, 13);
             this.lblTituloTasaOcupacion.TabIndex = 0;
             this.lblTituloTasaOcupacion.Text = "TASA DE OCUPACIÓN";
             // 
@@ -487,7 +546,7 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblValorTasaOcupacion.AutoSize = true;
             this.lblValorTasaOcupacion.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValorTasaOcupacion.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblValorTasaOcupacion.Location = new System.Drawing.Point(16, 34);
+            this.lblValorTasaOcupacion.Location = new System.Drawing.Point(14, 34);
             this.lblValorTasaOcupacion.Name = "lblValorTasaOcupacion";
             this.lblValorTasaOcupacion.Size = new System.Drawing.Size(60, 27);
             this.lblValorTasaOcupacion.TabIndex = 1;
@@ -497,9 +556,8 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             this.lblSubTasaOcupacion.AutoSize = true;
             this.lblSubTasaOcupacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblSubTasaOcupacion.Location = new System.Drawing.Point(16, 76);
+            this.lblSubTasaOcupacion.Location = new System.Drawing.Point(14, 76);
             this.lblSubTasaOcupacion.Name = "lblSubTasaOcupacion";
-            this.lblSubTasaOcupacion.Tag = "Dashboard_lblSubTasaOcupacion";
             this.lblSubTasaOcupacion.Size = new System.Drawing.Size(110, 15);
             this.lblSubTasaOcupacion.TabIndex = 2;
             this.lblSubTasaOcupacion.Text = "Capacidad activa";
@@ -507,6 +565,11 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // pnlFiltroFechasGeneral
             // 
             this.pnlFiltroFechasGeneral.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
+            this.pnlFiltroFechasGeneral.Controls.Add(this.btnFiltroHistorico);
+            this.pnlFiltroFechasGeneral.Controls.Add(this.btnFiltroEsteMes);
+            this.pnlFiltroFechasGeneral.Controls.Add(this.btnFiltro30Dias);
+            this.pnlFiltroFechasGeneral.Controls.Add(this.btnFiltro7Dias);
+            this.pnlFiltroFechasGeneral.Controls.Add(this.btnFiltroHoy);
             this.pnlFiltroFechasGeneral.Controls.Add(this.btnActualizarGeneral);
             this.pnlFiltroFechasGeneral.Controls.Add(this.dtpHastaGeneral);
             this.pnlFiltroFechasGeneral.Controls.Add(this.lblEtiquetaHastaGeneral);
@@ -517,7 +580,7 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.pnlFiltroFechasGeneral.Location = new System.Drawing.Point(3, 139);
             this.pnlFiltroFechasGeneral.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
             this.pnlFiltroFechasGeneral.Name = "pnlFiltroFechasGeneral";
-            this.pnlFiltroFechasGeneral.Size = new System.Drawing.Size(1424, 76);
+            this.pnlFiltroFechasGeneral.Size = new System.Drawing.Size(1424, 112);
             this.pnlFiltroFechasGeneral.TabIndex = 1;
             // 
             // lblTituloFiltroGeneral
@@ -527,7 +590,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblTituloFiltroGeneral.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblTituloFiltroGeneral.Location = new System.Drawing.Point(16, 10);
             this.lblTituloFiltroGeneral.Name = "lblTituloFiltroGeneral";
-            this.lblTituloFiltroGeneral.Tag = "Dashboard_lblTituloFiltroGeneral";
             this.lblTituloFiltroGeneral.Size = new System.Drawing.Size(150, 17);
             this.lblTituloFiltroGeneral.TabIndex = 0;
             this.lblTituloFiltroGeneral.Text = "INGRESOS DEL PERÍODO";
@@ -536,9 +598,8 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             this.lblEtiquetaDesdeGeneral.AutoSize = true;
             this.lblEtiquetaDesdeGeneral.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblEtiquetaDesdeGeneral.Location = new System.Drawing.Point(400, 12);
+            this.lblEtiquetaDesdeGeneral.Location = new System.Drawing.Point(16, 70);
             this.lblEtiquetaDesdeGeneral.Name = "lblEtiquetaDesdeGeneral";
-            this.lblEtiquetaDesdeGeneral.Tag = "Dashboard_lblEtiquetaDesdeGeneral";
             this.lblEtiquetaDesdeGeneral.Size = new System.Drawing.Size(40, 15);
             this.lblEtiquetaDesdeGeneral.TabIndex = 1;
             this.lblEtiquetaDesdeGeneral.Text = "Desde";
@@ -556,12 +617,12 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.dtpDesdeGeneral.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.dtpDesdeGeneral.IconChar = FontAwesome.Sharp.IconChar.CalendarDay;
             this.dtpDesdeGeneral.IconColor = System.Drawing.Color.Goldenrod;
-            this.dtpDesdeGeneral.IconSize = 18;
-            this.dtpDesdeGeneral.Location = new System.Drawing.Point(400, 30);
+            this.dtpDesdeGeneral.IconSize = 20;
+            this.dtpDesdeGeneral.Location = new System.Drawing.Point(70, 58);
             this.dtpDesdeGeneral.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpDesdeGeneral.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpDesdeGeneral.Name = "dtpDesdeGeneral";
-            this.dtpDesdeGeneral.Size = new System.Drawing.Size(170, 36);
+            this.dtpDesdeGeneral.Size = new System.Drawing.Size(220, 40);
             this.dtpDesdeGeneral.TabIndex = 2;
             this.dtpDesdeGeneral.Value = null;
             // 
@@ -569,9 +630,8 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             this.lblEtiquetaHastaGeneral.AutoSize = true;
             this.lblEtiquetaHastaGeneral.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblEtiquetaHastaGeneral.Location = new System.Drawing.Point(590, 12);
+            this.lblEtiquetaHastaGeneral.Location = new System.Drawing.Point(310, 70);
             this.lblEtiquetaHastaGeneral.Name = "lblEtiquetaHastaGeneral";
-            this.lblEtiquetaHastaGeneral.Tag = "Dashboard_lblEtiquetaHastaGeneral";
             this.lblEtiquetaHastaGeneral.Size = new System.Drawing.Size(38, 15);
             this.lblEtiquetaHastaGeneral.TabIndex = 3;
             this.lblEtiquetaHastaGeneral.Text = "Hasta";
@@ -589,12 +649,12 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.dtpHastaGeneral.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.dtpHastaGeneral.IconChar = FontAwesome.Sharp.IconChar.CalendarDay;
             this.dtpHastaGeneral.IconColor = System.Drawing.Color.Goldenrod;
-            this.dtpHastaGeneral.IconSize = 18;
-            this.dtpHastaGeneral.Location = new System.Drawing.Point(590, 30);
+            this.dtpHastaGeneral.IconSize = 20;
+            this.dtpHastaGeneral.Location = new System.Drawing.Point(364, 58);
             this.dtpHastaGeneral.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpHastaGeneral.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpHastaGeneral.Name = "dtpHastaGeneral";
-            this.dtpHastaGeneral.Size = new System.Drawing.Size(170, 36);
+            this.dtpHastaGeneral.Size = new System.Drawing.Size(220, 40);
             this.dtpHastaGeneral.TabIndex = 4;
             this.dtpHastaGeneral.Value = null;
             // 
@@ -602,22 +662,97 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             this.btnActualizarGeneral.BackColor = System.Drawing.Color.Goldenrod;
             this.btnActualizarGeneral.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnActualizarGeneral.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnActualizarGeneral.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnActualizarGeneral.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
             this.btnActualizarGeneral.IconChar = FontAwesome.Sharp.IconChar.ArrowsRotate;
             this.btnActualizarGeneral.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
-            this.btnActualizarGeneral.IconSize = 18;
+            this.btnActualizarGeneral.IconSize = 20;
             this.btnActualizarGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnActualizarGeneral.Location = new System.Drawing.Point(780, 30);
+            this.btnActualizarGeneral.Location = new System.Drawing.Point(604, 56);
             this.btnActualizarGeneral.Name = "btnActualizarGeneral";
-            this.btnActualizarGeneral.Tag = "Dashboard_btnActualizarGeneral";
-            this.btnActualizarGeneral.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnActualizarGeneral.Size = new System.Drawing.Size(140, 36);
+            this.btnActualizarGeneral.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
+            this.btnActualizarGeneral.Size = new System.Drawing.Size(170, 44);
             this.btnActualizarGeneral.TabIndex = 5;
             this.btnActualizarGeneral.Text = "Actualizar";
             this.btnActualizarGeneral.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnActualizarGeneral.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnActualizarGeneral.UseVisualStyleBackColor = false;
+            // 
+            // btnFiltroHoy
+            // 
+            this.btnFiltroHoy.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.btnFiltroHoy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFiltroHoy.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFiltroHoy.ForeColor = System.Drawing.Color.Goldenrod;
+            this.btnFiltroHoy.Location = new System.Drawing.Point(678, 8);
+            this.btnFiltroHoy.Name = "btnFiltroHoy";
+            this.btnFiltroHoy.Size = new System.Drawing.Size(130, 36);
+            this.btnFiltroHoy.TabIndex = 6;
+            this.btnFiltroHoy.Text = "Hoy";
+            this.btnFiltroHoy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnFiltroHoy.UseVisualStyleBackColor = false;
+            // 
+            // btnFiltro7Dias
+            // 
+            this.btnFiltro7Dias.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.btnFiltro7Dias.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFiltro7Dias.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFiltro7Dias.ForeColor = System.Drawing.Color.Goldenrod;
+            this.btnFiltro7Dias.Location = new System.Drawing.Point(818, 8);
+            this.btnFiltro7Dias.Name = "btnFiltro7Dias";
+            this.btnFiltro7Dias.Size = new System.Drawing.Size(140, 36);
+            this.btnFiltro7Dias.TabIndex = 7;
+            this.btnFiltro7Dias.Text = "Últimos 7 días";
+            this.btnFiltro7Dias.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnFiltro7Dias.UseVisualStyleBackColor = false;
+            // 
+            // btnFiltro30Dias
+            // 
+            this.btnFiltro30Dias.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.btnFiltro30Dias.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFiltro30Dias.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFiltro30Dias.ForeColor = System.Drawing.Color.Goldenrod;
+            this.btnFiltro30Dias.Location = new System.Drawing.Point(968, 8);
+            this.btnFiltro30Dias.Name = "btnFiltro30Dias";
+            this.btnFiltro30Dias.Size = new System.Drawing.Size(140, 36);
+            this.btnFiltro30Dias.TabIndex = 8;
+            this.btnFiltro30Dias.Text = "Últimos 30 días";
+            this.btnFiltro30Dias.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnFiltro30Dias.UseVisualStyleBackColor = false;
+            // 
+            // btnFiltroEsteMes
+            // 
+            this.btnFiltroEsteMes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.btnFiltroEsteMes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFiltroEsteMes.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFiltroEsteMes.ForeColor = System.Drawing.Color.Goldenrod;
+            this.btnFiltroEsteMes.Location = new System.Drawing.Point(1118, 8);
+            this.btnFiltroEsteMes.Name = "btnFiltroEsteMes";
+            this.btnFiltroEsteMes.Size = new System.Drawing.Size(130, 36);
+            this.btnFiltroEsteMes.TabIndex = 9;
+            this.btnFiltroEsteMes.Text = "Este Mes";
+            this.btnFiltroEsteMes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnFiltroEsteMes.UseVisualStyleBackColor = false;
+            // 
+            // btnFiltroHistorico
+            // 
+            this.btnFiltroHistorico.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.btnFiltroHistorico.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFiltroHistorico.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFiltroHistorico.ForeColor = System.Drawing.Color.Goldenrod;
+            this.btnFiltroHistorico.IconChar = FontAwesome.Sharp.IconChar.Infinity;
+            this.btnFiltroHistorico.IconColor = System.Drawing.Color.Goldenrod;
+            this.btnFiltroHistorico.IconSize = 16;
+            this.btnFiltroHistorico.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnFiltroHistorico.Location = new System.Drawing.Point(1258, 8);
+            this.btnFiltroHistorico.Name = "btnFiltroHistorico";
+            this.btnFiltroHistorico.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnFiltroHistorico.Size = new System.Drawing.Size(150, 36);
+            this.btnFiltroHistorico.TabIndex = 10;
+            this.btnFiltroHistorico.Text = "Histórico Total";
+            this.btnFiltroHistorico.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnFiltroHistorico.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnFiltroHistorico.UseVisualStyleBackColor = false;
             // 
             // pnlCardsIngresos
             // 
@@ -630,7 +765,7 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.pnlCardsIngresos.Controls.Add(this.pnlCardTicketPromedio, 1, 0);
             this.pnlCardsIngresos.Controls.Add(this.pnlCardAnuladas, 2, 0);
             this.pnlCardsIngresos.Controls.Add(this.pnlCardMontoAnulado, 3, 0);
-            this.pnlCardsIngresos.Location = new System.Drawing.Point(3, 225);
+            this.pnlCardsIngresos.Location = new System.Drawing.Point(3, 261);
             this.pnlCardsIngresos.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
             this.pnlCardsIngresos.Name = "pnlCardsIngresos";
             this.pnlCardsIngresos.RowCount = 1;
@@ -670,7 +805,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblTituloIngresos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloIngresos.Location = new System.Drawing.Point(16, 14);
             this.lblTituloIngresos.Name = "lblTituloIngresos";
-            this.lblTituloIngresos.Tag = "Dashboard_lblTituloIngresos";
             this.lblTituloIngresos.Size = new System.Drawing.Size(120, 13);
             this.lblTituloIngresos.TabIndex = 0;
             this.lblTituloIngresos.Text = "INGRESOS PERÍODO";
@@ -718,7 +852,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblTituloTicketPromedio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloTicketPromedio.Location = new System.Drawing.Point(16, 14);
             this.lblTituloTicketPromedio.Name = "lblTituloTicketPromedio";
-            this.lblTituloTicketPromedio.Tag = "Dashboard_lblTituloTicketPromedio";
             this.lblTituloTicketPromedio.Size = new System.Drawing.Size(110, 13);
             this.lblTituloTicketPromedio.TabIndex = 0;
             this.lblTituloTicketPromedio.Text = "TICKET PROMEDIO";
@@ -766,7 +899,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblTituloAnuladas.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloAnuladas.Location = new System.Drawing.Point(16, 14);
             this.lblTituloAnuladas.Name = "lblTituloAnuladas";
-            this.lblTituloAnuladas.Tag = "Dashboard_lblTituloAnuladas";
             this.lblTituloAnuladas.Size = new System.Drawing.Size(140, 13);
             this.lblTituloAnuladas.TabIndex = 0;
             this.lblTituloAnuladas.Text = "% RESERVAS ANULADAS";
@@ -814,7 +946,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblTituloMontoAnulado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloMontoAnulado.Location = new System.Drawing.Point(16, 14);
             this.lblTituloMontoAnulado.Name = "lblTituloMontoAnulado";
-            this.lblTituloMontoAnulado.Tag = "Dashboard_lblTituloMontoAnulado";
             this.lblTituloMontoAnulado.Size = new System.Drawing.Size(120, 13);
             this.lblTituloMontoAnulado.TabIndex = 0;
             this.lblTituloMontoAnulado.Text = "MONTO ANULADO";
@@ -837,7 +968,7 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.pnlOrigenGasto.Controls.Add(this.ucDonutOrigenGasto);
             this.pnlOrigenGasto.Controls.Add(this.lblTituloOrigenGasto);
             this.pnlOrigenGasto.CornerRadius = 12;
-            this.pnlOrigenGasto.Location = new System.Drawing.Point(3, 341);
+            this.pnlOrigenGasto.Location = new System.Drawing.Point(3, 377);
             this.pnlOrigenGasto.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.pnlOrigenGasto.Name = "pnlOrigenGasto";
             this.pnlOrigenGasto.Size = new System.Drawing.Size(1424, 300);
@@ -850,7 +981,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.lblTituloOrigenGasto.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblTituloOrigenGasto.Location = new System.Drawing.Point(16, 14);
             this.lblTituloOrigenGasto.Name = "lblTituloOrigenGasto";
-            this.lblTituloOrigenGasto.Tag = "Dashboard_lblTituloOrigenGasto";
             this.lblTituloOrigenGasto.Size = new System.Drawing.Size(140, 19);
             this.lblTituloOrigenGasto.TabIndex = 0;
             this.lblTituloOrigenGasto.Text = "ORIGEN DEL GASTO";
@@ -874,30 +1004,19 @@ namespace GUI_08YS.Recepcionista.Dashboard
             // 
             // flpOcupacion
             // 
-            this.flpOcupacion.Controls.Add(this.lblOcupacionPlaceholder);
+            this.flpOcupacion.AutoScroll = true;
             this.flpOcupacion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpOcupacion.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpOcupacion.Location = new System.Drawing.Point(0, 0);
             this.flpOcupacion.Name = "flpOcupacion";
             this.flpOcupacion.Padding = new System.Windows.Forms.Padding(20, 16, 20, 16);
             this.flpOcupacion.Size = new System.Drawing.Size(1470, 794);
             this.flpOcupacion.TabIndex = 1;
             this.flpOcupacion.Visible = false;
-            // 
-            // lblOcupacionPlaceholder
-            // 
-            this.lblOcupacionPlaceholder.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOcupacionPlaceholder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblOcupacionPlaceholder.Location = new System.Drawing.Point(3, 0);
-            this.lblOcupacionPlaceholder.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.lblOcupacionPlaceholder.Name = "lblOcupacionPlaceholder";
-            this.lblOcupacionPlaceholder.Tag = "Dashboard_lblOcupacionPlaceholder";
-            this.lblOcupacionPlaceholder.Size = new System.Drawing.Size(400, 22);
-            this.lblOcupacionPlaceholder.TabIndex = 0;
-            this.lblOcupacionPlaceholder.Text = "Donuts de ocupación por estado y por tipo — próximamente.";
+            this.flpOcupacion.WrapContents = false;
             // 
             // flpHuespedes
             // 
-            this.flpHuespedes.Controls.Add(this.lblHuespedesPlaceholder);
             this.flpHuespedes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpHuespedes.Location = new System.Drawing.Point(0, 0);
             this.flpHuespedes.Name = "flpHuespedes";
@@ -905,18 +1024,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.flpHuespedes.Size = new System.Drawing.Size(1470, 794);
             this.flpHuespedes.TabIndex = 2;
             this.flpHuespedes.Visible = false;
-            // 
-            // lblHuespedesPlaceholder
-            // 
-            this.lblHuespedesPlaceholder.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHuespedesPlaceholder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblHuespedesPlaceholder.Location = new System.Drawing.Point(3, 0);
-            this.lblHuespedesPlaceholder.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.lblHuespedesPlaceholder.Name = "lblHuespedesPlaceholder";
-            this.lblHuespedesPlaceholder.Tag = "Dashboard_lblHuespedesPlaceholder";
-            this.lblHuespedesPlaceholder.Size = new System.Drawing.Size(400, 22);
-            this.lblHuespedesPlaceholder.TabIndex = 0;
-            this.lblHuespedesPlaceholder.Text = "KPIs de huéspedes nuevos/recurrentes y nacionalidad — próximamente.";
             // 
             // FormDashboard_68SA
             // 
@@ -950,6 +1057,9 @@ namespace GUI_08YS.Recepcionista.Dashboard
             this.pnlCardLimpieza.ResumeLayout(false);
             this.pnlCardLimpieza.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconLimpieza)).EndInit();
+            this.pnlCardMantenimiento.ResumeLayout(false);
+            this.pnlCardMantenimiento.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.iconMantenimiento)).EndInit();
             this.pnlCardTasaOcupacion.ResumeLayout(false);
             this.pnlCardTasaOcupacion.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconTasaOcupacion)).EndInit();
@@ -999,6 +1109,11 @@ namespace GUI_08YS.Recepcionista.Dashboard
         private System.Windows.Forms.Label lblTituloLimpieza;
         private System.Windows.Forms.Label lblValorLimpieza;
         private System.Windows.Forms.Label lblSubLimpieza;
+        private UserControls.RoundedPanel_68SA pnlCardMantenimiento;
+        private FontAwesome.Sharp.IconPictureBox iconMantenimiento;
+        private System.Windows.Forms.Label lblTituloMantenimiento;
+        private System.Windows.Forms.Label lblValorMantenimiento;
+        private System.Windows.Forms.Label lblSubMantenimiento;
         private UserControls.RoundedPanel_68SA pnlCardTasaOcupacion;
         private FontAwesome.Sharp.IconPictureBox iconTasaOcupacion;
         private System.Windows.Forms.Label lblTituloTasaOcupacion;
@@ -1011,6 +1126,11 @@ namespace GUI_08YS.Recepcionista.Dashboard
         private System.Windows.Forms.Label lblEtiquetaHastaGeneral;
         private CustomControls.IconDateTimePicker dtpHastaGeneral;
         private FontAwesome.Sharp.IconButton btnActualizarGeneral;
+        private FontAwesome.Sharp.IconButton btnFiltroHoy;
+        private FontAwesome.Sharp.IconButton btnFiltro7Dias;
+        private FontAwesome.Sharp.IconButton btnFiltro30Dias;
+        private FontAwesome.Sharp.IconButton btnFiltroEsteMes;
+        private FontAwesome.Sharp.IconButton btnFiltroHistorico;
         private System.Windows.Forms.TableLayoutPanel pnlCardsIngresos;
         private UserControls.RoundedPanel_68SA pnlCardIngresos;
         private FontAwesome.Sharp.IconPictureBox iconIngresos;
@@ -1033,8 +1153,6 @@ namespace GUI_08YS.Recepcionista.Dashboard
         private UC_DonutChart_68SA ucDonutOrigenGasto;
         private System.Windows.Forms.FlowLayoutPanel flpLeyendaOrigenGasto;
         private System.Windows.Forms.FlowLayoutPanel flpOcupacion;
-        private System.Windows.Forms.Label lblOcupacionPlaceholder;
         private System.Windows.Forms.FlowLayoutPanel flpHuespedes;
-        private System.Windows.Forms.Label lblHuespedesPlaceholder;
     }
 }

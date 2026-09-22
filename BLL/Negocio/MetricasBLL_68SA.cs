@@ -20,6 +20,6 @@ namespace BLL_08YS.Negocio
         public ResumenOcupacion_68SA GetResumenOcupacion() => _repo.GetResumenOcupacion();
         public List<OcupacionPorTipoItem_68SA> GetOcupacionPorTipo() => _repo.GetOcupacionPorTipo();
         public ResumenIngresos_68SA GetResumenIngresos(DateTime? desde, DateTime? hasta) => _repo.GetResumenIngresos(desde, hasta);
-        public ResumenHuespedes_68SA GetResumenHuespedes(DateTime desde, DateTime hasta) => _repo.GetResumenHuespedes(desde, hasta);
+        public ResumenHuespedes_68SA GetResumenHuespedes(DateTime? desde, DateTime? hasta) => _repo.GetResumenHuespedes(desde, hasta);
     }
 }

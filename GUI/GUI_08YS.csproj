@@ -99,7 +99,9 @@
     <Compile Include="Recepcionista\Dashboard\FormDashboard_68SA.Designer.cs">
       <DependentUpon>FormDashboard_68SA.cs</DependentUpon>
     </Compile>
-    <Compile Include="Recepcionista\Dashboard\UC_DonutChart_68SA.cs" />
+    <Compile Include="Recepcionista\Dashboard\UC_DonutChart_68SA.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Recepcionista\Dashboard\UC_DonutChart_68SA.Designer.cs">
       <DependentUpon>UC_DonutChart_68SA.cs</DependentUpon>
     </Compile>

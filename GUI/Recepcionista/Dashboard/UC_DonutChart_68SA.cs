@@ -6,13 +6,6 @@ using System.Windows.Forms;
 
 namespace GUI_08YS.Recepcionista.Dashboard
 {
-    public class SegmentoDonut_68SA
-    {
-        public string Etiqueta { get; set; }
-        public decimal Valor { get; set; }
-        public Color Color { get; set; }
-    }
-
     public partial class UC_DonutChart_68SA : UserControl
     {
         private List<SegmentoDonut_68SA> _segmentos = new List<SegmentoDonut_68SA>();
@@ -105,5 +98,12 @@ namespace GUI_08YS.Recepcionista.Dashboard
                     (Width - tamano.Width) / 2, Height / 2 + 14);
             }
         }
+    }
+
+    public class SegmentoDonut_68SA
+    {
+        public string Etiqueta { get; set; }
+        public decimal Valor { get; set; }
+        public Color Color { get; set; }
     }
 }

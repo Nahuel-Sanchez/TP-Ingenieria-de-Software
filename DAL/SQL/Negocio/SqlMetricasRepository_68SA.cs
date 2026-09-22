@@ -18,11 +18,11 @@ namespace DAL_08YS
                 ;WITH HabitacionesAgg AS (
                     SELECT
                         COUNT(*) AS Total,
-                        SUM(CASE WHEN h.Estado = 0 AND rHoy.ReservaID IS NULL THEN 1 ELSE 0 END) AS Disponibles,
-                        SUM(CASE WHEN h.Estado = 0 AND rHoy.ReservaID IS NOT NULL THEN 1 ELSE 0 END) AS Reservadas,
-                        SUM(CASE WHEN h.Estado = 2 THEN 1 ELSE 0 END) AS Ocupadas,
-                        SUM(CASE WHEN h.Estado = 3 THEN 1 ELSE 0 END) AS EnLimpieza,
-                        SUM(CASE WHEN h.Estado = 4 THEN 1 ELSE 0 END) AS FueraDeServicio
+                        ISNULL(SUM(CASE WHEN h.Estado = 0 AND rHoy.ReservaID IS NULL THEN 1 ELSE 0 END), 0) AS Disponibles,
+                        ISNULL(SUM(CASE WHEN h.Estado = 0 AND rHoy.ReservaID IS NOT NULL THEN 1 ELSE 0 END), 0) AS Reservadas,
+                        ISNULL(SUM(CASE WHEN h.Estado = 2 THEN 1 ELSE 0 END), 0) AS Ocupadas,
+                        ISNULL(SUM(CASE WHEN h.Estado = 3 THEN 1 ELSE 0 END), 0) AS EnLimpieza,
+                        ISNULL(SUM(CASE WHEN h.Estado = 4 THEN 1 ELSE 0 END), 0) AS FueraDeServicio
                     FROM Habitaciones h
                     LEFT JOIN Reservas rHoy ON rHoy.HabitacionID = h.HabitacionID AND rHoy.Estado = 0
                                              AND rHoy.FechaIngreso <= CAST(GETDATE() AS DATE)
@@ -107,9 +107,9 @@ namespace DAL_08YS
                 ReservasAgg AS (
                     SELECT
                         COUNT(*) AS TotalReservasPeriodo,
-                        SUM(CASE WHEN Estado = 3 THEN 1 ELSE 0 END) AS ReservasAnuladas,
-                        SUM(CASE WHEN Estado <> 3 THEN MontoOriginal ELSE 0 END) AS MontoOrigenReserva,
-                        SUM(CASE WHEN Estado <> 3 THEN MontoTotal - MontoOriginal ELSE 0 END) AS MontoOrigenRenovacion
+                        ISNULL(SUM(CASE WHEN Estado = 3 THEN 1 ELSE 0 END), 0) AS ReservasAnuladas,
+                        ISNULL(SUM(CASE WHEN Estado <> 3 THEN MontoOriginal ELSE 0 END), 0) AS MontoOrigenReserva,
+                        ISNULL(SUM(CASE WHEN Estado <> 3 THEN MontoTotal - MontoOriginal ELSE 0 END), 0) AS MontoOrigenRenovacion
                     FROM Reservas r WHERE {filtroReservas}
                 ),
                 AnuladasAgg AS (
@@ -148,26 +148,54 @@ namespace DAL_08YS
             return resumen;
         }
 
-        public ResumenHuespedes_68SA GetResumenHuespedes(DateTime desde, DateTime hasta)
+        public ResumenHuespedes_68SA GetResumenHuespedes(DateTime? desde, DateTime? hasta)
         {
-            DateTime hastaInclusive = hasta.Date.AddDays(1).AddTicks(-1);
+            string filtroReservas = "1=1";
+            string filtroPagos = "1=1";
+            string condicionRecurrente = "0";
 
-            string queryResumen = @"
+            if (desde.HasValue)
+            {
+                filtroReservas += " AND r.FechaIngreso >= @Desde";
+                filtroPagos += " AND FechaPago >= @Desde";
+                condicionRecurrente = @"CASE WHEN EXISTS (
+                SELECT 1 FROM Reservas r2
+                WHERE r2.HuespedTitularID = hu.HuespedID AND r2.FechaIngreso < @Desde
+                ) THEN 1 ELSE 0 END";
+            }
+            if (hasta.HasValue)
+            {
+                filtroReservas += " AND r.FechaIngreso <= @Hasta";
+                filtroPagos += " AND FechaPago <= @HastaInclusive";
+            }
+
+            // Cada llamada a GetDataTable necesita SUS PROPIAS instancias de parámetro — no se puede
+            // reusar el mismo SqlParameter en dos comandos distintos.
+            List<IDbDataParameter> ConstruirParametros()
+            {
+                var lista = new List<IDbDataParameter>();
+                if (desde.HasValue)
+                    lista.Add(Param("@Desde", desde.Value.Date));
+                if (hasta.HasValue)
+                {
+                    DateTime hastaInclusive = hasta.Value.Date.AddDays(1).AddTicks(-1);
+                    lista.Add(Param("@Hasta", hasta.Value.Date));
+                    lista.Add(Param("@HastaInclusive", hastaInclusive));
+                }
+                return lista;
+            }
+
+            string queryResumen = $@"
                 ;WITH HuespedesPeriodo AS (
-                    SELECT hu.HuespedID,
-                           CASE WHEN EXISTS (
-                               SELECT 1 FROM Reservas r2
-                               WHERE r2.HuespedTitularID = hu.HuespedID AND r2.FechaIngreso < @Desde
-                           ) THEN 1 ELSE 0 END AS EsRecurrente
+                    SELECT hu.HuespedID, {condicionRecurrente} AS EsRecurrente
                     FROM Huespedes hu
                     INNER JOIN Reservas r ON r.HuespedTitularID = hu.HuespedID
-                    WHERE r.FechaIngreso >= @Desde AND r.FechaIngreso <= @Hasta AND r.Estado <> 3
+                    WHERE {filtroReservas} AND r.Estado <> 3
                     GROUP BY hu.HuespedID
                 ),
                 IngresosAgg AS (
                     SELECT ISNULL(SUM(Monto), 0) AS IngresosPeriodo
-                    FROM Pagos
-                    WHERE FechaPago >= @Desde AND FechaPago <= @HastaInclusive
+                    FROM Pagos WHERE {filtroPagos}
                 )
                 SELECT
                     (SELECT COUNT(*) FROM HuespedesPeriodo) AS Total,
@@ -175,12 +203,7 @@ namespace DAL_08YS
                     ia.IngresosPeriodo
                 FROM IngresosAgg ia";
 
-            DataTable dtResumen = GetDataTable(queryResumen, new[]
-            {
-                Param("@Desde", desde.Date),
-                Param("@Hasta", hasta.Date),
-                Param("@HastaInclusive", hastaInclusive)
-            });
+            DataTable dtResumen = GetDataTable(queryResumen, ConstruirParametros().ToArray());
             var rowResumen = dtResumen.Rows[0];
 
             int total = Convert.ToInt32(rowResumen["Total"]);
@@ -196,15 +219,15 @@ namespace DAL_08YS
                 GastoPromedioPorHuesped = total > 0 ? Math.Round(ingresosPeriodo / total, 2) : 0
             };
 
-            string queryNacionalidad = @"
+            string queryNacionalidad = $@"
                 SELECT hu.Nacionalidad, COUNT(DISTINCT hu.HuespedID) AS Cantidad
                 FROM Huespedes hu
                 INNER JOIN Reservas r ON r.HuespedTitularID = hu.HuespedID
-                WHERE r.FechaIngreso >= @Desde AND r.FechaIngreso <= @Hasta AND r.Estado <> 3
+                WHERE {filtroReservas} AND r.Estado <> 3
                 GROUP BY hu.Nacionalidad
                 ORDER BY Cantidad DESC";
 
-            DataTable dtNac = GetDataTable(queryNacionalidad, new[] { Param("@Desde", desde.Date), Param("@Hasta", hasta.Date) });
+            DataTable dtNac = GetDataTable(queryNacionalidad, ConstruirParametros().ToArray());
             foreach (DataRow row in dtNac.Rows)
             {
                 resumen.PorNacionalidad.Add(new NacionalidadItem_68SA
