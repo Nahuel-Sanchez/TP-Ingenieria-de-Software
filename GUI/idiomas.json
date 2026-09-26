@@ -38,7 +38,6 @@
     "Comun_excTitularMenorDeEdad": "El titular de una reserva debe ser mayor de edad.",
     "Comun_excHabitacionNoDisponible": "La habitación seleccionada ya no está disponible para el rango de fechas indicado.",
     "Comun_excRangoFechasInvalido": "El rango de fechas ingresado no es válido.",
-
     "Login_btn_Acceder": "Acceder",
     "Login_lblDescripcionLogin": "Excelencia en cada estadía",
     "Login_txtUsername": "Usuario",
@@ -64,7 +63,6 @@
     "Login_Titulo": "Login - Horizon Hotel && Resort",
     "Login_msg_dv_inconsistente": "Se detectó una inconsistencia en la base de datos. Contacte a un administrador para más información.",
     "Login_txtPassword": "Contraseña",
-
     "MDI_btnCerrarSesion": "Cerrar Sesión",
     "MDI_btnAdministrativo": "Administrativo",
     "MDI_btnPerfil": "Perfil",
@@ -106,7 +104,6 @@
     "MDI_menuPisos": "Pisos",
     "MDI_btnHuespedes": "Huespedes",
     "MDI_btnHotelConfig": "Configuracion Hotel",
-
     "GestionUsuarios_lblUsuarios": "Usuarios",
     "GestionUsuarios_btnDesbloquear": "Desbloquear",
     "GestionUsuarios_btnActivar": "Activar",
@@ -148,7 +145,6 @@
     "GestionUsuarios_lblDNI": "DNI",
     "GestionUsuarios_msg_user_auto_estado": "No puede modificar su propio estado activo.",
     "GestionUsuarios_btnActivarDesactivar": "Activar/Desactivar",
-
     "Bitacora_lblAuditoriaEventos": "Auditoría de Eventos",
     "Bitacora_lblModulo": "Módulo: ",
     "Bitacora_lblEvento": "Evento: ",
@@ -169,7 +165,6 @@
     "Bitacora_msg_fecha_fin_futura": "La fecha de finalización no puede ser posterior a la fecha actual.",
     "Bitacora_msg_fechas_invertidas": "La fecha de partida no puede ser posterior a la fecha de finalización.",
     "Bitacora_btnFiltrar": "Filtrar",
-
     "AccesoAltaMod_lblAltaModificacion": "Alta/Modificación",
     "AccesoAltaMod_lblNombre": "Nombre",
     "AccesoAltaMod_lblAsignados": "Asignados",
@@ -203,7 +198,6 @@
     "AccesoAltaMod_no_se_puede_agregar": "No se puede agregar",
     "AccesoAltaMod_txtNombreAcceso_hint": "Ingrese el nombre",
     "AccesoAltaMod_lblDescripcion": "Descripción",
-
     "GestionAcceso_lblGestion": "Gestión",
     "GestionAcceso_lblListado": "Listado",
     "GestionAcceso_lblDetalle": "Detail",
@@ -215,7 +209,6 @@
     "GestionAcceso_Texto_GestionDe": "Gestión de",
     "GestionAcceso_Entidad_Familias": "Familias",
     "GestionAcceso_Entidad_Roles": "Roles",
-
     "Backups_backup_titulo": "Gestión de Respaldos",
     "Backups_backup_crear_titulo": "Crear respaldo",
     "Backups_backup_crear_desc": "Seleccioná la carpeta donde se guardará el archivo de backup",
@@ -239,7 +232,6 @@
     "Backups_backup_ok": "Backup completado exitosamente en:",
     "Backups_backup_error": "Ocurrió un error mientras se realizaba el backup.",
     "Backups_restore_info_archivo": "Archivo de backup seleccionado:",
-
     "Backups_restore_confirm_mensaje": "¿Está seguro de que desea restaurar la base de datos desde este backup?",
     "Backups_restore_confirm_titulo": "Confirmar Restauración",
     "Backups_restore_ok": "Base de datos restaurada exitosamente.",
@@ -249,7 +241,6 @@
     "Backups_restore_error_sql": "Error al restaurar ({0}): {1}",
     "Backups_restore_archivo_no_existe": "El archivo de backup seleccionado no existe.",
     "Backups_restore_formato_invalido": "El archivo seleccionado no tiene el formato .bak esperado.",
-
     "InconsistenciaDB_dv_titulo": "Inconsistencia en la base de datos",
     "InconsistenciaDB_dv_descripcion": "Se detectaron modificaciones directas sobre la base de datos. Seleccione una acción:",
     "InconsistenciaDB_dv_btn_recalcular": "Recalcular",
@@ -261,7 +252,6 @@
     "InconsistenciaDB_dv_restore_confirm": "Se restaurará la base de datos desde:\n\nArchivo: {0}\nTamaño: {1} MB\nFecha: {2}\n\nEsta operación reemplazará completamente la base de datos actual y no puede deshacerse. El sistema se reiniciará al finalizar.\n\n¿Desea continuar?",
     "InconsistenciaDB_dv_restore_ok": "Base de datos restaurada correctamente. El sistema se reiniciará.",
     "InconsistenciaDB_dv_restore_error": "Error al restaurar el backup.",
-
     "CambiarPassword_lblUsuario": "Usuario:",
     "CambiarPassword_btnCambiarContraseña": "Cambiar Contraseña",
     "CambiarPassword_lblPasswordActual": "Contraseña Actual",
@@ -277,10 +267,8 @@
     "CambiarPassword_txtPwdActual": "Contraseña Actual",
     "CambiarPassword_txtPwdNueva": "Nueva Contraseña",
     "CambiarPassword_txtPwdConfirmar": "Confirmar Contraseña",
-
     "Disponibilidad_lblTituloDisponibilidad": "Registrar reserva",
     "Disponibilidad_btnContinuarDisponibilidad": "Continuar",
-
     "ControlHabitaciones_lblFiltroEstado": "Filtrar por estado:",
     "ControlHabitaciones_lblFiltroTipo": "Filtrar por tipo:",
     "ControlHabitaciones_tituloReserva": "Habitaciones disponibles",
@@ -309,15 +297,12 @@
     "ControlHabitaciones_estadoReservada": "Reservada",
     "ControlHabitaciones_estadoLimpieza": "Limpieza",
     "ControlHabitaciones_estadoFueraServicio": "Fuera de Servicio",
-
     "HabitacionCard_lblEtiqueta": "Habitación",
     "HabitacionCard_lblCapacidadPrefijo": "Max",
-
     "AccionesHabitacion_lblTitulo": "Acciones - Habitación",
     "AccionesHabitacion_lblEtiquetaHabitacion": "HABITACIÓN",
     "AccionesHabitacion_lblEtiquetaTipo": "TIPO",
     "AccionesHabitacion_lblEtiquetaEstado": "ESTADO",
-
     "BuscarReserva_btnSeleccionar": "Seleccionar",
     "BuscarReserva_lblResultado": "Ingresá el documento del titular y presioná Buscar.",
     "BuscarReserva_btnBuscar": "Buscar",
@@ -325,7 +310,6 @@
     "BuscarReserva_lblEtiquetaTipoDocumento": "Tipo de Documento",
     "BuscarReserva_msgIngreseDocumento": "Ingresá un número de documento.",
     "BuscarReserva_msgNoEncontrada": "No se encontró una reserva con ese documento en el estado esperado.",
-
     "CheckIn_lblEncabezado": "Registrar Check-in",
     "CheckIn_btnBuscarReserva": "Buscar Reserva por DNI",
     "CheckIn_lblSeccionReserva": "DATOS DE LA RESERVA",
@@ -350,7 +334,6 @@
     "CheckIn_tituloComposicionNoCoincide": "La composición no coincide",
     "CheckIn_msgCheckInRegistrado": "Check-in registrado para la habitación {0}.",
     "CheckIn_tituloCheckInConfirmado": "Check-in confirmado",
-
     "CheckOut_lblEncabezado": "Registrar Check-out",
     "CheckOut_btnBuscarReserva": "Buscar Reserva por DNI",
     "CheckOut_lblSeccionReserva": "DATOS DE LA RESERVA",
@@ -372,7 +355,6 @@
     "CheckOut_msgFaltaReserva": "Buscá y encontrá una reserva antes de confirmar el check-out.",
     "CheckOut_msgCheckOutRegistrado": "Check-out registrado para la habitación {0}.",
     "CheckOut_tituloCheckOutConfirmado": "Check-out confirmado",
-
     "RegistrarReserva_lblEncabezado": "Registrar Reserva",
     "RegistrarReserva_lblDetEtiquetaCapacidad": "Capacidad máx.:",
     "RegistrarReserva_lblDetEtiquetaPrecio": "Precio por noche:",
@@ -415,7 +397,6 @@
     "RegistrarReserva_tituloCapacidadExcedida": "Capacidad excedida",
     "RegistrarReserva_msgReservaConfirmada": "Reserva #{0} confirmada para la habitación {1}.",
     "RegistrarReserva_tituloReservaConfirmada": "Reserva confirmada",
-
     "RegistrarHuesped_btnRegistrar": "Registrar",
     "RegistrarHuesped_btnCancelar": "Cancelar",
     "RegistrarHuesped_lblEmail": "Email",
@@ -436,13 +417,11 @@
     "RegistrarHuesped_msgSeleccioneFechaNacimiento": "Seleccioná la fecha de nacimiento.",
     "RegistrarHuesped_msgFechaNacimientoFutura": "La fecha de nacimiento no puede ser futura.",
     "RegistrarHuesped_msgEmailInvalido": "El email ingresado no tiene un formato válido.",
-
     "EstadoHabitacion_badgeDisponible": "DISPONIBLE",
     "EstadoHabitacion_badgeReservada": "RESERVADA",
     "EstadoHabitacion_badgeOcupada": "OCUPADA",
     "EstadoHabitacion_badgeEnLimpieza": "EN LIMPIEZA",
     "EstadoHabitacion_badgeFueraServicio": "FUERA DE SERVICIO",
-
     "RenovarEstadia_lblTitulo": "Renovar Estadía",
     "RenovarEstadia_lblEtiquetaHabitacion": "Habitación:",
     "RenovarEstadia_lblEtiquetaTitular": "Titular:",
@@ -457,7 +436,6 @@
     "RenovarEstadia_txtNoches": "noches",
     "RenovarEstadia_msgRenovacionConfirmada": "Estadía renovada correctamente. El costo adicional queda como saldo a cobrar en el check-out.",
     "RenovarEstadia_tituloRenovacionConfirmada": "Renovación confirmada",
-
     "Reservas_btnCrearReserva": "Crear Reserva",
     "Reservas_lblEncabezado": "Reservas",
     "Reservas_btnTabCalendario": "Calendario",
@@ -500,7 +478,6 @@
     "Reservas_lblCantOcupadas": "Cantidad: 0",
     "Reservas_lblCantFinalizadas": "Cantidad: 0",
     "Reservas_lblCantCanceladas": "Cantidad: 0",
-
     "Dashboard_lblEncabezado": "Panel de Control",
     "Dashboard_btnTabGeneral": "General",
     "Dashboard_btnTabOcupacion": "Ocupación",
@@ -526,7 +503,6 @@
     "Dashboard_lblHuespedesPlaceholder": "KPIs de huéspedes nuevos/recurrentes y nacionalidad — próximamente.",
     "Dashboard_txtDeXHab": "de {0} hab.",
     "Dashboard_msgFiltroInvalido": "La fecha Desde no puede ser posterior a Hasta.",
-
     "Pendientes_btn_Aceptar": "Aceptar",
     "Pendientes_btn_Cancelar": "Cancelar",
     "Pendientes_lbl_Password": "Contraseña:",
@@ -557,13 +533,11 @@
     "Pendientes_msg_familia_en_uso": "No se puede eliminar: la familia está siendo utilizada por un rol u otra familia.",
     "Pendientes_msg_familia_nombre_duplicado": "Ya existe una familia con el mismo nombre.",
     "Pendientes_msg_familia_permisos_duplicados": "Ya existe una familia con exactamente el mismo conjunto de permisos.",
-
     "Menu_pisos": "Pisos",
     "Crud_btnFiltrar": "Filtrar",
     "Crud_btnLimpiar": "Limpiar",
     "Crud_btnGuardar": "Guardar",
     "Crud_btnCancelar": "Cancelar",
-
     "Pisos_titulo": "Pisos",
     "Pisos_btnNuevo": "Nuevo piso",
     "Pisos_colNumero": "Número",
@@ -580,7 +554,6 @@
     "Pisos_msgConHabitaciones": "No se puede eliminar el piso porque tiene habitaciones asociadas.",
     "Pisos_msgNoEncontrado": "El piso ya no existe. Se actualizará el listado.",
     "Pisos_tituloNoSePudoEliminar": "No se pudo eliminar",
-
     "Menu_tiposHabitacion": "Tipos de habitación",
     "Tipos_titulo": "Tipos de habitación",
     "Tipos_btnNuevo": "Nuevo tipo",
@@ -605,7 +578,6 @@
     "Tipos_tituloNoSePudoEliminar": "No se pudo eliminar",
     "Tipos_msgFiltroCapacidadInvalido": "La capacidad del filtro debe ser un número entero.",
     "Tipos_msgFiltroTarifaInvalido": "Las tarifas del filtro deben ser números válidos.",
-
     "Menu_habitaciones": "Administrar habitaciones",
     "Crud_todos": "Todos",
     "Habitaciones_titulo": "Administrar habitaciones",
@@ -630,7 +602,6 @@
     "Habitaciones_msgConReservas": "No se puede eliminar la habitación porque tiene reservas asociadas (incluido el historial). Si ya no se usa, póngala fuera de servicio desde Control de habitaciones.",
     "Habitaciones_msgNoEncontrada": "La habitación ya no existe. Se actualizará el listado.",
     "Habitaciones_tituloNoSePudoEliminar": "No se pudo eliminar",
-
     "Menu_huespedes": "Huéspedes",
     "Huespedes_titulo": "Huéspedes",
     "Huespedes_btnNuevo": "Nuevo huésped",
@@ -644,7 +615,6 @@
     "Huespedes_tituloNoSePudoEliminar": "No se pudo eliminar",
     "Huespedes_msgLimite": "Se muestran los primeros {0} resultados. Use los filtros para acotar la búsqueda.",
     "RegistrarHuesped_msgIngreseNacionalidad": "Ingrese la nacionalidad.",
-
     "Menu_configuracionHotel": "Configuración del hotel",
     "Config_titulo": "Configuración del hotel",
     "Config_lblCheckIn": "Hora de check-in",
@@ -655,15 +625,14 @@
     "Config_msgIngreseHoras": "Seleccione la hora de check-in y la hora de check-out.",
     "Config_msgConfirmarGuardar": "Estos valores se aplican a todo el hotel y afectan la cancelación automática de no-shows. ¿Guardar los cambios?",
     "Config_msgGuardado": "La configuración se guardó correctamente.",
-    "Config_msgSinConfiguracion": "No hay una configuración cargada en la base de datos. Contacte al administrador."
+    "Config_msgSinConfiguracion": "No hay una configuración cargada en la base de datos. Contacte al administrador.",
+
+
+    "Dashboard_origenReserva": "Reserva",
+    "Dashboard_origenRenovacion": "Renovación",
+    "Dashboard_origenServicio": "Servicio a la Habitación",
+    "Dashboard_origenCambioHabitacion": "Cambio de Habitación"
   },
-
-
-
-
-
-
-
 
 
 
@@ -707,7 +676,6 @@
     "Comun_excTitularMenorDeEdad": "The reservation holder must be of legal age.",
     "Comun_excHabitacionNoDisponible": "The selected room is no longer available for the specified date range.",
     "Comun_excRangoFechasInvalido": "The entered date range is not valid.",
-
     "Login_btn_Acceder": "Log In",
     "Login_lblDescripcionLogin": "Excellence in Each Stay",
     "Login_txtUsername": "Username",
@@ -733,7 +701,6 @@
     "Login_Titulo": "Login - Horizon Hotel && Resort",
     "Login_msg_dv_inconsistente": "A database inconsistency was detected. Please contact an administrator for more information.",
     "Login_txtPassword": "Password",
-
     "MDI_btnCerrarSesion": "Logout",
     "MDI_btnAdministrativo": "Administrative",
     "MDI_btnPerfil": "Profile",
@@ -775,7 +742,6 @@
     "MDI_menuPisos": "Floors",
     "MDI_btnHuespedes": "Guests",
     "MDI_btnHotelConfig": "Hotel Configuration",
-
     "GestionUsuarios_lblUsuarios": "Users",
     "GestionUsuarios_btnDesbloquear": "Unlock",
     "GestionUsuarios_btnActivar": "Activate",
@@ -817,7 +783,6 @@
     "GestionUsuarios_lblDNI": "ID Number",
     "GestionUsuarios_msg_user_auto_estado": "You cannot modify your own active status.",
     "GestionUsuarios_btnActivarDesactivar": "Activate/Deactivate",
-
     "Bitacora_lblAuditoriaEventos": "Event Audit",
     "Bitacora_lblModulo": "Module: ",
     "Bitacora_lblEvento": "Event: ",
@@ -838,7 +803,6 @@
     "Bitacora_msg_fecha_fin_futura": "The end date cannot be later than today's date.",
     "Bitacora_msg_fechas_invertidas": "The start date cannot be later than the end date.",
     "Bitacora_btnFiltrar": "Filter",
-
     "AccesoAltaMod_lblAltaModificacion": "Alta/Modificación",
     "AccesoAltaMod_lblNombre": "Name",
     "AccesoAltaMod_lblAsignados": "Assigned",
@@ -872,7 +836,6 @@
     "AccesoAltaMod_no_se_puede_agregar": "It cannot be added",
     "AccesoAltaMod_txtNombreAcceso_hint": "Enter the name",
     "AccesoAltaMod_lblDescripcion": "Description",
-
     "GestionAcceso_lblGestion": "Management",
     "GestionAcceso_lblListado": "List",
     "GestionAcceso_lblDetalle": "Detail",
@@ -884,7 +847,6 @@
     "GestionAcceso_Texto_GestionDe": "Management of",
     "GestionAcceso_Entidad_Familias": "Families",
     "GestionAcceso_Entidad_Roles": "Roles",
-
     "Backups_backup_titulo": "Backup Management",
     "Backups_backup_crear_titulo": "Create backup",
     "Backups_backup_crear_desc": "Select the folder where the backup file will be saved",
@@ -907,7 +869,6 @@
     "Backups_backup_seleccionar_carpeta": "Select Folder",
     "Backups_backup_ok": "Backup completed successfully in:",
     "Backups_backup_error": "An error occurred while performing the backup.",
-
     "Backups_restore_info_archivo": "Selected backup file:",
     "Backups_restore_confirm_mensaje": "Are you sure you want to restore the database from this backup?",
     "Backups_restore_confirm_titulo": "Confirm Restore",
@@ -918,7 +879,6 @@
     "Backups_restore_error_sql": "Error while restoring ({0}): {1}",
     "Backups_restore_archivo_no_existe": "The selected backup file does not exist.",
     "Backups_restore_formato_invalido": "The selected file does not have the expected .bak format.",
-
     "InconsistenciaDB_dv_titulo": "Database inconsistency",
     "InconsistenciaDB_dv_descripcion": "Direct modifications to the database were detected. Please select an action:",
     "InconsistenciaDB_dv_btn_recalcular": "Recalculate",
@@ -930,7 +890,6 @@
     "InconsistenciaDB_dv_restore_confirm": "The database will be restored from:\n\nFile: {0}\nSize: {1} MB\nDate: {2}\n\nThis operation will completely replace the current database and cannot be undone. The system will restart when the process is complete.\n\nDo you want to continue?",
     "InconsistenciaDB_dv_restore_ok": "Database restored successfully. The system will restart.",
     "InconsistenciaDB_dv_restore_error": "An error occurred while restoring the backup.",
-
     "CambiarPassword_lblUsuario": "Username:",
     "CambiarPassword_btnCambiarContraseña": "Change Password",
     "CambiarPassword_lblPasswordActual": "Current Password",
@@ -946,10 +905,8 @@
     "CambiarPassword_txtPwdActual": "Current Password",
     "CambiarPassword_txtPwdNueva": "New Password",
     "CambiarPassword_txtPwdConfirmar": "Confirm Password",
-
     "Disponibilidad_lblTituloDisponibilidad": "Register Booking",
     "Disponibilidad_btnContinuarDisponibilidad": "Continue",
-
     "ControlHabitaciones_lblFiltroEstado": "Filter by status:",
     "ControlHabitaciones_lblFiltroTipo": "Filter by type:",
     "ControlHabitaciones_tituloReserva": "Available Rooms",
@@ -978,15 +935,12 @@
     "ControlHabitaciones_estadoReservada": "Reserved",
     "ControlHabitaciones_estadoLimpieza": "Cleaning",
     "ControlHabitaciones_estadoFueraServicio": "Out of Service",
-
     "HabitacionCard_lblEtiqueta": "Room",
     "HabitacionCard_lblCapacidadPrefijo": "Max",
-
     "AccionesHabitacion_lblTitulo": "Actions - Room",
     "AccionesHabitacion_lblEtiquetaHabitacion": "ROOM",
     "AccionesHabitacion_lblEtiquetaTipo": "TYPE",
     "AccionesHabitacion_lblEtiquetaEstado": "STATUS",
-
     "BuscarReserva_btnSeleccionar": "Select",
     "BuscarReserva_lblResultado": "Enter the holder's document and press Search.",
     "BuscarReserva_btnBuscar": "Search",
@@ -994,7 +948,6 @@
     "BuscarReserva_lblEtiquetaTipoDocumento": "Document Type",
     "BuscarReserva_msgIngreseDocumento": "Enter a document number.",
     "BuscarReserva_msgNoEncontrada": "No reservation was found with that document in the expected status.",
-
     "CheckIn_lblEncabezado": "Register Check-in",
     "CheckIn_btnBuscarReserva": "Search Reservation by ID",
     "CheckIn_lblSeccionReserva": "RESERVATION DETAILS",
@@ -1019,7 +972,6 @@
     "CheckIn_tituloComposicionNoCoincide": "Composition doesn't match",
     "CheckIn_msgCheckInRegistrado": "Check-in registered for room {0}.",
     "CheckIn_tituloCheckInConfirmado": "Check-in confirmed",
-
     "CheckOut_lblEncabezado": "Register Check-out",
     "CheckOut_btnBuscarReserva": "Search Reservation by ID",
     "CheckOut_lblSeccionReserva": "RESERVATION DETAILS",
@@ -1041,7 +993,6 @@
     "CheckOut_msgFaltaReserva": "Search for and find a reservation before confirming check-out.",
     "CheckOut_msgCheckOutRegistrado": "Check-out registered for room {0}.",
     "CheckOut_tituloCheckOutConfirmado": "Check-out confirmed",
-
     "RegistrarReserva_lblEncabezado": "Register Reservation",
     "RegistrarReserva_lblDetEtiquetaCapacidad": "Max. capacity:",
     "RegistrarReserva_lblDetEtiquetaPrecio": "Price per night:",
@@ -1084,7 +1035,6 @@
     "RegistrarReserva_tituloCapacidadExcedida": "Capacity exceeded",
     "RegistrarReserva_msgReservaConfirmada": "Reservation #{0} confirmed for room {1}.",
     "RegistrarReserva_tituloReservaConfirmada": "Reservation confirmed",
-
     "RegistrarHuesped_btnRegistrar": "Register",
     "RegistrarHuesped_btnCancelar": "Cancel",
     "RegistrarHuesped_lblEmail": "Email",
@@ -1105,13 +1055,11 @@
     "RegistrarHuesped_msgSeleccioneFechaNacimiento": "Select the date of birth.",
     "RegistrarHuesped_msgFechaNacimientoFutura": "The date of birth cannot be in the future.",
     "RegistrarHuesped_msgEmailInvalido": "The email entered is not in a valid format.",
-
     "EstadoHabitacion_badgeDisponible": "AVAILABLE",
     "EstadoHabitacion_badgeReservada": "RESERVED",
     "EstadoHabitacion_badgeOcupada": "OCCUPIED",
     "EstadoHabitacion_badgeEnLimpieza": "CLEANING",
     "EstadoHabitacion_badgeFueraServicio": "OUT OF SERVICE",
-
     "RenovarEstadia_lblTitulo": "Renew Stay",
     "RenovarEstadia_lblEtiquetaHabitacion": "Room:",
     "RenovarEstadia_lblEtiquetaTitular": "Holder:",
@@ -1126,7 +1074,6 @@
     "RenovarEstadia_txtNoches": "nights",
     "RenovarEstadia_msgRenovacionConfirmada": "Stay renewed successfully. The additional cost is added as a balance to collect at check-out.",
     "RenovarEstadia_tituloRenovacionConfirmada": "Renewal confirmed",
-
     "Reservas_btnCrearReserva": "Create Reservation",
     "Reservas_lblEncabezado": "Reservations",
     "Reservas_btnTabCalendario": "Calendar",
@@ -1169,7 +1116,6 @@
     "Reservas_lblCantOcupadas": "Count: 0",
     "Reservas_lblCantFinalizadas": "Count: 0",
     "Reservas_lblCantCanceladas": "Count: 0",
-
     "Dashboard_lblEncabezado": "Dashboard",
     "Dashboard_btnTabGeneral": "General",
     "Dashboard_btnTabOcupacion": "Occupancy",
@@ -1195,7 +1141,6 @@
     "Dashboard_lblHuespedesPlaceholder": "New/returning guest KPIs and nationality — coming soon.",
     "Dashboard_txtDeXHab": "of {0} rooms",
     "Dashboard_msgFiltroInvalido": "The 'From' date cannot be later than 'To'.",
-
     "Pendientes_btn_Aceptar": "Accept",
     "Pendientes_btn_Cancelar": "Cancel",
     "Pendientes_lbl_Password": "Password:",
@@ -1226,13 +1171,11 @@
     "Pendientes_msg_familia_en_uso": "Cannot delete: the family is being used by a role or another family.",
     "Pendientes_msg_familia_nombre_duplicado": "A family with the same name already exists.",
     "Pendientes_msg_familia_permisos_duplicados": "A family with exactly the same set of permissions already exists.",
-
     "Menu_pisos": "Floors",
     "Crud_btnFiltrar": "Filter",
     "Crud_btnLimpiar": "Clear",
     "Crud_btnGuardar": "Save",
     "Crud_btnCancelar": "Cancel",
-
     "Pisos_titulo": "Floors",
     "Pisos_btnNuevo": "New floor",
     "Pisos_colNumero": "Number",
@@ -1249,7 +1192,6 @@
     "Pisos_msgConHabitaciones": "The floor cannot be deleted because it has rooms assigned.",
     "Pisos_msgNoEncontrado": "The floor no longer exists. The list will be refreshed.",
     "Pisos_tituloNoSePudoEliminar": "Could not delete",
-
     "Menu_tiposHabitacion": "Room types",
     "Tipos_titulo": "Room types",
     "Tipos_btnNuevo": "New type",
@@ -1274,7 +1216,6 @@
     "Tipos_tituloNoSePudoEliminar": "Could not delete",
     "Tipos_msgFiltroCapacidadInvalido": "The capacity filter must be a whole number.",
     "Tipos_msgFiltroTarifaInvalido": "The rate filters must be valid numbers.",
-
     "Menu_habitaciones": "Manage rooms",
     "Crud_todos": "All",
     "Habitaciones_titulo": "Manage rooms",
@@ -1299,7 +1240,6 @@
     "Habitaciones_msgConReservas": "The room cannot be deleted because it has reservations (including history). If it is no longer used, set it out of service from Room control.",
     "Habitaciones_msgNoEncontrada": "The room no longer exists. The list will be refreshed.",
     "Habitaciones_tituloNoSePudoEliminar": "Could not delete",
-
     "Menu_huespedes": "Guests",
     "Huespedes_titulo": "Guests",
     "Huespedes_btnNuevo": "New guest",
@@ -1313,7 +1253,6 @@
     "Huespedes_tituloNoSePudoEliminar": "Could not delete",
     "Huespedes_msgLimite": "Showing the first {0} results. Use the filters to narrow the search.",
     "RegistrarHuesped_msgIngreseNacionalidad": "Enter the nationality.",
-
     "Menu_configuracionHotel": "Hotel settings",
     "Config_titulo": "Hotel settings",
     "Config_lblCheckIn": "Check-in time",
@@ -1324,6 +1263,12 @@
     "Config_msgIngreseHoras": "Select the check-in time and the check-out time.",
     "Config_msgConfirmarGuardar": "These values apply to the whole hotel and affect automatic no-show cancellation. Save the changes?",
     "Config_msgGuardado": "Settings saved successfully.",
-    "Config_msgSinConfiguracion": "There is no configuration loaded in the database. Contact the administrator."
+    "Config_msgSinConfiguracion": "There is no configuration loaded in the database. Contact the administrator.",
+
+
+    "Dashboard_origenReserva": "Booking",
+    "Dashboard_origenRenovacion": "Renewal",
+    "Dashboard_origenServicio": "Room Service",
+    "Dashboard_origenCambioHabitacion": "Room Change"
   }
 }

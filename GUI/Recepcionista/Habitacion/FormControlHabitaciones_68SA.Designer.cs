@@ -80,10 +80,10 @@
             this.lblFiltroEstado.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblFiltroEstado.Location = new System.Drawing.Point(30, 0);
             this.lblFiltroEstado.Name = "lblFiltroEstado";
-            this.lblFiltroEstado.Tag = "ControlHabitaciones_lblFiltroEstado";
             this.lblFiltroEstado.Padding = new System.Windows.Forms.Padding(0, 15, 0, 0);
             this.lblFiltroEstado.Size = new System.Drawing.Size(142, 35);
             this.lblFiltroEstado.TabIndex = 0;
+            this.lblFiltroEstado.Tag = "ControlHabitaciones_lblFiltroEstado";
             this.lblFiltroEstado.Text = "Filtrar por estado:";
             // 
             // pnlFilaTipo
@@ -114,10 +114,10 @@
             this.lblFiltroTipo.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblFiltroTipo.Location = new System.Drawing.Point(30, 0);
             this.lblFiltroTipo.Name = "lblFiltroTipo";
-            this.lblFiltroTipo.Tag = "ControlHabitaciones_lblFiltroTipo";
             this.lblFiltroTipo.Padding = new System.Windows.Forms.Padding(0, 15, 23, 0);
             this.lblFiltroTipo.Size = new System.Drawing.Size(142, 35);
             this.lblFiltroTipo.TabIndex = 0;
+            this.lblFiltroTipo.Tag = "ControlHabitaciones_lblFiltroTipo";
             this.lblFiltroTipo.Text = "Filtrar por tipo:";
             // 
             // flpHabitaciones

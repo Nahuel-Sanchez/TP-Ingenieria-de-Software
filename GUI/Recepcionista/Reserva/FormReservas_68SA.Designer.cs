@@ -1215,6 +1215,7 @@
             this.btnLimpiarFiltros.TabIndex = 0;
             this.btnLimpiarFiltros.Text = "Limpiar";
             this.btnLimpiarFiltros.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnLimpiarFiltros.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnLimpiarFiltros.UseVisualStyleBackColor = false;
             // 
             // btnFiltrar

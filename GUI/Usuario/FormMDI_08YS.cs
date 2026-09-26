@@ -123,6 +123,16 @@ namespace GUI_08YS
             {
                 TraducirMenuFlotanteCustom(PerfilDropDownMenu);
             }
+
+            if (RecepcionDropDownMenu != null)
+            {
+                TraducirMenuFlotanteCustom(RecepcionDropDownMenu);
+            }
+
+            if (HabitacionesDropdownMenu != null)
+            {
+                TraducirMenuFlotanteCustom(HabitacionesDropdownMenu);
+            }
             RefrescarContenidoComboIdioma();
         }
 

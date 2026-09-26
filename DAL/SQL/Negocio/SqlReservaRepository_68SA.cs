@@ -244,5 +244,21 @@ namespace DAL_08YS.SQL.Negocio
             return Convert.ToBoolean(disponibleOutput.Value);
         }
 
+        public bool Modificar(int reservaId, DateTime fechaIngreso, DateTime fechaEgreso, int adultos, int ninos)
+        {
+            var disponibleOutput = ParamOutput("@Disponible");
+            ExecuteNonQuery("sp_ModificarReserva",
+                new[]
+                {
+            Param("@ReservaID", reservaId),
+            Param("@FechaIngreso", fechaIngreso.Date),
+            Param("@FechaEgreso", fechaEgreso.Date),
+            Param("@CantidadAdultos", adultos),
+            Param("@CantidadNinos", ninos),
+            disponibleOutput
+                },
+                storedProcedure: true);
+            return Convert.ToBoolean(disponibleOutput.Value);
+        }
     }
 }

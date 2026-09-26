@@ -245,6 +245,21 @@ namespace GUI_08YS.Recepcionista
                     _openChildForm(new FormCheckIn_68SA(_openChildForm, reservaDeHoy, _modo, _fechaIngreso, _fechaEgreso));
                     break;
 
+                case AccionHabitacion.VerReserva:
+                    var reservaParaVer = BLLFactory_08YS.CreateReservaBLL().GetConfirmadaHoyPorHabitacion(habitacion.Id);
+                    if (reservaParaVer == null)
+                    {
+                        MessageBox.Show("No se encontró una reserva Confirmada para hoy en esta habitación.", "Sin reserva",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    }
+                    using (var popupModificar = new FormModificarReserva_68SA(reservaParaVer))
+                    {
+                        if (popupModificar.ShowDialog(this) == DialogResult.OK)
+                            CargarHabitaciones();
+                    }
+                    break;
+
                 case AccionHabitacion.CheckOut:
                     var reservaEnCurso = BLLFactory_08YS.CreateReservaBLL().GetEnCursoPorHabitacion(habitacion.Id);
                     if (reservaEnCurso == null)
@@ -306,14 +321,17 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
-        // ---------- Idioma ----------
 
         public void UpdateIdioma()
         {
             TraducirControles(this);
-            // Los chips y las tarjetas se generan en runtime y no pasan por este mecanismo de Tag;
-            // si más adelante hace falta traducirlos, hay que llamar TraductorManager_08YS.Instance.GetTexto(...)
-            // directamente en CargarChipsTipo/CargarChipsEstado/TextoEstado.
+
+            // Los chips y las tarjetas se generan en runtime (no pasan por el mecanismo de Tag),
+            // así que hay que reconstruirlos para que reflejen el idioma nuevo.
+            CargarChipsTipo();
+            if (_modo == ModoHabitaciones.Gestion)
+                CargarChipsEstado();
+            CargarHabitaciones();
         }
 
         private void TraducirControles(Control contenedor)

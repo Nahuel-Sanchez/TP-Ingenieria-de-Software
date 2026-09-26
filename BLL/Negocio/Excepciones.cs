@@ -70,6 +70,15 @@ namespace BLL_08YS.Negocio
         public HabitacionNoDisponibleException_68SA(string message, Exception innerException) : base(message, innerException) { }
     }
 
+    public class CapacidadExcedidaException_68SA : Exception
+    {
+        public CapacidadExcedidaException_68SA()
+        : base("La cantidad de huéspedes supera la capacidad de la habitación.") { }
+
+        public CapacidadExcedidaException_68SA(string message) : base(message) { }
+        public CapacidadExcedidaException_68SA(string message, Exception innerException) : base(message, innerException) { }
+    }
+
     #endregion
 
     #region Piso

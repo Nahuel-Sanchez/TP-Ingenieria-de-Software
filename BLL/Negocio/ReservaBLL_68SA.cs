@@ -171,5 +171,25 @@ namespace BLL_08YS.Negocio
             _bitacoraBll.RegistrarEvento(Evento.ReservaEstadiaExtendida, targetUsername: reservaId.ToString());
         }
 
+        public void Modificar(int reservaId, DateTime fechaIngreso, DateTime fechaEgreso, int adultos, int ninos)
+        {
+            var actual = _reservaRepo.GetById(reservaId);
+            if (actual == null)
+                throw new ReservaNoEncontradaException_68SA();
+
+            if (actual.Estado != EstadoReserva.Confirmada)
+                throw new EstadoReservaInvalidoException_68SA("Solo se puede modificar una reserva Pendiente (Confirmada).");
+
+            HabitacionBLL_68SA.ValidarRango(fechaIngreso, fechaEgreso);
+
+            var habitacion = BLLFactory_08YS.CreateHabitacionBLL().GetById(actual.Habitacion.Id);
+            if (adultos + ninos > habitacion.Tipo.Capacidad)
+                throw new CapacidadExcedidaException_68SA(
+                    $"La composición ({adultos + ninos} huésped/es) supera la capacidad de la habitación ({habitacion.Tipo.Capacidad}).");
+
+            bool disponible = _reservaRepo.Modificar(reservaId, fechaIngreso, fechaEgreso, adultos, ninos);
+            if (!disponible)
+                throw new HabitacionNoDisponibleException_68SA("La habitación no está disponible para el nuevo rango de fechas.");
+        }
     }
 }

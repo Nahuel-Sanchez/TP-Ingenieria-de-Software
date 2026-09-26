@@ -20,6 +20,7 @@ namespace GUI_08YS.Recepcionista
         private readonly Action<Form> _openChildForm;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
         private readonly HabitacionBLL_68SA _habitacionBLL = BLLFactory_08YS.CreateHabitacionBLL();
+        private readonly PagoBLL_68SA _pagoBLL = BLLFactory_08YS.CreatePagoBLL();
 
         private DateTime _fechaBaseCalendario = DateTime.Today;
         private ModoCalendarioReservas _modoCalendario = ModoCalendarioReservas.Semana;
@@ -69,7 +70,7 @@ namespace GUI_08YS.Recepcionista
             this.Shown += (s, e) => CargarLista();
         }
 
-        // ---------- Grid ----------
+        #region Grid
 
         private void ConfigurarGrid()
         {
@@ -196,16 +197,29 @@ namespace GUI_08YS.Recepcionista
             string columna = dgvReservas.Columns[e.ColumnIndex].Name;
 
             if (columna == "colEditar")
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Reservas_msgEditarPendiente"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloPendiente"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            {
+                if (item.PuedeCancelar) // mismo criterio que Cancelar: solo Pendiente (Confirmada)
+                {
+                    var reserva = _reservaBLL.GetById(item.ReservaId);
+                    using (var popup = new FormModificarReserva_68SA(reserva))
+                    {
+                        if (popup.ShowDialog(this) == DialogResult.OK)
+                            CargarLista();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Solo se pueden modificar reservas Pendientes.", "No disponible",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
             else if (columna == "colImprimir")
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Reservas_msgImprimirPendiente"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloPendiente"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                GenerarYAbrirFactura(item.ReservaId);
             else if (columna == "colCancelar" && item.PuedeCancelar)
                 CancelarReserva(item.ReservaId);
         }
 
-        // ---------- Tabs ----------
+        #endregion
 
         private void CambiarTab(bool lista)
         {
@@ -225,7 +239,7 @@ namespace GUI_08YS.Recepcionista
             if (!lista) CargarCalendario();
         }
 
-        // ---------- Filtros ----------
+        #region Filtros
 
         private void ActualizarVisibilidadCosto()
         {
@@ -282,7 +296,9 @@ namespace GUI_08YS.Recepcionista
             return filtro;
         }
 
-        // ---------- Carga ----------
+        #endregion
+
+        #region Carga
 
         private void CargarLista()
         {
@@ -350,6 +366,8 @@ namespace GUI_08YS.Recepcionista
 
             ucCalendario.Cargar(habitaciones, reservas, desde, hasta, _modoCalendario);
         }
+
+        #endregion
 
         private void CambiarVistaCalendario(ModoCalendarioReservas modo)
         {
@@ -420,6 +438,22 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        private void GenerarYAbrirFactura(int reservaId)
+        {
+            try
+            {
+                var reserva = _reservaBLL.GetById(reservaId);
+                var pagos = _pagoBLL.GetByReserva(reservaId);
+                new FacturaImpresor_68SA(reserva, pagos).Imprimir();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"No se pudo imprimir el comprobante: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        #region Idioma
         public void UpdateIdioma()
         {
             TraducirControles(this);
@@ -436,6 +470,7 @@ namespace GUI_08YS.Recepcionista
                     TraducirControles(c);
             }
         }
+        #endregion
     }
 
 

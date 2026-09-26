@@ -31,5 +31,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
         int ProcesarNoShows();
 
         bool ExtenderEstadia(int reservaId, DateTime nuevaFechaEgreso);
+
+        bool Modificar(int reservaId, DateTime fechaIngreso, DateTime fechaEgreso, int adultos, int ninos);
     }
 }

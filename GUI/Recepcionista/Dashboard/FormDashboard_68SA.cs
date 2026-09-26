@@ -232,21 +232,37 @@ namespace GUI_08YS.Recepcionista
                 { "Cambio de Habitación", Color.FromArgb(160, 165, 180) }
             };
 
+            var clavesPorOrigen = new System.Collections.Generic.Dictionary<string, string>
+            {
+                { "Reserva", "Dashboard_origenReserva" },
+                { "Renovación", "Dashboard_origenRenovacion" },
+                { "Servicio a la Habitación", "Dashboard_origenServicio" },
+                { "Cambio de Habitación", "Dashboard_origenCambioHabitacion" }
+            };
+
             var segmentos = new List<SegmentoDonut_68SA>();
             decimal total = 0;
             foreach (var item in resumen.OrigenDelGasto)
             {
                 total += item.Monto;
+                string etiqueta = clavesPorOrigen.TryGetValue(item.Origen, out var clave)
+                    ? TraductorManager_08YS.Instance.GetTexto(clave)
+                    : item.Origen;
                 segmentos.Add(new SegmentoDonut_68SA
                 {
-                    Etiqueta = item.Origen,
+                    Etiqueta = etiqueta,
                     Valor = item.Monto,
                     Color = coloresPorOrigen.TryGetValue(item.Origen, out var color) ? color : Color.Gray
                 });
             }
 
-            ucDonutOrigenGasto.Cargar(segmentos, $"${total:N0}", "Total");
-            PoblarLeyenda(flpLeyendaOrigenGasto, segmentos, v => $"${v:N2}");
+            ucDonutOrigenGasto.Cargar(segmentos, $"${total:N0}", "Total"); 
+            flpLeyendaOrigenGasto.Controls.Clear();
+            foreach (var segmento in segmentos)
+            {
+                decimal porcentaje = total > 0 ? segmento.Valor / total * 100 : 0;
+                flpLeyendaOrigenGasto.Controls.Add(CrearFilaLeyenda(segmento.Etiqueta, segmento.Valor, porcentaje, segmento.Color));
+            }
         }
 
         private static Panel CrearFilaLeyenda(string etiqueta, decimal monto, decimal porcentaje, Color color)
