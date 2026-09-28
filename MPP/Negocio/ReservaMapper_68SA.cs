@@ -65,6 +65,12 @@ namespace MPP_08YS
             if (row.Table.Columns.Contains("MontoPagado") && row["MontoPagado"] != DBNull.Value)
                 reserva.MontoPagado = Convert.ToDecimal(row["MontoPagado"]);
 
+            if (row.Table.Columns.Contains("NombreTipoHabitacion") && row["NombreTipoHabitacion"] != DBNull.Value)
+                reserva.Habitacion.Tipo = new TipoHabitacion_68SA { Nombre = row["NombreTipoHabitacion"].ToString() };
+
+            if (row.Table.Columns.Contains("MontoPagado") && row["MontoPagado"] != DBNull.Value)
+                reserva.MontoPagado = Convert.ToDecimal(row["MontoPagado"]);
+
             return reserva;
         }
     }

@@ -180,7 +180,7 @@ namespace GUI_08YS.Recepcionista
 
             foreach (DataGridViewRow fila in dgvTipos.Rows)
             {
-                if (!(fila.DataBoundItem is TipoHabitacion tipo)) continue;
+                if (!(fila.DataBoundItem is TipoHabitacion_68SA tipo)) continue;
                 fila.Cells["colEditar"].Value = icoEditar;
                 fila.Cells["colEliminar"].Value = tipo.CantidadHabitaciones == 0 ? icoEliminar : icoEliminarInactivo;
             }
@@ -200,14 +200,14 @@ namespace GUI_08YS.Recepcionista
         private void DgvTipos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (!(dgvTipos.Rows[e.RowIndex].DataBoundItem is TipoHabitacion tipo)) return;
+            if (!(dgvTipos.Rows[e.RowIndex].DataBoundItem is TipoHabitacion_68SA tipo)) return;
 
             string columna = dgvTipos.Columns[e.ColumnIndex].Name;
             if (columna == "colEditar") AbrirEdicion(tipo);
             else if (columna == "colEliminar") EliminarTipo(tipo);
         }
 
-        private void AbrirEdicion(TipoHabitacion tipo)
+        private void AbrirEdicion(TipoHabitacion_68SA tipo)
         {
             using (var popup = new FormEditarTipoHabitacion_68SA(tipo))
             {
@@ -216,7 +216,7 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
-        private void EliminarTipo(TipoHabitacion tipo)
+        private void EliminarTipo(TipoHabitacion_68SA tipo)
         {
             var t = TraductorManager_08YS.Instance;
 

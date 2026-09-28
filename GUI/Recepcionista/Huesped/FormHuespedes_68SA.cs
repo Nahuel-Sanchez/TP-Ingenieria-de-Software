@@ -6,41 +6,72 @@ using FontAwesome.Sharp;
 using GUI_08YS.UserControls;
 using Service_08YS;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormHuespedes_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos y tipos auxiliares
+
+        // Se identifica por id (no por el texto del combo) para que no se rompa al cambiar de idioma
+        private enum OperadorEdad { Cualquiera = 0, MayorA = 1, MenorA = 2, Entre = 3 }
+
+        // Columnas de datos en el orden en que se muestran (Apellido primero, como se ordena el listado)
+        private static readonly string[] ColumnasDatos =
+        {
+            "Apellido", "Nombre", "TipoDocumento", "Documento", "Nacionalidad",
+            "FechaNacimiento", "Edad", "Telefono", "Email"
+        };
+
         private readonly HuespedBLL_68SA _huespedBLL = BLLFactory_08YS.CreateHuespedBLL();
+
+        // Lo que está actualmente en la grilla: viene de la base (CargarLista) o de un XML deserializado.
+        // Es lo único que lee Serializar; en ningún caso se escribe en la base de datos.
+        private List<Huesped_68SA> _listadoActual;
+
+        // Último ancho para el que se repartió el espacio de los filtros (evita recalcular sin necesidad)
+        private int _anchoFiltrosAplicado = -1;
+
+        #endregion
 
         public FormHuespedes_68SA()
         {
             InitializeComponent();
 
-            // Fechas opcionales: el control arranca con la tilde marcada pero sin fecha; sin tilde = sin filtro
-            foreach (var dtp in new[] { dtpNacDesde, dtpNacHasta })
-            {
-                dtp.MinDate = new DateTime(1900, 1, 1);
-                dtp.MaxDate = DateTime.Today;
-                dtp.Checked = false;
-            }
-
             CrudEstilo_68SA.AplicarGrilla(dgvHuespedes);
+            // Encabezados en una sola línea: así el ancho que se mide para cada columna es el del texto completo
+            dgvHuespedes.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
             dgvHuespedes.CellClick += DgvHuespedes_CellClick;
+
+            flpFiltros.SizeChanged += (s, e) => DistribuirFiltros();
+            cmbOperadorEdad.SelectedIndexChanged += (s, e) => ActualizarVisibilidadEdad();
 
             btnNuevo.Click += (s, e) => AbrirEdicion(null);
             btnFiltrar.Click += (s, e) => CargarLista();
             btnLimpiar.Click += (s, e) => LimpiarFiltros();
+            btnSerializar.Click += (s, e) => Serializar();
+            btnDeserializar.Click += (s, e) => Deserializar();
 
             AplicarTextos();
+            ActualizarVisibilidadEdad();
 
             // Igual que FormReservas_68SA: la primera carga va en Shown, con el handle creado, para que los íconos de la grilla se pinten
-            Shown += (s, e) => CargarLista();
+            Shown += (s, e) =>
+            {
+                DistribuirFiltros();
+                CargarLista();
+            };
         }
 
-        // ---------- Idioma ----------
+
+        #region Idioma
 
         public void UpdateIdioma() => AplicarTextos();
 
@@ -58,11 +89,21 @@ namespace GUI_08YS.Recepcionista
             txtEmailFiltro.PlaceholderText = t.GetTexto("RegistrarHuesped_lblEmail");
             txtTelefonoFiltro.PlaceholderText = t.GetTexto("RegistrarHuesped_lblTelefono");
 
+            toolTipCrud.SetToolTip(btnLimpiar, t.GetTexto("Huespedes_ayudaLimpiar"));
+            toolTipCrud.SetToolTip(btnSerializar, t.GetTexto("Huespedes_ayudaSerializar"));
+            toolTipCrud.SetToolTip(btnDeserializar, t.GetTexto("Huespedes_ayudaDeserializar"));
+
             ReconstruirComboTipoDocumento();
+            ReconstruirComboOperadorEdad();
+
             AplicarEncabezados();
+            AjustarAnchoColumnas(); // los encabezados traducidos pueden ser más largos o más cortos
 
             if (lblAvisoLimite.Visible)
                 lblAvisoLimite.Text = string.Format(t.GetTexto("Huespedes_msgLimite"), HuespedBLL_68SA.LimiteListado);
+
+            if (lblOrigenXml.Visible)
+                lblOrigenXml.Text = t.GetTexto("Huespedes_avisoOrigenXml");
         }
 
         private void TraducirControles(Control contenedor)
@@ -97,7 +138,9 @@ namespace GUI_08YS.Recepcionista
                 dgvHuespedes.Columns[columna].HeaderText = texto;
         }
 
-        // ---------- Filtros ----------
+        #endregion
+
+        #region Filtros
 
         // Solo cambia el texto de "Todos" al traducir; los tipos de documento se muestran como en FormRegistrarHuesped_68SA (nombre del enum)
         private void ReconstruirComboTipoDocumento()
@@ -112,14 +155,46 @@ namespace GUI_08YS.Recepcionista
             ItemCombo_68SA.Seleccionar(cmbTipoDocFiltro, seleccion);
         }
 
+        private void ReconstruirComboOperadorEdad()
+        {
+            var t = TraductorManager_08YS.Instance;
+            int? seleccion = ItemCombo_68SA.IdSeleccionado(cmbOperadorEdad);
+
+            cmbOperadorEdad.Items.Clear();
+            cmbOperadorEdad.Items.Add(new ItemCombo_68SA((int)OperadorEdad.Cualquiera, t.GetTexto("Huespedes_edadCualquiera")));
+            cmbOperadorEdad.Items.Add(new ItemCombo_68SA((int)OperadorEdad.MayorA, t.GetTexto("Huespedes_edadMayorA")));
+            cmbOperadorEdad.Items.Add(new ItemCombo_68SA((int)OperadorEdad.MenorA, t.GetTexto("Huespedes_edadMenorA")));
+            cmbOperadorEdad.Items.Add(new ItemCombo_68SA((int)OperadorEdad.Entre, t.GetTexto("Huespedes_edadEntre")));
+
+            // Sin selección previa queda en el primero (Cualquiera)
+            ItemCombo_68SA.Seleccionar(cmbOperadorEdad, seleccion);
+            ActualizarVisibilidadEdad();
+        }
+
+        // Igual que el costo en FormReservas_68SA: según el operador se muestran uno o dos valores.
+        // Las columnas del TableLayoutPanel son AutoSize, así que las que se ocultan colapsan solas y el combo usa el espacio.
+        private void ActualizarVisibilidadEdad()
+        {
+            var operador = OperadorEdadSeleccionado();
+            nudEdadDesde.Visible = operador != OperadorEdad.Cualquiera;
+            lblGuionEdad.Visible = operador == OperadorEdad.Entre;
+            nudEdadHasta.Visible = operador == OperadorEdad.Entre;
+        }
+
+        private OperadorEdad OperadorEdadSeleccionado() =>
+            (OperadorEdad)(ItemCombo_68SA.IdSeleccionado(cmbOperadorEdad) ?? (int)OperadorEdad.Cualquiera);
+
         private void LimpiarFiltros()
         {
             foreach (var txt in new[] { txtNombreFiltro, txtApellidoFiltro, txtDocumentoFiltro, txtNacionalidadFiltro, txtEmailFiltro, txtTelefonoFiltro })
                 txt.Text = string.Empty;
 
             ItemCombo_68SA.Seleccionar(cmbTipoDocFiltro, null);
-            dtpNacDesde.Checked = false;
-            dtpNacHasta.Checked = false;
+
+            ItemCombo_68SA.Seleccionar(cmbOperadorEdad, (int)OperadorEdad.Cualquiera);
+            nudEdadDesde.Value = 0;
+            nudEdadHasta.Value = 0;
+            ActualizarVisibilidadEdad();
 
             CargarLista();
         }
@@ -127,11 +202,25 @@ namespace GUI_08YS.Recepcionista
         private static string Texto(IconPlaceholderTextBox txt) =>
             string.IsNullOrWhiteSpace(txt.RealText) ? null : txt.RealText.Trim();
 
-        // ---------- Carga ----------
-
-        private void CargarLista()
+        private HuespedFiltro_68SA ConstruirFiltro()
         {
-            var filtro = new HuespedFiltro_68SA
+            // Misma lógica que el costo en FormReservas_68SA: "Menor a" usa el primer valor
+            int? edadDesde = null, edadHasta = null;
+            switch (OperadorEdadSeleccionado())
+            {
+                case OperadorEdad.MayorA:
+                    edadDesde = (int)nudEdadDesde.Value;
+                    break;
+                case OperadorEdad.MenorA:
+                    edadHasta = (int)nudEdadDesde.Value;
+                    break;
+                case OperadorEdad.Entre:
+                    edadDesde = (int)nudEdadDesde.Value;
+                    edadHasta = (int)nudEdadHasta.Value;
+                    break;
+            }
+
+            return new HuespedFiltro_68SA
             {
                 Nombre = Texto(txtNombreFiltro),
                 Apellido = Texto(txtApellidoFiltro),
@@ -140,15 +229,70 @@ namespace GUI_08YS.Recepcionista
                 Email = Texto(txtEmailFiltro),
                 Telefono = Texto(txtTelefonoFiltro),
                 TipoDocumento = (TipoDocumento?)ItemCombo_68SA.IdSeleccionado(cmbTipoDocFiltro),
-                NacimientoDesde = dtpNacDesde.Value?.Date, // null si la tilde está sin marcar
-                NacimientoHasta = dtpNacHasta.Value?.Date
+                EdadDesde = edadDesde,
+                EdadHasta = edadHasta
             };
+        }
 
-            var lista = _huespedBLL.GetListado(filtro);
+        #endregion
 
-            dgvHuespedes.DataSource = null;
-            dgvHuespedes.DataSource = lista;
-            AplicarColumnas();
+        #region FrontEnd
+
+        // FlowLayoutPanel solo sabe hacer wrap: si el siguiente filtro no entra, pasa a la línea de abajo y deja
+        // espacio vacío al final de la fila. Acá se agrupan los filtros en filas con la misma regla de wrap
+        // (MinimumSize + Margin) y el sobrante de cada fila se reparte entre sus filtros.
+        private void DistribuirFiltros()
+        {
+            int disponible = flpFiltros.ClientSize.Width - flpFiltros.Padding.Horizontal;
+            if (disponible <= 0 || disponible == _anchoFiltrosAplicado) return;
+            _anchoFiltrosAplicado = disponible;
+
+            var filtros = flpFiltros.Controls.Cast<Control>().Where(c => c.Visible).ToList();
+            var fila = new List<Control>();
+            int usado = 0;
+
+            flpFiltros.SuspendLayout();
+
+            foreach (var filtro in filtros)
+            {
+                int necesita = filtro.MinimumSize.Width + filtro.Margin.Horizontal;
+
+                if (fila.Count > 0 && usado + necesita > disponible)
+                {
+                    EstirarFila(fila, usado, disponible);
+                    fila.Clear();
+                    usado = 0;
+                }
+
+                fila.Add(filtro);
+                usado += necesita;
+            }
+
+            EstirarFila(fila, usado, disponible); // última fila (también se estira)
+
+            flpFiltros.ResumeLayout(true);
+        }
+
+        private static void EstirarFila(List<Control> fila, int usado, int disponible)
+        {
+            if (fila.Count == 0) return;
+
+            int sobrante = Math.Max(0, disponible - usado);
+            int porFiltro = sobrante / fila.Count;
+            int resto = sobrante % fila.Count; // los píxeles que sobran de la división van de a uno a los primeros
+
+            for (int i = 0; i < fila.Count; i++)
+                fila[i].Width = fila[i].MinimumSize.Width + porFiltro + (i < resto ? 1 : 0);
+        }
+
+        #endregion
+
+        #region Carga de datos
+
+        private void CargarLista()
+        {
+            var lista = _huespedBLL.GetListado(ConstruirFiltro());
+            MostrarEnGrilla(lista, esSnapshotXml: false);
 
             // Si se llegó al tope, se avisa que hay más resultados y que conviene acotar con filtros
             lblAvisoLimite.Visible = lista.Count >= HuespedBLL_68SA.LimiteListado;
@@ -156,24 +300,32 @@ namespace GUI_08YS.Recepcionista
                 lblAvisoLimite.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Huespedes_msgLimite"), HuespedBLL_68SA.LimiteListado);
         }
 
+        // Deja en pantalla la lista dada, venga de la base (CargarLista) o de un XML deserializado.
+        // Nunca escribe en la base de datos.
+        private void MostrarEnGrilla(List<Huesped_68SA> lista, bool esSnapshotXml)
+        {
+            _listadoActual = lista ?? new List<Huesped_68SA>();
+
+            dgvHuespedes.DataSource = null;
+            dgvHuespedes.DataSource = _listadoActual;
+            AplicarColumnas();
+
+            lblOrigenXml.Visible = esSnapshotXml;
+            if (esSnapshotXml)
+            {
+                lblAvisoLimite.Visible = false; // el aviso de tope de filas no aplica a un archivo XML
+                lblOrigenXml.Text = TraductorManager_08YS.Instance.GetTexto("Huespedes_avisoOrigenXml");
+            }
+        }
+
+        #endregion
+
+        #region Grid
+
         private void AplicarColumnas()
         {
             if (dgvHuespedes.Columns["Id"] != null) dgvHuespedes.Columns["Id"].Visible = false;
             if (dgvHuespedes.Columns["CantidadReservas"] != null) dgvHuespedes.Columns["CantidadReservas"].Visible = false;
-
-            // Orden y anchos: Apellido primero, como se ordena el listado
-            var columnas = new (string Nombre, float Peso)[]
-            {
-                ("Apellido", 13), ("Nombre", 13), ("TipoDocumento", 9), ("Documento", 11), ("Nacionalidad", 12),
-                ("FechaNacimiento", 11), ("Edad", 5), ("Telefono", 11), ("Email", 15)
-            };
-            for (int i = 0; i < columnas.Length; i++)
-            {
-                var col = dgvHuespedes.Columns[columnas[i].Nombre];
-                if (col == null) continue;
-                col.DisplayIndex = i;
-                col.FillWeight = columnas[i].Peso;
-            }
 
             if (dgvHuespedes.Columns["FechaNacimiento"] != null)
                 dgvHuespedes.Columns["FechaNacimiento"].DefaultCellStyle.Format = "d";
@@ -197,11 +349,117 @@ namespace GUI_08YS.Recepcionista
                 fila.Cells["colEliminar"].Value = huesped.CantidadReservas == 0 ? icoEliminar : icoEliminarInactivo;
             }
 
-            AplicarEncabezados();
+            AplicarEncabezados();  // primero el texto traducido, para que se mida el encabezado real
+            AjustarAnchoColumnas();
+
             dgvHuespedes.Invalidate();
         }
 
-        // ---------- Acciones ----------
+        // Cada columna se mide contra su contenido (encabezado incluido) y ese ancho pasa a ser su mínimo y su peso:
+        //  - si sobra lugar, la grilla ocupa todo el ancho y las columnas crecen en proporción (modo Fill, como antes);
+        //  - si no alcanza, ninguna se achica por debajo de lo que necesita: no se corta texto y aparece el scroll.
+        // Solo afecta a esta grilla: no se toca el helper compartido CrudEstilo_68SA.AplicarGrilla.
+        private void AjustarAnchoColumnas()
+        {
+            for (int i = 0; i < ColumnasDatos.Length; i++)
+            {
+                var col = dgvHuespedes.Columns[ColumnasDatos[i]];
+                if (col == null) continue;
+
+                col.DisplayIndex = i;
+
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                col.MinimumWidth = 20; // se libera el mínimo anterior para poder medir de nuevo (idioma o datos distintos)
+                dgvHuespedes.AutoResizeColumn(col.Index, DataGridViewAutoSizeColumnMode.AllCells);
+
+                int ancho = col.Width;
+                col.MinimumWidth = ancho;
+                col.FillWeight = ancho;
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+        }
+
+        #endregion
+
+        #region Serialización XML
+
+        private void Serializar()
+        {
+            var t = TraductorManager_08YS.Instance;
+
+            if (_listadoActual == null || _listadoActual.Count == 0)
+            {
+                MessageBox.Show(t.GetTexto("Huespedes_msgNadaParaSerializar"), t.GetTexto("Comun_tituloErrorValidacion"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (var dialogo = new SaveFileDialog
+            {
+                Filter = t.GetTexto("Huespedes_filtroXml"),
+                DefaultExt = "xml",
+                AddExtension = true,
+                FileName = "Huespedes.xml",
+                Title = t.GetTexto("Huespedes_tituloGuardarXml")
+            })
+            {
+                // El propio diálogo cubre "elegir ubicación" + "elegir nombre" en un solo paso
+                if (dialogo.ShowDialog(this) != DialogResult.OK) return;
+
+                try
+                {
+                    var serializador = new XmlSerializer(typeof(List<Huesped_68SA>));
+                    using (var writer = new StreamWriter(dialogo.FileName, false, Encoding.UTF8))
+                    {
+                        serializador.Serialize(writer, _listadoActual);
+                    }
+
+                    MessageBox.Show(t.GetTexto("Huespedes_msgSerializado"), t.GetTexto("Huespedes_titulo"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(t.GetTexto("Huespedes_msgErrorSerializar"), ex.Message),
+                        t.GetTexto("Comun_tituloErrorValidacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void Deserializar()
+        {
+            var t = TraductorManager_08YS.Instance;
+
+            using (var dialogo = new OpenFileDialog
+            {
+                Filter = t.GetTexto("Huespedes_filtroXml"),
+                Title = t.GetTexto("Huespedes_tituloAbrirXml")
+            })
+            {
+                if (dialogo.ShowDialog(this) != DialogResult.OK) return;
+
+                try
+                {
+                    var serializador = new XmlSerializer(typeof(List<Huesped_68SA>));
+                    List<Huesped_68SA> lista;
+                    using (var reader = new StreamReader(dialogo.FileName, Encoding.UTF8))
+                    {
+                        lista = (List<Huesped_68SA>)serializador.Deserialize(reader);
+                    }
+
+                    // Se sube a la misma grilla del Maestro de Huéspedes; no toca la base de datos
+                    MostrarEnGrilla(lista, esSnapshotXml: true);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(t.GetTexto("Huespedes_msgErrorDeserializar"), ex.Message),
+                        t.GetTexto("Comun_tituloErrorValidacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        #endregion
+
+        #region CRUD
 
         private void DgvHuespedes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -256,5 +514,7 @@ namespace GUI_08YS.Recepcionista
 
             CargarLista();
         }
+
+        #endregion
     }
 }

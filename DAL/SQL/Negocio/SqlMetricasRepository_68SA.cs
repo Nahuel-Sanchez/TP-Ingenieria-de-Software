@@ -59,7 +59,7 @@ namespace DAL_08YS
         public List<OcupacionPorTipoItem_68SA> GetOcupacionPorTipo()
         {
             string query = @"
-                SELECT t.Nombre AS TipoHabitacion, SUM(CASE WHEN h.Estado = 2 THEN 1 ELSE 0 END) AS CantidadOcupadas
+                SELECT t.Nombre AS TipoHabitacion_68SA, SUM(CASE WHEN h.Estado = 2 THEN 1 ELSE 0 END) AS CantidadOcupadas
                 FROM Habitaciones h
                 INNER JOIN TiposHabitacion t ON h.TipoHabitacionID = t.TipoHabitacionID
                 GROUP BY t.Nombre
@@ -71,7 +71,7 @@ namespace DAL_08YS
             {
                 lista.Add(new OcupacionPorTipoItem_68SA
                 {
-                    TipoHabitacion = row["TipoHabitacion"].ToString(),
+                    TipoHabitacion = row["TipoHabitacion_68SA"].ToString(),
                     CantidadOcupadas = Convert.ToInt32(row["CantidadOcupadas"])
                 });
             }

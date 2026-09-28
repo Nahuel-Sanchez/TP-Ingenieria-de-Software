@@ -10,9 +10,9 @@ namespace GUI_08YS.Recepcionista
     public partial class FormEditarTipoHabitacion_68SA : Form
     {
         private readonly TipoHabitacionBLL_68SA _tipoBLL = BLLFactory_08YS.CreateTipoHabitacionBLL();
-        private readonly TipoHabitacion _tipo; // null = alta
+        private readonly TipoHabitacion_68SA _tipo; // null = alta
 
-        public FormEditarTipoHabitacion_68SA(TipoHabitacion tipo = null)
+        public FormEditarTipoHabitacion_68SA(TipoHabitacion_68SA tipo = null)
         {
             InitializeComponent();
             _tipo = tipo;
@@ -62,7 +62,7 @@ namespace GUI_08YS.Recepcionista
                 return;
             }
 
-            var tipo = new TipoHabitacion
+            var tipo = new TipoHabitacion_68SA
             {
                 Id = _tipo?.Id ?? 0,
                 Nombre = txtNombre.RealText.Trim(),

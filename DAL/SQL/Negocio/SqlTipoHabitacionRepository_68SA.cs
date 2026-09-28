@@ -17,13 +17,13 @@ namespace DAL_08YS.SQL.Negocio
 
         public SqlTipoHabitacionRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
 
-        public List<TipoHabitacion> GetAll()
+        public List<TipoHabitacion_68SA> GetAll()
         {
             DataTable dt = GetDataTable(BaseSelect + " ORDER BY Nombre");
             return TipoHabitacionMapper_08YS.FromDataTable(dt);
         }
 
-        public TipoHabitacion GetById(int tipoHabitacionId)
+        public TipoHabitacion_68SA GetById(int tipoHabitacionId)
         {
             DataTable dt = GetDataTable(
                 BaseSelect + " WHERE TipoHabitacionID = @Id",
@@ -32,7 +32,7 @@ namespace DAL_08YS.SQL.Negocio
             return dt.Rows.Count > 0 ? TipoHabitacionMapper_08YS.FromDataRow(dt.Rows[0]) : null;
         }
 
-        public List<TipoHabitacion> GetAll(TipoHabitacionFiltro_68SA filtro)
+        public List<TipoHabitacion_68SA> GetAll(TipoHabitacionFiltro_68SA filtro)
         {
             var where = new List<string>();
             var parametros = new List<IDbDataParameter>();
@@ -74,7 +74,7 @@ namespace DAL_08YS.SQL.Negocio
             return TipoHabitacionMapper_08YS.FromDataTable(GetDataTable(query, parametros.ToArray()));
         }
 
-        public int Crear(TipoHabitacion tipo)
+        public int Crear(TipoHabitacion_68SA tipo)
         {
             return ExecuteScalar<int>(
                 @"INSERT INTO TiposHabitacion (Nombre, Descripcion, Capacidad, TarifaNoche)
@@ -89,7 +89,7 @@ namespace DAL_08YS.SQL.Negocio
                 });
         }
 
-        public void Modificar(TipoHabitacion tipo)
+        public void Modificar(TipoHabitacion_68SA tipo)
         {
             ExecuteNonQuery(
                 @"UPDATE TiposHabitacion

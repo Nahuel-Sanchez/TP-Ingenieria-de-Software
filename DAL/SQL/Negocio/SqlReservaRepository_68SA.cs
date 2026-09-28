@@ -14,13 +14,14 @@ namespace DAL_08YS.SQL.Negocio
             r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
             r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.MontoOriginal,
             r.UsuarioRegistroDNI, r.FechaRegistro,
-            hab.NroHabitacion,
+            hab.NroHabitacion, tip.Nombre AS NombreTipoHabitacion,
             hu.Documento AS DocumentoTitular, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular,
             ureg.Nombre AS NombreUsuarioRegistro, ureg.Apellido AS ApellidoUsuarioRegistro";
 
         private const string BaseFrom = @"
             FROM Reservas r
             INNER JOIN Habitaciones hab ON r.HabitacionID = hab.HabitacionID
+            INNER JOIN TiposHabitacion tip ON hab.TipoHabitacionID = tip.TipoHabitacionID
             INNER JOIN Huespedes hu ON r.HuespedTitularID = hu.HuespedID
             LEFT JOIN Users ureg ON r.UsuarioRegistroDNI = ureg.DNI";
 

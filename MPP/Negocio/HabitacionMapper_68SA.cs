@@ -31,7 +31,7 @@ namespace MPP_08YS
                     Numero = Convert.ToInt32(row["Numero"]),
                     Nombre = row["NombrePiso"].ToString()
                 },
-                Tipo = new TipoHabitacion
+                Tipo = new TipoHabitacion_68SA
                 {
                     Id = Convert.ToInt32(row["TipoHabitacionID"]),
                     Nombre = row["NombreTipo"].ToString(),
@@ -80,17 +80,17 @@ namespace MPP_08YS
 
     public static class TipoHabitacionMapper_08YS
     {
-        public static List<TipoHabitacion> FromDataTable(DataTable dt)
+        public static List<TipoHabitacion_68SA> FromDataTable(DataTable dt)
         {
-            var tipos = new List<TipoHabitacion>();
+            var tipos = new List<TipoHabitacion_68SA>();
             foreach (DataRow row in dt.Rows)
                 tipos.Add(FromDataRow(row));
             return tipos;
         }
 
-        public static TipoHabitacion FromDataRow(DataRow row)
+        public static TipoHabitacion_68SA FromDataRow(DataRow row)
         {
-            var tipo = new TipoHabitacion
+            var tipo = new TipoHabitacion_68SA
             {
                 Id = Convert.ToInt32(row["TipoHabitacionID"]),
                 Nombre = row["Nombre"].ToString(),

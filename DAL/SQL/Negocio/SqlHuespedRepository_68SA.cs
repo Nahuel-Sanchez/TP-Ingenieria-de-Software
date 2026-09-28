@@ -111,16 +111,19 @@ namespace DAL_08YS.SQL.Negocio
             {
                 where.Add("h.TipoDocumento = @TipoDocumento");
                 parametros.Add(Param("@TipoDocumento", (int)filtro.TipoDocumento.Value));
-            }
-            if (filtro.NacimientoDesde.HasValue)
+            }            
+            // Traduce el rango de edad a fecha de nacimiento, con el mismo redondeo que Huesped_68SA.Edad
+            if (filtro.EdadDesde.HasValue)
             {
-                where.Add("h.FechaNacimiento >= @NacDesde");
-                parametros.Add(Param("@NacDesde", filtro.NacimientoDesde.Value.Date));
-            }
-            if (filtro.NacimientoHasta.HasValue)
-            {
+                // "Edad mayor o igual a X" => nació hace X años o más
                 where.Add("h.FechaNacimiento <= @NacHasta");
-                parametros.Add(Param("@NacHasta", filtro.NacimientoHasta.Value.Date));
+                parametros.Add(Param("@NacHasta", DateTime.Today.AddYears(-filtro.EdadDesde.Value)));
+            }
+            if (filtro.EdadHasta.HasValue)
+            {
+                // "Edad menor o igual a Y" => nació después de hoy - (Y+1) años (estricto: excluye a quien hoy cumple Y+1)
+                where.Add("h.FechaNacimiento > @NacDesde");
+                parametros.Add(Param("@NacDesde", DateTime.Today.AddYears(-(filtro.EdadHasta.Value + 1))));
             }
 
             string query = ListadoSelect

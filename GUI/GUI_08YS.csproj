@@ -105,6 +105,7 @@
     <Compile Include="Recepcionista\Dashboard\UC_DonutChart_68SA.Designer.cs">
       <DependentUpon>UC_DonutChart_68SA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Recepcionista\Dashboard\ReporteReservasImpresor_68SA.cs" />
     <Compile Include="Recepcionista\Reserva\FacturaImpresor_68SA.cs" />
     <Compile Include="Recepcionista\FormConfiguracionHotel_68SA.cs">
       <SubType>Form</SubType>

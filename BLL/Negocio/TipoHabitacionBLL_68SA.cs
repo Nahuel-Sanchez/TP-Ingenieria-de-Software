@@ -19,14 +19,14 @@ namespace BLL_08YS.Negocio
             _bitacoraBll = bitacoraBll;
         }
 
-        public List<TipoHabitacion> GetAll() => _tipoRepo.GetAll();
+        public List<TipoHabitacion_68SA> GetAll() => _tipoRepo.GetAll();
 
-        public List<TipoHabitacion> GetAll(TipoHabitacionFiltro_68SA filtro) =>
+        public List<TipoHabitacion_68SA> GetAll(TipoHabitacionFiltro_68SA filtro) =>
             _tipoRepo.GetAll(filtro ?? new TipoHabitacionFiltro_68SA());
 
-        public TipoHabitacion GetById(int tipoHabitacionId) => _tipoRepo.GetById(tipoHabitacionId);
+        public TipoHabitacion_68SA GetById(int tipoHabitacionId) => _tipoRepo.GetById(tipoHabitacionId);
 
-        public int Crear(TipoHabitacion tipo)
+        public int Crear(TipoHabitacion_68SA tipo)
         {
             Validar(tipo);
 
@@ -38,7 +38,7 @@ namespace BLL_08YS.Negocio
             return tipo.Id;
         }
 
-        public void Modificar(TipoHabitacion tipo)
+        public void Modificar(TipoHabitacion_68SA tipo)
         {
             Validar(tipo);
 
@@ -63,7 +63,7 @@ namespace BLL_08YS.Negocio
             _bitacoraBll.RegistrarEvento(Evento.TipoHabitacionEliminado, targetUsername: tipoHabitacionId.ToString());
         }
 
-        private static void Validar(TipoHabitacion tipo)
+        private static void Validar(TipoHabitacion_68SA tipo)
         {
             if (tipo == null) throw new ArgumentNullException(nameof(tipo));
 

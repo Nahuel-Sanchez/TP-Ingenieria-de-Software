@@ -730,7 +730,7 @@
             this.HabitacionesDropdownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
             this.HabitacionesDropdownMenu.Name = "HabitacionesDropdownMenu";
             this.HabitacionesDropdownMenu.PrimaryColor = System.Drawing.Color.Empty;
-            this.HabitacionesDropdownMenu.Size = new System.Drawing.Size(213, 104);
+            this.HabitacionesDropdownMenu.Size = new System.Drawing.Size(213, 76);
             // 
             // habitacionesToolStripMenuItem
             // 

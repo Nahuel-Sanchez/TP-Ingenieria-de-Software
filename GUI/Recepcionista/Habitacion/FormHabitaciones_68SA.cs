@@ -22,7 +22,7 @@ namespace GUI_08YS.Recepcionista
 
         // Caches para reconstruir combos y grilla al cambiar de idioma sin volver a consultar la base
         private List<Piso_68SA> _pisos;
-        private List<TipoHabitacion> _tipos;
+        private List<TipoHabitacion_68SA> _tipos;
         private List<Habitacion_68SA> _listado;
 
         public FormHabitaciones_68SA()

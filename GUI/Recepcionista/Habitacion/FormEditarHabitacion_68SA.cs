@@ -98,7 +98,7 @@ namespace GUI_08YS.Recepcionista
                 Id = _habitacion?.Id ?? 0,
                 NroHabitacion = txtNumero.RealText.Trim(),
                 Piso = new Piso_68SA { PisoId = pisoId.Value },
-                Tipo = new TipoHabitacion { Id = tipoId.Value }
+                Tipo = new TipoHabitacion_68SA { Id = tipoId.Value }
             };
 
             try

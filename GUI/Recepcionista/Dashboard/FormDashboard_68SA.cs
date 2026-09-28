@@ -18,6 +18,7 @@ namespace GUI_08YS.Recepcionista
         #region Campos y constructor
 
         private readonly MetricasBLL_68SA _metricasBLL = BLLFactory_08YS.CreateMetricasBLL();
+        private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
         private bool _historicoTotal = false;
         private bool _huespedesInicializado = false;
         private bool _historicoTotalHuespedes = false;
@@ -49,7 +50,26 @@ namespace GUI_08YS.Recepcionista
             btnFiltroEsteMes.Click += (s, e) => AplicarPreset(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), DateTime.Today);
             btnFiltroHistorico.Click += (s, e) => AplicarHistoricoTotal();
             btnActualizarGeneral.Click += (s, e) => { _historicoTotal = false; ActualizarEstiloHistorico(); CargarTarjetasIngresosGeneral(); };
-
+            var btnGenerarReporte = new IconButton
+            {
+                BackColor = Color.FromArgb(90, 155, 235),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(10, 15, 35),
+                IconChar = IconChar.FilePdf,
+                IconColor = Color.FromArgb(10, 15, 35),
+                IconSize = 35,
+                ImageAlign = ContentAlignment.MiddleLeft,
+                Location = new Point(804, 56),
+                Padding = new Padding(12, 0, 0, 0),
+                Size = new Size(260, 44),
+                Text = "Generar Reporte",
+                TextAlign = ContentAlignment.MiddleLeft,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                UseVisualStyleBackColor = false
+            };
+            btnGenerarReporte.Click += (s, e) => GenerarReporteReservas();
+            pnlFiltroFechasGeneral.Controls.Add(btnGenerarReporte);
             this.Shown += (s, e) => CargarGeneral();
         }
 
@@ -300,6 +320,24 @@ namespace GUI_08YS.Recepcionista
             fila.Controls.Add(lblValor);
 
             return fila;
+        }
+
+        private void GenerarReporteReservas()
+        {
+            DateTime? desde = _historicoTotal ? (DateTime?)null : dtpDesdeGeneral.Value;
+            DateTime? hasta = _historicoTotal ? (DateTime?)null : dtpHastaGeneral.Value;
+
+            if (!_historicoTotal && (!desde.HasValue || !hasta.HasValue))
+            {
+                MessageBox.Show("Seleccioná un período o activá Histórico Total antes de generar el reporte.", "Falta el período",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var filtro = new ReservaFiltro_68SA { FechaDesde = desde, FechaHasta = hasta };
+            var reservas = _reservaBLL.GetTodas(filtro);
+
+            new ReporteReservasImpresor_68SA(reservas, desde, hasta).Imprimir();
         }
 
         #endregion

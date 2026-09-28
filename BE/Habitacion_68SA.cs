@@ -20,7 +20,7 @@ namespace BE_08YS
         public int Id { get; set; }
         public string NroHabitacion { get; set; }
         public Piso_68SA Piso { get; set; }
-        public TipoHabitacion Tipo { get; set; }
+        public TipoHabitacion_68SA Tipo { get; set; }
         public EstadoHabitacion Estado { get; set; }
 
         public bool TieneReservaHoy { get; set; }
@@ -43,7 +43,7 @@ namespace BE_08YS
         public EstadoHabitacion? Estado { get; set; } // se compara contra EstadoVisual (mismo criterio que Control de habitaciones)
     }
 
-    public class TipoHabitacion
+    public class TipoHabitacion_68SA
     {
         public int Id { get; set; }
         public string Nombre { get; set; }

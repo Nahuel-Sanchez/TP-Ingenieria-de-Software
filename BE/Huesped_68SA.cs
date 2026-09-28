@@ -50,8 +50,8 @@ namespace BE_08YS
         public string Nacionalidad { get; set; }
         public string Email { get; set; }
         public string Telefono { get; set; }
-        public DateTime? NacimientoDesde { get; set; }
-        public DateTime? NacimientoHasta { get; set; }
+        public int? EdadDesde { get; set; } // "mayor o igual a"
+        public int? EdadHasta { get; set; } // "menor o igual a"
         public int Maximo { get; set; } // tope de filas: lo fija el BLL (HuespedBLL_68SA.LimiteListado)
     }
 }
