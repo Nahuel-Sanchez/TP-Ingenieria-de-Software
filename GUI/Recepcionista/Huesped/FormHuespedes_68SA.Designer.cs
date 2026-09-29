@@ -93,8 +93,8 @@
             this.flpFiltros.Controls.Add(this.txtDocumentoFiltro);
             this.flpFiltros.Controls.Add(this.cmbTipoDocFiltro);
             this.flpFiltros.Controls.Add(this.txtNacionalidadFiltro);
-            this.flpFiltros.Controls.Add(this.txtEmailFiltro);
             this.flpFiltros.Controls.Add(this.txtTelefonoFiltro);
+            this.flpFiltros.Controls.Add(this.txtEmailFiltro);
             this.flpFiltros.Controls.Add(this.tblEdad);
             this.flpFiltros.Name = "flpFiltros";
             this.flpFiltros.TabIndex = 1;

@@ -79,6 +79,15 @@ namespace BLL_08YS.Negocio
         public CapacidadExcedidaException_68SA(string message, Exception innerException) : base(message, innerException) { }
     }
 
+    public class CheckInAnticipadoException_68SA : Exception
+    {
+        public CheckInAnticipadoException_68SA()
+        : base("Todavía no se puede hacer check-in: la reserva ingresa en una fecha futura.") { }
+
+        public CheckInAnticipadoException_68SA(string message) : base(message) { }
+        public CheckInAnticipadoException_68SA(string message, Exception innerException) : base(message, innerException) { }
+    }
+
     #endregion
 
     #region Piso

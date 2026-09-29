@@ -310,6 +310,7 @@
     "BuscarReserva_lblEtiquetaTipoDocumento": "Tipo de Documento",
     "BuscarReserva_msgIngreseDocumento": "Ingresá un número de documento.",
     "BuscarReserva_msgNoEncontrada": "No se encontró una reserva con ese documento en el estado esperado.",
+
     "CheckIn_lblEncabezado": "Registrar Check-in",
     "CheckIn_btnBuscarReserva": "Buscar Reserva por DNI",
     "CheckIn_lblSeccionReserva": "DATOS DE LA RESERVA",
@@ -334,6 +335,8 @@
     "CheckIn_tituloComposicionNoCoincide": "La composición no coincide",
     "CheckIn_msgCheckInRegistrado": "Check-in registrado para la habitación {0}.",
     "CheckIn_tituloCheckInConfirmado": "Check-in confirmado",
+    "CheckIn_avisoFechaFutura": "todavía no llegó la fecha de ingreso",
+
     "CheckOut_lblEncabezado": "Registrar Check-out",
     "CheckOut_btnBuscarReserva": "Buscar Reserva por DNI",
     "CheckOut_lblSeccionReserva": "DATOS DE LA RESERVA",
@@ -989,6 +992,8 @@
     "CheckIn_tituloComposicionNoCoincide": "Composition doesn't match",
     "CheckIn_msgCheckInRegistrado": "Check-in registered for room {0}.",
     "CheckIn_tituloCheckInConfirmado": "Check-in confirmed",
+    "CheckIn_avisoFechaFutura": "the check-in date hasn't arrived yet",
+
     "CheckOut_lblEncabezado": "Register Check-out",
     "CheckOut_btnBuscarReserva": "Search Reservation by ID",
     "CheckOut_lblSeccionReserva": "RESERVATION DETAILS",

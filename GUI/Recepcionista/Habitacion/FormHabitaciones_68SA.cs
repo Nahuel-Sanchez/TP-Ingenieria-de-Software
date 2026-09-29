@@ -16,6 +16,10 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormHabitaciones_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
+        private static readonly string[] ColumnasDatos = { "NroHabitacion", "Piso", "Tipo", "Capacidad", "TarifaNoche", "Estado" };
+
         private readonly HabitacionBLL_68SA _habitacionBLL = BLLFactory_08YS.CreateHabitacionBLL();
         private readonly PisoBLL_68SA _pisoBLL = BLLFactory_08YS.CreatePisoBLL();
         private readonly TipoHabitacionBLL_68SA _tipoBLL = BLLFactory_08YS.CreateTipoHabitacionBLL();
@@ -25,13 +29,20 @@ namespace GUI_08YS.Recepcionista
         private List<TipoHabitacion_68SA> _tipos;
         private List<Habitacion_68SA> _listado;
 
+        #endregion
+
+        #region Constructor
+
         public FormHabitaciones_68SA()
         {
             InitializeComponent();
 
             CrudEstilo_68SA.AplicarGrilla(dgvHabitaciones);
+            dgvHabitaciones.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
             dgvHabitaciones.CellClick += DgvHabitaciones_CellClick;
             dgvHabitaciones.CellFormatting += DgvHabitaciones_CellFormatting;
+
+            flpFiltros.SizeChanged += (s, e) => DistribuirFiltros();
 
             btnNueva.Click += (s, e) => AbrirEdicion(null);
             btnFiltrar.Click += (s, e) => CargarLista();
@@ -45,11 +56,14 @@ namespace GUI_08YS.Recepcionista
                 _pisos = _pisoBLL.GetAll();
                 _tipos = _tipoBLL.GetAll();
                 ReconstruirCombos();
+                DistribuirFiltros();
                 CargarLista();
             };
         }
 
-        // ---------- Idioma ----------
+        #endregion
+
+        #region Idioma
 
         public void UpdateIdioma() => AplicarTextos();
 
@@ -57,7 +71,7 @@ namespace GUI_08YS.Recepcionista
         {
             TraducirControles(this);
 
-            // Los campos de texto no llevan Tag (el Tag escribiría en .Text): se traduce el placeholder
+            // El campo de texto no lleva Tag (el Tag escribiría en .Text): se traduce el placeholder
             txtNumeroFiltro.PlaceholderText = TraductorManager_08YS.Instance.GetTexto("Habitaciones_colNumero");
 
             ReconstruirCombos();
@@ -94,7 +108,9 @@ namespace GUI_08YS.Recepcionista
                 dgvHabitaciones.Columns[columna].HeaderText = texto;
         }
 
-        // ---------- Combos de filtro ----------
+        #endregion
+
+        #region Filtros
 
         // Reconstruye los tres combos conservando la selección (por Id). Se usa al cargar los catálogos y al cambiar de idioma.
         private void ReconstruirCombos()
@@ -138,7 +154,59 @@ namespace GUI_08YS.Recepcionista
             CargarLista();
         }
 
-        // ---------- Carga ----------
+        #endregion
+
+        #region Distribución de los filtros
+
+        // Mismo mecanismo que FormHuespedes_68SA: agrupa los filtros en filas según el mismo criterio
+        // de wrap que usaría el FlowLayoutPanel (MinimumSize + Margin), y reparte el sobrante de cada
+        // fila entre sus filtros para que no quede espacio vacío. Se recalcula en cada resize.
+        private void DistribuirFiltros()
+        {
+            int disponible = flpFiltros.ClientSize.Width - flpFiltros.Padding.Horizontal;
+            if (disponible <= 0) return;
+
+            var filtros = flpFiltros.Controls.Cast<Control>().Where(c => c.Visible).ToList();
+            var fila = new List<Control>();
+            int usado = 0;
+
+            flpFiltros.SuspendLayout();
+
+            foreach (var filtro in filtros)
+            {
+                int necesita = filtro.MinimumSize.Width + filtro.Margin.Horizontal;
+
+                if (fila.Count > 0 && usado + necesita > disponible)
+                {
+                    EstirarFila(fila, usado, disponible);
+                    fila.Clear();
+                    usado = 0;
+                }
+
+                fila.Add(filtro);
+                usado += necesita;
+            }
+
+            EstirarFila(fila, usado, disponible); // última fila (también se estira)
+
+            flpFiltros.ResumeLayout(true);
+        }
+
+        private static void EstirarFila(List<Control> fila, int usado, int disponible)
+        {
+            if (fila.Count == 0) return;
+
+            int sobrante = Math.Max(0, disponible - usado);
+            int porFiltro = sobrante / fila.Count;
+            int resto = sobrante % fila.Count;
+
+            for (int i = 0; i < fila.Count; i++)
+                fila[i].Width = fila[i].MinimumSize.Width + porFiltro + (i < resto ? 1 : 0);
+        }
+
+        #endregion
+
+        #region Carga
 
         private void CargarLista()
         {
@@ -177,15 +245,12 @@ namespace GUI_08YS.Recepcionista
             AplicarColumnas();
         }
 
+        #endregion
+
+        #region Grilla
+
         private void AplicarColumnas()
         {
-            PonerPeso("NroHabitacion", 14);
-            PonerPeso("Piso", 22);
-            PonerPeso("Tipo", 22);
-            PonerPeso("Capacidad", 10);
-            PonerPeso("TarifaNoche", 16);
-            PonerPeso("Estado", 16);
-
             if (dgvHabitaciones.Columns["TarifaNoche"] != null)
                 dgvHabitaciones.Columns["TarifaNoche"].DefaultCellStyle.Format = "C2";
 
@@ -208,14 +273,33 @@ namespace GUI_08YS.Recepcionista
                 fila.Cells["colEliminar"].Value = item.Origen.CantidadReservas == 0 ? icoEliminar : icoEliminarInactivo;
             }
 
-            AplicarEncabezados();
+            AplicarEncabezados(); // primero el texto traducido, para que se mida el encabezado real
+            AjustarAnchoColumnas();
+
             dgvHabitaciones.Invalidate();
         }
 
-        private void PonerPeso(string columna, float peso)
+        // Cada columna se mide contra su contenido (encabezado incluido): si sobra lugar la grilla
+        // ocupa todo el ancho (modo Fill), y si no alcanza ninguna se achica por debajo de lo que
+        // necesita (no se corta texto, aparece el scroll). Solo afecta a esta grilla.
+        private void AjustarAnchoColumnas()
         {
-            if (dgvHabitaciones.Columns[columna] != null)
-                dgvHabitaciones.Columns[columna].FillWeight = peso;
+            for (int i = 0; i < ColumnasDatos.Length; i++)
+            {
+                var col = dgvHabitaciones.Columns[ColumnasDatos[i]];
+                if (col == null) continue;
+
+                col.DisplayIndex = i;
+
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                col.MinimumWidth = 20;
+                dgvHabitaciones.AutoResizeColumn(col.Index, DataGridViewAutoSizeColumnMode.AllCells);
+
+                int ancho = col.Width;
+                col.MinimumWidth = ancho;
+                col.FillWeight = ancho;
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
         }
 
         // El color sale del item (según el enum), no del texto traducido: no se rompe al cambiar de idioma
@@ -227,7 +311,9 @@ namespace GUI_08YS.Recepcionista
                 e.CellStyle.ForeColor = item.ColorEstado;
         }
 
-        // ---------- Acciones ----------
+        #endregion
+
+        #region Acciones
 
         private void DgvHabitaciones_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -280,6 +366,8 @@ namespace GUI_08YS.Recepcionista
 
             CargarLista();
         }
+
+        #endregion
     }
 
     /// <summary>Fila de la grilla: aplana Habitacion_68SA (la DGV no bindea propiedades anidadas).</summary>
@@ -295,5 +383,4 @@ namespace GUI_08YS.Recepcionista
         public decimal TarifaNoche { get; set; }
         public string Estado { get; set; }
     }
-
 }

@@ -86,14 +86,23 @@ namespace BLL_08YS.Negocio
 
         public void RegistrarCheckIn(int reservaId, List<Huesped_68SA> acompanantes)
         {
+            var reserva = _reservaRepo.GetById(reservaId);
+            if (reserva == null)
+                throw new ReservaNoEncontradaException_68SA();
+
+            // sp_RegistrarCheckIn solo valida el Estado, nunca la fecha: sin este chequeo
+            // se puede hacer check-in de una reserva Confirmada con ingreso a meses vista.
+            if (reserva.FechaIngreso.Date > DateTime.Today)
+                throw new CheckInAnticipadoException_68SA(
+                    $"La reserva ingresa el {reserva.FechaIngreso:dd/MM/yyyy}; todavía no se puede hacer check-in.");
+
             if (acompanantes != null && acompanantes.Count > 0)
             {
                 var duplicado = acompanantes.GroupBy(a => a.Documento).FirstOrDefault(g => g.Count() > 1);
                 if (duplicado != null)
                     throw new AcompananteDuplicadoException_68SA($"El documento {duplicado.Key} está cargado más de una vez entre los acompañantes.");
 
-                var reserva = _reservaRepo.GetById(reservaId);
-                if (reserva != null && acompanantes.Any(a => a.Documento == reserva.Titular.Documento))
+                if (acompanantes.Any(a => a.Documento == reserva.Titular.Documento))
                     throw new TitularEntreAcompanantesException_68SA();
             }
 

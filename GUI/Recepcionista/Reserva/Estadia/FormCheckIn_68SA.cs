@@ -82,6 +82,12 @@ namespace GUI_08YS.Recepcionista
             lblResFechas.Text = $"{reserva.FechaIngreso:dd/MM/yyyy} → {reserva.FechaEgreso:dd/MM/yyyy}";
             lblResComposicion.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_txtAdultosNinos"), reserva.CantidadAdultos, reserva.CantidadNinos);
 
+            bool fechaFutura = reserva.FechaIngreso.Date > DateTime.Today;
+            btnConfirmar.Enabled = !fechaFutura;
+            lblResFechas.ForeColor = fechaFutura ? Color.FromArgb(235, 90, 90) : Color.WhiteSmoke;
+            if (fechaFutura)
+                lblResFechas.Text += "  —  " + TraductorManager_08YS.Instance.GetTexto("CheckIn_avisoFechaFutura");
+
             var habitacion = BLLFactory_08YS.CreateHabitacionBLL().GetById(reserva.Habitacion.Id);
             lblResTipo.Text = habitacion.Tipo.Nombre;
 
@@ -305,6 +311,10 @@ namespace GUI_08YS.Recepcionista
             catch (TitularEntreAcompanantesException_68SA)
             {
                 MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excTitularEntreAcompanantes"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (CheckInAnticipadoException_68SA ex)
+            {
+                MessageBox.Show(ex.Message, TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

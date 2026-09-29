@@ -50,7 +50,7 @@ namespace GUI_08YS.Recepcionista
             dgvHuespedes.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
             dgvHuespedes.CellClick += DgvHuespedes_CellClick;
 
-            flpFiltros.SizeChanged += (s, e) => DistribuirFiltros();
+            flpFiltros.Layout += (s, e) => DistribuirFiltros();
             cmbOperadorEdad.SelectedIndexChanged += (s, e) => ActualizarVisibilidadEdad();
 
             btnNuevo.Click += (s, e) => AbrirEdicion(null);
@@ -238,39 +238,52 @@ namespace GUI_08YS.Recepcionista
 
         #region FrontEnd
 
+        private bool _distribuyendoFiltros;
+
         // FlowLayoutPanel solo sabe hacer wrap: si el siguiente filtro no entra, pasa a la línea de abajo y deja
         // espacio vacío al final de la fila. Acá se agrupan los filtros en filas con la misma regla de wrap
         // (MinimumSize + Margin) y el sobrante de cada fila se reparte entre sus filtros.
+        // Se engancha a Layout (no a SizeChanged): es el evento pensado para esto, y los cambios que se
+        // hagan acá quedan incorporados en la misma pasada de layout — con SizeChanged, en un maximizar/
+        // restaurar, el alto (AutoSize) del panel podía quedar mal calculado y dejaba un hueco debajo.
         private void DistribuirFiltros()
         {
-            int disponible = flpFiltros.ClientSize.Width - flpFiltros.Padding.Horizontal;
-            if (disponible <= 0 || disponible == _anchoFiltrosAplicado) return;
-            _anchoFiltrosAplicado = disponible;
-
-            var filtros = flpFiltros.Controls.Cast<Control>().Where(c => c.Visible).ToList();
-            var fila = new List<Control>();
-            int usado = 0;
-
-            flpFiltros.SuspendLayout();
-
-            foreach (var filtro in filtros)
+            if (_distribuyendoFiltros) return;
+            _distribuyendoFiltros = true;
+            try
             {
-                int necesita = filtro.MinimumSize.Width + filtro.Margin.Horizontal;
+                int disponible = flpFiltros.ClientSize.Width - flpFiltros.Padding.Horizontal;
+                if (disponible <= 0) return;
 
-                if (fila.Count > 0 && usado + necesita > disponible)
+                var filtros = flpFiltros.Controls.Cast<Control>().Where(c => c.Visible).ToList();
+                var fila = new List<Control>();
+                int usado = 0;
+
+                flpFiltros.SuspendLayout();
+
+                foreach (var filtro in filtros)
                 {
-                    EstirarFila(fila, usado, disponible);
-                    fila.Clear();
-                    usado = 0;
+                    int necesita = filtro.MinimumSize.Width + filtro.Margin.Horizontal;
+
+                    if (fila.Count > 0 && usado + necesita > disponible)
+                    {
+                        EstirarFila(fila, usado, disponible);
+                        fila.Clear();
+                        usado = 0;
+                    }
+
+                    fila.Add(filtro);
+                    usado += necesita;
                 }
 
-                fila.Add(filtro);
-                usado += necesita;
+                EstirarFila(fila, usado, disponible); // última fila (también se estira)
+
+                flpFiltros.ResumeLayout(true);
             }
-
-            EstirarFila(fila, usado, disponible); // última fila (también se estira)
-
-            flpFiltros.ResumeLayout(true);
+            finally
+            {
+                _distribuyendoFiltros = false;
+            }
         }
 
         private static void EstirarFila(List<Control> fila, int usado, int disponible)
