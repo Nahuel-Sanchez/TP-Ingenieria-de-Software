@@ -47,6 +47,8 @@ namespace GUI
         {
             TraducirControles(this);
             TraducirColumnas();
+            txtUsername.PlaceholderText = TraductorManager_08YS.Instance.GetTexto("Bitacora_phUsername");
+            txtTargetUsername.PlaceholderText = TraductorManager_08YS.Instance.GetTexto("Bitacora_phUsername");
         }
         private void TraducirColumnas()
         {

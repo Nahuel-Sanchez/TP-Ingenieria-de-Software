@@ -3,6 +3,8 @@ using DAL_08YS.Interfaces_Repositories.Negocio;
 using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
+using Service_08YS;
+using Service_08YS.Entities.Acceso;
 
 namespace BLL_08YS.Negocio
 {
@@ -25,6 +27,8 @@ namespace BLL_08YS.Negocio
 
         public int Crear(Piso_68SA piso)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearPiso);
+
             Validar(piso);
 
             if (_pisoRepo.ExisteNumero(piso.Numero))
@@ -37,6 +41,8 @@ namespace BLL_08YS.Negocio
 
         public void Modificar(Piso_68SA piso)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarPiso);
+
             Validar(piso);
 
             if (_pisoRepo.GetById(piso.PisoId) == null)
@@ -51,6 +57,8 @@ namespace BLL_08YS.Negocio
 
         public void Eliminar(int pisoId)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarPiso);
+
             if (_pisoRepo.GetById(pisoId) == null)
                 throw new PisoNoEncontradoException_68SA();
 

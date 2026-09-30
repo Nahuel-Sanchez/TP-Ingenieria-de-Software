@@ -52,18 +52,19 @@
             this.calRangoReservas.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(40)))), ((int)(((byte)(75)))));
             this.calRangoReservas.HoverForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.calRangoReservas.InRangeBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(218)))), ((int)(((byte)(165)))), ((int)(((byte)(32)))));
-            this.calRangoReservas.Location = new System.Drawing.Point(12, 197);
+            this.calRangoReservas.Location = new System.Drawing.Point(12, 110);
             this.calRangoReservas.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.calRangoReservas.MaxNights = null;
             this.calRangoReservas.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.calRangoReservas.MinimumSize = new System.Drawing.Size(620, 249);
             this.calRangoReservas.Name = "calRangoReservas";
+            this.calRangoReservas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.calRangoReservas.PreviewBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(218)))), ((int)(((byte)(165)))), ((int)(((byte)(32)))));
             this.calRangoReservas.SelectedBackColor = System.Drawing.Color.Goldenrod;
             this.calRangoReservas.SelectedForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
             this.calRangoReservas.SeparatorColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(75)))), ((int)(((byte)(40)))));
             this.calRangoReservas.ShowTodayHighlight = true;
-            this.calRangoReservas.Size = new System.Drawing.Size(1428, 575);
+            this.calRangoReservas.Size = new System.Drawing.Size(1446, 711);
             this.calRangoReservas.TabIndex = 0;
             this.calRangoReservas.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(25)))), ((int)(((byte)(50)))));
             this.calRangoReservas.TitleForeColor = System.Drawing.Color.Goldenrod;
@@ -73,14 +74,17 @@
             // 
             // lblTitulo
             // 
-            this.lblTitulo.AutoSize = true;
+            this.lblTitulo.AutoSize = false;
             this.lblTitulo.BackColor = System.Drawing.Color.Transparent;
             this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblTitulo.Location = new System.Drawing.Point(44, 19);
             this.lblTitulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(570, 79);
+            this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblTitulo.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.lblTitulo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblTitulo.Size = new System.Drawing.Size(1446, 110);
             this.lblTitulo.TabIndex = 55;
             this.lblTitulo.Tag = "Disponibilidad_lblTituloDisponibilidad";
             this.lblTitulo.Text = "Registrar reserva";
@@ -128,11 +132,12 @@
             this.BackgroundImage = global::GUI_08YS.Properties.Resources.BackGroundHorizon;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1470, 920);
-            this.Controls.Add(this.lblTitulo);
             this.Controls.Add(this.calRangoReservas);
+            this.Controls.Add(this.lblTitulo);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormDisponibilidad";
+            this.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
             this.Text = "FormDisponibilidad";
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);

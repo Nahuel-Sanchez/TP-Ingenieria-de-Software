@@ -136,6 +136,7 @@ namespace GUI_08YS.Recepcionista
             this.lblEncabezado.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblEncabezado.Location = new System.Drawing.Point(72, 24);
             this.lblEncabezado.Name = "lblEncabezado";
+            this.lblEncabezado.Tag = "Dashboard_lblEncabezado";
             this.lblEncabezado.Size = new System.Drawing.Size(180, 30);
             this.lblEncabezado.TabIndex = 1;
             this.lblEncabezado.Text = "Panel de Control";
@@ -175,6 +176,7 @@ namespace GUI_08YS.Recepcionista
             this.btnTabGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnTabGeneral.Location = new System.Drawing.Point(20, 6);
             this.btnTabGeneral.Name = "btnTabGeneral";
+            this.btnTabGeneral.Tag = "Dashboard_btnTabGeneral";
             this.btnTabGeneral.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnTabGeneral.Size = new System.Drawing.Size(140, 38);
             this.btnTabGeneral.TabIndex = 0;
@@ -195,6 +197,7 @@ namespace GUI_08YS.Recepcionista
             this.btnTabOcupacion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnTabOcupacion.Location = new System.Drawing.Point(170, 6);
             this.btnTabOcupacion.Name = "btnTabOcupacion";
+            this.btnTabOcupacion.Tag = "Dashboard_btnTabOcupacion";
             this.btnTabOcupacion.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnTabOcupacion.Size = new System.Drawing.Size(160, 38);
             this.btnTabOcupacion.TabIndex = 1;
@@ -215,6 +218,7 @@ namespace GUI_08YS.Recepcionista
             this.btnTabHuespedes.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnTabHuespedes.Location = new System.Drawing.Point(340, 6);
             this.btnTabHuespedes.Name = "btnTabHuespedes";
+            this.btnTabHuespedes.Tag = "Dashboard_btnTabHuespedes";
             this.btnTabHuespedes.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnTabHuespedes.Size = new System.Drawing.Size(160, 38);
             this.btnTabHuespedes.TabIndex = 2;
@@ -294,6 +298,7 @@ namespace GUI_08YS.Recepcionista
             this.iconDisponibles.IconSize = 30;
             this.iconDisponibles.Location = new System.Drawing.Point(212, 40);
             this.iconDisponibles.Name = "iconDisponibles";
+            this.iconDisponibles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconDisponibles.Size = new System.Drawing.Size(38, 38);
             this.iconDisponibles.TabIndex = 3;
             this.iconDisponibles.TabStop = false;
@@ -305,6 +310,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloDisponibles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloDisponibles.Location = new System.Drawing.Point(14, 14);
             this.lblTituloDisponibles.Name = "lblTituloDisponibles";
+            this.lblTituloDisponibles.Tag = "Dashboard_lblTituloDisponibles";
             this.lblTituloDisponibles.Size = new System.Drawing.Size(120, 13);
             this.lblTituloDisponibles.TabIndex = 0;
             this.lblTituloDisponibles.Text = "DISPONIBLES";
@@ -352,6 +358,7 @@ namespace GUI_08YS.Recepcionista
             this.iconOcupadasDash.IconSize = 30;
             this.iconOcupadasDash.Location = new System.Drawing.Point(212, 40);
             this.iconOcupadasDash.Name = "iconOcupadasDash";
+            this.iconOcupadasDash.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconOcupadasDash.Size = new System.Drawing.Size(38, 38);
             this.iconOcupadasDash.TabIndex = 3;
             this.iconOcupadasDash.TabStop = false;
@@ -363,6 +370,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloOcupadasDash.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloOcupadasDash.Location = new System.Drawing.Point(14, 14);
             this.lblTituloOcupadasDash.Name = "lblTituloOcupadasDash";
+            this.lblTituloOcupadasDash.Tag = "Dashboard_lblTituloOcupadasDash";
             this.lblTituloOcupadasDash.Size = new System.Drawing.Size(110, 13);
             this.lblTituloOcupadasDash.TabIndex = 0;
             this.lblTituloOcupadasDash.Text = "OCUPADAS";
@@ -410,6 +418,7 @@ namespace GUI_08YS.Recepcionista
             this.iconLimpieza.IconSize = 30;
             this.iconLimpieza.Location = new System.Drawing.Point(212, 40);
             this.iconLimpieza.Name = "iconLimpieza";
+            this.iconLimpieza.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconLimpieza.Size = new System.Drawing.Size(38, 38);
             this.iconLimpieza.TabIndex = 3;
             this.iconLimpieza.TabStop = false;
@@ -421,6 +430,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloLimpieza.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloLimpieza.Location = new System.Drawing.Point(14, 14);
             this.lblTituloLimpieza.Name = "lblTituloLimpieza";
+            this.lblTituloLimpieza.Tag = "Dashboard_lblTituloLimpieza";
             this.lblTituloLimpieza.Size = new System.Drawing.Size(90, 13);
             this.lblTituloLimpieza.TabIndex = 0;
             this.lblTituloLimpieza.Text = "POR LIMPIEZA";
@@ -468,6 +478,7 @@ namespace GUI_08YS.Recepcionista
             this.iconMantenimiento.IconSize = 30;
             this.iconMantenimiento.Location = new System.Drawing.Point(212, 40);
             this.iconMantenimiento.Name = "iconMantenimiento";
+            this.iconMantenimiento.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconMantenimiento.Size = new System.Drawing.Size(38, 38);
             this.iconMantenimiento.TabIndex = 3;
             this.iconMantenimiento.TabStop = false;
@@ -479,6 +490,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloMantenimiento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloMantenimiento.Location = new System.Drawing.Point(14, 14);
             this.lblTituloMantenimiento.Name = "lblTituloMantenimiento";
+            this.lblTituloMantenimiento.Tag = "Dashboard_lblTituloMantenimiento";
             this.lblTituloMantenimiento.Size = new System.Drawing.Size(100, 13);
             this.lblTituloMantenimiento.TabIndex = 0;
             this.lblTituloMantenimiento.Text = "EN MANTENIMIENTO";
@@ -526,6 +538,7 @@ namespace GUI_08YS.Recepcionista
             this.iconTasaOcupacion.IconSize = 30;
             this.iconTasaOcupacion.Location = new System.Drawing.Point(224, 40);
             this.iconTasaOcupacion.Name = "iconTasaOcupacion";
+            this.iconTasaOcupacion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconTasaOcupacion.Size = new System.Drawing.Size(38, 38);
             this.iconTasaOcupacion.TabIndex = 3;
             this.iconTasaOcupacion.TabStop = false;
@@ -537,6 +550,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloTasaOcupacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloTasaOcupacion.Location = new System.Drawing.Point(14, 14);
             this.lblTituloTasaOcupacion.Name = "lblTituloTasaOcupacion";
+            this.lblTituloTasaOcupacion.Tag = "Dashboard_lblTituloTasaOcupacion";
             this.lblTituloTasaOcupacion.Size = new System.Drawing.Size(105, 13);
             this.lblTituloTasaOcupacion.TabIndex = 0;
             this.lblTituloTasaOcupacion.Text = "TASA DE OCUPACIÓN";
@@ -558,6 +572,7 @@ namespace GUI_08YS.Recepcionista
             this.lblSubTasaOcupacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblSubTasaOcupacion.Location = new System.Drawing.Point(14, 76);
             this.lblSubTasaOcupacion.Name = "lblSubTasaOcupacion";
+            this.lblSubTasaOcupacion.Tag = "Dashboard_lblSubTasaOcupacion";
             this.lblSubTasaOcupacion.Size = new System.Drawing.Size(110, 15);
             this.lblSubTasaOcupacion.TabIndex = 2;
             this.lblSubTasaOcupacion.Text = "Capacidad activa";
@@ -600,6 +615,7 @@ namespace GUI_08YS.Recepcionista
             this.lblEtiquetaDesdeGeneral.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaDesdeGeneral.Location = new System.Drawing.Point(16, 70);
             this.lblEtiquetaDesdeGeneral.Name = "lblEtiquetaDesdeGeneral";
+            this.lblEtiquetaDesdeGeneral.Tag = "Dashboard_lblEtiquetaDesdeGeneral";
             this.lblEtiquetaDesdeGeneral.Size = new System.Drawing.Size(40, 15);
             this.lblEtiquetaDesdeGeneral.TabIndex = 1;
             this.lblEtiquetaDesdeGeneral.Text = "Desde";
@@ -632,6 +648,7 @@ namespace GUI_08YS.Recepcionista
             this.lblEtiquetaHastaGeneral.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaHastaGeneral.Location = new System.Drawing.Point(310, 70);
             this.lblEtiquetaHastaGeneral.Name = "lblEtiquetaHastaGeneral";
+            this.lblEtiquetaHastaGeneral.Tag = "Dashboard_lblEtiquetaHastaGeneral";
             this.lblEtiquetaHastaGeneral.Size = new System.Drawing.Size(38, 15);
             this.lblEtiquetaHastaGeneral.TabIndex = 3;
             this.lblEtiquetaHastaGeneral.Text = "Hasta";
@@ -670,6 +687,7 @@ namespace GUI_08YS.Recepcionista
             this.btnActualizarGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnActualizarGeneral.Location = new System.Drawing.Point(604, 56);
             this.btnActualizarGeneral.Name = "btnActualizarGeneral";
+            this.btnActualizarGeneral.Tag = "Dashboard_btnActualizarGeneral";
             this.btnActualizarGeneral.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.btnActualizarGeneral.Size = new System.Drawing.Size(170, 44);
             this.btnActualizarGeneral.TabIndex = 5;
@@ -686,6 +704,7 @@ namespace GUI_08YS.Recepcionista
             this.btnFiltroHoy.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnFiltroHoy.Location = new System.Drawing.Point(678, 8);
             this.btnFiltroHoy.Name = "btnFiltroHoy";
+            this.btnFiltroHoy.Tag = "Dashboard_btnFiltroHoy";
             this.btnFiltroHoy.Size = new System.Drawing.Size(130, 36);
             this.btnFiltroHoy.TabIndex = 6;
             this.btnFiltroHoy.Text = "Hoy";
@@ -700,6 +719,7 @@ namespace GUI_08YS.Recepcionista
             this.btnFiltro7Dias.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnFiltro7Dias.Location = new System.Drawing.Point(818, 8);
             this.btnFiltro7Dias.Name = "btnFiltro7Dias";
+            this.btnFiltro7Dias.Tag = "Dashboard_btnFiltro7Dias";
             this.btnFiltro7Dias.Size = new System.Drawing.Size(140, 36);
             this.btnFiltro7Dias.TabIndex = 7;
             this.btnFiltro7Dias.Text = "Últimos 7 días";
@@ -714,6 +734,7 @@ namespace GUI_08YS.Recepcionista
             this.btnFiltro30Dias.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnFiltro30Dias.Location = new System.Drawing.Point(968, 8);
             this.btnFiltro30Dias.Name = "btnFiltro30Dias";
+            this.btnFiltro30Dias.Tag = "Dashboard_btnFiltro30Dias";
             this.btnFiltro30Dias.Size = new System.Drawing.Size(140, 36);
             this.btnFiltro30Dias.TabIndex = 8;
             this.btnFiltro30Dias.Text = "Últimos 30 días";
@@ -728,6 +749,7 @@ namespace GUI_08YS.Recepcionista
             this.btnFiltroEsteMes.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnFiltroEsteMes.Location = new System.Drawing.Point(1118, 8);
             this.btnFiltroEsteMes.Name = "btnFiltroEsteMes";
+            this.btnFiltroEsteMes.Tag = "Dashboard_btnFiltroEsteMes";
             this.btnFiltroEsteMes.Size = new System.Drawing.Size(130, 36);
             this.btnFiltroEsteMes.TabIndex = 9;
             this.btnFiltroEsteMes.Text = "Este Mes";
@@ -746,6 +768,7 @@ namespace GUI_08YS.Recepcionista
             this.btnFiltroHistorico.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltroHistorico.Location = new System.Drawing.Point(1258, 8);
             this.btnFiltroHistorico.Name = "btnFiltroHistorico";
+            this.btnFiltroHistorico.Tag = "Dashboard_btnFiltroHistorico";
             this.btnFiltroHistorico.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnFiltroHistorico.Size = new System.Drawing.Size(150, 36);
             this.btnFiltroHistorico.TabIndex = 10;
@@ -794,6 +817,7 @@ namespace GUI_08YS.Recepcionista
             this.iconIngresos.IconSize = 28;
             this.iconIngresos.Location = new System.Drawing.Point(288, 32);
             this.iconIngresos.Name = "iconIngresos";
+            this.iconIngresos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconIngresos.Size = new System.Drawing.Size(36, 36);
             this.iconIngresos.TabIndex = 2;
             this.iconIngresos.TabStop = false;
@@ -805,6 +829,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloIngresos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloIngresos.Location = new System.Drawing.Point(16, 14);
             this.lblTituloIngresos.Name = "lblTituloIngresos";
+            this.lblTituloIngresos.Tag = "Dashboard_lblTituloIngresos";
             this.lblTituloIngresos.Size = new System.Drawing.Size(120, 13);
             this.lblTituloIngresos.TabIndex = 0;
             this.lblTituloIngresos.Text = "INGRESOS PERÍODO";
@@ -841,6 +866,7 @@ namespace GUI_08YS.Recepcionista
             this.iconTicketPromedio.IconSize = 28;
             this.iconTicketPromedio.Location = new System.Drawing.Point(288, 32);
             this.iconTicketPromedio.Name = "iconTicketPromedio";
+            this.iconTicketPromedio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconTicketPromedio.Size = new System.Drawing.Size(36, 36);
             this.iconTicketPromedio.TabIndex = 2;
             this.iconTicketPromedio.TabStop = false;
@@ -852,6 +878,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloTicketPromedio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloTicketPromedio.Location = new System.Drawing.Point(16, 14);
             this.lblTituloTicketPromedio.Name = "lblTituloTicketPromedio";
+            this.lblTituloTicketPromedio.Tag = "Dashboard_lblTituloTicketPromedio";
             this.lblTituloTicketPromedio.Size = new System.Drawing.Size(110, 13);
             this.lblTituloTicketPromedio.TabIndex = 0;
             this.lblTituloTicketPromedio.Text = "TICKET PROMEDIO";
@@ -888,6 +915,7 @@ namespace GUI_08YS.Recepcionista
             this.iconAnuladas.IconSize = 28;
             this.iconAnuladas.Location = new System.Drawing.Point(288, 32);
             this.iconAnuladas.Name = "iconAnuladas";
+            this.iconAnuladas.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconAnuladas.Size = new System.Drawing.Size(36, 36);
             this.iconAnuladas.TabIndex = 2;
             this.iconAnuladas.TabStop = false;
@@ -899,6 +927,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloAnuladas.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloAnuladas.Location = new System.Drawing.Point(16, 14);
             this.lblTituloAnuladas.Name = "lblTituloAnuladas";
+            this.lblTituloAnuladas.Tag = "Dashboard_lblTituloAnuladas";
             this.lblTituloAnuladas.Size = new System.Drawing.Size(140, 13);
             this.lblTituloAnuladas.TabIndex = 0;
             this.lblTituloAnuladas.Text = "% RESERVAS ANULADAS";
@@ -935,6 +964,7 @@ namespace GUI_08YS.Recepcionista
             this.iconMontoAnulado.IconSize = 28;
             this.iconMontoAnulado.Location = new System.Drawing.Point(288, 32);
             this.iconMontoAnulado.Name = "iconMontoAnulado";
+            this.iconMontoAnulado.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconMontoAnulado.Size = new System.Drawing.Size(36, 36);
             this.iconMontoAnulado.TabIndex = 2;
             this.iconMontoAnulado.TabStop = false;
@@ -946,6 +976,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloMontoAnulado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblTituloMontoAnulado.Location = new System.Drawing.Point(16, 14);
             this.lblTituloMontoAnulado.Name = "lblTituloMontoAnulado";
+            this.lblTituloMontoAnulado.Tag = "Dashboard_lblTituloMontoAnulado";
             this.lblTituloMontoAnulado.Size = new System.Drawing.Size(120, 13);
             this.lblTituloMontoAnulado.TabIndex = 0;
             this.lblTituloMontoAnulado.Text = "MONTO ANULADO";
@@ -981,6 +1012,7 @@ namespace GUI_08YS.Recepcionista
             this.lblTituloOrigenGasto.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblTituloOrigenGasto.Location = new System.Drawing.Point(16, 14);
             this.lblTituloOrigenGasto.Name = "lblTituloOrigenGasto";
+            this.lblTituloOrigenGasto.Tag = "Dashboard_lblTituloOrigenGasto";
             this.lblTituloOrigenGasto.Size = new System.Drawing.Size(140, 19);
             this.lblTituloOrigenGasto.TabIndex = 0;
             this.lblTituloOrigenGasto.Text = "ORIGEN DEL GASTO";
@@ -998,7 +1030,11 @@ namespace GUI_08YS.Recepcionista
             this.flpLeyendaOrigenGasto.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpLeyendaOrigenGasto.Location = new System.Drawing.Point(360, 60);
             this.flpLeyendaOrigenGasto.Name = "flpLeyendaOrigenGasto";
-            this.flpLeyendaOrigenGasto.Size = new System.Drawing.Size(400, 210);
+            this.flpLeyendaOrigenGasto.AutoScroll = true;
+            this.flpLeyendaOrigenGasto.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpLeyendaOrigenGasto.Size = new System.Drawing.Size(1040, 220);
             this.flpLeyendaOrigenGasto.TabIndex = 2;
             this.flpLeyendaOrigenGasto.WrapContents = false;
             // 

@@ -10,19 +10,37 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormReservas_68SA : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnCrearReserva), Permisos.RegistrarReserva },
+            };
+
         private static readonly Bitmap IconoVacio = new Bitmap(1, 1);
+
+        // Íconos de acción y colores de estado se resuelven una vez por carga y se entregan en
+        // CellFormatting: la grilla no recorre filas ni guarda imágenes por celda (filas "compartidas").
+        private readonly Image _iconoEditar = IconCache.Get(IconChar.PenToSquare, IconFont.Auto, 36, Color.Goldenrod);
+        private readonly Image _iconoImprimir = IconCache.Get(IconChar.Print, IconFont.Auto, 36, Color.Goldenrod);
+        private readonly Image _iconoCancelar = IconCache.Get(IconChar.Ban, IconFont.Auto, 36, Color.FromArgb(235, 90, 90));
+        private List<ReservaListItem_68SA> _items = new List<ReservaListItem_68SA>();
+        private Dictionary<string, Color> _coloresEstado = new Dictionary<string, Color>();
+        private int _colEstado = -1, _colEditar = -1, _colImprimir = -1, _colCancelar = -1;
 
         private readonly Action<Form> _openChildForm;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
         private readonly HabitacionBLL_68SA _habitacionBLL = BLLFactory_08YS.CreateHabitacionBLL();
         private readonly PagoBLL_68SA _pagoBLL = BLLFactory_08YS.CreatePagoBLL();
 
-        private DateTime _fechaBaseCalendario = DateTime.Today;
+        // Primer día visible del calendario: < y > lo corren un día, << y >> una semana o un mes completo
+        private DateTime _fechaBaseCalendario = InicioAlineado(DateTime.Today, ModoCalendarioReservas.Semana);
+        private readonly ToolTip _tooltipNavegacion = new ToolTip();
         private ModoCalendarioReservas _modoCalendario = ModoCalendarioReservas.Semana;
 
         public FormReservas_68SA(Action<Form> openChildForm)
@@ -30,37 +48,40 @@ namespace GUI_08YS.Recepcionista
             _openChildForm = openChildForm;
             InitializeComponent();
 
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
+
             ConfigurarGrid();
 
-            cmbEstadoFiltro.Items.Add("Todos");
-            cmbEstadoFiltro.Items.AddRange(Enum.GetValues(typeof(EstadoReserva)).Cast<object>().ToArray());
-            cmbEstadoFiltro.SelectedIndex = 0;
+            // Filtros adaptables: cada grupo reparte su ancho entre sus campos (se ven bien en cualquier resolución)
+            LayoutAdaptable_68SA.RepartirColumnas(pnlGrupoIngreso,
+                new Control[] { lblEtiquetaFechaDesde, dtpFechaDesde }, new Control[] { lblEtiquetaFechaHasta, dtpFechaHasta });
+            LayoutAdaptable_68SA.RepartirColumnas(pnlGrupoEgreso,
+                new Control[] { lblEtiquetaFechaEgresoDesde, dtpFechaEgresoDesde }, new Control[] { lblEtiquetaFechaEgresoHasta, dtpFechaEgresoHasta });
+            LayoutAdaptable_68SA.RepartirColumnas(pnlGrupoBotones,
+                new Control[] { btnLimpiarFiltros }, new Control[] { btnFiltrar });
+            pnlGrupoCosto.Resize += (s, e) => AcomodarGrupoCosto();
 
-            cmbOperadorCosto.Items.AddRange(new object[] { "Cualquiera", "Mayor a", "Menor a", "Entre" });
+            CargarCombosFiltro();
+            cmbEstadoFiltro.SelectedIndex = 0;
             cmbOperadorCosto.SelectedIndex = 0;
             cmbOperadorCosto.SelectedIndexChanged += (s, e) => ActualizarVisibilidadCosto();
 
             btnTabCalendario.Click += (s, e) => CambiarTab(false);
             btnTabLista.Click += (s, e) => CambiarTab(true);
             btnCrearReserva.Click += (s, e) => _openChildForm(new FormDisponibilidad(_openChildForm));
-            btnCalAnterior.Click += (s, e) =>
-            {
-                _fechaBaseCalendario = _modoCalendario == ModoCalendarioReservas.Semana
-                    ? _fechaBaseCalendario.AddDays(-7) : _fechaBaseCalendario.AddMonths(-1);
-                CargarCalendario();
-            };
-            btnCalSiguiente.Click += (s, e) =>
-            {
-                _fechaBaseCalendario = _modoCalendario == ModoCalendarioReservas.Semana
-                    ? _fechaBaseCalendario.AddDays(7) : _fechaBaseCalendario.AddMonths(1);
-                CargarCalendario();
-            };
-            btnCalHoy.Click += (s, e) => { _fechaBaseCalendario = DateTime.Today; CargarCalendario(); };
+            btnCalAnteriorPeriodo.Click += (s, e) => MoverCalendario(-1, periodoCompleto: true);
+            btnCalAnterior.Click += (s, e) => MoverCalendario(-1, periodoCompleto: false);
+            btnCalSiguiente.Click += (s, e) => MoverCalendario(1, periodoCompleto: false);
+            btnCalSiguientePeriodo.Click += (s, e) => MoverCalendario(1, periodoCompleto: true);
+            btnCalHoy.Click += (s, e) => { _fechaBaseCalendario = InicioAlineado(DateTime.Today, _modoCalendario); CargarCalendario(); };
+            TraducirTooltipsCalendario();
             btnCalVistaSemana.Click += (s, e) => CambiarVistaCalendario(ModoCalendarioReservas.Semana);
             btnCalVistaMes.Click += (s, e) => CambiarVistaCalendario(ModoCalendarioReservas.Mes);
-            ucCalendario.ReservaClickeada += (s, reserva) =>
-                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("Reservas_msgDetallePendiente"), reserva.Id), TraductorManager_08YS.Instance.GetTexto("Comun_tituloPendiente"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Calendario: clic en una reserva abre su comprobante / factura; doble clic en un día libre, reserva esa habitación
+            ucCalendario.PermiteCrearReservas = SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarReserva)
+                                             && SessionManager_08YS.Instance.HasPermission(Permisos.Cobrar);
+            ucCalendario.ReservaClickeada += (s, reserva) => FormDocumentosReserva_68SA.Mostrar(this, reserva.Id);
+            ucCalendario.NuevaReservaSolicitada += (s, e) => ReservarDesdeCalendario(e.Habitacion, e.Fecha);
 
             btnFiltrar.Click += (s, e) => CargarLista();
             btnLimpiarFiltros.Click += (s, e) => LimpiarFiltros();
@@ -89,6 +110,10 @@ namespace GUI_08YS.Recepcionista
             dgvReservas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReservas.MultiSelect = false;
             dgvReservas.RowTemplate.Height = 48;
+            dgvReservas.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            dgvReservas.AllowUserToResizeRows = false;
+            // Sin doble buffer la grilla se repinta celda por celda al desplazarse (se "arrastra")
+            LayoutAdaptable_68SA.HabilitarDobleBuffer(dgvReservas);
             dgvReservas.ColumnHeadersHeight = 36;
             dgvReservas.EnableHeadersVisualStyles = false;
 
@@ -113,6 +138,7 @@ namespace GUI_08YS.Recepcionista
 
         private void AplicarColumnasGrid()
         {
+            var t = TraductorManager_08YS.Instance;
             void Configurar(string nombre, string encabezado, int peso, string formato = null)
             {
                 if (dgvReservas.Columns[nombre] == null) return;
@@ -121,16 +147,16 @@ namespace GUI_08YS.Recepcionista
                 if (formato != null) dgvReservas.Columns[nombre].DefaultCellStyle.Format = formato;
             }
 
-            Configurar("ReservaId", "Cód.", 55);
-            Configurar("HuespedDisplay", "Huésped", 190);
-            Configurar("Habitacion", "Hab.", 60);
-            Configurar("RegistroDisplay", "Registro", 170);
-            Configurar("FechaEntrada", "Entrada", 90, "dd/MM/yyyy");
-            Configurar("FechaSalida", "Salida", 90, "dd/MM/yyyy");
-            Configurar("Costo", "Costo", 90, "$#,##0.00");
-            Configurar("Adelanto", "Adelanto", 90, "$#,##0.00");
-            Configurar("Saldo", "Saldo", 90, "$#,##0.00");
-            Configurar("Estado", "Estado", 90);
+            Configurar("ReservaId", t.GetTexto("Reservas_colCodigo"), 55);
+            Configurar("HuespedDisplay", t.GetTexto("Reservas_colHuesped"), 190);
+            Configurar("Habitacion", t.GetTexto("Reservas_colHabitacion"), 60);
+            Configurar("RegistroDisplay", t.GetTexto("Reservas_colRegistro"), 170);
+            Configurar("FechaEntrada", t.GetTexto("Reservas_colEntrada"), 90, "dd/MM/yyyy");
+            Configurar("FechaSalida", t.GetTexto("Reservas_colSalida"), 90, "dd/MM/yyyy");
+            Configurar("Costo", t.GetTexto("Reservas_colCosto"), 90, "$#,##0.00");
+            Configurar("Adelanto", t.GetTexto("Reservas_colAdelanto"), 90, "$#,##0.00");
+            Configurar("Saldo", t.GetTexto("Reservas_colSaldo"), 90, "$#,##0.00");
+            Configurar("Estado", t.GetTexto("Reservas_colEstado"), 90);
 
             foreach (var oculta in new[] { "Huesped", "Documento", "RegistradoPor", "FechaRegistro", "PuedeCancelar" })
                 if (dgvReservas.Columns[oculta] != null)
@@ -144,20 +170,14 @@ namespace GUI_08YS.Recepcionista
             dgvReservas.Columns.Add(CrearColumnaIcono("colEditar"));
             dgvReservas.Columns.Add(CrearColumnaIcono("colImprimir"));
             dgvReservas.Columns.Add(CrearColumnaIcono("colCancelar"));
+            dgvReservas.Columns["colEditar"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.ModificarReserva);
+            dgvReservas.Columns["colImprimir"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.ImprimirComprobante);
+            dgvReservas.Columns["colCancelar"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.CancelarReserva);
 
-            Image iconoEditar = IconCache.Get(IconChar.PenToSquare, IconFont.Auto, 36, Color.Goldenrod);
-            Image iconoImprimir = IconCache.Get(IconChar.Print, IconFont.Auto, 36, Color.Goldenrod);
-            Image iconoCancelar = IconCache.Get(IconChar.Ban, IconFont.Auto, 36, Color.FromArgb(235, 90, 90));
-
-            foreach (DataGridViewRow fila in dgvReservas.Rows)
-            {
-                if (!(fila.DataBoundItem is ReservaListItem_68SA item)) continue;
-                fila.Cells["colEditar"].Value = iconoEditar;
-                fila.Cells["colImprimir"].Value = iconoImprimir;
-                fila.Cells["colCancelar"].Value = item.PuedeCancelar ? iconoCancelar : IconoVacio;
-            }
-
-            dgvReservas.Invalidate();
+            _colEstado = dgvReservas.Columns["Estado"]?.Index ?? -1;
+            _colEditar = dgvReservas.Columns["colEditar"].Index;
+            _colImprimir = dgvReservas.Columns["colImprimir"].Index;
+            _colCancelar = dgvReservas.Columns["colCancelar"].Index;
         }
 
         private static DataGridViewImageColumn CrearColumnaIcono(string nombre)
@@ -168,7 +188,7 @@ namespace GUI_08YS.Recepcionista
                 HeaderText = "",
                 Width = 42,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                ImageLayout = DataGridViewImageCellLayout.Zoom
+                ImageLayout = DataGridViewImageCellLayout.Normal // el ícono ya viene del tamaño justo: no se reescala en cada pintado
             };
             columna.DefaultCellStyle.BackColor = Color.FromArgb(10, 18, 50);
             columna.DefaultCellStyle.SelectionBackColor = Color.FromArgb(15, 25, 55);
@@ -178,14 +198,29 @@ namespace GUI_08YS.Recepcionista
 
         private void DgvReservas_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dgvReservas.Columns[e.ColumnIndex].Name != "Estado" || e.Value == null) return;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-            switch (e.Value.ToString())
+            if (e.ColumnIndex == _colEstado)
             {
-                case "Pendiente": e.CellStyle.ForeColor = Color.FromArgb(90, 155, 235); break;
-                case "Ocupada": e.CellStyle.ForeColor = Color.FromArgb(76, 217, 100); break;
-                case "Finalizada": e.CellStyle.ForeColor = Color.FromArgb(160, 165, 180); break;
-                case "Cancelada": e.CellStyle.ForeColor = Color.FromArgb(235, 90, 90); break;
+                if (e.Value is string estado && _coloresEstado.TryGetValue(estado, out Color color))
+                    e.CellStyle.ForeColor = color;
+            }
+            else if (e.ColumnIndex == _colEditar)
+            {
+                e.Value = _iconoEditar;
+                e.FormattingApplied = true;
+            }
+            else if (e.ColumnIndex == _colImprimir)
+            {
+                e.Value = _iconoImprimir;
+                e.FormattingApplied = true;
+            }
+            else if (e.ColumnIndex == _colCancelar)
+            {
+                // Se lee de la lista enlazada (no de Rows[i]) para no "descompartir" la fila
+                bool puedeCancelar = e.RowIndex < _items.Count && _items[e.RowIndex].PuedeCancelar;
+                e.Value = puedeCancelar ? _iconoCancelar : IconoVacio;
+                e.FormattingApplied = true;
             }
         }
 
@@ -209,7 +244,7 @@ namespace GUI_08YS.Recepcionista
                 }
                 else
                 {
-                    MessageBox.Show("Solo se pueden modificar reservas Pendientes.", "No disponible",
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Reservas_msgSoloPendientes"), TraductorManager_08YS.Instance.GetTexto("Reservas_tituloNoDisponible"),
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -241,12 +276,69 @@ namespace GUI_08YS.Recepcionista
 
         #region Filtros
 
+        private const int OperadorCostoCualquiera = 0;
+        private const int OperadorCostoMayorA = 1;
+        private const int OperadorCostoMenorA = 2;
+        private const int OperadorCostoEntre = 3;
+
+        // Combos y placeholders de los filtros en el idioma activo (conserva la selección al cambiar de idioma)
+        private void CargarCombosFiltro()
+        {
+            var t = TraductorManager_08YS.Instance;
+
+            OpcionEnum_68SA.Cargar(cmbEstadoFiltro, typeof(EstadoReserva), t.GetTexto("Crud_todos"));
+
+            int? operador = ItemCombo_68SA.IdSeleccionado(cmbOperadorCosto);
+            cmbOperadorCosto.Items.Clear();
+            cmbOperadorCosto.Items.Add(new ItemCombo_68SA(OperadorCostoCualquiera, t.GetTexto("Reservas_costoCualquiera")));
+            cmbOperadorCosto.Items.Add(new ItemCombo_68SA(OperadorCostoMayorA, t.GetTexto("Reservas_costoMayorA")));
+            cmbOperadorCosto.Items.Add(new ItemCombo_68SA(OperadorCostoMenorA, t.GetTexto("Reservas_costoMenorA")));
+            cmbOperadorCosto.Items.Add(new ItemCombo_68SA(OperadorCostoEntre, t.GetTexto("Reservas_costoEntre")));
+            if (operador.HasValue) ItemCombo_68SA.Seleccionar(cmbOperadorCosto, operador);
+
+            txtHuespedFiltro.PlaceholderText = t.GetTexto("Reservas_phHuespedFiltro");
+            txtHabitacionFiltro.PlaceholderText = t.GetTexto("Reservas_phHabitacionFiltro");
+            txtRegistroFiltro.PlaceholderText = t.GetTexto("Reservas_phRegistroFiltro");
+        }
+
         private void ActualizarVisibilidadCosto()
         {
-            string operador = cmbOperadorCosto.SelectedItem?.ToString();
-            nudCostoDesde.Visible = operador != "Cualquiera";
-            lblGuionCosto.Visible = operador == "Entre";
-            nudCostoHasta.Visible = operador == "Entre";
+            int operador = ItemCombo_68SA.IdSeleccionado(cmbOperadorCosto) ?? OperadorCostoCualquiera;
+            nudCostoDesde.Visible = operador != OperadorCostoCualquiera;
+            lblGuionCosto.Visible = operador == OperadorCostoEntre;
+            nudCostoHasta.Visible = operador == OperadorCostoEntre;
+            AcomodarGrupoCosto();
+        }
+
+        // Operador (40%) + uno o dos importes que se reparten el resto del ancho del grupo
+        private void AcomodarGrupoCosto()
+        {
+            int ancho = pnlGrupoCosto.ClientSize.Width;
+            if (ancho <= 0) return;
+
+            const int separacion = 8;
+            int anchoCombo = Math.Max(90, ancho * 40 / 100);
+            cmbOperadorCosto.Left = 0;
+            cmbOperadorCosto.Width = anchoCombo;
+
+            int inicio = anchoCombo + separacion;
+            int resto = Math.Max(0, ancho - inicio);
+            // Se decide por el operador elegido (Visible devuelve false mientras la pestaña está oculta)
+            if (ItemCombo_68SA.IdSeleccionado(cmbOperadorCosto) == OperadorCostoEntre)
+            {
+                int anchoGuion = lblGuionCosto.Width + 6;
+                int anchoImporte = Math.Max(40, (resto - anchoGuion) / 2);
+                nudCostoDesde.Left = inicio;
+                nudCostoDesde.Width = anchoImporte;
+                lblGuionCosto.Left = nudCostoDesde.Right + 3;
+                nudCostoHasta.Left = ancho - anchoImporte;
+                nudCostoHasta.Width = anchoImporte;
+            }
+            else
+            {
+                nudCostoDesde.Left = inicio;
+                nudCostoDesde.Width = Math.Max(40, resto);
+            }
         }
 
         private void LimpiarFiltros()
@@ -272,22 +364,22 @@ namespace GUI_08YS.Recepcionista
                 Huesped = string.IsNullOrWhiteSpace(txtHuespedFiltro.RealText) ? null : txtHuespedFiltro.RealText.Trim(),
                 Habitacion = string.IsNullOrWhiteSpace(txtHabitacionFiltro.RealText) ? null : txtHabitacionFiltro.RealText.Trim(),
                 Registro = string.IsNullOrWhiteSpace(txtRegistroFiltro.RealText) ? null : txtRegistroFiltro.RealText.Trim(),
-                Estado = cmbEstadoFiltro.SelectedItem is EstadoReserva estado ? estado : (EstadoReserva?)null,
+                Estado = OpcionEnum_68SA.Seleccionado<EstadoReserva>(cmbEstadoFiltro),
                 FechaDesde = dtpFechaDesde.Value,
                 FechaHasta = dtpFechaHasta.Value,
                 FechaEgresoDesde = dtpFechaEgresoDesde.Value,
                 FechaEgresoHasta = dtpFechaEgresoHasta.Value
             };
 
-            switch (cmbOperadorCosto.SelectedItem?.ToString())
+            switch (ItemCombo_68SA.IdSeleccionado(cmbOperadorCosto) ?? OperadorCostoCualquiera)
             {
-                case "Mayor a":
+                case OperadorCostoMayorA:
                     filtro.CostoDesde = nudCostoDesde.Value;
                     break;
-                case "Menor a":
+                case OperadorCostoMenorA:
                     filtro.CostoHasta = nudCostoDesde.Value;
                     break;
-                case "Entre":
+                case OperadorCostoEntre:
                     filtro.CostoDesde = nudCostoDesde.Value;
                     filtro.CostoHasta = nudCostoHasta.Value;
                     break;
@@ -337,41 +429,113 @@ namespace GUI_08YS.Recepcionista
                 PuedeCancelar = r.Estado == EstadoReserva.Confirmada
             }).ToList();
 
+            _coloresEstado = new Dictionary<string, Color>
+            {
+                [TextoEstadoReserva(EstadoReserva.Confirmada)] = Color.FromArgb(90, 155, 235),
+                [TextoEstadoReserva(EstadoReserva.EnCurso)] = Color.FromArgb(76, 217, 100),
+                [TextoEstadoReserva(EstadoReserva.Finalizada)] = Color.FromArgb(160, 165, 180),
+                [TextoEstadoReserva(EstadoReserva.Cancelada)] = Color.FromArgb(235, 90, 90)
+            };
+
+            dgvReservas.SuspendLayout();
+            _items = items;
+            // Las columnas se regeneran al volver a enlazar: los índices guardados dejan de valer
+            _colEstado = _colEditar = _colImprimir = _colCancelar = -1;
             dgvReservas.DataSource = null;
             dgvReservas.DataSource = items;
             AplicarColumnasGrid();
+            dgvReservas.ResumeLayout();
         }
         private void CargarCalendario()
         {
-            DateTime desde, hasta;
+            DateTime desde = _fechaBaseCalendario.Date;
+            DateTime hasta = _modoCalendario == ModoCalendarioReservas.Semana ? desde.AddDays(7) : desde.AddMonths(1);
 
-            if (_modoCalendario == ModoCalendarioReservas.Semana)
-            {
-                int diasDesdeElLunes = ((int)_fechaBaseCalendario.DayOfWeek + 6) % 7;
-                desde = _fechaBaseCalendario.Date.AddDays(-diasDesdeElLunes);
-                hasta = desde.AddDays(7);
-            }
-            else
-            {
-                desde = new DateTime(_fechaBaseCalendario.Year, _fechaBaseCalendario.Month, 1);
-                hasta = desde.AddMonths(1);
-            }
-
-            lblCalPeriodo.Text = _modoCalendario == ModoCalendarioReservas.Semana
-                ? $"{desde:dd/MM} – {hasta.AddDays(-1):dd/MM/yyyy}"
-                : desde.ToString("MMMM yyyy", System.Globalization.CultureInfo.GetCultureInfo("es-ES"));
+            // Un mes que arranca el día 1 se titula con su nombre; si se corrió de a días, con el rango
+            var cultura = OpcionEnum_68SA.CulturaActual();
+            lblCalPeriodo.Text = _modoCalendario == ModoCalendarioReservas.Mes && desde.Day == 1
+                ? cultura.TextInfo.ToTitleCase(desde.ToString("MMMM yyyy", cultura))
+                : $"{desde:dd/MM} – {hasta.AddDays(-1):dd/MM/yyyy}";
 
             var habitaciones = _habitacionBLL.GetAll();
-            var reservas = _reservaBLL.GetEnRangoVisible(desde, hasta);
+            // Un día antes: la reserva que sale el primer día visible ocupa su mañana (hasta el check-out)
+            var reservas = _reservaBLL.GetEnRangoVisible(desde.AddDays(-1), hasta);
 
-            ucCalendario.Cargar(habitaciones, reservas, desde, hasta, _modoCalendario);
+            TimeSpan horaCheckIn = TimeSpan.FromHours(14), horaCheckOut = TimeSpan.FromHours(10);
+            try
+            {
+                var configuracion = BLLFactory_08YS.CreateConfiguracionHotelBLL().GetConfiguracion();
+                if (configuracion != null)
+                {
+                    horaCheckIn = configuracion.HoraCheckIn;
+                    horaCheckOut = configuracion.HoraCheckOut;
+                }
+            }
+            catch { /* se usan los horarios por defecto */ }
+
+            ucCalendario.Cargar(habitaciones, reservas, desde, hasta, _modoCalendario, horaCheckIn, horaCheckOut);
+        }
+
+        private void ReservarDesdeCalendario(Habitacion_68SA habitacion, DateTime fecha)
+        {
+            try
+            {
+                SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarReserva);
+                // Se relee la habitación completa (tipo con tarifa y capacidad) para el alta
+                var completa = _habitacionBLL.GetById(habitacion.Id);
+                _openChildForm(new FormRegistrarReserva_68SA(_openChildForm, completa, ModoHabitaciones.Reserva, fecha, fecha.AddDays(1)));
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw; // lo muestra el manejador global de permisos
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #endregion
 
+        /// <summary>
+        /// Semana: arranca el lunes. Mes: arranca el día 1. (Punto de partida al tocar "Hoy" o cambiar de vista.)
+        /// </summary>
+        private static DateTime InicioAlineado(DateTime fecha, ModoCalendarioReservas modo)
+        {
+            if (modo == ModoCalendarioReservas.Mes)
+                return new DateTime(fecha.Year, fecha.Month, 1);
+            int diasDesdeElLunes = ((int)fecha.DayOfWeek + 6) % 7;
+            return fecha.Date.AddDays(-diasDesdeElLunes);
+        }
+
+        /// <param name="sentido">-1 hacia atrás, 1 hacia adelante.</param>
+        /// <param name="periodoCompleto">true: una semana o un mes (según la vista); false: un día.</param>
+        private void MoverCalendario(int sentido, bool periodoCompleto)
+        {
+            if (!periodoCompleto)
+                _fechaBaseCalendario = _fechaBaseCalendario.AddDays(sentido);
+            else if (_modoCalendario == ModoCalendarioReservas.Semana)
+                _fechaBaseCalendario = _fechaBaseCalendario.AddDays(7 * sentido);
+            else
+                _fechaBaseCalendario = _fechaBaseCalendario.AddMonths(sentido);
+            CargarCalendario();
+        }
+
+        private void TraducirTooltipsCalendario()
+        {
+            var t = TraductorManager_08YS.Instance;
+            bool semana = _modoCalendario == ModoCalendarioReservas.Semana;
+            _tooltipNavegacion.SetToolTip(btnCalAnterior, t.GetTexto("Reservas_ttDiaAnterior"));
+            _tooltipNavegacion.SetToolTip(btnCalSiguiente, t.GetTexto("Reservas_ttDiaSiguiente"));
+            _tooltipNavegacion.SetToolTip(btnCalAnteriorPeriodo, t.GetTexto(semana ? "Reservas_ttSemanaAnterior" : "Reservas_ttMesAnterior"));
+            _tooltipNavegacion.SetToolTip(btnCalSiguientePeriodo, t.GetTexto(semana ? "Reservas_ttSemanaSiguiente" : "Reservas_ttMesSiguiente"));
+        }
+
         private void CambiarVistaCalendario(ModoCalendarioReservas modo)
         {
             _modoCalendario = modo;
+            _fechaBaseCalendario = InicioAlineado(_fechaBaseCalendario, modo);
+            TraducirTooltipsCalendario();
 
             bool esSemana = modo == ModoCalendarioReservas.Semana;
             btnCalVistaSemana.BackColor = esSemana ? Color.Goldenrod : Color.FromArgb(10, 18, 50);
@@ -442,13 +606,14 @@ namespace GUI_08YS.Recepcionista
         {
             try
             {
-                var reserva = _reservaBLL.GetById(reservaId);
-                var pagos = _pagoBLL.GetByReserva(reservaId);
-                new FacturaImpresor_68SA(reserva, pagos).Imprimir();
+                SessionManager_08YS.Instance.ValidatePermission(Permisos.ImprimirComprobante);
+
+                // Visor con la factura (y el comprobante): imprimir, guardar PDF o reenviar por mail
+                FormDocumentosReserva_68SA.Mostrar(this, reservaId, indiceInicial: 1);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"No se pudo imprimir el comprobante: {ex.Message}", "Error",
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("Reservas_msgErrorImprimir"), ex.Message), TraductorManager_08YS.Instance.GetTexto("Comun_error"),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -457,6 +622,15 @@ namespace GUI_08YS.Recepcionista
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            CargarCombosFiltro();
+            TraducirTooltipsCalendario();
+
+            // Si ya hay datos cargados, se recargan para traducir estados y encabezados
+            if (dgvReservas.DataSource != null)
+            {
+                CargarLista();
+                if (pnlCalendario.Visible) CargarCalendario();
+            }
         }
 
         private void TraducirControles(Control contenedor)

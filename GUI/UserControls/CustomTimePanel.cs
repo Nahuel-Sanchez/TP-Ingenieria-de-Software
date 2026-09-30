@@ -304,8 +304,8 @@ namespace CustomControls
 
         private void DrawFooter(Graphics g)
         {
-            DrawButton(g, _nowBtn, "Ahora", _hoverNow, false);
-            DrawButton(g, _acceptBtn, "Aceptar", _hoverAccept, true);
+            DrawButton(g, _nowBtn, Service_08YS.TraductorManager_08YS.Instance.GetTexto("Comun_txtAhora"), _hoverNow, false);
+            DrawButton(g, _acceptBtn, Service_08YS.TraductorManager_08YS.Instance.GetTexto("Comun_txtAceptar"), _hoverAccept, true);
         }
 
         private void DrawButton(Graphics g, Rectangle rect, string text, bool hover, bool accent)

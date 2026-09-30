@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service_08YS.Entities.Acceso;
 
 namespace BLL_08YS
 {
@@ -29,6 +30,8 @@ namespace BLL_08YS
 
         public string RealizarBackup(string carpeta)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RealizarBackup);
+
             AsegurarCarpetaExiste(carpeta);
 
             string nombreArchivo = $"{NombreBaseDatos}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";

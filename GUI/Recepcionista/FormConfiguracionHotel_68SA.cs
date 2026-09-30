@@ -4,17 +4,28 @@ using BLL_08YS.Negocio;
 using Service_08YS;
 using System;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
+using System.Collections.Generic;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormConfiguracionHotel_68SA : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnGuardar),   Permisos.ModificarConfiguracionHotel },
+                { nameof(btnDescartar), Permisos.ModificarConfiguracionHotel },
+            };
+
         private readonly ConfiguracionHotelBLL_68SA _configBLL = BLLFactory_08YS.CreateConfiguracionHotelBLL();
         private ConfiguracionHotel_68SA _configuracion; // null = no hay fila cargada en la base
 
         public FormConfiguracionHotel_68SA()
         {
             InitializeComponent();
+
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
 
             btnGuardar.Click += (s, e) => Guardar();
             btnDescartar.Click += (s, e) => CargarConfiguracion();
@@ -110,6 +121,19 @@ namespace GUI_08YS.Recepcionista
             catch (DatosInvalidosException_68SA ex)
             {
                 MessageBox.Show(ex.Message, t.GetTexto("Comun_tituloErrorValidacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    
+
+        // Pinta el formulario completo en memoria y lo vuelca de una vez: sin parpadeo ni franjas
+        // blancas mientras los controles se acomodan al abrir o redimensionar la ventana.
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
+                return cp;
             }
         }
     }

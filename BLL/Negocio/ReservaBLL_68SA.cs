@@ -5,6 +5,7 @@ using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Service_08YS.Entities.Acceso;
 
 namespace BLL_08YS.Negocio
 {
@@ -23,6 +24,8 @@ namespace BLL_08YS.Negocio
 
         public int Crear(Reserva_68SA reserva)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarReserva);
+
             HabitacionBLL_68SA.ValidarRango(reserva.FechaIngreso, reserva.FechaEgreso);
 
             if (!HuespedBLL_68SA.EsMayorDeEdad(reserva.Titular))
@@ -86,6 +89,8 @@ namespace BLL_08YS.Negocio
 
         public void RegistrarCheckIn(int reservaId, List<Huesped_68SA> acompanantes)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarCheckIn);
+
             var reserva = _reservaRepo.GetById(reservaId);
             if (reserva == null)
                 throw new ReservaNoEncontradaException_68SA();
@@ -124,6 +129,8 @@ namespace BLL_08YS.Negocio
 
         public void RegistrarCheckOut(int reservaId)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarCheckOut);
+
             if (!_reservaRepo.RegistrarCheckOut(reservaId, DateTime.Now))
                 throw new EstadoReservaInvalidoException_68SA("Solo se puede hacer check-out sobre una reserva En Curso.");
 
@@ -133,6 +140,8 @@ namespace BLL_08YS.Negocio
 
         public void Cancelar(int reservaId)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CancelarReserva);
+
             if (!_reservaRepo.Cancelar(reservaId))
                 throw new EstadoReservaInvalidoException_68SA("Solo se puede cancelar una reserva Confirmada (sin check-in todavía).");
 
@@ -162,6 +171,8 @@ namespace BLL_08YS.Negocio
         // se liquida como saldo pendiente en el check-out (FormCheckOut_68SA ya lo calcula solo).
         public void ExtenderEstadia(int reservaId, DateTime nuevaFechaEgreso)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ExtenderEstadia);
+
             var reserva = _reservaRepo.GetById(reservaId);
             if (reserva == null)
                 throw new ReservaNoEncontradaException_68SA();
@@ -182,6 +193,8 @@ namespace BLL_08YS.Negocio
 
         public void Modificar(int reservaId, DateTime fechaIngreso, DateTime fechaEgreso, int adultos, int ninos)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarReserva);
+
             var actual = _reservaRepo.GetById(reservaId);
             if (actual == null)
                 throw new ReservaNoEncontradaException_68SA();

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service_08YS;
+using Service_08YS.Entities.Acceso;
 
 namespace BLL_08YS.Negocio
 {
@@ -24,6 +26,8 @@ namespace BLL_08YS.Negocio
 
         public void Actualizar(ConfiguracionHotel_68SA configuracion)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarConfiguracionHotel);
+
             if (configuracion == null) throw new ArgumentNullException(nameof(configuracion));
 
             // Columnas time(7): la hora tiene que caer dentro de un mismo día

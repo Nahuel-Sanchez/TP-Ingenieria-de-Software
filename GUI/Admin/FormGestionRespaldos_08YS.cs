@@ -11,11 +11,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
 
 namespace GUI_08YS.Admin
 {
     public partial class FormGestionRespaldos_08YS : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnSeleccionarCarpetaBackup),  Permisos.RealizarBackup },
+                { nameof(btnRealizarBackUp),            Permisos.RealizarBackup },
+                { nameof(btnSeleccionarArchivoRestore), Permisos.RealizarRestore },
+                { nameof(btnRealizarRestore),           Permisos.RealizarRestore },
+            };
+
         private readonly BackupBLL_08YS _bll;
 
         private static readonly Color ColorFondo = Color.FromArgb(5, 15, 45);
@@ -27,6 +37,8 @@ namespace GUI_08YS.Admin
         public FormGestionRespaldos_08YS()
         {
             InitializeComponent();
+
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
             _bll = BLLFactory_08YS.CreateBackupBLL();
         }
 
@@ -243,6 +255,8 @@ namespace GUI_08YS.Admin
 
         private void btnRealizarRestore_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RealizarRestore);
+
             string rutaBak = txtArchivoRestore.Text.Trim();
             if (string.IsNullOrWhiteSpace(rutaBak)) return;
 

@@ -5,10 +5,20 @@ using Service_08YS;
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
+using System.Collections.Generic;
+using GUI_08YS.UserControls;
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormRegistrarReserva_68SA : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnConfirmar),    Permisos.RegistrarReserva },
+                { nameof(btnHuespedNuevo), Permisos.CrearHuesped },
+            };
+
         private readonly Action<Form> _openChildForm;
         private readonly Habitacion_68SA _habitacion;
         private readonly ModoHabitaciones _modoOrigen;
@@ -33,6 +43,15 @@ namespace GUI_08YS.Recepcionista
 
             InitializeComponent();
 
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
+            // Confirmar incluye el cobro (CUN-03): hacen falta ambos permisos
+            btnConfirmar.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarReserva)
+                                && SessionManager_08YS.Instance.HasPermission(Permisos.Cobrar);
+
+            LayoutAdaptable_68SA.RepartirColumnas(pnlResumen,
+                new Control[] { lblEtiquetaFechaIngreso, dtpFechaIngreso, lblEtiquetaAdultos, nudAdultos },
+                new Control[] { lblEtiquetaFechaEgreso, dtpFechaEgreso, lblEtiquetaNinos, nudNinos });
+
             lblDetTipo.Text = habitacion.Tipo.Nombre;
             lblDetDescripcion.Text = string.IsNullOrEmpty(habitacion.Tipo.Descripcion) ? "-" : habitacion.Tipo.Descripcion;
             lblDetPiso.Text = habitacion.Piso.Numero.ToString();
@@ -44,11 +63,18 @@ namespace GUI_08YS.Recepcionista
             nudAdultos.Maximum = habitacion.Tipo.Capacidad;
             nudNinos.Maximum = habitacion.Tipo.Capacidad;
 
-            cmbTipoDocumento.Items.AddRange(Enum.GetValues(typeof(TipoDocumento)).Cast<object>().ToArray());
+            OpcionEnum_68SA.Cargar(cmbTipoDocumento, typeof(TipoDocumento));
             cmbTipoDocumento.SelectedIndex = 0;
 
-            cmbMetodoPago.Items.AddRange(Enum.GetValues(typeof(MetodoPago)).Cast<object>().ToArray());
+            OpcionEnum_68SA.Cargar(cmbMetodoPago, typeof(MetodoPago));
             cmbMetodoPago.SelectedIndex = 0;
+            TraducirPlaceholders();
+            int anioActual = DateTime.Today.Year % 100;
+            nudAnioVencimiento.Minimum = anioActual;
+            nudAnioVencimiento.Maximum = anioActual + 20;
+            nudAnioVencimiento.Value = anioActual;
+
+            txtNumeroTarjeta.TextChanged += (s, e) => ActualizarMarcaDetectada();
             cmbMetodoPago.SelectedIndexChanged += (s, e) => ActualizarVisibilidadVuelto();
             ActualizarVisibilidadVuelto();
 
@@ -96,9 +122,35 @@ namespace GUI_08YS.Recepcionista
 
         private void ActualizarVisibilidadVuelto()
         {
-            bool esEfectivo = cmbMetodoPago.SelectedItem is MetodoPago metodo && metodo == MetodoPago.Efectivo;
+            bool esEfectivo = OpcionEnum_68SA.Seleccionado<MetodoPago>(cmbMetodoPago) == MetodoPago.Efectivo;
+
+            lblEtiquetaMontoRecibido.Visible = esEfectivo;
+            nudMontoRecibido.Visible = esEfectivo;
             lblVueltoEtiqueta.Visible = esEfectivo;
             lblVuelto.Visible = esEfectivo;
+
+            bool esTarjeta = !esEfectivo;
+            lblEtiquetaNumeroTarjeta.Visible = esTarjeta;
+            txtNumeroTarjeta.Visible = esTarjeta;
+            lblEtiquetaTitularTarjeta.Visible = esTarjeta;
+            txtTitularTarjeta.Visible = esTarjeta;
+            lblEtiquetaVencimiento.Visible = esTarjeta;
+            nudMesVencimiento.Visible = esTarjeta;
+            lblBarraVencimiento.Visible = esTarjeta;
+            nudAnioVencimiento.Visible = esTarjeta;
+            lblEtiquetaCvv.Visible = esTarjeta;
+            txtCvv.Visible = esTarjeta;
+            lblMarcaTarjetaDetectada.Visible = esTarjeta;
+
+            pnlPago.Height = esTarjeta ? 400 : 225;
+        }
+
+        private void ActualizarMarcaDetectada()
+        {
+            string marca = TarjetaValidador_68SA.DetectarMarca(txtNumeroTarjeta.RealText);
+            if (marca == "Desconocida")
+                marca = TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_txtMarcaDesconocida");
+            lblMarcaTarjetaDetectada.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_txtMarcaDetectada"), marca);
         }
 
         private void ValidarComposicion()
@@ -163,6 +215,10 @@ namespace GUI_08YS.Recepcionista
 
         private void BtnConfirmar_Click(object sender, EventArgs e)
         {
+            // Se valida el cobro antes de crear la reserva: si no, quedaría una reserva sin su pago
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarReserva);
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.Cobrar);
+
             if (_huespedSeleccionado == null)
             {
                 MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgFaltaTitular"), TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloFaltaTitular"),
@@ -177,11 +233,45 @@ namespace GUI_08YS.Recepcionista
                 return;
             }
 
-            if (nudMontoRecibido.Value < _montoTotal)
+            var metodoSeleccionado = OpcionEnum_68SA.Seleccionado<MetodoPago>(cmbMetodoPago) ?? MetodoPago.Efectivo;
+            if (metodoSeleccionado == MetodoPago.Efectivo)
             {
-                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_msgPagoInsuficiente"), nudMontoRecibido.Value, _montoTotal),
-                    TraductorManager_08YS.Instance.GetTexto("Comun_tituloPagoInsuficiente"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                if (nudMontoRecibido.Value < _montoTotal)
+                {
+                    MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_msgPagoInsuficiente"), nudMontoRecibido.Value, _montoTotal),
+                        TraductorManager_08YS.Instance.GetTexto("Comun_tituloPagoInsuficiente"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+            else // Tarjeta
+            {
+                if (!TarjetaValidador_68SA.EsNumeroValido(txtNumeroTarjeta.RealText))
+                {
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgTarjetaNumeroInvalido"),
+                        TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloTarjetaInvalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(txtTitularTarjeta.RealText))
+                {
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgTarjetaFaltaTitular"),
+                        TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloTarjetaInvalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                if (!TarjetaValidador_68SA.EsVencimientoValido((int)nudMesVencimiento.Value, (int)nudAnioVencimiento.Value, out string errorVencimiento))
+                {
+                    string clave = errorVencimiento == "vencExpirado" ? "RegistrarReserva_msgTarjetaVencida" : "RegistrarReserva_msgTarjetaVencimientoInvalido";
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto(clave),
+                        TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloTarjetaInvalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                string marcaDetectada = TarjetaValidador_68SA.DetectarMarca(txtNumeroTarjeta.RealText);
+                if (!TarjetaValidador_68SA.EsCvvValido(txtCvv.RealText, marcaDetectada))
+                {
+                    MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgTarjetaCvvInvalido"),
+                            TarjetaValidador_68SA.LongitudCvvEsperada(marcaDetectada)),
+                        TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloTarjetaInvalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
             }
 
             var reserva = new Reserva_68SA
@@ -199,15 +289,17 @@ namespace GUI_08YS.Recepcionista
             {
                 int reservaId = _reservaBLL.Crear(reserva);
 
+                // Se registra lo que se cobra (el total), no lo que entregó el huésped: el vuelto no es un ingreso
+                decimal montoACobrar = _montoTotal;
+
                 _pagoBLL.Registrar(new Pago_68SA
                 {
                     ReservaId = reservaId,
-                    Monto = nudMontoRecibido.Value,
-                    MetodoPago = (MetodoPago)cmbMetodoPago.SelectedItem
+                    Monto = montoACobrar,
+                    MetodoPago = metodoSeleccionado
                 });
 
-                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgReservaConfirmada"), reservaId, _habitacion.NroHabitacion),
-                    TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloReservaConfirmada"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MostrarComprobante(reservaId, reserva.Titular ?? _huespedSeleccionado);
                 Volver();
             }
             catch (TitularMenorDeEdadException_68SA)
@@ -226,14 +318,56 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
-        private void Volver()
+        /// <summary>
+        /// Muestra el comprobante y la factura de la reserva recién registrada; el mail al huésped
+        /// se envía solo, en segundo plano, mientras se ve el comprobante.
+        /// </summary>
+        private void MostrarComprobante(int reservaId, Huesped_68SA titular)
         {
-            _openChildForm(new FormControlHabitaciones_68SA(_openChildForm, _modoOrigen, _fechaIngresoOrigen, _fechaEgresoOrigen));
+            try
+            {
+                var datos = DatosDocumentoReserva_68SA.Cargar(reservaId, titular);
+                using (var visor = new FormDocumentosReserva_68SA(datos, 0, esNuevaReserva: true))
+                    visor.ShowDialog(this);
+            }
+            catch (Exception)
+            {
+                // La reserva y el pago ya quedaron registrados: si no se pudo armar el comprobante, se avisa como antes
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgReservaConfirmada"), reservaId, _habitacion.NroHabitacion),
+                    TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloReservaConfirmada"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
+        private void Volver()
+            => _openChildForm(new FormControlHabitaciones_68SA(_openChildForm, _modoOrigen, _fechaIngresoOrigen, _fechaEgresoOrigen));
+        
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            TraducirPlaceholders();
+            OpcionEnum_68SA.Cargar(cmbTipoDocumento, typeof(TipoDocumento));
+            OpcionEnum_68SA.Cargar(cmbMetodoPago, typeof(MetodoPago));
+            ActualizarMarcaDetectada();
+            ValidarComposicion();
+            if (dtpFechaIngreso.Value.HasValue && dtpFechaEgreso.Value.HasValue)
+            {
+                int noches = (dtpFechaEgreso.Value.Value.Date - dtpFechaIngreso.Value.Value.Date).Days;
+                lblResNoches.Text = $"{noches} {TraductorManager_08YS.Instance.GetTexto(noches == 1 ? "RegistrarReserva_txtNoche" : "RegistrarReserva_txtNoches")}";
+            }
+            toolTip1.SetToolTip(btnHuespedNuevo, TraductorManager_08YS.Instance.GetTexto("Comun_tooltipRegistrarHuespedNuevo"));
+        }
+
+        private void TraducirPlaceholders()
+        {
+            var t = TraductorManager_08YS.Instance;
+            string seCompleta = t.GetTexto("RegistrarReserva_phSeCompletaAlConsultar");
+            txtDni.PlaceholderText = t.GetTexto("RegistrarReserva_lblEtiquetaDni");
+            txtNombre.PlaceholderText = seCompleta;
+            txtApellido.PlaceholderText = seCompleta;
+            txtTelefono.PlaceholderText = seCompleta;
+            txtNacionalidad.PlaceholderText = seCompleta;
+            txtEmail.PlaceholderText = seCompleta;
+            txtTitularTarjeta.PlaceholderText = t.GetTexto("RegistrarReserva_phTitularTarjeta");
         }
 
         private void TraducirControles(Control contenedor)
@@ -268,5 +402,18 @@ namespace GUI_08YS.Recepcionista
 
         }
 
+    
+
+        // Pinta el formulario completo en memoria y lo vuelca de una vez: sin parpadeo ni franjas
+        // blancas mientras los controles se acomodan al abrir o redimensionar la ventana.
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
+                return cp;
+            }
+        }
     }
 }

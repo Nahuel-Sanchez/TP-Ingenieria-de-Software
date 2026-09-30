@@ -133,6 +133,7 @@
             this.btnBuscarReserva.IconSize = 26;
             this.btnBuscarReserva.Location = new System.Drawing.Point(220, 38);
             this.btnBuscarReserva.Name = "btnBuscarReserva";
+            this.btnBuscarReserva.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnBuscarReserva.Tag = "CheckOut_btnBuscarReserva";
             this.btnBuscarReserva.Size = new System.Drawing.Size(260, 46);
             this.btnBuscarReserva.TabIndex = 0;
@@ -180,6 +181,8 @@
             this.pnlLineaReserva.BackColor = System.Drawing.Color.Goldenrod;
             this.pnlLineaReserva.Location = new System.Drawing.Point(16, 38);
             this.pnlLineaReserva.Name = "pnlLineaReserva";
+            this.pnlLineaReserva.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlLineaReserva.Size = new System.Drawing.Size(668, 2);
             this.pnlLineaReserva.TabIndex = 1;
             // 
@@ -331,6 +334,8 @@
             this.pnlLineaCuenta1.BackColor = System.Drawing.Color.Goldenrod;
             this.pnlLineaCuenta1.Location = new System.Drawing.Point(16, 38);
             this.pnlLineaCuenta1.Name = "pnlLineaCuenta1";
+            this.pnlLineaCuenta1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlLineaCuenta1.Size = new System.Drawing.Size(668, 2);
             this.pnlLineaCuenta1.TabIndex = 1;
             // 
@@ -381,6 +386,8 @@
             this.pnlLineaCuenta2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(75)))), ((int)(((byte)(110)))));
             this.pnlLineaCuenta2.Location = new System.Drawing.Point(16, 106);
             this.pnlLineaCuenta2.Name = "pnlLineaCuenta2";
+            this.pnlLineaCuenta2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlLineaCuenta2.Size = new System.Drawing.Size(668, 1);
             this.pnlLineaCuenta2.TabIndex = 6;
             // 

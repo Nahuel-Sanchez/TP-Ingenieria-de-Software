@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service_08YS;
+using Service_08YS.Entities.Acceso;
 
 namespace BLL_08YS.Negocio
 {
@@ -44,6 +46,8 @@ namespace BLL_08YS.Negocio
 
         public void CambiarEstado(int habitacionId, EstadoHabitacion nuevoEstado)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CambiarEstadoHabitacion);
+
             _habitacionRepo.CambiarEstado(habitacionId, nuevoEstado);
 
             // FueraDeServicio ("Poner en Mantenimiento") es la transición operativamente más
@@ -80,6 +84,8 @@ namespace BLL_08YS.Negocio
 
         public int Crear(Habitacion_68SA habitacion)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearHabitacion);
+
             Validar(habitacion);
 
             if (_habitacionRepo.ExisteNumero(habitacion.NroHabitacion))
@@ -92,6 +98,8 @@ namespace BLL_08YS.Negocio
 
         public void Modificar(Habitacion_68SA habitacion)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarHabitacion);
+
             Validar(habitacion);
 
             var actual = _habitacionRepo.GetById(habitacion.Id);
@@ -111,6 +119,8 @@ namespace BLL_08YS.Negocio
 
         public void Eliminar(int habitacionId)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarHabitacion);
+
             if (_habitacionRepo.GetById(habitacionId) == null)
                 throw new HabitacionNoEncontradaException_68SA();
 

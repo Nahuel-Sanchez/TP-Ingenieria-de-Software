@@ -15,7 +15,7 @@ namespace GUI_08YS.Recepcionista.Dashboard
         public UC_DonutChart_68SA()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
         }
 
         public void Cargar(List<SegmentoDonut_68SA> segmentos, string textoCentral, string subtextoCentral)

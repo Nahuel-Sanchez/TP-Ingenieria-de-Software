@@ -26,7 +26,50 @@ namespace Service_08YS.Entities.Acceso
         ManejarInconsistencias,
         VerRespaldos,
         RealizarBackup,
-        RealizarRestore
+        RealizarRestore,
+
+        // Negocio - Reservas
+        VerReservas,
+        RegistrarReserva,
+        ModificarReserva,
+        CancelarReserva,
+        ImprimirComprobante,
+        Cobrar,
+
+        // Negocio - Estadías
+        ExtenderEstadia,
+        VerControlHabitaciones,
+        CambiarEstadoHabitacion,
+        RegistrarCheckIn,
+        RegistrarCheckOut,
+
+        // Negocio - Huéspedes
+        VerHuespedes,
+        CrearHuesped,
+        ModificarHuesped,
+        EliminarHuesped,
+        SerializarHuespedes,
+        DeserializarHuespedes,
+
+        // Negocio - Habitaciones
+        VerHabitaciones,
+        CrearHabitacion,
+        ModificarHabitacion,
+        EliminarHabitacion,
+        VerTiposHabitacion,
+        CrearTipoHabitacion,
+        ModificarTipoHabitacion,
+        EliminarTipoHabitacion,
+        VerPisos,
+        CrearPiso,
+        ModificarPiso,
+        EliminarPiso,
+
+        // Negocio - Reportes y configuración
+        VerDashboard,
+        GenerarReporteReservas,
+        VerConfiguracionHotel,
+        ModificarConfiguracionHotel
     }
 
     public class Permiso_08YS : AccessComponent_08YS

@@ -19,7 +19,7 @@
         {
             this.pnlGrilla = new System.Windows.Forms.Panel();
             this.dgvTipos = new System.Windows.Forms.DataGridView();
-            this.pnlFiltros = new System.Windows.Forms.Panel();
+            this.pnlFiltros = new System.Windows.Forms.FlowLayoutPanel();
             this.txtNombreFiltro = new CustomControls.IconPlaceholderTextBox();
             this.txtDescripcionFiltro = new CustomControls.IconPlaceholderTextBox();
             this.txtCapacidadFiltro = new CustomControls.IconPlaceholderTextBox();
@@ -58,16 +58,18 @@
             // pnlFiltros
             // 
             this.pnlFiltros.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
-            this.pnlFiltros.Controls.Add(this.btnLimpiar);
-            this.pnlFiltros.Controls.Add(this.btnFiltrar);
-            this.pnlFiltros.Controls.Add(this.txtTarifaHastaFiltro);
-            this.pnlFiltros.Controls.Add(this.txtTarifaDesdeFiltro);
-            this.pnlFiltros.Controls.Add(this.txtCapacidadFiltro);
-            this.pnlFiltros.Controls.Add(this.txtDescripcionFiltro);
             this.pnlFiltros.Controls.Add(this.txtNombreFiltro);
+            this.pnlFiltros.Controls.Add(this.txtDescripcionFiltro);
+            this.pnlFiltros.Controls.Add(this.txtCapacidadFiltro);
+            this.pnlFiltros.Controls.Add(this.txtTarifaDesdeFiltro);
+            this.pnlFiltros.Controls.Add(this.txtTarifaHastaFiltro);
+            this.pnlFiltros.Controls.Add(this.btnFiltrar);
+            this.pnlFiltros.Controls.Add(this.btnLimpiar);
             this.pnlFiltros.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlFiltros.Location = new System.Drawing.Point(0, 72);
             this.pnlFiltros.Name = "pnlFiltros";
+            this.pnlFiltros.Padding = new System.Windows.Forms.Padding(24, 8, 12, 0);
+            this.pnlFiltros.AutoSize = true;
             this.pnlFiltros.Size = new System.Drawing.Size(1000, 136);
             this.pnlFiltros.TabIndex = 1;
             // 
@@ -87,6 +89,7 @@
             this.txtNombreFiltro.Location = new System.Drawing.Point(24, 8);
             this.txtNombreFiltro.MaxLength = 50;
             this.txtNombreFiltro.Name = "txtNombreFiltro";
+            this.txtNombreFiltro.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.txtNombreFiltro.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtNombreFiltro.PlaceholderText = "Nombre";
             this.txtNombreFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -109,6 +112,7 @@
             this.txtDescripcionFiltro.Location = new System.Drawing.Point(276, 8);
             this.txtDescripcionFiltro.MaxLength = 200;
             this.txtDescripcionFiltro.Name = "txtDescripcionFiltro";
+            this.txtDescripcionFiltro.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.txtDescripcionFiltro.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtDescripcionFiltro.PlaceholderText = "Descripción";
             this.txtDescripcionFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -131,6 +135,7 @@
             this.txtCapacidadFiltro.Location = new System.Drawing.Point(588, 8);
             this.txtCapacidadFiltro.MaxLength = 3;
             this.txtCapacidadFiltro.Name = "txtCapacidadFiltro";
+            this.txtCapacidadFiltro.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.txtCapacidadFiltro.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtCapacidadFiltro.PlaceholderText = "Capacidad";
             this.txtCapacidadFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -153,6 +158,7 @@
             this.txtTarifaDesdeFiltro.Location = new System.Drawing.Point(24, 72);
             this.txtTarifaDesdeFiltro.MaxLength = 12;
             this.txtTarifaDesdeFiltro.Name = "txtTarifaDesdeFiltro";
+            this.txtTarifaDesdeFiltro.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.txtTarifaDesdeFiltro.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtTarifaDesdeFiltro.PlaceholderText = "Tarifa desde";
             this.txtTarifaDesdeFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -175,6 +181,7 @@
             this.txtTarifaHastaFiltro.Location = new System.Drawing.Point(276, 72);
             this.txtTarifaHastaFiltro.MaxLength = 12;
             this.txtTarifaHastaFiltro.Name = "txtTarifaHastaFiltro";
+            this.txtTarifaHastaFiltro.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.txtTarifaHastaFiltro.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtTarifaHastaFiltro.PlaceholderText = "Tarifa hasta";
             this.txtTarifaHastaFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -194,6 +201,7 @@
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltrar.Location = new System.Drawing.Point(528, 72);
             this.btnFiltrar.Name = "btnFiltrar";
+            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.btnFiltrar.Size = new System.Drawing.Size(140, 49);
             this.btnFiltrar.TabIndex = 5;
             this.btnFiltrar.Tag = "Crud_btnFiltrar";
@@ -214,6 +222,7 @@
             this.btnLimpiar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLimpiar.Location = new System.Drawing.Point(680, 72);
             this.btnLimpiar.Name = "btnLimpiar";
+            this.btnLimpiar.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.btnLimpiar.Size = new System.Drawing.Size(140, 49);
             this.btnLimpiar.TabIndex = 6;
             this.btnLimpiar.Tag = "Crud_btnLimpiar";
@@ -291,7 +300,7 @@
 
         private System.Windows.Forms.Panel pnlGrilla;
         private System.Windows.Forms.DataGridView dgvTipos;
-        private System.Windows.Forms.Panel pnlFiltros;
+        private System.Windows.Forms.FlowLayoutPanel pnlFiltros;
         private CustomControls.IconPlaceholderTextBox txtNombreFiltro;
         private CustomControls.IconPlaceholderTextBox txtDescripcionFiltro;
         private CustomControls.IconPlaceholderTextBox txtCapacidadFiltro;

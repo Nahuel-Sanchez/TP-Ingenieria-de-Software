@@ -83,7 +83,8 @@ namespace CustomControls
         private int _bigCellW;
         private int _bigCellH;
 
-        private readonly CultureInfo _culture = CultureInfo.CurrentCulture;
+        // Cultura del idioma elegido en el sistema (no la de Windows), para nombres de días y meses
+        private CultureInfo _culture => GUI_08YS.UserControls.OpcionEnum_68SA.CulturaActual();
         private readonly DayOfWeek _firstDayOfWeek;
 
         public event DateRangeEventHandler DateSelected;
@@ -614,7 +615,7 @@ namespace CustomControls
             int rows = GetVisibleRowsForMonth(_viewDate);
             int y = _gridTop + rows * _cellH;
             var rect = new Rectangle(0, y, Width, _footerH);
-            string txt = "Hoy: " + DateTime.Today.ToString("dd/MM/yyyy");
+            string txt = Service_08YS.TraductorManager_08YS.Instance.GetTexto("Comun_txtHoy") + ": " + DateTime.Today.ToString("dd/MM/yyyy");
 
             using (var pen = new Pen(_separatorColor))
                 g.DrawLine(pen, 0, y, Width, y);

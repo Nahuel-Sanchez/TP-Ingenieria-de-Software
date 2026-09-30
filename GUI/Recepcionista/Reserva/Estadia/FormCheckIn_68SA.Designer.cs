@@ -123,6 +123,7 @@
             this.btnBuscarReserva.IconSize = 26;
             this.btnBuscarReserva.Location = new System.Drawing.Point(220, 38);
             this.btnBuscarReserva.Name = "btnBuscarReserva";
+            this.btnBuscarReserva.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnBuscarReserva.Tag = "CheckIn_btnBuscarReserva";
             this.btnBuscarReserva.Size = new System.Drawing.Size(260, 46);
             this.btnBuscarReserva.TabIndex = 0;
@@ -170,6 +171,8 @@
             this.pnlLineaReserva.BackColor = System.Drawing.Color.Goldenrod;
             this.pnlLineaReserva.Location = new System.Drawing.Point(16, 38);
             this.pnlLineaReserva.Name = "pnlLineaReserva";
+            this.pnlLineaReserva.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlLineaReserva.Size = new System.Drawing.Size(668, 2);
             this.pnlLineaReserva.TabIndex = 1;
             // 
@@ -309,6 +312,8 @@
             this.pnlLineaAcompanantes.BackColor = System.Drawing.Color.Goldenrod;
             this.pnlLineaAcompanantes.Location = new System.Drawing.Point(16, 38);
             this.pnlLineaAcompanantes.Name = "pnlLineaAcompanantes";
+            this.pnlLineaAcompanantes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlLineaAcompanantes.Size = new System.Drawing.Size(668, 2);
             this.pnlLineaAcompanantes.TabIndex = 1;
             // 
@@ -319,6 +324,8 @@
             this.flpFilas.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpFilas.Location = new System.Drawing.Point(16, 50);
             this.flpFilas.Name = "flpFilas";
+            this.flpFilas.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.flpFilas.Size = new System.Drawing.Size(668, 158);
             this.flpFilas.TabIndex = 2;
             this.flpFilas.WrapContents = false;

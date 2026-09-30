@@ -25,6 +25,10 @@ namespace GUI_08YS.UserControls
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.MultiSelect = false;
             dgv.RowTemplate.Height = alturaFila;
+            dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            dgv.AllowUserToResizeRows = false;
+            // Sin doble buffer la grilla se repinta celda por celda al desplazarse
+            LayoutAdaptable_68SA.HabilitarDobleBuffer(dgv);
             dgv.ColumnHeadersHeight = 36;
             dgv.EnableHeadersVisualStyles = false;
 
@@ -52,7 +56,7 @@ namespace GUI_08YS.UserControls
                 HeaderText = "",
                 Width = 42,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                ImageLayout = DataGridViewImageCellLayout.Zoom
+                ImageLayout = DataGridViewImageCellLayout.Normal // el ícono ya viene del tamaño justo: no se reescala en cada pintado
             };
             columna.DefaultCellStyle.BackColor = Color.FromArgb(10, 18, 50);
             columna.DefaultCellStyle.SelectionBackColor = Color.FromArgb(15, 25, 55);

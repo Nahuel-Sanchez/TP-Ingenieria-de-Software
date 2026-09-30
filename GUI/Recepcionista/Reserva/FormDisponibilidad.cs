@@ -41,6 +41,7 @@ namespace GUI_08YS.Recepcionista
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            calRangoReservas.ClearButtonText = TraductorManager_08YS.Instance.GetTexto("Comun_txtLimpiarSeleccion");
         }
 
         private void TraducirControles(Control contenedor)

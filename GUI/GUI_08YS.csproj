@@ -107,16 +107,23 @@
     </Compile>
     <Compile Include="Recepcionista\Dashboard\ReporteReservasImpresor_68SA.cs" />
     <Compile Include="Recepcionista\Reserva\FacturaImpresor_68SA.cs" />
+    <Compile Include="Recepcionista\Reserva\Documentos\ComprobanteReserva_68SA.cs" />
+    <Compile Include="Recepcionista\Reserva\Documentos\DocumentoReserva_68SA.cs" />
+    <Compile Include="Recepcionista\Reserva\Documentos\EnvioDocumentosReserva_68SA.cs" />
+    <Compile Include="Recepcionista\Reserva\Documentos\FacturaReserva_68SA.cs" />
+    <Compile Include="Recepcionista\Reserva\Documentos\FormDocumentosReserva_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Recepcionista\FormConfiguracionHotel_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Recepcionista\FormConfiguracionHotel_68SA.Designer.cs">
       <DependentUpon>FormConfiguracionHotel_68SA.cs</DependentUpon>
     </Compile>
-    <Compile Include="Recepcionista\FormModificarReserva_68SA.cs">
+    <Compile Include="Recepcionista\Reserva\FormModificarReserva_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Recepcionista\FormModificarReserva_68SA.Designer.cs">
+    <Compile Include="Recepcionista\Reserva\FormModificarReserva_68SA.Designer.cs">
       <DependentUpon>FormModificarReserva_68SA.cs</DependentUpon>
     </Compile>
     <Compile Include="Recepcionista\Habitacion\FormEditarHabitacion_68SA.cs">
@@ -228,11 +235,14 @@
     <Compile Include="Recepcionista\Reserva\UC_CalendarioReservas_68SA.Designer.cs">
       <DependentUpon>UC_CalendarioReservas_68SA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Recepcionista\Reserva\TarjetaValidador_68SA.cs" />
     <Compile Include="UserControls\CrudEstilo_68SA.cs" />
     <Compile Include="UserControls\IconNumericUpDown.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\ItemCombo_68SA.cs" />
+    <Compile Include="UserControls\LayoutAdaptable_68SA.cs" />
+    <Compile Include="UserControls\OpcionEnum_68SA.cs" />
     <Compile Include="UserControls\RoundedPanel_68SA.cs">
       <SubType>Component</SubType>
     </Compile>

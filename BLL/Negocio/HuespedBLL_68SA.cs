@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service_08YS;
+using Service_08YS.Entities.Acceso;
 
 namespace BLL_08YS.Negocio
 {
@@ -39,6 +41,8 @@ namespace BLL_08YS.Negocio
             if (existente != null)
                 return existente;
 
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearHuesped);
+
             huesped.Id = _huespedRepo.Create(huesped);
             DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.HuespedRegistrado, targetUsername: huesped.Documento);
@@ -67,6 +71,8 @@ namespace BLL_08YS.Negocio
 
         public void Modificar(Huesped_68SA huesped)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarHuesped);
+
             Validar(huesped);
 
             if (_huespedRepo.GetById(huesped.Id) == null)
@@ -81,6 +87,8 @@ namespace BLL_08YS.Negocio
 
         public void Eliminar(int huespedId)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarHuesped);
+
             var huesped = _huespedRepo.GetById(huespedId);
             if (huesped == null)
                 throw new HuespedNoEncontradoException_68SA();

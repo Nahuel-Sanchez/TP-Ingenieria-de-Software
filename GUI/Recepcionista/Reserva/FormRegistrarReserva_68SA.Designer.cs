@@ -58,6 +58,17 @@
             this.pnlLineaResumen1 = new System.Windows.Forms.Panel();
             this.lblSeccionResumen = new System.Windows.Forms.Label();
             this.pnlPago = new GUI_08YS.UserControls.RoundedPanel_68SA();
+            this.lblEtiquetaNumeroTarjeta = new System.Windows.Forms.Label();
+            this.txtNumeroTarjeta = new CustomControls.IconPlaceholderTextBox();
+            this.lblEtiquetaTitularTarjeta = new System.Windows.Forms.Label();
+            this.txtTitularTarjeta = new CustomControls.IconPlaceholderTextBox();
+            this.lblEtiquetaVencimiento = new System.Windows.Forms.Label();
+            this.nudMesVencimiento = new CustomControls.IconNumericUpDown();
+            this.lblBarraVencimiento = new System.Windows.Forms.Label();
+            this.nudAnioVencimiento = new CustomControls.IconNumericUpDown();
+            this.lblEtiquetaCvv = new System.Windows.Forms.Label();
+            this.txtCvv = new CustomControls.IconPlaceholderTextBox();
+            this.lblMarcaTarjetaDetectada = new System.Windows.Forms.Label();
             this.lblVuelto = new System.Windows.Forms.Label();
             this.lblVueltoEtiqueta = new System.Windows.Forms.Label();
             this.nudMontoRecibido = new CustomControls.IconNumericUpDown();
@@ -237,12 +248,15 @@
             // 
             // lblDetDescripcion
             // 
-            this.lblDetDescripcion.AutoSize = true;
+            this.lblDetDescripcion.AutoSize = false;
             this.lblDetDescripcion.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.lblDetDescripcion.Location = new System.Drawing.Point(110, 74);
             this.lblDetDescripcion.MaximumSize = new System.Drawing.Size(440, 0);
             this.lblDetDescripcion.Name = "lblDetDescripcion";
-            this.lblDetDescripcion.Size = new System.Drawing.Size(11, 16);
+            this.lblDetDescripcion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDetDescripcion.AutoEllipsis = true;
+            this.lblDetDescripcion.Size = new System.Drawing.Size(680, 18);
             this.lblDetDescripcion.TabIndex = 7;
             this.lblDetDescripcion.Text = "-";
             // 
@@ -304,7 +318,9 @@
             this.pnlLineaDetalles.BackColor = System.Drawing.Color.Goldenrod;
             this.pnlLineaDetalles.Location = new System.Drawing.Point(16, 38);
             this.pnlLineaDetalles.Name = "pnlLineaDetalles";
-            this.pnlLineaDetalles.Size = new System.Drawing.Size(528, 2);
+            this.pnlLineaDetalles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlLineaDetalles.Size = new System.Drawing.Size(774, 2);
             this.pnlLineaDetalles.TabIndex = 1;
             // 
             // lblSeccionDetalles
@@ -453,7 +469,9 @@
             this.pnlLineaResumen3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(75)))), ((int)(((byte)(110)))));
             this.pnlLineaResumen3.Location = new System.Drawing.Point(16, 300);
             this.pnlLineaResumen3.Name = "pnlLineaResumen3";
-            this.pnlLineaResumen3.Size = new System.Drawing.Size(528, 1);
+            this.pnlLineaResumen3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlLineaResumen3.Size = new System.Drawing.Size(774, 1);
             this.pnlLineaResumen3.TabIndex = 17;
             // 
             // lblResMontoTotal
@@ -486,7 +504,9 @@
             this.pnlLineaResumen2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(75)))), ((int)(((byte)(110)))));
             this.pnlLineaResumen2.Location = new System.Drawing.Point(16, 174);
             this.pnlLineaResumen2.Name = "pnlLineaResumen2";
-            this.pnlLineaResumen2.Size = new System.Drawing.Size(528, 1);
+            this.pnlLineaResumen2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlLineaResumen2.Size = new System.Drawing.Size(774, 1);
             this.pnlLineaResumen2.TabIndex = 10;
             // 
             // lblResNoches
@@ -613,7 +633,9 @@
             this.pnlLineaResumen1.BackColor = System.Drawing.Color.Goldenrod;
             this.pnlLineaResumen1.Location = new System.Drawing.Point(16, 39);
             this.pnlLineaResumen1.Name = "pnlLineaResumen1";
-            this.pnlLineaResumen1.Size = new System.Drawing.Size(528, 2);
+            this.pnlLineaResumen1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlLineaResumen1.Size = new System.Drawing.Size(774, 2);
             this.pnlLineaResumen1.TabIndex = 1;
             // 
             // lblSeccionResumen
@@ -633,6 +655,17 @@
             this.pnlPago.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlPago.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
+            this.pnlPago.Controls.Add(this.lblMarcaTarjetaDetectada);
+            this.pnlPago.Controls.Add(this.txtCvv);
+            this.pnlPago.Controls.Add(this.lblEtiquetaCvv);
+            this.pnlPago.Controls.Add(this.nudAnioVencimiento);
+            this.pnlPago.Controls.Add(this.lblBarraVencimiento);
+            this.pnlPago.Controls.Add(this.nudMesVencimiento);
+            this.pnlPago.Controls.Add(this.lblEtiquetaVencimiento);
+            this.pnlPago.Controls.Add(this.txtTitularTarjeta);
+            this.pnlPago.Controls.Add(this.lblEtiquetaTitularTarjeta);
+            this.pnlPago.Controls.Add(this.txtNumeroTarjeta);
+            this.pnlPago.Controls.Add(this.lblEtiquetaNumeroTarjeta);
             this.pnlPago.Controls.Add(this.lblVuelto);
             this.pnlPago.Controls.Add(this.lblVueltoEtiqueta);
             this.pnlPago.Controls.Add(this.nudMontoRecibido);
@@ -646,6 +679,179 @@
             this.pnlPago.Name = "pnlPago";
             this.pnlPago.Size = new System.Drawing.Size(806, 225);
             this.pnlPago.TabIndex = 2;
+            // 
+            // lblEtiquetaNumeroTarjeta
+            // 
+            this.lblEtiquetaNumeroTarjeta.AutoSize = true;
+            this.lblEtiquetaNumeroTarjeta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblEtiquetaNumeroTarjeta.Location = new System.Drawing.Point(16, 120);
+            this.lblEtiquetaNumeroTarjeta.Name = "lblEtiquetaNumeroTarjeta";
+            this.lblEtiquetaNumeroTarjeta.Tag = "RegistrarReserva_lblEtiquetaNumeroTarjeta";
+            this.lblEtiquetaNumeroTarjeta.Size = new System.Drawing.Size(120, 16);
+            this.lblEtiquetaNumeroTarjeta.TabIndex = 8;
+            this.lblEtiquetaNumeroTarjeta.Text = "Número de Tarjeta";
+            this.lblEtiquetaNumeroTarjeta.Visible = false;
+            // 
+            // txtNumeroTarjeta
+            // 
+            this.txtNumeroTarjeta.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtNumeroTarjeta.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtNumeroTarjeta.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtNumeroTarjeta.BorderWidth = 2;
+            this.txtNumeroTarjeta.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNumeroTarjeta.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtNumeroTarjeta.IconChar = FontAwesome.Sharp.IconChar.CreditCard;
+            this.txtNumeroTarjeta.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtNumeroTarjeta.IconPadding = 4;
+            this.txtNumeroTarjeta.IconSize = 22;
+            this.txtNumeroTarjeta.Location = new System.Drawing.Point(16, 140);
+            this.txtNumeroTarjeta.MaxLength = 19;
+            this.txtNumeroTarjeta.Name = "txtNumeroTarjeta";
+            this.txtNumeroTarjeta.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtNumeroTarjeta.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtNumeroTarjeta.PlaceholderText = "0000 0000 0000 0000";
+            this.txtNumeroTarjeta.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtNumeroTarjeta.Size = new System.Drawing.Size(774, 40);
+            this.txtNumeroTarjeta.TabIndex = 9;
+            this.txtNumeroTarjeta.Visible = false;
+            // 
+            // lblEtiquetaTitularTarjeta
+            // 
+            this.lblEtiquetaTitularTarjeta.AutoSize = true;
+            this.lblEtiquetaTitularTarjeta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblEtiquetaTitularTarjeta.Location = new System.Drawing.Point(16, 192);
+            this.lblEtiquetaTitularTarjeta.Name = "lblEtiquetaTitularTarjeta";
+            this.lblEtiquetaTitularTarjeta.Tag = "RegistrarReserva_lblEtiquetaTitularTarjeta";
+            this.lblEtiquetaTitularTarjeta.Size = new System.Drawing.Size(150, 16);
+            this.lblEtiquetaTitularTarjeta.TabIndex = 10;
+            this.lblEtiquetaTitularTarjeta.Text = "Titular de la Tarjeta";
+            this.lblEtiquetaTitularTarjeta.Visible = false;
+            // 
+            // txtTitularTarjeta
+            // 
+            this.txtTitularTarjeta.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtTitularTarjeta.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtTitularTarjeta.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtTitularTarjeta.BorderWidth = 2;
+            this.txtTitularTarjeta.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTitularTarjeta.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtTitularTarjeta.IconChar = FontAwesome.Sharp.IconChar.User;
+            this.txtTitularTarjeta.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtTitularTarjeta.IconPadding = 4;
+            this.txtTitularTarjeta.IconSize = 22;
+            this.txtTitularTarjeta.Location = new System.Drawing.Point(16, 212);
+            this.txtTitularTarjeta.Name = "txtTitularTarjeta";
+            this.txtTitularTarjeta.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtTitularTarjeta.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtTitularTarjeta.PlaceholderText = "Como figura en la tarjeta";
+            this.txtTitularTarjeta.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtTitularTarjeta.Size = new System.Drawing.Size(774, 40);
+            this.txtTitularTarjeta.TabIndex = 11;
+            this.txtTitularTarjeta.Visible = false;
+            // 
+            // lblEtiquetaVencimiento
+            // 
+            this.lblEtiquetaVencimiento.AutoSize = true;
+            this.lblEtiquetaVencimiento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblEtiquetaVencimiento.Location = new System.Drawing.Point(16, 264);
+            this.lblEtiquetaVencimiento.Name = "lblEtiquetaVencimiento";
+            this.lblEtiquetaVencimiento.Tag = "RegistrarReserva_lblEtiquetaVencimiento";
+            this.lblEtiquetaVencimiento.Size = new System.Drawing.Size(140, 16);
+            this.lblEtiquetaVencimiento.TabIndex = 12;
+            this.lblEtiquetaVencimiento.Text = "Vencimiento (MM/AA)";
+            this.lblEtiquetaVencimiento.Visible = false;
+            // 
+            // nudMesVencimiento
+            // 
+            this.nudMesVencimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.nudMesVencimiento.BorderColor = System.Drawing.Color.Goldenrod;
+            this.nudMesVencimiento.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.nudMesVencimiento.BorderWidth = 2;
+            this.nudMesVencimiento.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.nudMesVencimiento.IconChar = FontAwesome.Sharp.IconChar.None;
+            this.nudMesVencimiento.IconColor = System.Drawing.Color.Goldenrod;
+            this.nudMesVencimiento.Location = new System.Drawing.Point(16, 284);
+            this.nudMesVencimiento.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            this.nudMesVencimiento.Maximum = new decimal(new int[] { 12, 0, 0, 0 });
+            this.nudMesVencimiento.Name = "nudMesVencimiento";
+            this.nudMesVencimiento.Size = new System.Drawing.Size(70, 40);
+            this.nudMesVencimiento.TabIndex = 13;
+            this.nudMesVencimiento.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            this.nudMesVencimiento.Visible = false;
+            // 
+            // lblBarraVencimiento
+            // 
+            this.lblBarraVencimiento.AutoSize = true;
+            this.lblBarraVencimiento.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lblBarraVencimiento.Location = new System.Drawing.Point(90, 296);
+            this.lblBarraVencimiento.Name = "lblBarraVencimiento";
+            this.lblBarraVencimiento.Size = new System.Drawing.Size(12, 16);
+            this.lblBarraVencimiento.TabIndex = 14;
+            this.lblBarraVencimiento.Text = "/";
+            this.lblBarraVencimiento.Visible = false;
+            // 
+            // nudAnioVencimiento
+            // 
+            this.nudAnioVencimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.nudAnioVencimiento.BorderColor = System.Drawing.Color.Goldenrod;
+            this.nudAnioVencimiento.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.nudAnioVencimiento.BorderWidth = 2;
+            this.nudAnioVencimiento.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.nudAnioVencimiento.IconChar = FontAwesome.Sharp.IconChar.None;
+            this.nudAnioVencimiento.IconColor = System.Drawing.Color.Goldenrod;
+            this.nudAnioVencimiento.Location = new System.Drawing.Point(108, 284);
+            this.nudAnioVencimiento.Name = "nudAnioVencimiento";
+            this.nudAnioVencimiento.Size = new System.Drawing.Size(70, 40);
+            this.nudAnioVencimiento.TabIndex = 15;
+            this.nudAnioVencimiento.Visible = false;
+            // 
+            // lblEtiquetaCvv
+            // 
+            this.lblEtiquetaCvv.AutoSize = true;
+            this.lblEtiquetaCvv.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblEtiquetaCvv.Location = new System.Drawing.Point(280, 264);
+            this.lblEtiquetaCvv.Name = "lblEtiquetaCvv";
+            this.lblEtiquetaCvv.Tag = "RegistrarReserva_lblEtiquetaCvv";
+            this.lblEtiquetaCvv.Size = new System.Drawing.Size(40, 16);
+            this.lblEtiquetaCvv.TabIndex = 16;
+            this.lblEtiquetaCvv.Text = "CVV";
+            this.lblEtiquetaCvv.Visible = false;
+            // 
+            // txtCvv
+            // 
+            this.txtCvv.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
+            this.txtCvv.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtCvv.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtCvv.BorderWidth = 2;
+            this.txtCvv.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCvv.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtCvv.IconChar = FontAwesome.Sharp.IconChar.Lock;
+            this.txtCvv.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtCvv.IconPadding = 4;
+            this.txtCvv.IconSize = 22;
+            this.txtCvv.Location = new System.Drawing.Point(280, 284);
+            this.txtCvv.MaxLength = 4;
+            this.txtCvv.Name = "txtCvv";
+            this.txtCvv.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtCvv.PlaceholderText = "123";
+            this.txtCvv.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtCvv.Size = new System.Drawing.Size(120, 40);
+            this.txtCvv.TabIndex = 17;
+            this.txtCvv.Visible = false;
+            // 
+            // lblMarcaTarjetaDetectada
+            // 
+            this.lblMarcaTarjetaDetectada.AutoSize = true;
+            this.lblMarcaTarjetaDetectada.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMarcaTarjetaDetectada.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblMarcaTarjetaDetectada.Location = new System.Drawing.Point(16, 336);
+            this.lblMarcaTarjetaDetectada.Name = "lblMarcaTarjetaDetectada";
+            this.lblMarcaTarjetaDetectada.Size = new System.Drawing.Size(150, 18);
+            this.lblMarcaTarjetaDetectada.TabIndex = 18;
+            this.lblMarcaTarjetaDetectada.Text = "Marca detectada: -";
+            this.lblMarcaTarjetaDetectada.Visible = false;
             // 
             // lblVuelto
             // 
@@ -681,20 +887,14 @@
             this.nudMontoRecibido.IconChar = FontAwesome.Sharp.IconChar.DollarSign;
             this.nudMontoRecibido.IconColor = System.Drawing.Color.Goldenrod;
             this.nudMontoRecibido.IconSize = 22;
-            this.nudMontoRecibido.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+            this.nudMontoRecibido.Increment = new decimal(new int[] { 100, 0, 0, 0 });
             this.nudMontoRecibido.Location = new System.Drawing.Point(16, 140);
-            this.nudMontoRecibido.Maximum = new decimal(new int[] {
-            99999999,
-            0,
-            0,
-            0});
+            this.nudMontoRecibido.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
             this.nudMontoRecibido.Name = "nudMontoRecibido";
+            this.nudMontoRecibido.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.nudMontoRecibido.Prefix = "";
-            this.nudMontoRecibido.Size = new System.Drawing.Size(528, 40);
+            this.nudMontoRecibido.Size = new System.Drawing.Size(774, 40);
             this.nudMontoRecibido.SpinnerArrowColor = System.Drawing.Color.DimGray;
             this.nudMontoRecibido.SpinnerHoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.nudMontoRecibido.SpinnerPressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
@@ -732,9 +932,11 @@
             this.cmbMetodoPago.IconSize = 26;
             this.cmbMetodoPago.Location = new System.Drawing.Point(16, 70);
             this.cmbMetodoPago.Name = "cmbMetodoPago";
+            this.cmbMetodoPago.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbMetodoPago.SelectedItem = null;
             this.cmbMetodoPago.SelectedValue = null;
-            this.cmbMetodoPago.Size = new System.Drawing.Size(528, 40);
+            this.cmbMetodoPago.Size = new System.Drawing.Size(774, 40);
             this.cmbMetodoPago.TabIndex = 3;
             // 
             // lblEtiquetaMetodoPago
@@ -753,7 +955,9 @@
             this.pnlLineaPago.BackColor = System.Drawing.Color.Goldenrod;
             this.pnlLineaPago.Location = new System.Drawing.Point(16, 38);
             this.pnlLineaPago.Name = "pnlLineaPago";
-            this.pnlLineaPago.Size = new System.Drawing.Size(528, 2);
+            this.pnlLineaPago.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlLineaPago.Size = new System.Drawing.Size(774, 2);
             this.pnlLineaPago.TabIndex = 1;
             // 
             // lblSeccionPago
@@ -826,11 +1030,13 @@
             this.txtEmail.IconSize = 22;
             this.txtEmail.Location = new System.Drawing.Point(16, 550);
             this.txtEmail.Name = "txtEmail";
+            this.txtEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtEmail.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtEmail.PlaceholderText = "Se completa al consultar";
             this.txtEmail.ReadOnly = true;
             this.txtEmail.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtEmail.Size = new System.Drawing.Size(382, 38);
+            this.txtEmail.Size = new System.Drawing.Size(554, 38);
             this.txtEmail.TabIndex = 19;
             // 
             // lblEtiquetaNacionalidad
@@ -859,11 +1065,13 @@
             this.txtNacionalidad.IconSize = 22;
             this.txtNacionalidad.Location = new System.Drawing.Point(16, 480);
             this.txtNacionalidad.Name = "txtNacionalidad";
+            this.txtNacionalidad.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtNacionalidad.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtNacionalidad.PlaceholderText = "Se completa al consultar";
             this.txtNacionalidad.ReadOnly = true;
             this.txtNacionalidad.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtNacionalidad.Size = new System.Drawing.Size(382, 38);
+            this.txtNacionalidad.Size = new System.Drawing.Size(554, 38);
             this.txtNacionalidad.TabIndex = 17;
             // 
             // lblEtiquetaTelefono
@@ -892,11 +1100,13 @@
             this.txtTelefono.IconSize = 22;
             this.txtTelefono.Location = new System.Drawing.Point(16, 410);
             this.txtTelefono.Name = "txtTelefono";
+            this.txtTelefono.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTelefono.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtTelefono.PlaceholderText = "Se completa al consultar";
             this.txtTelefono.ReadOnly = true;
             this.txtTelefono.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtTelefono.Size = new System.Drawing.Size(382, 38);
+            this.txtTelefono.Size = new System.Drawing.Size(554, 38);
             this.txtTelefono.TabIndex = 15;
             // 
             // lblEtiquetaFechaNacimiento
@@ -933,7 +1143,9 @@
             this.dtpFechaNacimiento.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpFechaNacimiento.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpFechaNacimiento.Name = "dtpFechaNacimiento";
-            this.dtpFechaNacimiento.Size = new System.Drawing.Size(382, 38);
+            this.dtpFechaNacimiento.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpFechaNacimiento.Size = new System.Drawing.Size(554, 38);
             this.dtpFechaNacimiento.TabIndex = 13;
             this.dtpFechaNacimiento.TimeValue = null;
             this.dtpFechaNacimiento.Value = null;
@@ -964,11 +1176,13 @@
             this.txtApellido.IconSize = 22;
             this.txtApellido.Location = new System.Drawing.Point(16, 270);
             this.txtApellido.Name = "txtApellido";
+            this.txtApellido.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtApellido.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtApellido.PlaceholderText = "Se completa al consultar";
             this.txtApellido.ReadOnly = true;
             this.txtApellido.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtApellido.Size = new System.Drawing.Size(382, 38);
+            this.txtApellido.Size = new System.Drawing.Size(554, 38);
             this.txtApellido.TabIndex = 11;
             // 
             // lblEtiquetaNombre
@@ -997,11 +1211,13 @@
             this.txtNombre.IconSize = 22;
             this.txtNombre.Location = new System.Drawing.Point(16, 200);
             this.txtNombre.Name = "txtNombre";
+            this.txtNombre.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtNombre.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtNombre.PlaceholderText = "Se completa al consultar";
             this.txtNombre.ReadOnly = true;
             this.txtNombre.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtNombre.Size = new System.Drawing.Size(382, 38);
+            this.txtNombre.Size = new System.Drawing.Size(554, 38);
             this.txtNombre.TabIndex = 9;
             // 
             // btnHuespedNuevo
@@ -1013,8 +1229,9 @@
             this.btnHuespedNuevo.IconColor = System.Drawing.Color.Gold;
             this.btnHuespedNuevo.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnHuespedNuevo.IconSize = 24;
-            this.btnHuespedNuevo.Location = new System.Drawing.Point(334, 122);
+            this.btnHuespedNuevo.Location = new System.Drawing.Point(506, 122);
             this.btnHuespedNuevo.Name = "btnHuespedNuevo";
+            this.btnHuespedNuevo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnHuespedNuevo.Size = new System.Drawing.Size(64, 42);
             this.btnHuespedNuevo.TabIndex = 7;
             this.btnHuespedNuevo.UseVisualStyleBackColor = false;
@@ -1033,9 +1250,11 @@
             this.btnConsultarDocumento.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnConsultarDocumento.Location = new System.Drawing.Point(16, 122);
             this.btnConsultarDocumento.Name = "btnConsultarDocumento";
+            this.btnConsultarDocumento.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnConsultarDocumento.Tag = "RegistrarReserva_btnConsultarDocumento";
             this.btnConsultarDocumento.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
-            this.btnConsultarDocumento.Size = new System.Drawing.Size(310, 42);
+            this.btnConsultarDocumento.Size = new System.Drawing.Size(482, 42);
             this.btnConsultarDocumento.TabIndex = 6;
             this.btnConsultarDocumento.Text = "Consultar Documento";
             this.btnConsultarDocumento.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1068,10 +1287,12 @@
             this.txtDni.IconSize = 22;
             this.txtDni.Location = new System.Drawing.Point(180, 72);
             this.txtDni.Name = "txtDni";
+            this.txtDni.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDni.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtDni.PlaceholderText = "N° Documento";
             this.txtDni.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtDni.Size = new System.Drawing.Size(218, 38);
+            this.txtDni.Size = new System.Drawing.Size(390, 38);
             this.txtDni.TabIndex = 5;
             // 
             // lblEtiquetaTipoDocumento
@@ -1114,7 +1335,9 @@
             this.pnlLineaHuesped1.BackColor = System.Drawing.Color.Goldenrod;
             this.pnlLineaHuesped1.Location = new System.Drawing.Point(16, 38);
             this.pnlLineaHuesped1.Name = "pnlLineaHuesped1";
-            this.pnlLineaHuesped1.Size = new System.Drawing.Size(382, 2);
+            this.pnlLineaHuesped1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlLineaHuesped1.Size = new System.Drawing.Size(554, 2);
             this.pnlLineaHuesped1.TabIndex = 1;
             // 
             // lblSeccionHuesped
@@ -1265,6 +1488,17 @@
         private CustomControls.IconComboBox cmbMetodoPago;
         private System.Windows.Forms.Label lblEtiquetaMontoRecibido;
         private CustomControls.IconNumericUpDown nudMontoRecibido;
+        private System.Windows.Forms.Label lblEtiquetaNumeroTarjeta;
+        private CustomControls.IconPlaceholderTextBox txtNumeroTarjeta;
+        private System.Windows.Forms.Label lblEtiquetaTitularTarjeta;
+        private CustomControls.IconPlaceholderTextBox txtTitularTarjeta;
+        private System.Windows.Forms.Label lblEtiquetaVencimiento;
+        private CustomControls.IconNumericUpDown nudMesVencimiento;
+        private System.Windows.Forms.Label lblBarraVencimiento;
+        private CustomControls.IconNumericUpDown nudAnioVencimiento;
+        private System.Windows.Forms.Label lblEtiquetaCvv;
+        private CustomControls.IconPlaceholderTextBox txtCvv;
+        private System.Windows.Forms.Label lblMarcaTarjetaDetectada;
         private System.Windows.Forms.Label lblVueltoEtiqueta;
         private System.Windows.Forms.Label lblVuelto;
         private UserControls.RoundedPanel_68SA pnlIzquierda;

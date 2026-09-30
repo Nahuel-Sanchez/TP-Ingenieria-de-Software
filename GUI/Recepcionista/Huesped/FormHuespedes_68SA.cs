@@ -13,11 +13,20 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Service_08YS.Entities.Acceso;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormHuespedes_68SA : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnNuevo),        Permisos.CrearHuesped },
+                { nameof(btnSerializar),   Permisos.SerializarHuespedes },
+                { nameof(btnDeserializar), Permisos.DeserializarHuespedes },
+            };
+
         #region Campos y tipos auxiliares
 
         // Se identifica por id (no por el texto del combo) para que no se rompa al cambiar de idioma
@@ -45,10 +54,20 @@ namespace GUI_08YS.Recepcionista
         {
             InitializeComponent();
 
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
+
             CrudEstilo_68SA.AplicarGrilla(dgvHuespedes);
             // Encabezados en una sola línea: así el ancho que se mide para cada columna es el del texto completo
             dgvHuespedes.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
             dgvHuespedes.CellClick += DgvHuespedes_CellClick;
+            dgvHuespedes.CellFormatting += (s, e) =>
+            {
+                if (e.Value is TipoDocumento tipo && dgvHuespedes.Columns[e.ColumnIndex].Name == "TipoDocumento")
+                {
+                    e.Value = OpcionEnum_68SA.Texto(tipo);
+                    e.FormattingApplied = true;
+                }
+            };
 
             flpFiltros.Layout += (s, e) => DistribuirFiltros();
             cmbOperadorEdad.SelectedIndexChanged += (s, e) => ActualizarVisibilidadEdad();
@@ -142,7 +161,7 @@ namespace GUI_08YS.Recepcionista
 
         #region Filtros
 
-        // Solo cambia el texto de "Todos" al traducir; los tipos de documento se muestran como en FormRegistrarHuesped_68SA (nombre del enum)
+        // Tipos de documento en el idioma activo (mismos textos que FormRegistrarHuesped_68SA)
         private void ReconstruirComboTipoDocumento()
         {
             int? seleccion = ItemCombo_68SA.IdSeleccionado(cmbTipoDocFiltro);
@@ -150,7 +169,7 @@ namespace GUI_08YS.Recepcionista
             cmbTipoDocFiltro.Items.Clear();
             cmbTipoDocFiltro.Items.Add(new ItemCombo_68SA(null, TraductorManager_08YS.Instance.GetTexto("Crud_todos")));
             foreach (TipoDocumento tipo in Enum.GetValues(typeof(TipoDocumento)))
-                cmbTipoDocFiltro.Items.Add(new ItemCombo_68SA((int)tipo, tipo.ToString()));
+                cmbTipoDocFiltro.Items.Add(new ItemCombo_68SA((int)tipo, OpcionEnum_68SA.Texto(tipo)));
 
             ItemCombo_68SA.Seleccionar(cmbTipoDocFiltro, seleccion);
         }
@@ -350,6 +369,8 @@ namespace GUI_08YS.Recepcionista
 
             dgvHuespedes.Columns.Add(CrudEstilo_68SA.CrearColumnaIcono("colEditar"));
             dgvHuespedes.Columns.Add(CrudEstilo_68SA.CrearColumnaIcono("colEliminar"));
+            dgvHuespedes.Columns["colEditar"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.ModificarHuesped);
+            dgvHuespedes.Columns["colEliminar"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.EliminarHuesped);
 
             Image icoEditar = IconCache.Get(IconChar.PenToSquare, IconFont.Auto, 36, Color.Goldenrod);
             Image icoEliminar = IconCache.Get(IconChar.Trash, IconFont.Auto, 36, Color.FromArgb(235, 90, 90));
@@ -398,6 +419,8 @@ namespace GUI_08YS.Recepcionista
 
         private void Serializar()
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.SerializarHuespedes);
+
             var t = TraductorManager_08YS.Instance;
 
             if (_listadoActual == null || _listadoActual.Count == 0)
@@ -440,6 +463,8 @@ namespace GUI_08YS.Recepcionista
 
         private void Deserializar()
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.DeserializarHuespedes);
+
             var t = TraductorManager_08YS.Instance;
 
             using (var dialogo = new OpenFileDialog

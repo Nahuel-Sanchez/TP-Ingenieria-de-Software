@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service_08YS;
+using Service_08YS.Entities.Acceso;
 
 namespace BLL_08YS.Negocio
 {
@@ -22,6 +24,8 @@ namespace BLL_08YS.Negocio
 
         public int Registrar(Pago_68SA pago)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.Cobrar);
+
             if (pago.Monto <= 0)
                 throw new ArgumentException("El monto del pago debe ser mayor a cero.");
 

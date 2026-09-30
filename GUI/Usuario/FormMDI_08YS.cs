@@ -58,19 +58,65 @@ namespace GUI_08YS
                 { nameof(gestionRespaldosToolStripMenuItem), Permisos.VerRespaldos   },
             };
 
+        // Botones del panel lateral que abren directamente una pantalla de negocio
+        private static readonly Dictionary<string, Permisos> _mapaBotonesNegocio =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnReservas),    Permisos.VerReservas           },
+                { nameof(btnHuespedes),   Permisos.VerHuespedes          },
+                { nameof(btnDashboard),   Permisos.VerDashboard          },
+                { nameof(btnHotelConfig), Permisos.VerConfiguracionHotel },
+            };
+
+        // Items del menu desplegable de recepción
+        private static readonly Dictionary<string, Permisos> _mapaMenuRecepcion =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(reservarToolStripMenuItem),              Permisos.RegistrarReserva       },
+                { nameof(controlDeHabitacionesToolStripMenuItem), Permisos.VerControlHabitaciones },
+                { nameof(checkInToolStripMenuItem),               Permisos.RegistrarCheckIn       },
+                { nameof(checkOutToolStripMenuItem),              Permisos.RegistrarCheckOut      },
+            };
+
+        // Items del menu desplegable de habitaciones
+        private static readonly Dictionary<string, Permisos> _mapaMenuHabitaciones =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(habitacionesToolStripMenuItem),      Permisos.VerHabitaciones    },
+                { nameof(tiposDeHabitacionToolStripMenuItem), Permisos.VerTiposHabitacion },
+                { nameof(pisosToolStripMenuItem),             Permisos.VerPisos           },
+            };
+
         private void AplicarPermisos()
         {
             // Botón "Administrativo" del panel lateral — solo visible si tiene algún permiso admin
             btnAdministrativo.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.VerUsuarios)
                                      || SessionManager_08YS.Instance.HasPermission(Permisos.VerBitacora)
                                      || SessionManager_08YS.Instance.HasPermission(Permisos.VerFamilias)
-                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerRoles   );
+                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerRoles   )
+                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerRespaldos);
 
             gestionAccesosToolStripMenuItem.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.VerRoles   )
                                                    || SessionManager_08YS.Instance.HasPermission(Permisos.VerFamilias);
 
             // Items del menu desplegable de admin
             PermissionFilter_08YS.AplicarMenuStrip(AdministrativoDropDownMenu, _mapaMenuAdmin);
+
+            // Panel lateral de negocio
+            PermissionFilter_08YS.Aplicar(this, _mapaBotonesNegocio);
+
+            // Botones con menú desplegable — solo visibles si tiene algún permiso de su menú
+            btnRecepcion.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarReserva      )
+                                || SessionManager_08YS.Instance.HasPermission(Permisos.VerControlHabitaciones)
+                                || SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarCheckIn      )
+                                || SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarCheckOut     );
+
+            btnHabitaciones.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.VerHabitaciones   )
+                                   || SessionManager_08YS.Instance.HasPermission(Permisos.VerTiposHabitacion)
+                                   || SessionManager_08YS.Instance.HasPermission(Permisos.VerPisos          );
+
+            PermissionFilter_08YS.AplicarMenuStrip(RecepcionDropDownMenu, _mapaMenuRecepcion);
+            PermissionFilter_08YS.AplicarMenuStrip(HabitacionesDropdownMenu, _mapaMenuHabitaciones);
         }
 
         #endregion
@@ -228,6 +274,29 @@ namespace GUI_08YS
             PerfilDropDownMenu.IsMainMenu = true;
             RecepcionDropDownMenu.IsMainMenu = true;
             HabitacionesDropdownMenu.IsMainMenu = true;
+
+            AjustarAPantalla();
+        }
+
+        // Área de trabajo del monitor actual (relativa al monitor, como la espera MaximizedBounds)
+        private Rectangle AreaMaximizada()
+        {
+            Screen pantalla = Screen.FromControl(this);
+            Rectangle area = pantalla.WorkingArea;
+            return new Rectangle(area.Left - pantalla.Bounds.Left, area.Top - pantalla.Bounds.Top, area.Width, area.Height);
+        }
+
+        // El tamaño de diseño (1800x966) no entra en todas las pantallas: si no entra, la ventana
+        // arranca maximizada dentro del área de trabajo (sin tapar la barra de tareas); si entra, centrada.
+        private void AjustarAPantalla()
+        {
+            Rectangle area = Screen.FromControl(this).WorkingArea;
+            MaximizedBounds = AreaMaximizada();
+
+            if (Width > area.Width || Height > area.Height)
+                WindowState = FormWindowState.Maximized;
+            else
+                Location = new Point(area.Left + (area.Width - Width) / 2, area.Top + (area.Height - Height) / 2);
         }
 
         private void FormMDI_FormClosing(object sender, FormClosingEventArgs e)
@@ -256,28 +325,36 @@ namespace GUI_08YS
 
         public void OpenChildForm(Form childForm)
         {
-            panel2.Controls.Clear();
+            var anterior = panel2.Tag as Form;
+
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
-            childForm.Dock = DockStyle.Fill;
             childForm.AutoScaleMode = AutoScaleMode.None;
+            childForm.Dock = DockStyle.Fill;
+            // Tamaño final desde el principio: los controles se acomodan una sola vez y antes de
+            // mostrarse. Si no, el form aparece con el tamaño del diseñador y se ve cómo se reacomoda
+            // (la "línea blanca" de barras de desplazamiento que aparecen y desaparecen).
+            childForm.Bounds = panel2.ClientRectangle;
 
             panel2.SuspendLayout();
-            childForm.SuspendLayout();
-
+            panel2.Controls.Clear();
             panel2.Controls.Add(childForm);
             panel2.Tag = childForm;
-
-            ForceCustomControlsLayout(childForm);   // ← MOVER antes del Show
-
-            childForm.ResumeLayout(false);          // ← false: no forzar redibujado todavía
             panel2.ResumeLayout(false);
+
+            // La pantalla anterior ya no se ve: deja de recibir los cambios de idioma
+            // (si se vuelve a abrir, se suscribe de nuevo acá abajo)
+            if (anterior != null && !ReferenceEquals(anterior, childForm) && anterior is IIdiomaObserver_08YS observadorAnterior)
+                TraductorManager_08YS.Instance.Desuscribir(observadorAnterior);
 
             if(childForm is IIdiomaObserver_08YS observer)
             {
                 TraductorManager_08YS.Instance.Suscribir(observer); // Suscribir al nuevo formulario al cambio de idioma
                 observer.UpdateIdioma(); // Forzar actualización inmediata del idioma al abrir la pantalla
             }
+
+            childForm.PerformLayout();              // layout con el tamaño y los textos definitivos
+            ForceCustomControlsLayout(childForm);
 
             childForm.Load += (s, e) => TraductorManager_08YS.Instance.Suscribir(childForm as IIdiomaObserver_08YS); // Suscribir al nuevo formulario al cambio de idioma
             childForm.FormClosed += (s, e) => TraductorManager_08YS.Instance.Desuscribir(childForm as IIdiomaObserver_08YS); // Desuscribir al cerrar
@@ -424,21 +501,25 @@ namespace GUI_08YS
 
         private void reservarToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarReserva);
             OpenChildForm(new FormDisponibilidad(OpenChildForm));
         }
 
         private void controlDeHabitacionesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerControlHabitaciones);
             OpenChildForm(new FormControlHabitaciones_68SA(OpenChildForm, ModoHabitaciones.Gestion));
         }
 
         private void checkInToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarCheckIn);
             OpenChildForm(new FormCheckIn_68SA(OpenChildForm, ModoHabitaciones.Gestion));
         }
 
         private void checkOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarCheckOut);
             OpenChildForm(new FormCheckOut_68SA(OpenChildForm, ModoHabitaciones.Gestion));
         }
 
@@ -490,7 +571,10 @@ namespace GUI_08YS
         private void button2_Click_1(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Normal)
+            {
+                this.MaximizedBounds = AreaMaximizada();
                 this.WindowState = FormWindowState.Maximized;
+            }
             else
                 this.WindowState = FormWindowState.Normal;
         }
@@ -511,11 +595,13 @@ namespace GUI_08YS
 
         private void btnReservas_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerReservas);
             OpenChildForm(new FormReservas_68SA(OpenChildForm));
         }
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerDashboard);
             OpenChildForm(new FormDashboard_68SA());
         }
 
@@ -526,26 +612,31 @@ namespace GUI_08YS
 
         private void pisosToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerPisos);
             OpenChildForm(new FormPisos_68SA());
         }
 
         private void tiposDeHabitacionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerTiposHabitacion);
             OpenChildForm(new FormTiposHabitacion_68SA());
         }
 
         private void habitacionesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerHabitaciones);
             OpenChildForm(new FormHabitaciones_68SA());
         }
 
         private void btnHuespedes_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerHuespedes);
             OpenChildForm(new FormHuespedes_68SA());
         }
 
         private void btnHotelConfig_Click(object sender, EventArgs e)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerConfiguracionHotel);
             OpenChildForm(new FormConfiguracionHotel_68SA());
         }
     }

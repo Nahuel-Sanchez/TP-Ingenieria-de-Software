@@ -9,11 +9,19 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
+using GUI_08YS.UserControls;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormCheckIn_68SA : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnConfirmar), Permisos.RegistrarCheckIn },
+            };
+
         private class FilaAcompanante
         {
             public Panel Contenedor;
@@ -50,6 +58,12 @@ namespace GUI_08YS.Recepcionista
             _fechaEgresoOrigen = fechaEgresoOrigen;
 
             InitializeComponent();
+
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
+
+            // Las tarjetas (buscar, reserva, cuenta/acompañantes) ocupan todo el ancho disponible
+            LayoutAdaptable_68SA.EstirarHijosAlAncho(flpContenido);
+            LayoutAdaptable_68SA.EstirarHijosAlAncho(flpFilas);
 
             btnConfirmar.Click += BtnConfirmar_Click;
             btnCancelar.Click += (s, e) => Volver();
@@ -158,6 +172,8 @@ namespace GUI_08YS.Recepcionista
                 {
                     Location = new Point(204, 12),
                     Size = new Size(340, 24),
+                    Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+                    AutoEllipsis = true,
                     ForeColor = Color.FromArgb(160, 165, 180),
                     Font = new Font("Segoe UI", 9F),
                     Text = TraductorManager_08YS.Instance.GetTexto("CheckIn_txtSinBuscar")
@@ -174,10 +190,12 @@ namespace GUI_08YS.Recepcionista
                     FlatStyle = FlatStyle.Flat,
                     Location = new Point(552, 3),
                     Size = new Size(40, 40),
+                    Anchor = AnchorStyles.Top | AnchorStyles.Right,
                     UseVisualStyleBackColor = false
                 };
                 toolTip1.SetToolTip(btnNuevo, TraductorManager_08YS.Instance.GetTexto("Comun_tooltipRegistrarHuespedNuevo"));
                 btnNuevo.Click += (s, e) => AbrirRegistrarHuesped(fila);
+                btnNuevo.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.CrearHuesped);
                 panel.Controls.Add(btnNuevo);
 
                 flpFilas.Controls.Add(panel);
@@ -325,7 +343,11 @@ namespace GUI_08YS.Recepcionista
 
         public void UpdateIdioma()
         {
+            // Los paneles de reserva/acompañantes se agregan a flpContenido recién al buscar: se traducen siempre
             TraducirControles(this);
+            TraducirControles(pnlAccionBuscar);
+            TraducirControles(pnlReserva);
+            TraducirControles(pnlAcompanantes);
         }
 
         private void TraducirControles(Control contenedor)
@@ -337,6 +359,19 @@ namespace GUI_08YS.Recepcionista
 
                 if (c.HasChildren)
                     TraducirControles(c);
+            }
+        }
+    
+
+        // Pinta el formulario completo en memoria y lo vuelca de una vez: sin parpadeo ni franjas
+        // blancas mientras los controles se acomodan al abrir o redimensionar la ventana.
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
+                return cp;
             }
         }
     }

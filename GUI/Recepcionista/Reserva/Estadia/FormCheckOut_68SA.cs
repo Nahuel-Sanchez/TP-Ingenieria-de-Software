@@ -6,11 +6,20 @@ using Service_08YS;
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
+using System.Collections.Generic;
+using GUI_08YS.UserControls;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormCheckOut_68SA : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnConfirmar), Permisos.RegistrarCheckOut },
+            };
+
         private readonly Action<Form> _openChildForm;
         private readonly ModoHabitaciones _modoOrigen;
         private readonly DateTime? _fechaIngresoOrigen;
@@ -40,7 +49,12 @@ namespace GUI_08YS.Recepcionista
 
             InitializeComponent();
 
-            cmbMetodoPagoFinal.Items.AddRange(Enum.GetValues(typeof(MetodoPago)).Cast<object>().ToArray());
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
+
+            // Las tarjetas (buscar, reserva, cuenta/acompañantes) ocupan todo el ancho disponible
+            LayoutAdaptable_68SA.EstirarHijosAlAncho(flpContenido);
+
+            OpcionEnum_68SA.Cargar(cmbMetodoPagoFinal, typeof(MetodoPago));
             cmbMetodoPagoFinal.SelectedIndex = 0;
             cmbMetodoPagoFinal.SelectedIndexChanged += (s, e) => ActualizarVisibilidadVueltoFinal();
             nudMontoRecibidoFinal.ValueChanged += (s, e) => ActualizarVueltoFinal();
@@ -93,6 +107,11 @@ namespace GUI_08YS.Recepcionista
                 : System.Drawing.Color.FromArgb(76, 217, 100);
 
             bool haySaldo = _saldoPendiente > 0;
+
+            // Con saldo pendiente el check-out incluye el cobro (CUN-03): hacen falta ambos permisos
+            btnConfirmar.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarCheckOut)
+                                && (!haySaldo || SessionManager_08YS.Instance.HasPermission(Permisos.Cobrar));
+
             lblEtiquetaMetodoPagoFinal.Visible = haySaldo;
             cmbMetodoPagoFinal.Visible = haySaldo;
             lblEtiquetaMontoRecibidoFinal.Visible = haySaldo;
@@ -147,8 +166,8 @@ namespace GUI_08YS.Recepcionista
                     _pagoBLL.Registrar(new Pago_68SA
                     {
                         ReservaId = _reserva.Id,
-                        Monto = nudMontoRecibidoFinal.Value,
-                        MetodoPago = (MetodoPago)cmbMetodoPagoFinal.SelectedItem
+                        Monto = _saldoPendiente, // el vuelto entregado no es un ingreso
+                        MetodoPago = OpcionEnum_68SA.Seleccionado<MetodoPago>(cmbMetodoPagoFinal) ?? MetodoPago.Efectivo
                     });
                 }
 
@@ -170,14 +189,21 @@ namespace GUI_08YS.Recepcionista
 
         private void ActualizarVisibilidadVueltoFinal()
         {
-            bool esEfectivo = cmbMetodoPagoFinal.SelectedItem is MetodoPago metodo && metodo == MetodoPago.Efectivo;
+            bool esEfectivo = OpcionEnum_68SA.Seleccionado<MetodoPago>(cmbMetodoPagoFinal) == MetodoPago.Efectivo;
             lblEtiquetaVueltoFinal.Visible = esEfectivo;
             lblVueltoFinal.Visible = esEfectivo;
         }
 
         public void UpdateIdioma()
         {
+            // Los paneles de reserva/cuenta se agregan a flpContenido recién al buscar: se traducen siempre
             TraducirControles(this);
+            TraducirControles(pnlAccionBuscar);
+            TraducirControles(pnlReserva);
+            TraducirControles(pnlCuenta);
+            OpcionEnum_68SA.Cargar(cmbMetodoPagoFinal, typeof(MetodoPago));
+            if (_reserva != null)
+                lblResComposicion.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_txtAdultosNinos"), _reserva.CantidadAdultos, _reserva.CantidadNinos);
         }
 
         private void TraducirControles(Control contenedor)
@@ -189,6 +215,19 @@ namespace GUI_08YS.Recepcionista
 
                 if (c.HasChildren)
                     TraducirControles(c);
+            }
+        }
+    
+
+        // Pinta el formulario completo en memoria y lo vuelca de una vez: sin parpadeo ni franjas
+        // blancas mientras los controles se acomodan al abrir o redimensionar la ventana.
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
+                return cp;
             }
         }
     }

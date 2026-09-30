@@ -5,6 +5,7 @@ using Service_08YS;
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GUI_08YS.UserControls;
 
 namespace GUI_08YS.Recepcionista
 {
@@ -32,8 +33,9 @@ namespace GUI_08YS.Recepcionista
             InitializeComponent();
             TraducirControles(this);
             Text = TraductorManager_08YS.Instance.GetTexto("RegistrarHuesped_lblTitulo");
+            TraducirPlaceholders();
 
-            cmbTipoDocumento.DataSource = Enum.GetValues(typeof(TipoDocumento));
+            OpcionEnum_68SA.Cargar(cmbTipoDocumento, typeof(TipoDocumento));
             cmbTipoDocumento.SelectedIndex = -1;
 
             dtpFechaNacimiento.MaxDate = DateTime.Today;
@@ -45,8 +47,6 @@ namespace GUI_08YS.Recepcionista
             _huespedAEditar = huespedAEditar;
             if (huespedAEditar != null)
                 CargarParaEdicion(huespedAEditar);
-
-            btnRegistrar.Click += BtnRegistrar_Click;
         }
 
         private void CargarParaEdicion(Huesped_68SA huesped)
@@ -71,7 +71,7 @@ namespace GUI_08YS.Recepcionista
             if (!ValidarCampos()) return;
 
             string documento = txtDocumento.RealText.Trim();
-            var tipoDocumento = (TipoDocumento)cmbTipoDocumento.SelectedItem;
+            var tipoDocumento = OpcionEnum_68SA.Seleccionado<TipoDocumento>(cmbTipoDocumento).Value;
             string nacionalidad = txtNacionalidad.RealText.Trim(); // CAMBIO: obligatoria (Huespedes.Nacionalidad es NOT NULL)
 
             try
@@ -199,6 +199,17 @@ namespace GUI_08YS.Recepcionista
         private static bool EsEmailValido(string email)
         {
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        private void TraducirPlaceholders()
+        {
+            var t = TraductorManager_08YS.Instance;
+            txtNombre.PlaceholderText = t.GetTexto("RegistrarHuesped_phNombre");
+            txtApellido.PlaceholderText = t.GetTexto("RegistrarHuesped_phApellido");
+            txtDocumento.PlaceholderText = t.GetTexto("RegistrarHuesped_lblNroDocumento");
+            txtNacionalidad.PlaceholderText = t.GetTexto("RegistrarHuesped_lblNacionalidad");
+            txtTelefono.PlaceholderText = t.GetTexto("RegistrarHuesped_phTelefono");
+            txtEmail.PlaceholderText = t.GetTexto("RegistrarHuesped_phEmail");
         }
 
         private void TraducirControles(Control contenedor)

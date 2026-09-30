@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Service_08YS;
 
 namespace GUI_08YS
 {
@@ -20,6 +21,25 @@ namespace GUI_08YS
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Red de seguridad para las validaciones de permisos (SessionManager_08YS.ValidatePermission)
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.ThreadException += (s, e) =>
+            {
+                if (e.Exception is UnauthorizedAccessException)
+                {
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_msgSinPermiso"),
+                                    TraductorManager_08YS.Instance.GetTexto("Comun_tituloSinPermiso"),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                using (var dialogo = new ThreadExceptionDialog(e.Exception))
+                {
+                    if (dialogo.ShowDialog() == DialogResult.Abort)
+                        Application.Exit();
+                }
+            };
 
             try
             {

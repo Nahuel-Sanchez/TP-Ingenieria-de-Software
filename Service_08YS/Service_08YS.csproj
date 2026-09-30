@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CorreoService_68SA.cs" />
     <Compile Include="DvEncriptador_08YS.cs" />
     <Compile Include="Entities\Acceso\AccessComponent_08YS.cs" />
     <Compile Include="Entities\Acceso\Familia_08YS.cs" />

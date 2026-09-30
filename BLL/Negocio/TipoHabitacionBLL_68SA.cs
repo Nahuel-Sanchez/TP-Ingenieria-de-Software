@@ -3,6 +3,8 @@ using DAL_08YS.Interfaces_Repositories.Negocio.habitacion;
 using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
+using Service_08YS;
+using Service_08YS.Entities.Acceso;
 
 namespace BLL_08YS.Negocio
 {
@@ -28,6 +30,8 @@ namespace BLL_08YS.Negocio
 
         public int Crear(TipoHabitacion_68SA tipo)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearTipoHabitacion);
+
             Validar(tipo);
 
             if (_tipoRepo.ExisteNombre(tipo.Nombre))
@@ -40,6 +44,8 @@ namespace BLL_08YS.Negocio
 
         public void Modificar(TipoHabitacion_68SA tipo)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarTipoHabitacion);
+
             Validar(tipo);
 
             if (_tipoRepo.GetById(tipo.Id) == null)
@@ -54,6 +60,8 @@ namespace BLL_08YS.Negocio
 
         public void Eliminar(int tipoHabitacionId)
         {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarTipoHabitacion);
+
             if (_tipoRepo.GetById(tipoHabitacionId) == null)
                 throw new TipoHabitacionNoEncontradoException_68SA();
 

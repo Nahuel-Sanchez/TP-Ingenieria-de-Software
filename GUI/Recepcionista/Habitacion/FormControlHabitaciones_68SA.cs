@@ -8,7 +8,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
 
+using GUI_08YS.UserControls;
 namespace GUI_08YS.Recepcionista
 {
     public enum ModoHabitaciones
@@ -54,8 +56,14 @@ namespace GUI_08YS.Recepcionista
 
             InitializeComponent();
 
+            // Los pisos van uno debajo del otro (nunca en una columna nueva a la derecha): solo se desplaza en vertical
+            // y las tarjetas de cada piso pasan a la fila siguiente cuando no entran a lo ancho.
+            flpHabitaciones.WrapContents = false;
+            LayoutAdaptable_68SA.OcultarScrollHorizontal(flpHabitaciones);
+            flpHabitaciones.Layout += (s, e) => AjustarAnchoPisos();
+
             Text = _modo == ModoHabitaciones.Reserva
-                ? $"{TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloReserva")} — {fechaIngreso:dd/MM} al {fechaEgreso:dd/MM}"
+                ? $"{TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloReserva")} — {string.Format(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_txtRangoFechas"), fechaIngreso, fechaEgreso)}"
                 : TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloGestion");
 
             pnlFilaEstado.Visible = _modo == ModoHabitaciones.Gestion;
@@ -131,6 +139,7 @@ namespace GUI_08YS.Recepcionista
 
         private void CargarHabitaciones()
         {
+            flpHabitaciones.SuspendLayout();
             flpHabitaciones.Controls.Clear();
 
             List<Habitacion_68SA> habitaciones = _modo == ModoHabitaciones.Gestion
@@ -155,8 +164,8 @@ namespace GUI_08YS.Recepcionista
                     WrapContents = true,
                     AutoSize = true,
                     AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    Width = flpHabitaciones.ClientSize.Width - 24,
-                    Margin = new Padding(0)
+                    Margin = new Padding(0),
+                    Tag = MarcaFilaPiso
                 };
 
                 foreach (var habitacion in grupoPiso.OrderBy(h => h.NroHabitacion))
@@ -168,6 +177,37 @@ namespace GUI_08YS.Recepcionista
                 }
 
                 flpHabitaciones.Controls.Add(flpCardsPiso);
+            }
+
+            AjustarAnchoPisos();
+            flpHabitaciones.ResumeLayout(true);
+        }
+
+        private const string MarcaFilaPiso = "filaPiso";
+        private bool _ajustandoPisos;
+
+        /// <summary>
+        /// Cada fila de tarjetas ocupa exactamente el ancho visible: con un tope de ancho, el FlowLayoutPanel
+        /// autoajustable pasa las tarjetas a la fila siguiente en lugar de crecer hacia la derecha.
+        /// </summary>
+        private void AjustarAnchoPisos()
+        {
+            if (_ajustandoPisos) return;
+            _ajustandoPisos = true;
+            try
+            {
+                int ancho = Math.Max(200, flpHabitaciones.ClientSize.Width - flpHabitaciones.Padding.Horizontal - 4);
+                foreach (Control fila in flpHabitaciones.Controls)
+                {
+                    if (!(fila.Tag is string marca) || marca != MarcaFilaPiso) continue;
+                    var tamano = new Size(ancho, 0);
+                    if (fila.MaximumSize != tamano) fila.MaximumSize = tamano;
+                    if (fila.MinimumSize != tamano) fila.MinimumSize = tamano;
+                }
+            }
+            finally
+            {
+                _ajustandoPisos = false;
             }
         }
 
@@ -183,6 +223,19 @@ namespace GUI_08YS.Recepcionista
         }
 
         #endregion
+
+        // Acción del popup -> permiso requerido. Las acciones que no figuran acá no requieren un permiso propio.
+        private static readonly Dictionary<AccionHabitacion, Permisos> _mapaPermisosAcciones =
+            new Dictionary<AccionHabitacion, Permisos>
+            {
+                { AccionHabitacion.Reservar,             Permisos.RegistrarReserva        },
+                { AccionHabitacion.CheckInDirecto,       Permisos.RegistrarCheckIn        },
+                { AccionHabitacion.CheckIn,              Permisos.RegistrarCheckIn        },
+                { AccionHabitacion.CheckOut,             Permisos.RegistrarCheckOut       },
+                { AccionHabitacion.Renovar,              Permisos.ExtenderEstadia         },
+                { AccionHabitacion.MarcarDisponible,     Permisos.CambiarEstadoHabitacion },
+                { AccionHabitacion.PonerEnMantenimiento, Permisos.CambiarEstadoHabitacion },
+            };
 
         private void MostrarPopupAcciones(Habitacion_68SA habitacion)
         {
@@ -212,6 +265,10 @@ namespace GUI_08YS.Recepcionista
 
             if (habitacion.EstadoVisual != EstadoHabitacion.FueraDeServicio)
                 acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accPonerEnMantenimiento"), IconChar.Wrench, AccionHabitacion.PonerEnMantenimiento));
+
+            // Solo se ofrecen las acciones para las que el usuario tiene permiso
+            acciones.RemoveAll(a => _mapaPermisosAcciones.TryGetValue(a.Accion, out var permiso)
+                                    && !SessionManager_08YS.Instance.HasPermission(permiso));
 
             using (var popup = new FormAccionesHabitacion_68SA(habitacion, acciones))
             {
@@ -249,7 +306,8 @@ namespace GUI_08YS.Recepcionista
                     var reservaParaVer = BLLFactory_08YS.CreateReservaBLL().GetConfirmadaHoyPorHabitacion(habitacion.Id);
                     if (reservaParaVer == null)
                     {
-                        MessageBox.Show("No se encontró una reserva Confirmada para hoy en esta habitación.", "Sin reserva",
+                        MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_msgSinReservaHoy"),
+                            TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloSinReserva"),
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
                     }

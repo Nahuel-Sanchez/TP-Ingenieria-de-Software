@@ -174,7 +174,7 @@
             this.lblAyudaGracia.ForeColor = System.Drawing.Color.FromArgb(160, 165, 180);
             this.lblAyudaGracia.Location = new System.Drawing.Point(24, 192);
             this.lblAyudaGracia.Name = "lblAyudaGracia";
-            this.lblAyudaGracia.Size = new System.Drawing.Size(552, 40);
+            this.lblAyudaGracia.Size = new System.Drawing.Size(552, 50);
             this.lblAyudaGracia.TabIndex = 6;
             this.lblAyudaGracia.Tag = "Config_ayudaGracia";
             this.lblAyudaGracia.Text = "Pasado este tiempo desde la hora de check-in, las reservas confirmadas sin check-in se cancelan automáticamente como no-show.";

@@ -143,6 +143,7 @@
             this.btnCrearReserva.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCrearReserva.Location = new System.Drawing.Point(1270, 20);
             this.btnCrearReserva.Name = "btnCrearReserva";
+            this.btnCrearReserva.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCrearReserva.Tag = "Reservas_btnCrearReserva";
             this.btnCrearReserva.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.btnCrearReserva.Size = new System.Drawing.Size(180, 38);
@@ -245,6 +246,8 @@
             this.btnCalSiguiente = new FontAwesome.Sharp.IconButton();
             this.btnCalHoy = new FontAwesome.Sharp.IconButton();
             this.btnCalAnterior = new FontAwesome.Sharp.IconButton();
+            this.btnCalAnteriorPeriodo = new FontAwesome.Sharp.IconButton();
+            this.btnCalSiguientePeriodo = new FontAwesome.Sharp.IconButton();
             this.ucCalendario = new GUI_08YS.Recepcionista.UC_CalendarioReservas_68SA();
             this.pnlCalendarioNav.SuspendLayout();
             // 
@@ -269,11 +272,39 @@
             this.pnlCalendarioNav.Controls.Add(this.btnCalSiguiente);
             this.pnlCalendarioNav.Controls.Add(this.btnCalHoy);
             this.pnlCalendarioNav.Controls.Add(this.btnCalAnterior);
+            this.pnlCalendarioNav.Controls.Add(this.btnCalAnteriorPeriodo);
+            this.pnlCalendarioNav.Controls.Add(this.btnCalSiguientePeriodo);
             this.pnlCalendarioNav.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCalendarioNav.Location = new System.Drawing.Point(20, 16);
             this.pnlCalendarioNav.Name = "pnlCalendarioNav";
             this.pnlCalendarioNav.Size = new System.Drawing.Size(1430, 56);
             this.pnlCalendarioNav.TabIndex = 0;
+            // 
+            // btnCalAnteriorPeriodo
+            // 
+            this.btnCalAnteriorPeriodo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
+            this.btnCalAnteriorPeriodo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCalAnteriorPeriodo.IconChar = FontAwesome.Sharp.IconChar.AnglesLeft;
+            this.btnCalAnteriorPeriodo.IconColor = System.Drawing.Color.Goldenrod;
+            this.btnCalAnteriorPeriodo.IconSize = 20;
+            this.btnCalAnteriorPeriodo.Location = new System.Drawing.Point(0, 8);
+            this.btnCalAnteriorPeriodo.Name = "btnCalAnteriorPeriodo";
+            this.btnCalAnteriorPeriodo.Size = new System.Drawing.Size(42, 40);
+            this.btnCalAnteriorPeriodo.TabIndex = 4;
+            this.btnCalAnteriorPeriodo.UseVisualStyleBackColor = false;
+            // 
+            // btnCalSiguientePeriodo
+            // 
+            this.btnCalSiguientePeriodo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(18)))), ((int)(((byte)(50)))));
+            this.btnCalSiguientePeriodo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCalSiguientePeriodo.IconChar = FontAwesome.Sharp.IconChar.AnglesRight;
+            this.btnCalSiguientePeriodo.IconColor = System.Drawing.Color.Goldenrod;
+            this.btnCalSiguientePeriodo.IconSize = 20;
+            this.btnCalSiguientePeriodo.Location = new System.Drawing.Point(232, 8);
+            this.btnCalSiguientePeriodo.Name = "btnCalSiguientePeriodo";
+            this.btnCalSiguientePeriodo.Size = new System.Drawing.Size(42, 40);
+            this.btnCalSiguientePeriodo.TabIndex = 5;
+            this.btnCalSiguientePeriodo.UseVisualStyleBackColor = false;
             // 
             // btnCalAnterior
             // 
@@ -282,7 +313,7 @@
             this.btnCalAnterior.IconChar = FontAwesome.Sharp.IconChar.ChevronLeft;
             this.btnCalAnterior.IconColor = System.Drawing.Color.Goldenrod;
             this.btnCalAnterior.IconSize = 20;
-            this.btnCalAnterior.Location = new System.Drawing.Point(0, 8);
+            this.btnCalAnterior.Location = new System.Drawing.Point(48, 8);
             this.btnCalAnterior.Name = "btnCalAnterior";
             this.btnCalAnterior.Size = new System.Drawing.Size(42, 40);
             this.btnCalAnterior.TabIndex = 0;
@@ -294,7 +325,7 @@
             this.btnCalHoy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCalHoy.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCalHoy.ForeColor = System.Drawing.Color.Goldenrod;
-            this.btnCalHoy.Location = new System.Drawing.Point(50, 8);
+            this.btnCalHoy.Location = new System.Drawing.Point(96, 8);
             this.btnCalHoy.Name = "btnCalHoy";
             this.btnCalHoy.Tag = "Reservas_btnCalHoy";
             this.btnCalHoy.Size = new System.Drawing.Size(80, 40);
@@ -310,7 +341,7 @@
             this.btnCalSiguiente.IconChar = FontAwesome.Sharp.IconChar.ChevronRight;
             this.btnCalSiguiente.IconColor = System.Drawing.Color.Goldenrod;
             this.btnCalSiguiente.IconSize = 20;
-            this.btnCalSiguiente.Location = new System.Drawing.Point(138, 8);
+            this.btnCalSiguiente.Location = new System.Drawing.Point(184, 8);
             this.btnCalSiguiente.Name = "btnCalSiguiente";
             this.btnCalSiguiente.Size = new System.Drawing.Size(42, 40);
             this.btnCalSiguiente.TabIndex = 2;
@@ -321,7 +352,7 @@
             this.lblCalPeriodo.AutoSize = true;
             this.lblCalPeriodo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCalPeriodo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblCalPeriodo.Location = new System.Drawing.Point(200, 18);
+            this.lblCalPeriodo.Location = new System.Drawing.Point(292, 18);
             this.lblCalPeriodo.Name = "lblCalPeriodo";
             this.lblCalPeriodo.Tag = "Reservas_lblCalPeriodo";
             this.lblCalPeriodo.Size = new System.Drawing.Size(200, 22);
@@ -336,6 +367,7 @@
             this.btnCalVistaSemana.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(15)))), ((int)(((byte)(35)))));
             this.btnCalVistaSemana.Location = new System.Drawing.Point(1230, 8);
             this.btnCalVistaSemana.Name = "btnCalVistaSemana";
+            this.btnCalVistaSemana.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCalVistaSemana.Tag = "Reservas_btnCalVistaSemana";
             this.btnCalVistaSemana.Size = new System.Drawing.Size(95, 40);
             this.btnCalVistaSemana.TabIndex = 4;
@@ -351,6 +383,7 @@
             this.btnCalVistaMes.ForeColor = System.Drawing.Color.Goldenrod;
             this.btnCalVistaMes.Location = new System.Drawing.Point(1330, 8);
             this.btnCalVistaMes.Name = "btnCalVistaMes";
+            this.btnCalVistaMes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCalVistaMes.Tag = "Reservas_btnCalVistaMes";
             this.btnCalVistaMes.Size = new System.Drawing.Size(80, 40);
             this.btnCalVistaMes.TabIndex = 5;
@@ -433,6 +466,7 @@
             this.iconVigentes.IconSize = 32;
             this.iconVigentes.Location = new System.Drawing.Point(214, 38);
             this.iconVigentes.Name = "iconVigentes";
+            this.iconVigentes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconVigentes.Size = new System.Drawing.Size(40, 40);
             this.iconVigentes.TabIndex = 3;
             this.iconVigentes.TabStop = false;
@@ -493,6 +527,7 @@
             this.iconPendientes.IconSize = 32;
             this.iconPendientes.Location = new System.Drawing.Point(214, 38);
             this.iconPendientes.Name = "iconPendientes";
+            this.iconPendientes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconPendientes.Size = new System.Drawing.Size(40, 40);
             this.iconPendientes.TabIndex = 3;
             this.iconPendientes.TabStop = false;
@@ -553,6 +588,7 @@
             this.iconOcupadas.IconSize = 32;
             this.iconOcupadas.Location = new System.Drawing.Point(214, 38);
             this.iconOcupadas.Name = "iconOcupadas";
+            this.iconOcupadas.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconOcupadas.Size = new System.Drawing.Size(40, 40);
             this.iconOcupadas.TabIndex = 3;
             this.iconOcupadas.TabStop = false;
@@ -613,6 +649,7 @@
             this.iconFinalizadas.IconSize = 32;
             this.iconFinalizadas.Location = new System.Drawing.Point(214, 38);
             this.iconFinalizadas.Name = "iconFinalizadas";
+            this.iconFinalizadas.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconFinalizadas.Size = new System.Drawing.Size(40, 40);
             this.iconFinalizadas.TabIndex = 3;
             this.iconFinalizadas.TabStop = false;
@@ -673,6 +710,7 @@
             this.iconCanceladas.IconSize = 32;
             this.iconCanceladas.Location = new System.Drawing.Point(220, 38);
             this.iconCanceladas.Name = "iconCanceladas";
+            this.iconCanceladas.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.iconCanceladas.Size = new System.Drawing.Size(40, 40);
             this.iconCanceladas.TabIndex = 3;
             this.iconCanceladas.TabStop = false;
@@ -782,8 +820,8 @@
             // 
             // txtHuespedFiltro
             // 
-            this.txtHuespedFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right))));
+            this.txtHuespedFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtHuespedFiltro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.txtHuespedFiltro.BorderColor = System.Drawing.Color.Goldenrod;
             this.txtHuespedFiltro.BorderFocusColor = System.Drawing.Color.Goldenrod;
@@ -826,8 +864,8 @@
             // 
             // txtHabitacionFiltro
             // 
-            this.txtHabitacionFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right))));
+            this.txtHabitacionFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtHabitacionFiltro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.txtHabitacionFiltro.BorderColor = System.Drawing.Color.Goldenrod;
             this.txtHabitacionFiltro.BorderFocusColor = System.Drawing.Color.Goldenrod;
@@ -870,8 +908,8 @@
             // 
             // txtRegistroFiltro
             // 
-            this.txtRegistroFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right))));
+            this.txtRegistroFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRegistroFiltro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.txtRegistroFiltro.BorderColor = System.Drawing.Color.Goldenrod;
             this.txtRegistroFiltro.BorderFocusColor = System.Drawing.Color.Goldenrod;
@@ -914,8 +952,8 @@
             // 
             // cmbEstadoFiltro
             // 
-            this.cmbEstadoFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right))));
+            this.cmbEstadoFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbEstadoFiltro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
             this.cmbEstadoFiltro.BorderColor = System.Drawing.Color.Goldenrod;
             this.cmbEstadoFiltro.BorderFocusColor = System.Drawing.Color.Goldenrod;
@@ -1314,6 +1352,8 @@
         private FontAwesome.Sharp.IconButton btnCalAnterior;
         private FontAwesome.Sharp.IconButton btnCalHoy;
         private FontAwesome.Sharp.IconButton btnCalSiguiente;
+        private FontAwesome.Sharp.IconButton btnCalAnteriorPeriodo;
+        private FontAwesome.Sharp.IconButton btnCalSiguientePeriodo;
         private System.Windows.Forms.Label lblCalPeriodo;
         private FontAwesome.Sharp.IconButton btnCalVistaSemana;
         private FontAwesome.Sharp.IconButton btnCalVistaMes;

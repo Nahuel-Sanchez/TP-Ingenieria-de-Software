@@ -11,12 +11,19 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormHabitaciones_68SA : Form, IIdiomaObserver_08YS
     {
         #region Campos
+
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnNueva), Permisos.CrearHabitacion },
+            };
 
         private static readonly string[] ColumnasDatos = { "NroHabitacion", "Piso", "Tipo", "Capacidad", "TarifaNoche", "Estado" };
 
@@ -36,6 +43,8 @@ namespace GUI_08YS.Recepcionista
         public FormHabitaciones_68SA()
         {
             InitializeComponent();
+
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
 
             CrudEstilo_68SA.AplicarGrilla(dgvHabitaciones);
             dgvHabitaciones.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
@@ -261,6 +270,8 @@ namespace GUI_08YS.Recepcionista
 
             dgvHabitaciones.Columns.Add(CrudEstilo_68SA.CrearColumnaIcono("colEditar"));
             dgvHabitaciones.Columns.Add(CrudEstilo_68SA.CrearColumnaIcono("colEliminar"));
+            dgvHabitaciones.Columns["colEditar"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.ModificarHabitacion);
+            dgvHabitaciones.Columns["colEliminar"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.EliminarHabitacion);
 
             Image icoEditar = IconCache.Get(IconChar.PenToSquare, IconFont.Auto, 36, Color.Goldenrod);
             Image icoEliminar = IconCache.Get(IconChar.Trash, IconFont.Auto, 36, Color.FromArgb(235, 90, 90));

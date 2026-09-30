@@ -82,12 +82,14 @@ namespace Service_08YS
         // Función auxiliar para recuperar un texto por su clave
         public string GetTexto(string clave)
         {
-            var idiomas = _traducciones.Keys.ToList();
-            if (_traducciones.ContainsKey(_idiomaActual) && _traducciones[_idiomaActual].ContainsKey(clave))
+            // Se llama muchísimas veces (cada texto de cada pantalla, celdas de grillas): una sola búsqueda por diccionario
+            if (clave != null
+                && _traducciones.TryGetValue(_idiomaActual, out var textos)
+                && textos.TryGetValue(clave, out var texto))
             {
-                return _traducciones[_idiomaActual][clave];
+                return texto;
             }
-            return $"[{clave}]"; 
+            return $"[{clave}]";
         }
     }
 }

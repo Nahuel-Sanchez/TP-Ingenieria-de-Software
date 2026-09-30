@@ -7,6 +7,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GUI_08YS.UserControls;
 
 namespace GUI_08YS.Recepcionista
 {
@@ -24,9 +25,11 @@ namespace GUI_08YS.Recepcionista
             TraducirControles(this);
 
             lblTitulo.Text = titulo;
+            Text = titulo;
             iconTitulo.IconChar = icono;
+            txtDocumento.PlaceholderText = TraductorManager_08YS.Instance.GetTexto("BuscarReserva_phDocumento");
 
-            cmbTipoDocumento.Items.AddRange(Enum.GetValues(typeof(TipoDocumento)).Cast<object>().ToArray());
+            OpcionEnum_68SA.Cargar(cmbTipoDocumento, typeof(TipoDocumento));
             cmbTipoDocumento.SelectedIndex = 0;
 
             btnBuscar.Click += BtnBuscar_Click;

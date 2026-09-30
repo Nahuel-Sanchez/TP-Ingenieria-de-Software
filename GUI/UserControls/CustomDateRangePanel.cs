@@ -57,7 +57,7 @@ namespace CustomControls
 
             _clearLink = new LinkLabel
             {
-                Text = "Limpiar selección",
+                Text = Service_08YS.TraductorManager_08YS.Instance.GetTexto("Comun_txtLimpiarSeleccion"),
                 TextAlign = ContentAlignment.MiddleCenter,
                 LinkBehavior = LinkBehavior.HoverUnderline,
                 BackColor = Color.Transparent,

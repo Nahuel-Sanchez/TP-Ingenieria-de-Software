@@ -19,7 +19,7 @@
         {
             this.pnlGrilla = new System.Windows.Forms.Panel();
             this.dgvPisos = new System.Windows.Forms.DataGridView();
-            this.pnlFiltros = new System.Windows.Forms.Panel();
+            this.pnlFiltros = new System.Windows.Forms.FlowLayoutPanel();
             this.txtNumeroFiltro = new CustomControls.IconPlaceholderTextBox();
             this.txtNombreFiltro = new CustomControls.IconPlaceholderTextBox();
             this.btnFiltrar = new FontAwesome.Sharp.IconButton();
@@ -55,13 +55,15 @@
             // pnlFiltros
             // 
             this.pnlFiltros.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
-            this.pnlFiltros.Controls.Add(this.btnLimpiar);
-            this.pnlFiltros.Controls.Add(this.btnFiltrar);
-            this.pnlFiltros.Controls.Add(this.txtNombreFiltro);
             this.pnlFiltros.Controls.Add(this.txtNumeroFiltro);
+            this.pnlFiltros.Controls.Add(this.txtNombreFiltro);
+            this.pnlFiltros.Controls.Add(this.btnFiltrar);
+            this.pnlFiltros.Controls.Add(this.btnLimpiar);
             this.pnlFiltros.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlFiltros.Location = new System.Drawing.Point(0, 72);
             this.pnlFiltros.Name = "pnlFiltros";
+            this.pnlFiltros.Padding = new System.Windows.Forms.Padding(24, 8, 12, 0);
+            this.pnlFiltros.AutoSize = true;
             this.pnlFiltros.Size = new System.Drawing.Size(1000, 70);
             this.pnlFiltros.TabIndex = 1;
             // 
@@ -81,6 +83,7 @@
             this.txtNumeroFiltro.Location = new System.Drawing.Point(24, 8);
             this.txtNumeroFiltro.MaxLength = 10;
             this.txtNumeroFiltro.Name = "txtNumeroFiltro";
+            this.txtNumeroFiltro.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.txtNumeroFiltro.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtNumeroFiltro.PlaceholderText = "Número";
             this.txtNumeroFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -103,6 +106,7 @@
             this.txtNombreFiltro.Location = new System.Drawing.Point(206, 8);
             this.txtNombreFiltro.MaxLength = 50;
             this.txtNombreFiltro.Name = "txtNombreFiltro";
+            this.txtNombreFiltro.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.txtNombreFiltro.PlaceholderColor = System.Drawing.Color.LightGray;
             this.txtNombreFiltro.PlaceholderText = "Nombre";
             this.txtNombreFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -122,6 +126,7 @@
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltrar.Location = new System.Drawing.Point(518, 8);
             this.btnFiltrar.Name = "btnFiltrar";
+            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.btnFiltrar.Size = new System.Drawing.Size(140, 49);
             this.btnFiltrar.TabIndex = 2;
             this.btnFiltrar.Tag = "Crud_btnFiltrar";
@@ -142,6 +147,7 @@
             this.btnLimpiar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLimpiar.Location = new System.Drawing.Point(670, 8);
             this.btnLimpiar.Name = "btnLimpiar";
+            this.btnLimpiar.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.btnLimpiar.Size = new System.Drawing.Size(140, 49);
             this.btnLimpiar.TabIndex = 3;
             this.btnLimpiar.Tag = "Crud_btnLimpiar";
@@ -219,7 +225,7 @@
 
         private System.Windows.Forms.Panel pnlGrilla;
         private System.Windows.Forms.DataGridView dgvPisos;
-        private System.Windows.Forms.Panel pnlFiltros;
+        private System.Windows.Forms.FlowLayoutPanel pnlFiltros;
         private CustomControls.IconPlaceholderTextBox txtNumeroFiltro;
         private CustomControls.IconPlaceholderTextBox txtNombreFiltro;
         private FontAwesome.Sharp.IconButton btnFiltrar;

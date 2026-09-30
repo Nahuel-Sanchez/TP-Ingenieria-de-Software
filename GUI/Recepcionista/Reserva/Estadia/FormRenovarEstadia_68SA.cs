@@ -4,11 +4,19 @@ using BLL_08YS.Negocio;
 using Service_08YS;
 using System;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
+using System.Collections.Generic;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormRenovarEstadia_68SA : Form
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnConfirmar), Permisos.ExtenderEstadia },
+            };
+
         private readonly Reserva_68SA _reserva;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
 
@@ -16,6 +24,8 @@ namespace GUI_08YS.Recepcionista
         {
             _reserva = reserva;
             InitializeComponent();
+
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
             TraducirControles(this);
 
             lblHabitacion.Text = habitacion.NroHabitacion;

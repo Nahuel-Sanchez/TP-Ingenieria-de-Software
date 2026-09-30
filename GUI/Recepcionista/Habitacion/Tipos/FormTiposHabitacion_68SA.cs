@@ -9,16 +9,26 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Service_08YS.Entities.Acceso;
+using System.Collections.Generic;
 
 namespace GUI_08YS.Recepcionista
 {
     public partial class FormTiposHabitacion_68SA : Form, IIdiomaObserver_08YS
     {
+        private static readonly Dictionary<string, Permisos> _mapaPermisos =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(btnNuevo), Permisos.CrearTipoHabitacion },
+            };
+
         private readonly TipoHabitacionBLL_68SA _tipoBLL = BLLFactory_08YS.CreateTipoHabitacionBLL();
 
         public FormTiposHabitacion_68SA()
         {
             InitializeComponent();
+
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
 
             CrudEstilo_68SA.AplicarGrilla(dgvTipos);
             dgvTipos.CellClick += DgvTipos_CellClick;
@@ -173,6 +183,8 @@ namespace GUI_08YS.Recepcionista
 
             dgvTipos.Columns.Add(CrudEstilo_68SA.CrearColumnaIcono("colEditar"));
             dgvTipos.Columns.Add(CrudEstilo_68SA.CrearColumnaIcono("colEliminar"));
+            dgvTipos.Columns["colEditar"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.ModificarTipoHabitacion);
+            dgvTipos.Columns["colEliminar"].Visible = SessionManager_08YS.Instance.HasPermission(Permisos.EliminarTipoHabitacion);
 
             Image icoEditar = IconCache.Get(IconChar.PenToSquare, IconFont.Auto, 36, Color.Goldenrod);
             Image icoEliminar = IconCache.Get(IconChar.Trash, IconFont.Auto, 36, Color.FromArgb(235, 90, 90));
