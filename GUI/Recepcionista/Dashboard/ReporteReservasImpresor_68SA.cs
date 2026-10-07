@@ -18,8 +18,48 @@ namespace GUI_08YS.Recepcionista
     /// (cantidades, noches, facturación, cobros y saldo), tabla paginada con encabezado repetido,
     /// totales y pie "Página X de Y". Se imprime en cualquier impresora o en "Microsoft Print to PDF".
     /// </summary>
-    public class ReporteReservasImpresor_68SA
+    public class ReporteReservasImpresor_68SA : GUI_08YS.Reportes.IReporteImprimible_68SA
     {
+        #region Campos
+
+        private readonly List<Reserva_68SA> _reservas;
+        private readonly DateTime? _desde;
+        private readonly DateTime? _hasta;
+        private readonly string _usuario;
+        private readonly DateTime _generado = DateTime.Now;
+        private readonly CultureInfo _cultura = OpcionEnum_68SA.CulturaActual();
+
+        private int _filaActual;
+        private int _pagina;
+        private int _totalPaginas;
+        private bool _totalesImpresos;
+
+        private Font _fTitulo, _fSubtitulo, _fInfo, _fEtiqueta, _fValor, _fCabecera, _fCuerpo, _fCuerpoNegrita;
+
+        #endregion
+
+        #region Propiedades
+
+        public bool TieneDatos => _reservas.Count > 0;
+
+        #endregion
+
+        #region Constructor
+
+        public ReporteReservasImpresor_68SA(List<Reserva_68SA> reservas, DateTime? desde, DateTime? hasta)
+        {
+            // Orden cronológico por ingreso (el listado llega del más nuevo al más viejo)
+            _reservas = (reservas ?? new List<Reserva_68SA>())
+                .OrderBy(r => r.FechaIngreso).ThenBy(r => r.Id).ToList();
+            _desde = desde;
+            _hasta = hasta;
+
+            var actual = SessionManager_08YS.Instance.Current;
+            _usuario = actual == null ? "-" : $"{actual.Nombre} {actual.Apellido}".Trim();
+        }
+
+        #endregion
+
         #region Estilo
 
         private static readonly Color ColorMarca = Color.FromArgb(10, 18, 50);
@@ -57,98 +97,6 @@ namespace GUI_08YS.Recepcionista
         };
 
         #endregion
-
-        private readonly List<Reserva_68SA> _reservas;
-        private readonly DateTime? _desde;
-        private readonly DateTime? _hasta;
-        private readonly string _usuario;
-        private readonly DateTime _generado = DateTime.Now;
-        private readonly CultureInfo _cultura = OpcionEnum_68SA.CulturaActual();
-
-        private int _filaActual;
-        private int _pagina;
-        private int _totalPaginas;
-        private bool _totalesImpresos;
-
-        private Font _fTitulo, _fSubtitulo, _fInfo, _fEtiqueta, _fValor, _fCabecera, _fCuerpo, _fCuerpoNegrita;
-
-        private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
-
-        public ReporteReservasImpresor_68SA(List<Reserva_68SA> reservas, DateTime? desde, DateTime? hasta)
-        {
-            // Orden cronológico por ingreso (el listado llega del más nuevo al más viejo)
-            _reservas = (reservas ?? new List<Reserva_68SA>())
-                .OrderBy(r => r.FechaIngreso).ThenBy(r => r.Id).ToList();
-            _desde = desde;
-            _hasta = hasta;
-
-            var actual = SessionManager_08YS.Instance.Current;
-            _usuario = actual == null ? "-" : $"{actual.Nombre} {actual.Apellido}".Trim();
-        }
-
-        public void Imprimir()
-        {
-            if (_reservas.Count == 0)
-            {
-                MessageBox.Show(T("Dashboard_msgReporteSinDatos"), T("Dashboard_tituloReporteSinDatos"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            using (var documento = CrearDocumento())
-            using (var vistaPrevia = new PrintPreviewDialog
-            {
-                Document = documento,
-                Text = T("Reporte_tituloVentana"),
-                WindowState = FormWindowState.Maximized,
-                ShowIcon = false,
-                UseAntiAlias = true
-            })
-            {
-                ReemplazarBotonImprimir(vistaPrevia, documento);
-                vistaPrevia.ShowDialog();
-            }
-        }
-
-        private PrintDocument CrearDocumento()
-        {
-            var documento = new PrintDocument { DocumentName = T("Reporte_titulo") };
-            documento.DefaultPageSettings.Landscape = true;
-            documento.DefaultPageSettings.Margins = new Margins(40, 40, 36, 36);
-            documento.BeginPrint += (s, e) => IniciarImpresion();
-            documento.EndPrint += (s, e) => LiberarFuentes();
-            documento.PrintPage += ImprimirPagina;
-            return documento;
-        }
-
-        /// <summary>
-        /// El botón "Imprimir" de la vista previa manda directo a la impresora predeterminada;
-        /// se reemplaza por uno que abre el diálogo para elegir impresora (o "Microsoft Print to PDF").
-        /// </summary>
-        private static void ReemplazarBotonImprimir(PrintPreviewDialog vistaPrevia, PrintDocument documento)
-        {
-            var barra = vistaPrevia.Controls.OfType<ToolStrip>().FirstOrDefault();
-            var original = barra?.Items.OfType<ToolStripButton>().FirstOrDefault();
-            if (original == null) return;
-
-            var imprimir = new ToolStripButton(T("Reporte_btnImprimir"), original.Image)
-            {
-                DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-                ToolTipText = T("Reporte_btnImprimir")
-            };
-            imprimir.Click += (s, e) =>
-            {
-                using (var dialogo = new PrintDialog { Document = documento, UseEXDialog = true })
-                {
-                    if (dialogo.ShowDialog(vistaPrevia) != DialogResult.OK) return;
-                    documento.Print();
-                    vistaPrevia.Close();
-                }
-            };
-
-            original.Visible = false;
-            barra.Items.Insert(barra.Items.IndexOf(original), imprimir);
-        }
 
         #region Ciclo de impresión
 
@@ -472,6 +420,81 @@ namespace GUI_08YS.Recepcionista
         }
 
         private string Moneda(decimal valor) => "$" + valor.ToString("N2", _cultura);
+
+        #endregion
+
+        #region Métodos públicos
+
+        public void Imprimir()
+        {
+            if (_reservas.Count == 0)
+            {
+                MessageBox.Show(T("Dashboard_msgReporteSinDatos"), T("Dashboard_tituloReporteSinDatos"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var documento = CrearDocumento())
+            using (var vistaPrevia = new PrintPreviewDialog
+            {
+                Document = documento,
+                Text = T("Reporte_tituloVentana"),
+                WindowState = FormWindowState.Maximized,
+                ShowIcon = false,
+                UseAntiAlias = true
+            })
+            {
+                ReemplazarBotonImprimir(vistaPrevia, documento);
+                vistaPrevia.ShowDialog();
+            }
+        }
+
+        /// <summary>Documento listo para la vista previa o para imprimir (cada impresión arranca de cero).</summary>
+        public PrintDocument CrearDocumento()
+        {
+            var documento = new PrintDocument { DocumentName = T("Reporte_titulo") };
+            documento.DefaultPageSettings.Landscape = true;
+            documento.DefaultPageSettings.Margins = new Margins(40, 40, 36, 36);
+            documento.BeginPrint += (s, e) => IniciarImpresion();
+            documento.EndPrint += (s, e) => LiberarFuentes();
+            documento.PrintPage += ImprimirPagina;
+            return documento;
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
+
+        /// <summary>
+        /// El botón "Imprimir" de la vista previa manda directo a la impresora predeterminada;
+        /// se reemplaza por uno que abre el diálogo para elegir impresora (o "Microsoft Print to PDF").
+        /// </summary>
+        private static void ReemplazarBotonImprimir(PrintPreviewDialog vistaPrevia, PrintDocument documento)
+        {
+            var barra = vistaPrevia.Controls.OfType<ToolStrip>().FirstOrDefault();
+            var original = barra?.Items.OfType<ToolStripButton>().FirstOrDefault();
+            if (original == null) return;
+
+            var imprimir = new ToolStripButton(T("Reporte_btnImprimir"), original.Image)
+            {
+                DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                ToolTipText = T("Reporte_btnImprimir")
+            };
+            imprimir.Click += (s, e) =>
+            {
+                using (var dialogo = new PrintDialog { Document = documento, UseEXDialog = true })
+                {
+                    if (dialogo.ShowDialog(vistaPrevia) != DialogResult.OK) return;
+                    documento.Print();
+                    vistaPrevia.Close();
+                }
+            };
+
+            original.Visible = false;
+            barra.Items.Insert(barra.Items.IndexOf(original), imprimir);
+        }
 
         #endregion
     }

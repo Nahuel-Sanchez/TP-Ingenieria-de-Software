@@ -32,6 +32,50 @@ namespace GUI_08YS.Recepcionista
     /// </summary>
     public partial class UC_CalendarioReservas_68SA : UserControl
     {
+        #region Propiedades
+
+        /// <summary>Si es false no se ofrece crear reservas con doble clic (sin permiso).</summary>
+        public bool PermiteCrearReservas { get; set; } = true;
+
+        #endregion
+
+        #region Eventos
+
+        /// <summary>Clic sobre una reserva.</summary>
+        public event EventHandler<Reserva_68SA> ReservaClickeada;
+
+        /// <summary>Doble clic sobre un día libre de una habitación (desde hoy en adelante).</summary>
+        public event EventHandler<NuevaReservaEventArgs_68SA> NuevaReservaSolicitada;
+
+        #endregion
+
+        #region Constructor
+
+        public UC_CalendarioReservas_68SA()
+        {
+            InitializeComponent();
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
+                     ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.Selectable, true);
+
+            _scrollH.Visible = false;
+            _scrollV.Visible = false;
+            _scrollH.TabStop = false; // si toman el foco, el cursor de la barra parpadea
+            _scrollV.TabStop = false;
+            _scrollH.Scroll += (s, e) => Invalidate();
+            _scrollV.Scroll += (s, e) => Invalidate();
+            _scrollH.ValueChanged += (s, e) => Invalidate();
+            _scrollV.ValueChanged += (s, e) => Invalidate();
+            Controls.Add(_scrollH);
+            Controls.Add(_scrollV);
+
+            // La línea de "ahora" avanza sola
+            _timerAhora.Tick += (s, e) => Invalidate();
+            _timerAhora.Start();
+            Disposed += (s, e) => { _timerAhora.Dispose(); _tooltip.Dispose(); };
+        }
+
+        #endregion
+
         #region Medidas y colores
 
         private const int AnchoEtiqueta = 176;
@@ -102,40 +146,6 @@ namespace GUI_08YS.Recepcionista
         private string _textoTooltip;
 
         #endregion
-
-        /// <summary>Clic sobre una reserva.</summary>
-        public event EventHandler<Reserva_68SA> ReservaClickeada;
-
-        /// <summary>Doble clic sobre un día libre de una habitación (desde hoy en adelante).</summary>
-        public event EventHandler<NuevaReservaEventArgs_68SA> NuevaReservaSolicitada;
-
-        /// <summary>Si es false no se ofrece crear reservas con doble clic (sin permiso).</summary>
-        public bool PermiteCrearReservas { get; set; } = true;
-
-        private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
-
-        public UC_CalendarioReservas_68SA()
-        {
-            InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
-                     ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.Selectable, true);
-
-            _scrollH.Visible = false;
-            _scrollV.Visible = false;
-            _scrollH.TabStop = false; // si toman el foco, el cursor de la barra parpadea
-            _scrollV.TabStop = false;
-            _scrollH.Scroll += (s, e) => Invalidate();
-            _scrollV.Scroll += (s, e) => Invalidate();
-            _scrollH.ValueChanged += (s, e) => Invalidate();
-            _scrollV.ValueChanged += (s, e) => Invalidate();
-            Controls.Add(_scrollH);
-            Controls.Add(_scrollV);
-
-            // La línea de "ahora" avanza sola
-            _timerAhora.Tick += (s, e) => Invalidate();
-            _timerAhora.Start();
-            Disposed += (s, e) => { _timerAhora.Dispose(); _tooltip.Dispose(); };
-        }
 
         #region Carga y medidas
 
@@ -842,17 +852,31 @@ namespace GUI_08YS.Recepcionista
         }
 
         #endregion
+
+        #region Métodos auxiliares
+
+        private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
+
+        #endregion
     }
 
     public class NuevaReservaEventArgs_68SA : EventArgs
     {
+        #region Propiedades
+
         public Habitacion_68SA Habitacion { get; }
         public DateTime Fecha { get; }
+
+        #endregion
+
+        #region Constructor
 
         public NuevaReservaEventArgs_68SA(Habitacion_68SA habitacion, DateTime fecha)
         {
             Habitacion = habitacion;
             Fecha = fecha;
         }
+
+        #endregion
     }
 }

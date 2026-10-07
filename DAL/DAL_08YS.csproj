@@ -47,6 +47,13 @@
     <Compile Include="Interfaces_Repositories\Negocio\habitacion\IHabitacionRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\habitacion\IPisoRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\habitacion\ITipoHabitacionRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\cargos\IBitacoraCambioHabitacionRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\cargos\ICambioHabitacionRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\cargos\ICargoAdicionalRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\cargos\ICatalogoRoomServiceRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\cargos\IPedidoRoomServiceRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\cargos\IReporteServiciosRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\IAnalisisDemandaRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\IConfiguracionHotelRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\IHuespedRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\IMetricasRepository_68SA.cs" />
@@ -59,6 +66,13 @@
     <Compile Include="Interfaces_Repositories\Sistema\Permisos\IPermisoRepository_08YS.cs" />
     <Compile Include="Interfaces_Repositories\Sistema\Permisos\IRolRepository_08YS.cs" />
     <Compile Include="SQL\Negocio\SqlConfiguracionHotelRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlBitacoraCambioHabitacionRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlCambioHabitacionRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlCargoAdicionalRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlCatalogoRoomServiceRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlPedidoRoomServiceRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlReporteServiciosRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlAnalisisDemandaRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlHabitacionRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlHuespedRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlMetricasRepository_68SA.cs" />

@@ -12,9 +12,15 @@ namespace BLL_08YS
 {
     public class FamiliaBLL_08YS : AccesoBLL_08YS
     {
+        #region Campos
+
         private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly IFamiliaRepository_08YS _familiaRepo;
         private readonly IRolRepository_08YS _rolRepo;
+
+        #endregion
+
+        #region Constructor
 
         public FamiliaBLL_08YS(IFamiliaRepository_08YS familiaRepo, IRolRepository_08YS rolRepo, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
         {
@@ -22,6 +28,10 @@ namespace BLL_08YS
             _bitacoraBll = bitacoraBll;
             _rolRepo = rolRepo;
         }
+
+        #endregion
+
+        #region Consultas
 
         public List<Familia_08YS> GetAll() => _familiaRepo.GetAllRoots();
 
@@ -53,6 +63,111 @@ namespace BLL_08YS
 
             return permisos.Concat(familias).ToList();
         }
+
+        #endregion
+
+        #region Operaciones
+
+        public void Crear(string nombre, HashSet<AccessComponent_08YS> componentes)
+        {
+            ValidarDatosEntrada(nombre, componentes);
+            ValidarFamiliaNoExistente(nombre, componentes, null);
+
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearFamilias);
+            _familiaRepo.Create(nombre, componentes.ToList());
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.FamiliaCreada);
+        }
+
+        public void Modificar(int familiaId, string nombre, HashSet<AccessComponent_08YS> componentes)
+        {
+            ValidarDatosEntrada(nombre, componentes);
+            ValidarFamiliaNoExistente(nombre, componentes, familiaId);
+            ValidarPropagacion(familiaId, componentes, out var rolesAncestrosIds);
+
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarFamilias);
+            _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.FamiliaModificada);
+
+            int rolActual = SessionManager_08YS.Instance.Current.Rol.RolID;
+            if(rolesAncestrosIds.Contains(rolActual))
+                SessionManager_08YS.Instance.InvalidarSesion();
+        }
+
+        public void Eliminar(int familiaId)
+        {
+            if (_familiaRepo.IsInUse(familiaId))
+                throw new ComponenteEnUsoException_08YS();
+
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarFamilias);
+            _familiaRepo.Delete(familiaId);
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.FamiliaEliminada);
+        }
+
+        #endregion
+
+        #region Validaciones
+
+        /// <summary>
+        /// Verifica que modificar esta familia no genere permisos duplicados en
+        /// ningún contenedor (familia o rol) que dependa de ella, directa o transitivamente.
+        /// </summary>
+        private void ValidarPropagacion(int familiaId, HashSet<AccessComponent_08YS> nuevaComposicion, out List<int> rolesAncestrosIds)
+        {
+            var (familiaIds, rolIds) = _familiaRepo.GetAncestors(familiaId);
+            rolesAncestrosIds = rolIds;
+            if (!familiaIds.Any() && !rolIds.Any())
+                return;
+
+            var familiasDict = _familiaRepo.GetAllDictionary();
+
+            if (familiasDict.TryGetValue(familiaId, out var familiaEditada))
+                familiaEditada.ReemplazarHijos(nuevaComposicion);
+
+            var conflictos = new List<string>();
+
+            string plantillaConflictoLinea = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_propagacion_conflicto_linea");
+
+            foreach (int fid in familiaIds)
+                if (familiasDict.TryGetValue(fid, out var f))
+                    conflictos.AddRange(
+                        DetectarConflictosEntreHijos(f.Nombre, "Familia", f.Hijos, plantillaConflictoLinea));
+
+            if (rolIds.Any())
+            {
+                var rolesAfectados = _rolRepo.GetAll(familiasDict)
+                    .Where(r => rolIds.Contains(r.RolID));
+
+                foreach (var r in rolesAfectados)
+                    conflictos.AddRange(
+                        DetectarConflictosEntreHijos(r.Nombre, "Rol", r.Componentes, plantillaConflictoLinea));
+            }
+
+            if (conflictos.Any())
+            {
+                string plantillaEncabezado = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_propagacion_conflicto_encabezado");
+                throw new InvalidOperationException(
+                    plantillaEncabezado + "\n\n" + string.Join("\n", conflictos));
+            }
+        }
+
+        private void ValidarFamiliaNoExistente(string nombre, HashSet<AccessComponent_08YS> componentes, int? excluirId)
+        {
+            var permsNuevos = componentes.SelectMany(c => c.GetPermisos()).Select(p => p.PermisoID).ToHashSet();
+            var familias = _familiaRepo.GetAllRoots().Where(f => !excluirId.HasValue || f.FamiliaID != excluirId.Value).ToList();
+
+            if (familias.Any(f => f.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
+                throw new NombreDuplicadoException_08YS();
+
+            if (familias.Any(f => f.GetPermisos().Select(p => p.PermisoID).ToHashSet().SetEquals(permsNuevos)))
+                throw new PermisosDuplicadosException_08YS();
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         /// <summary>
         /// Obtiene todas las familias contenedoras (directas e indirectas)
@@ -97,76 +212,6 @@ namespace BLL_08YS
 
             // Devuelve todas las familias contenedoras encontradas.
             return contenedoras;
-        }
-
-        public void Crear(string nombre, HashSet<AccessComponent_08YS> componentes)
-        {
-            ValidarDatosEntrada(nombre, componentes);
-            ValidarFamiliaNoExistente(nombre, componentes, null);
-
-            SessionManager_08YS.Instance.ValidatePermission(Permisos.CrearFamilias);
-            _familiaRepo.Create(nombre, componentes.ToList());
-            DVManager_08YS.Recalcular();
-            _bitacoraBll.RegistrarEvento(Evento.FamiliaCreada);
-        }
-
-        public void Modificar(int familiaId, string nombre, HashSet<AccessComponent_08YS> componentes)
-        {
-            ValidarDatosEntrada(nombre, componentes);
-            ValidarFamiliaNoExistente(nombre, componentes, familiaId);
-            ValidarPropagacion(familiaId, componentes, out var rolesAncestrosIds);
-
-            SessionManager_08YS.Instance.ValidatePermission(Permisos.ModificarFamilias);
-            _familiaRepo.Modify(familiaId, nombre, componentes.ToList());
-            DVManager_08YS.Recalcular();
-            _bitacoraBll.RegistrarEvento(Evento.FamiliaModificada);
-
-            int rolActual = SessionManager_08YS.Instance.Current.Rol.RolID;
-            if(rolesAncestrosIds.Contains(rolActual))
-                SessionManager_08YS.Instance.InvalidarSesion();
-        }
-
-        /// <summary>
-        /// Verifica que modificar esta familia no genere permisos duplicados en
-        /// ningún contenedor (familia o rol) que dependa de ella, directa o transitivamente.
-        /// </summary>
-        private void ValidarPropagacion(int familiaId, HashSet<AccessComponent_08YS> nuevaComposicion, out List<int> rolesAncestrosIds)
-        {
-            var (familiaIds, rolIds) = _familiaRepo.GetAncestors(familiaId);
-            rolesAncestrosIds = rolIds;
-            if (!familiaIds.Any() && !rolIds.Any())
-                return;
-
-            var familiasDict = _familiaRepo.GetAllDictionary();
-
-            if (familiasDict.TryGetValue(familiaId, out var familiaEditada))
-                familiaEditada.ReemplazarHijos(nuevaComposicion);
-
-            var conflictos = new List<string>();
-
-            string plantillaConflictoLinea = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_propagacion_conflicto_linea");
-
-            foreach (int fid in familiaIds)
-                if (familiasDict.TryGetValue(fid, out var f))
-                    conflictos.AddRange(
-                        DetectarConflictosEntreHijos(f.Nombre, "Familia", f.Hijos, plantillaConflictoLinea));
-
-            if (rolIds.Any())
-            {
-                var rolesAfectados = _rolRepo.GetAll(familiasDict)
-                    .Where(r => rolIds.Contains(r.RolID));
-
-                foreach (var r in rolesAfectados)
-                    conflictos.AddRange(
-                        DetectarConflictosEntreHijos(r.Nombre, "Rol", r.Componentes, plantillaConflictoLinea));
-            }
-
-            if (conflictos.Any())
-            {
-                string plantillaEncabezado = TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_propagacion_conflicto_encabezado");
-                throw new InvalidOperationException(
-                    plantillaEncabezado + "\n\n" + string.Join("\n", conflictos));
-            }
         }
 
         private List<string> DetectarConflictosEntreHijos(
@@ -217,27 +262,6 @@ namespace BLL_08YS
             return resultado;
         }
 
-        public void Eliminar(int familiaId)
-        {
-            if (_familiaRepo.IsInUse(familiaId))
-                throw new ComponenteEnUsoException_08YS();
-
-            SessionManager_08YS.Instance.ValidatePermission(Permisos.EliminarFamilias);
-            _familiaRepo.Delete(familiaId);
-            DVManager_08YS.Recalcular();
-            _bitacoraBll.RegistrarEvento(Evento.FamiliaEliminada);
-        }
-
-        private void ValidarFamiliaNoExistente(string nombre, HashSet<AccessComponent_08YS> componentes, int? excluirId)
-        {
-            var permsNuevos = componentes.SelectMany(c => c.GetPermisos()).Select(p => p.PermisoID).ToHashSet();
-            var familias = _familiaRepo.GetAllRoots().Where(f => !excluirId.HasValue || f.FamiliaID != excluirId.Value).ToList();
-
-            if (familias.Any(f => f.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
-                throw new NombreDuplicadoException_08YS();
-
-            if (familias.Any(f => f.GetPermisos().Select(p => p.PermisoID).ToHashSet().SetEquals(permsNuevos)))
-                throw new PermisosDuplicadosException_08YS();
-        }
+        #endregion
     }
 }

@@ -9,8 +9,17 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
 {
     public interface IPagoRepository_68SA
     {
-        int Registrar(Pago_68SA pago);
+        #region Consultas
+
         List<Pago_68SA> GetByReserva(int reservaId);
         decimal GetTotalPagado(int reservaId);
+
+        #endregion
+
+        #region Operaciones
+
+        int Registrar(Pago_68SA pago);
+
+        #endregion
     }
 }

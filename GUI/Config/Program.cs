@@ -22,6 +22,12 @@ namespace GUI_08YS
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // Barras de desplazamiento oscuras en todos los formularios (en lugar de las blancas de Windows)
+            GUI_08YS.UserControls.BarrasDesplazamiento_68SA.Instalar();
+
+            // Ayuda en línea: F1 (ayuda de la pantalla o del elemento bajo el puntero) y Shift+F1 ("¿Qué es esto?")
+            GUI_08YS.Ayuda.AyudaManager_68SA.Instalar();
+
             // Red de seguridad para las validaciones de permisos (SessionManager_08YS.ValidatePermission)
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += (s, e) =>

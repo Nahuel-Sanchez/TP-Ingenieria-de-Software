@@ -8,8 +8,12 @@ namespace Service_08YS.Entities
 {
     public class DigitoVerificador_08YS
     {
+        #region Propiedades
+
         public string Tabla { get; set; }
         public string DVH { get; set; }
         public string DVV { get; set; }
+
+        #endregion
     }
 }

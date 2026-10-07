@@ -7,7 +7,13 @@ namespace GUI_08YS.UserControls
 {
     public class RoundedPanel_68SA : Panel
     {
+        #region Campos
+
         private int _cornerRadius = 14;
+
+        #endregion
+
+        #region Propiedades
 
         public int CornerRadius
         {
@@ -15,16 +21,18 @@ namespace GUI_08YS.UserControls
             set { _cornerRadius = value; AplicarRegion(); }
         }
 
+        #endregion
+
+        #region Constructor
+
         public RoundedPanel_68SA()
         {
             AplicarRegion();
         }
 
-        protected override void OnResize(System.EventArgs e)
-        {
-            base.OnResize(e);
-            AplicarRegion();
-        }
+        #endregion
+
+        #region Métodos auxiliares
 
         private void AplicarRegion()
         {
@@ -41,5 +49,17 @@ namespace GUI_08YS.UserControls
 
             Region = new Region(path);
         }
+
+        #endregion
+
+        #region Sobrescrituras
+
+        protected override void OnResize(System.EventArgs e)
+        {
+            base.OnResize(e);
+            AplicarRegion();
+        }
+
+        #endregion
     }
 }

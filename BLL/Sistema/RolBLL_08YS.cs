@@ -15,9 +15,15 @@ namespace BLL_08YS
     public class PermisosDuplicadosException_08YS : Exception { }
     public class RolBLL_08YS : AccesoBLL_08YS
     {
+        #region Campos
+
         private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly IRolRepository_08YS _rolRepo;
         private readonly IFamiliaRepository_08YS _familiaRepo;
+
+        #endregion
+
+        #region Constructor
 
         public RolBLL_08YS(IRolRepository_08YS rolRepo, IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
         {
@@ -25,6 +31,10 @@ namespace BLL_08YS
             _familiaRepo = familiaRepo;
             _bitacoraBll = bitacoraBll;
         }
+
+        #endregion
+
+        #region Consultas
 
         public List<Rol_08YS> GetAll() => _rolRepo.GetAll();
 
@@ -36,6 +46,10 @@ namespace BLL_08YS
             var familias = _familiaRepo.GetAllRoots().Cast<AccessComponent_08YS>();
             return permisos.Concat(familias).ToList();
         }
+
+        #endregion
+
+        #region Operaciones
 
         public void Crear(string nombre, HashSet<AccessComponent_08YS> componentes)
         {
@@ -74,6 +88,10 @@ namespace BLL_08YS
             _bitacoraBll.RegistrarEvento(Evento.RolEliminado);
         }
 
+        #endregion
+
+        #region Validaciones
+
         public void ValidarRolNoExistente(string nombre, HashSet<AccessComponent_08YS> componentes, int? excluirId)
         {
             var permsNuevos = componentes.SelectMany(c => c.GetPermisos()).Select(p => p.PermisoID).ToHashSet();
@@ -85,5 +103,7 @@ namespace BLL_08YS
             if (roles.Any(r => r.GetPermisos().Select(p => p.PermisoID).ToHashSet().SetEquals(permsNuevos)))
                 throw new PermisosDuplicadosException_08YS();
         }
+
+        #endregion
     }
 }

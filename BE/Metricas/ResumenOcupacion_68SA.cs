@@ -8,6 +8,8 @@ namespace BE_08YS.Metricas
 {
     public class ResumenOcupacion_68SA
     {
+        #region Propiedades
+
         public int Total { get; set; }
         public int Disponibles { get; set; }
         public int Reservadas { get; set; }
@@ -16,5 +18,7 @@ namespace BE_08YS.Metricas
         public int FueraDeServicio { get; set; }
         public decimal TasaOcupacionPorcentaje { get; set; }
         public double DuracionPromedioEstadiaHoras { get; set; }
+
+        #endregion
     }
 }

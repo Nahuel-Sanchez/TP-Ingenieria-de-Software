@@ -9,8 +9,32 @@ namespace Service_08YS.Entities.Comparers
 {
     public class AccessComponentComparer_08YS : IEqualityComparer<AccessComponent_08YS>
     {
+        #region Campos
+
         public static readonly AccessComponentComparer_08YS Instance = new AccessComponentComparer_08YS();
+
+        #endregion
+
+        #region Constructor
+
         private AccessComponentComparer_08YS() { }
+
+        #endregion
+
+        #region Consultas
+
+        public int GetHashCode(AccessComponent_08YS obj)
+        {
+            if (obj is Familia_08YS f)
+                return (typeof(Familia_08YS).GetHashCode() * 397) ^ f.FamiliaID.GetHashCode();
+            if (obj is Permiso_08YS p)
+                return (typeof(Permiso_08YS).GetHashCode() * 397) ^ p.PermisoID.GetHashCode();
+            return obj.GetHashCode();
+        }
+
+        #endregion
+
+        #region Métodos públicos
 
         public bool Equals(AccessComponent_08YS x, AccessComponent_08YS y)
         {
@@ -23,13 +47,6 @@ namespace Service_08YS.Entities.Comparers
             return false;
         }
 
-        public int GetHashCode(AccessComponent_08YS obj)
-        {
-            if (obj is Familia_08YS f)
-                return (typeof(Familia_08YS).GetHashCode() * 397) ^ f.FamiliaID.GetHashCode();
-            if (obj is Permiso_08YS p)
-                return (typeof(Permiso_08YS).GetHashCode() * 397) ^ p.PermisoID.GetHashCode();
-            return obj.GetHashCode();
-        }
+        #endregion
     }
 }

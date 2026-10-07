@@ -16,19 +16,13 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormCheckIn_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
                 { nameof(btnConfirmar), Permisos.RegistrarCheckIn },
             };
-
-        private class FilaAcompanante
-        {
-            public Panel Contenedor;
-            public IconPlaceholderTextBox Dni;
-            public Label Resultado;
-            public Huesped_68SA HuespedEncontrado;
-        }
 
         private readonly Action<Form> _openChildForm;
         private readonly ModoHabitaciones _modoOrigen;
@@ -40,6 +34,10 @@ namespace GUI_08YS.Recepcionista
 
         private readonly List<FilaAcompanante> _filasAcompanantes = new List<FilaAcompanante>();
         private Reserva_68SA _reserva;
+
+        #endregion
+
+        #region Constructor
 
         // Caso 1: sin reserva conocida — arranca mostrando el botón de búsqueda
         public FormCheckIn_68SA(Action<Form> openChildForm, ModoHabitaciones modoOrigen,
@@ -75,17 +73,34 @@ namespace GUI_08YS.Recepcionista
                 flpContenido.Controls.Add(pnlAccionBuscar);
         }
 
-        private void BtnBuscarReserva_Click(object sender, EventArgs e)
+        #endregion
+
+        #region Idioma
+
+        public void UpdateIdioma()
         {
-            using (var popup = new FormBuscarReserva_68SA(EstadoReserva.Confirmada, TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloBuscarReserva"), IconChar.DoorOpen))
+            // Los paneles de reserva/acompañantes se agregan a flpContenido recién al buscar: se traducen siempre
+            TraducirControles(this);
+            TraducirControles(pnlAccionBuscar);
+            TraducirControles(pnlReserva);
+            TraducirControles(pnlAcompanantes);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
             {
-                if (popup.ShowDialog(this) == DialogResult.OK)
-                {
-                    flpContenido.Controls.Remove(pnlAccionBuscar);
-                    CargarReserva(popup.ReservaSeleccionada);
-                }
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
             }
         }
+
+        #endregion
+
+        #region Carga de datos
 
         private void CargarReserva(Reserva_68SA reserva)
         {
@@ -122,6 +137,86 @@ namespace GUI_08YS.Recepcionista
                 flpContenido.Controls.Remove(pnlAcompanantes);
             }
         }
+
+        #endregion
+
+        #region Eventos de controles
+
+        private void BtnBuscarReserva_Click(object sender, EventArgs e)
+        {
+            using (var popup = new FormBuscarReserva_68SA(EstadoReserva.Confirmada, TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloBuscarReserva"), IconChar.DoorOpen))
+            {
+                if (popup.ShowDialog(this) == DialogResult.OK)
+                {
+                    flpContenido.Controls.Remove(pnlAccionBuscar);
+                    CargarReserva(popup.ReservaSeleccionada);
+                }
+            }
+        }
+
+        // ---------- Confirmar ----------
+
+        private void BtnConfirmar_Click(object sender, EventArgs e)
+        {
+            if (_reserva == null)
+            {
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgFaltaReserva"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloFaltaReserva"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var acompanantes = new List<Huesped_68SA>();
+            foreach (var fila in _filasAcompanantes)
+            {
+                if (fila.HuespedEncontrado == null)
+                {
+                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgFaltanAcompanantes"), TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloFaltanAcompanantes"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                acompanantes.Add(fila.HuespedEncontrado);
+            }
+
+            int adultosIngresados = 1 + acompanantes.Count(h => HuespedBLL_68SA.EsMayorDeEdad(h)); // el titular siempre es adulto
+            int ninosIngresados = acompanantes.Count(h => !HuespedBLL_68SA.EsMayorDeEdad(h));
+
+            if (adultosIngresados != _reserva.CantidadAdultos || ninosIngresados != _reserva.CantidadNinos)
+            {
+                MessageBox.Show(
+                    string.Format(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgComposicionNoCoincide"),
+                        _reserva.CantidadAdultos, _reserva.CantidadNinos, adultosIngresados, ninosIngresados),
+                    TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloComposicionNoCoincide"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                _reservaBLL.RegistrarCheckIn(_reserva.Id, acompanantes);
+                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgCheckInRegistrado"), _reserva.Habitacion.NroHabitacion),
+                    TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloCheckInConfirmado"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Volver();
+            }
+            catch (EstadoReservaInvalidoException_68SA)
+            {
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excEstadoReservaInvalido"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (AcompananteDuplicadoException_68SA)
+            {
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excAcompananteDuplicado"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (TitularEntreAcompanantesException_68SA)
+            {
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excTitularEntreAcompanantes"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (CheckInAnticipadoException_68SA ex)
+            {
+                MessageBox.Show(ex.Message, TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         private void GenerarFilasAcompanantes(int cantidad)
         {
@@ -276,92 +371,14 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
-        // ---------- Confirmar ----------
-
-        private void BtnConfirmar_Click(object sender, EventArgs e)
-        {
-            if (_reserva == null)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgFaltaReserva"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloFaltaReserva"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var acompanantes = new List<Huesped_68SA>();
-            foreach (var fila in _filasAcompanantes)
-            {
-                if (fila.HuespedEncontrado == null)
-                {
-                    MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgFaltanAcompanantes"), TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloFaltanAcompanantes"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                acompanantes.Add(fila.HuespedEncontrado);
-            }
-
-            int adultosIngresados = 1 + acompanantes.Count(h => HuespedBLL_68SA.EsMayorDeEdad(h)); // el titular siempre es adulto
-            int ninosIngresados = acompanantes.Count(h => !HuespedBLL_68SA.EsMayorDeEdad(h));
-
-            if (adultosIngresados != _reserva.CantidadAdultos || ninosIngresados != _reserva.CantidadNinos)
-            {
-                MessageBox.Show(
-                    string.Format(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgComposicionNoCoincide"),
-                        _reserva.CantidadAdultos, _reserva.CantidadNinos, adultosIngresados, ninosIngresados),
-                    TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloComposicionNoCoincide"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            try
-            {
-                _reservaBLL.RegistrarCheckIn(_reserva.Id, acompanantes);
-                MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("CheckIn_msgCheckInRegistrado"), _reserva.Habitacion.NroHabitacion),
-                    TraductorManager_08YS.Instance.GetTexto("CheckIn_tituloCheckInConfirmado"), MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Volver();
-            }
-            catch (EstadoReservaInvalidoException_68SA)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excEstadoReservaInvalido"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (AcompananteDuplicadoException_68SA)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excAcompananteDuplicado"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (TitularEntreAcompanantesException_68SA)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Comun_excTitularEntreAcompanantes"), TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (CheckInAnticipadoException_68SA ex)
-            {
-                MessageBox.Show(ex.Message, TraductorManager_08YS.Instance.GetTexto("Comun_tituloNoSePudoConfirmar"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
         private void Volver()
         {
             _openChildForm(new FormControlHabitaciones_68SA(_openChildForm, _modoOrigen, _fechaIngresoOrigen, _fechaEgresoOrigen));
         }
 
-        public void UpdateIdioma()
-        {
-            // Los paneles de reserva/acompañantes se agregan a flpContenido recién al buscar: se traducen siempre
-            TraducirControles(this);
-            TraducirControles(pnlAccionBuscar);
-            TraducirControles(pnlReserva);
-            TraducirControles(pnlAcompanantes);
-        }
+        #endregion
 
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
-
-                if (c.HasChildren)
-                    TraducirControles(c);
-            }
-        }
-    
+        #region Sobrescrituras
 
         // Pinta el formulario completo en memoria y lo vuelca de una vez: sin parpadeo ni franjas
         // blancas mientras los controles se acomodan al abrir o redimensionar la ventana.
@@ -374,5 +391,19 @@ namespace GUI_08YS.Recepcionista
                 return cp;
             }
         }
+
+        #endregion
+
+        #region Tipos anidados
+
+        private class FilaAcompanante
+        {
+            public Panel Contenedor;
+            public IconPlaceholderTextBox Dni;
+            public Label Resultado;
+            public Huesped_68SA HuespedEncontrado;
+        }
+
+        #endregion
     }
 }

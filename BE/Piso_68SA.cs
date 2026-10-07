@@ -8,12 +8,16 @@ namespace BE_08YS
 {
     public class Piso_68SA
     {
+        #region Propiedades
+
         public int PisoId { get; set; }
         public int Numero { get; set; }
         public string Nombre { get; set; }
 
         //Para listado
         public int CantidadHabitaciones { get; set; }
+
+        #endregion
     }
 
     public class PisoFiltro_68SA

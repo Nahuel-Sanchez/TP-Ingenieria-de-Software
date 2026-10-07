@@ -13,12 +13,22 @@ namespace DAL_08YS.SQL
 {
     public class SqlBackupRepository_08YS : Connection_08YS, IBackupRepository_08YS
     {
+        #region Campos
+
         private readonly IDbFactory_08YS _factory;
+
+        #endregion
+
+        #region Constructor
 
         public SqlBackupRepository_08YS(IDbFactory_08YS factory) : base(factory)
         {
             _factory = factory;
         }
+
+        #endregion
+
+        #region Operaciones
 
         // Usa la infraestructura normal de Connection_08YS
         public void RealizarBackup(string rutaArchivo, string nombreBaseDatos)
@@ -29,6 +39,31 @@ namespace DAL_08YS.SQL
                 Param("@NombreBaseDatos", nombreBaseDatos)
                 },
                 storedProcedure: true);
+
+        public void RestoreBackup(string rutaBak, string nombreBaseDatos)
+        {
+            string masterCs = BuildMasterConnectionString();
+
+            using (var conn = new SqlConnection(masterCs))
+            {
+                conn.Open();
+
+                string clausulasMove = ArmarClausulasMove(conn, nombreBaseDatos);
+
+                EjecutarEnMaster(conn,
+                    $"ALTER DATABASE [{nombreBaseDatos}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
+                EjecutarEnMaster(conn,
+                    $"RESTORE DATABASE [{nombreBaseDatos}] FROM DISK = N'{rutaBak}' WITH REPLACE{clausulasMove}");
+                EjecutarEnMaster(conn,
+                    $"ALTER DATABASE [{nombreBaseDatos}] SET MULTI_USER WITH ROLLBACK IMMEDIATE");
+            }
+
+            SqlConnection.ClearAllPools();
+        }
+
+        #endregion
+
+        #region Validaciones
 
         /// <summary>
         /// Valida que SQL Server pueda escribir en la carpeta ejecutando un backup de prueba.
@@ -54,26 +89,9 @@ namespace DAL_08YS.SQL
             }
         }
 
-        public void RestoreBackup(string rutaBak, string nombreBaseDatos)
-        {
-            string masterCs = BuildMasterConnectionString();
+        #endregion
 
-            using (var conn = new SqlConnection(masterCs))
-            {
-                conn.Open();
-
-                string clausulasMove = ArmarClausulasMove(conn, nombreBaseDatos);
-
-                EjecutarEnMaster(conn,
-                    $"ALTER DATABASE [{nombreBaseDatos}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
-                EjecutarEnMaster(conn,
-                    $"RESTORE DATABASE [{nombreBaseDatos}] FROM DISK = N'{rutaBak}' WITH REPLACE{clausulasMove}");
-                EjecutarEnMaster(conn,
-                    $"ALTER DATABASE [{nombreBaseDatos}] SET MULTI_USER WITH ROLLBACK IMMEDIATE");
-            }
-
-            SqlConnection.ClearAllPools();
-        }
+        #region Métodos auxiliares
 
         /// <summary>
         /// Arma las cláusulas MOVE reubicando los archivos lógicos del backup a las
@@ -115,5 +133,7 @@ namespace DAL_08YS.SQL
             using (var cmd = new SqlCommand(query, conn) { CommandTimeout = 600 })
                 cmd.ExecuteNonQuery();
         }
+
+        #endregion
     }
 }

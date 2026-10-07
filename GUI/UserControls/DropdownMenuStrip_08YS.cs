@@ -13,6 +13,8 @@ namespace GUI_08YS
 {
     public class DropdownMenuStrip_08YS : ContextMenuStrip
     {
+        #region Campos
+
         //Campos
         private bool isMainMenu;
         private int menuItemHeight = 25;
@@ -21,12 +23,14 @@ namespace GUI_08YS
 
         private Bitmap menuItemHeaderSize;
 
-        //Constructor
-        public DropdownMenuStrip_08YS(IContainer container)
-            : base(container)
-        {
+        //Metodos privados
+        // Alto de cada renglón: lo marca la imagen (ícono o espacio en blanco del mismo tamaño)
+        private const int AnchoImagen = 26;
+        private const int AltoRenglon = 38;
 
-        }
+        #endregion
+
+        #region Propiedades
 
         //Propiedades
         //Opcionalmente, ocultar las propiedades en el cuadro de herramientas para evitar el problema de mostrar y/o 
@@ -59,29 +63,72 @@ namespace GUI_08YS
             set { primaryColor = value; }
         }
 
-        //Metodos privados
-        private void LoadMenuItemApparence()
+        #endregion
+
+        #region Constructor
+
+        //Constructor
+        public DropdownMenuStrip_08YS(IContainer container)
+            : base(container)
         {
-            if (IsMainMenu)
-            {
-                menuItemHeaderSize = new Bitmap(25, 45);
-                menuItemTextColor = Color.Gainsboro;
-            }
-            else
-                menuItemHeaderSize = new Bitmap(15, menuItemHeight);
-            creaElementos(Items);
+
         }
 
-        private void creaElementos(ToolStripItemCollection items)
+        #endregion
+
+        #region Métodos públicos
+
+        /// <summary>Ícono dorado de FontAwesome a la izquierda del texto del ítem.</summary>
+        public static void AsignarIcono(ToolStripMenuItem item, FontAwesome.Sharp.IconChar icono)
         {
-            foreach (ToolStripMenuItem item in items)
+            var lienzo = new Bitmap(AnchoImagen, AltoRenglon);
+            using (var g = Graphics.FromImage(lienzo))
             {
-                item.ForeColor = menuItemTextColor;
+                var imagen = UserControls.IconCache.Get(icono, FontAwesome.Sharp.IconFont.Auto, 18, Color.Goldenrod);
+                if (imagen != null)
+                    g.DrawImage(imagen, (AnchoImagen - 18) / 2 + 2, (AltoRenglon - 18) / 2, 18, 18);
+            }
+            item.Image = lienzo;
+            item.ImageScaling = ToolStripItemImageScaling.None;
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private void LoadMenuItemApparence()
+        {
+            menuItemHeaderSize = new Bitmap(AnchoImagen, AltoRenglon);
+            Padding = new Padding(0, 6, 0, 6);
+            AplicarEstilo(Items);
+        }
+
+        private void AplicarEstilo(ToolStripItemCollection items)
+        {
+            foreach (ToolStripItem item in items)
+            {
+                item.ForeColor = UserControls.MenuHotelRenderer_68SA.Texto;
+                item.Font = new Font("Segoe UI", 10F);
                 item.ImageScaling = ToolStripItemImageScaling.None;
-                if (item.Image == null) item.Image = menuItemHeaderSize;
-                creaElementos(item.DropDownItems);
+                item.Padding = new Padding(4, 0, 12, 0);
+
+                if (item is ToolStripMenuItem menuItem)
+                {
+                    if (menuItem.Image == null) menuItem.Image = menuItemHeaderSize;
+                    if (menuItem.HasDropDownItems)
+                    {
+                        // Los submenús usan el mismo dibujo que el menú principal
+                        menuItem.DropDown.Renderer = Renderer;
+                        menuItem.DropDown.Padding = new Padding(0, 6, 0, 6);
+                        AplicarEstilo(menuItem.DropDownItems);
+                    }
+                }
             }
         }
+
+        #endregion
+
+        #region Sobrescrituras
 
         //Overrides
         protected override void OnHandleCreated(EventArgs e)
@@ -89,9 +136,12 @@ namespace GUI_08YS
             base.OnHandleCreated(e);
             if (this.DesignMode == false)
             {
-                this.Renderer = new MenuRenderer(isMainMenu, primaryColor, menuItemTextColor);
+                // Mismo estilo para todos los menús desplegables (antes dependía de IsMainMenu y PrimaryColor)
+                this.Renderer = new UserControls.MenuHotelRenderer_68SA();
                 LoadMenuItemApparence();
             }
         }
+
+        #endregion
     }
 }

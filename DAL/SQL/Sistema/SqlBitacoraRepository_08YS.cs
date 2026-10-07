@@ -14,20 +14,49 @@ namespace DAL_08YS
 {
     public class SqlBitacoraRepository_08YS : Connection_08YS, IBitacoraRepository_08YS
     {
+        #region Constructor
+
         public SqlBitacoraRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
 
-        private IDbDataParameter[] ToParameters(BitacoraEvento_08YS b)
+        #endregion
+
+        #region Consultas
+
+        public List<BitacoraEvento_08YS> GetAll()
         {
-            return new[]
-            {
-                Param("@username",       b.Username),
-                Param("@targetUsername", (object)b.TargetUsername ?? DBNull.Value),
-                Param("@fecha_hora",     b.FechaHora),
-                Param("@modulo",         (int)b.Modulo),
-                Param("@evento",         (int)b.Evento),
-                Param("@criticidad",     (int)b.Criticidad)
-            };
+            DataTable dt = GetDataTable("SELECT * FROM Bitacora ORDER BY FechaHora DESC");
+            return BitacoraMapper_08YS.FromDataTable(dt);
         }
+
+        public int ContarIntentosFallidos(string username, int ventanaHoras)
+        {
+            return ExecuteScalar<int>(
+                @"SELECT COUNT(*) FROM Bitacora
+                  WHERE Username  = @username
+                  AND Evento    = @evento
+                  AND FechaHora >= DATEADD(HOUR, -@horas, GETDATE())
+                  AND FechaHora >  ISNULL(
+                      (SELECT MAX(FechaHora) FROM Bitacora
+                          WHERE Evento IN (@desbloqueo, @loginExitoso)
+                          AND (
+                              Username       = @username    -- LoginExitoso: el actor es el propio usuario
+                              OR TargetUsername = @username -- UsuarioDesbloqueado: el usuario es el sujeto
+                          )),
+                      CAST('19000101' AS DATETIME))",
+                new[]
+                {
+                    Param("@username",     username),
+                    Param("@evento",       (int)Evento.LoginFallido),
+                    Param("@horas",        ventanaHoras),
+                    Param("@desbloqueo",   (int)Evento.UsuarioDesbloqueado),
+                    Param("@loginExitoso", (int)Evento.LoginExitoso)
+                }
+            );
+        }
+
+        #endregion
+
+        #region Operaciones
 
         public void RegistrarEvento(BitacoraEvento_08YS evento)
         {
@@ -37,11 +66,9 @@ namespace DAL_08YS
                 ToParameters(evento));
         }
 
-        public List<BitacoraEvento_08YS> GetAll()
-        {
-            DataTable dt = GetDataTable("SELECT * FROM Bitacora ORDER BY FechaHora DESC");
-            return BitacoraMapper_08YS.FromDataTable(dt);
-        }
+        #endregion
+
+        #region Métodos públicos
 
         public List<BitacoraEvento_08YS> Filtrar(BitacoraFiltro_08YS filtro)
         {
@@ -90,30 +117,23 @@ namespace DAL_08YS
             return BitacoraMapper_08YS.FromDataTable(GetDataTable(query.ToString(), parametros.ToArray()));
         }
 
-        public int ContarIntentosFallidos(string username, int ventanaHoras)
+        #endregion
+
+        #region Métodos auxiliares
+
+        private IDbDataParameter[] ToParameters(BitacoraEvento_08YS b)
         {
-            return ExecuteScalar<int>(
-                @"SELECT COUNT(*) FROM Bitacora
-                  WHERE Username  = @username
-                  AND Evento    = @evento
-                  AND FechaHora >= DATEADD(HOUR, -@horas, GETDATE())
-                  AND FechaHora >  ISNULL(
-                      (SELECT MAX(FechaHora) FROM Bitacora
-                          WHERE Evento IN (@desbloqueo, @loginExitoso)
-                          AND (
-                              Username       = @username    -- LoginExitoso: el actor es el propio usuario
-                              OR TargetUsername = @username -- UsuarioDesbloqueado: el usuario es el sujeto
-                          )),
-                      CAST('19000101' AS DATETIME))",
-                new[]
-                {
-                    Param("@username",     username),
-                    Param("@evento",       (int)Evento.LoginFallido),
-                    Param("@horas",        ventanaHoras),
-                    Param("@desbloqueo",   (int)Evento.UsuarioDesbloqueado),
-                    Param("@loginExitoso", (int)Evento.LoginExitoso)
-                }
-            );
+            return new[]
+            {
+                Param("@username",       b.Username),
+                Param("@targetUsername", (object)b.TargetUsername ?? DBNull.Value),
+                Param("@fecha_hora",     b.FechaHora),
+                Param("@modulo",         (int)b.Modulo),
+                Param("@evento",         (int)b.Evento),
+                Param("@criticidad",     (int)b.Criticidad)
+            };
         }
+
+        #endregion
     }
 }

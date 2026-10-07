@@ -11,9 +11,15 @@ namespace BLL_08YS.Negocio
 {
     public class ReservaBLL_68SA
     {
+        #region Campos
+
         private readonly IReservaRepository_68SA _reservaRepo;
         private readonly HuespedBLL_68SA _huespedBLL;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
+        #endregion
+
+        #region Constructor
 
         public ReservaBLL_68SA(IReservaRepository_68SA reservaRepo, HuespedBLL_68SA huespedBLL, BitacoraBLL_08YS bitacoraBll)
         {
@@ -22,29 +28,7 @@ namespace BLL_08YS.Negocio
             _bitacoraBll = bitacoraBll;
         }
 
-        public int Crear(Reserva_68SA reserva)
-        {
-            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarReserva);
-
-            HabitacionBLL_68SA.ValidarRango(reserva.FechaIngreso, reserva.FechaEgreso);
-
-            if (!HuespedBLL_68SA.EsMayorDeEdad(reserva.Titular))
-                throw new TitularMenorDeEdadException_68SA();
-
-            reserva.Titular = _huespedBLL.ObtenerOCrear(reserva.Titular);
-            reserva.MontoTotal = reserva.TarifaNoche * reserva.Noches;
-            reserva.UsuarioRegistroDni = SessionManager_08YS.Instance.Current.DNI;
-
-            int nuevoId = _reservaRepo.Crear(reserva);
-            if (nuevoId == -1)
-                throw new HabitacionNoDisponibleException_68SA();
-
-            reserva.Id = nuevoId;
-            DVManager_08YS.Recalcular();
-            _bitacoraBll.RegistrarEvento(Evento.ReservaCreada, targetUsername: reserva.Id.ToString());
-
-            return reserva.Id;
-        }
+        #endregion
 
         #region GETs
         public List<Reserva_68SA> GetTodas(ReservaFiltro_68SA filtro)
@@ -86,6 +70,32 @@ namespace BLL_08YS.Negocio
         }
 
         #endregion
+
+        #region Operaciones
+
+        public int Crear(Reserva_68SA reserva)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarReserva);
+
+            HabitacionBLL_68SA.ValidarRango(reserva.FechaIngreso, reserva.FechaEgreso);
+
+            if (!HuespedBLL_68SA.EsMayorDeEdad(reserva.Titular))
+                throw new TitularMenorDeEdadException_68SA();
+
+            reserva.Titular = _huespedBLL.ObtenerOCrear(reserva.Titular);
+            reserva.MontoTotal = reserva.TarifaNoche * reserva.Noches;
+            reserva.UsuarioRegistroDni = SessionManager_08YS.Instance.Current.DNI;
+
+            int nuevoId = _reservaRepo.Crear(reserva);
+            if (nuevoId == -1)
+                throw new HabitacionNoDisponibleException_68SA();
+
+            reserva.Id = nuevoId;
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.ReservaCreada, targetUsername: reserva.Id.ToString());
+
+            return reserva.Id;
+        }
 
         public void RegistrarCheckIn(int reservaId, List<Huesped_68SA> acompanantes)
         {
@@ -213,5 +223,7 @@ namespace BLL_08YS.Negocio
             if (!disponible)
                 throw new HabitacionNoDisponibleException_68SA("La habitación no está disponible para el nuevo rango de fechas.");
         }
+
+        #endregion
     }
 }

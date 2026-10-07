@@ -33,6 +33,8 @@ namespace CustomControls
     [ToolboxItem(false)]
     public class CustomTimePanel : Control
     {
+        #region Campos
+
         // ──────────────────────────────────────────────────────────────────
         // Estado
         // ──────────────────────────────────────────────────────────────────
@@ -78,10 +80,55 @@ namespace CustomControls
         private Rectangle _nowBtn;
         private Rectangle _acceptBtn;
 
+        #endregion
+
+        #region Propiedades
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── PROPIEDADES PÚBLICAS ──────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        public int Hour => _hour;
+        public int Minute => _minute;
+        public int Second => _second;
+
+        public bool ShowSeconds
+        {
+            get => _showSeconds;
+            set { _showSeconds = value; RecalcLayout(); Size = PreferredSize; Invalidate(); }
+        }
+
+        public Color TitleBackColor { get => _titleBackColor; set { _titleBackColor = value; Invalidate(); } }
+        public Color TitleForeColor { get => _titleForeColor; set { _titleForeColor = value; Invalidate(); } }
+        public Color SeparatorColor { get => _separatorColor; set { _separatorColor = value; Invalidate(); } }
+        public Color AccentColor { get => _accentColor; set { _accentColor = value; _selectedBorderColor = value; Invalidate(); } }
+        public Color AccentForeColor { get => _accentForeColor; set { _accentForeColor = value; Invalidate(); } }
+        public Color HoverBackColor { get => _hoverBackColor; set { _hoverBackColor = value; Invalidate(); } }
+
+        public new Size PreferredSize
+        {
+            get
+            {
+                RecalcLayout();
+                int cols = _showSeconds ? 3 : 2;
+                int w = _colW * cols + 24;
+                int h = _headerH + _spinnerAreaH + _footerH;
+                return new Size(Math.Max(w, 220), h);
+            }
+        }
+
+        #endregion
+
+        #region Eventos
+
         // ══════════════════════════════════════════════════════════════════
         // Evento
         // ══════════════════════════════════════════════════════════════════
         public event EventHandler TimeAccepted;
+
+        #endregion
+
+        #region Constructor
 
         // ══════════════════════════════════════════════════════════════════
         // Constructor
@@ -113,26 +160,9 @@ namespace CustomControls
             Size = PreferredSize;
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── PROPIEDADES PÚBLICAS ──────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
+        #endregion
 
-        public int Hour => _hour;
-        public int Minute => _minute;
-        public int Second => _second;
-
-        public bool ShowSeconds
-        {
-            get => _showSeconds;
-            set { _showSeconds = value; RecalcLayout(); Size = PreferredSize; Invalidate(); }
-        }
-
-        public Color TitleBackColor { get => _titleBackColor; set { _titleBackColor = value; Invalidate(); } }
-        public Color TitleForeColor { get => _titleForeColor; set { _titleForeColor = value; Invalidate(); } }
-        public Color SeparatorColor { get => _separatorColor; set { _separatorColor = value; Invalidate(); } }
-        public Color AccentColor { get => _accentColor; set { _accentColor = value; _selectedBorderColor = value; Invalidate(); } }
-        public Color AccentForeColor { get => _accentForeColor; set { _accentForeColor = value; Invalidate(); } }
-        public Color HoverBackColor { get => _hoverBackColor; set { _hoverBackColor = value; Invalidate(); } }
+        #region Métodos públicos
 
         public void SetTime(DateTime time)
         {
@@ -144,19 +174,9 @@ namespace CustomControls
             Invalidate();
         }
 
-        public override Size GetPreferredSize(Size proposedSize) => PreferredSize;
+        #endregion
 
-        public new Size PreferredSize
-        {
-            get
-            {
-                RecalcLayout();
-                int cols = _showSeconds ? 3 : 2;
-                int w = _colW * cols + 24;
-                int h = _headerH + _spinnerAreaH + _footerH;
-                return new Size(Math.Max(w, 220), h);
-            }
-        }
+        #region Métodos auxiliares
 
         // ══════════════════════════════════════════════════════════════════
         // ── LAYOUT ────────────────────────────────────────────────────────
@@ -195,40 +215,6 @@ namespace CustomControls
             int btnH = _footerH - 12;
             _nowBtn = new Rectangle(8, footerY + 6, btnW, btnH);
             _acceptBtn = new Rectangle(8 + btnW + 8, footerY + 6, btnW, btnH);
-        }
-
-        protected override void OnFontChanged(EventArgs e)
-        {
-            base.OnFontChanged(e);
-            RecalcLayout();
-            Size = PreferredSize;
-            Invalidate();
-        }
-
-        // ══════════════════════════════════════════════════════════════════
-        // ── PINTURA ───────────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-            g.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
-
-            DrawHeader(g);
-
-            using (var pen = new Pen(_separatorColor))
-                g.DrawLine(pen, 0, _headerH, Width, _headerH);
-
-            DrawSpinners(g);
-
-            int footerY = _headerH + _spinnerAreaH;
-            using (var pen = new Pen(_separatorColor))
-                g.DrawLine(pen, 0, footerY, Width, footerY);
-
-            DrawFooter(g);
         }
 
         private void DrawHeader(Graphics g)
@@ -327,6 +313,104 @@ namespace CustomControls
 
             TextRenderer.DrawText(g, text, Font, rect, fore,
                                   TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── HELPERS ───────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        private int SegmentMax(int segment) => segment == 0 ? 23 : 59;
+
+        private void SetSegmentValue(int segment, int value)
+        {
+            switch (segment)
+            {
+                case 0: _hour = value; break;
+                case 1: _minute = value; break;
+                case 2: _second = value; break;
+            }
+        }
+
+        private void AdvanceSegment()
+        {
+            int cols = _showSeconds ? 3 : 2;
+            _selectedSegment = (_selectedSegment + 1) % cols;
+            _editBuffer = string.Empty;
+        }
+
+        private void ChangeSegment(int segment, int delta)
+        {
+            switch (segment)
+            {
+                case 0: _hour = Wrap(_hour + delta, 0, 23); break;
+                case 1: _minute = Wrap(_minute + delta, 0, 59); break;
+                case 2: _second = Wrap(_second + delta, 0, 59); break;
+            }
+            Invalidate();
+        }
+
+        private static int Wrap(int value, int min, int max)
+        {
+            int range = max - min + 1;
+            if (value < min) value += range;
+            if (value > max) value -= range;
+            return value;
+        }
+
+        private static GraphicsPath RoundedRect(Rectangle rect, int radius)
+        {
+            float d = radius * 2f;
+            var path = new GraphicsPath();
+            path.AddArc(rect.X, rect.Y, d, d, 180, 90);
+            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
+            path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);
+            path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
+
+        private static Rectangle Inset(Rectangle rect, int margin) =>
+            new Rectangle(rect.X + margin, rect.Y + margin,
+                          rect.Width - margin * 2, rect.Height - margin * 2);
+
+        #endregion
+
+        #region Sobrescrituras
+
+        public override Size GetPreferredSize(Size proposedSize) => PreferredSize;
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            RecalcLayout();
+            Size = PreferredSize;
+            Invalidate();
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── PINTURA ───────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            g.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
+
+            DrawHeader(g);
+
+            using (var pen = new Pen(_separatorColor))
+                g.DrawLine(pen, 0, _headerH, Width, _headerH);
+
+            DrawSpinners(g);
+
+            int footerY = _headerH + _spinnerAreaH;
+            using (var pen = new Pen(_separatorColor))
+                g.DrawLine(pen, 0, footerY, Width, footerY);
+
+            DrawFooter(g);
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -549,62 +633,6 @@ namespace CustomControls
             e.Handled = true;
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── HELPERS ───────────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        private int SegmentMax(int segment) => segment == 0 ? 23 : 59;
-
-        private void SetSegmentValue(int segment, int value)
-        {
-            switch (segment)
-            {
-                case 0: _hour = value; break;
-                case 1: _minute = value; break;
-                case 2: _second = value; break;
-            }
-        }
-
-        private void AdvanceSegment()
-        {
-            int cols = _showSeconds ? 3 : 2;
-            _selectedSegment = (_selectedSegment + 1) % cols;
-            _editBuffer = string.Empty;
-        }
-
-        private void ChangeSegment(int segment, int delta)
-        {
-            switch (segment)
-            {
-                case 0: _hour = Wrap(_hour + delta, 0, 23); break;
-                case 1: _minute = Wrap(_minute + delta, 0, 59); break;
-                case 2: _second = Wrap(_second + delta, 0, 59); break;
-            }
-            Invalidate();
-        }
-
-        private static int Wrap(int value, int min, int max)
-        {
-            int range = max - min + 1;
-            if (value < min) value += range;
-            if (value > max) value -= range;
-            return value;
-        }
-
-        private static GraphicsPath RoundedRect(Rectangle rect, int radius)
-        {
-            float d = radius * 2f;
-            var path = new GraphicsPath();
-            path.AddArc(rect.X, rect.Y, d, d, 180, 90);
-            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
-            path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);
-            path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
-            path.CloseFigure();
-            return path;
-        }
-
-        private static Rectangle Inset(Rectangle rect, int margin) =>
-            new Rectangle(rect.X + margin, rect.Y + margin,
-                          rect.Width - margin * 2, rect.Height - margin * 2);
+        #endregion
     }
 }

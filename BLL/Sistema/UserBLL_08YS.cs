@@ -22,9 +22,15 @@ namespace BLL_08YS
 
     public class UserBLL_08YS
     {
+        #region Campos
+
         private readonly IUserRepository_08YS _userRepository;
         private readonly IRolRepository_08YS _rolRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
+        #endregion
+
+        #region Constructor
 
         public UserBLL_08YS(IUserRepository_08YS userRepository, IRolRepository_08YS rolRepo, BitacoraBLL_08YS bitacoraBll)
         {
@@ -32,6 +38,8 @@ namespace BLL_08YS
             _rolRepo = rolRepo;
             _bitacoraBll = bitacoraBll;
         }
+
+        #endregion
 
         #region Login
 
@@ -78,17 +86,6 @@ namespace BLL_08YS
             _rolRepo.GetById(user.Rol.RolID).GetPermisos().Any(p => p.Nombre == Permisos.ManejarInconsistencias.ToString() );
 
         #endregion
-
-        public void UserLockOut(string username)
-        {
-            var user = _userRepository.GetByUsername(username) ?? throw new UserNotFoundException_08YS();
-
-            _userRepository.LockOut(user.Username);
-            DVManager_08YS.Recalcular();
-            _bitacoraBll.RegistrarEvento(Evento.UsuarioBloqueado, username: username);
-
-            throw new UserBloqueadoException_08YS();
-        }
 
         #region GestionUsuario
 
@@ -166,6 +163,26 @@ namespace BLL_08YS
 
         #endregion
 
+        #region Idioma
+
+        public void CambiarIdiomaUsuario(string nuevoIdioma)
+        {
+            if (SessionManager_08YS.Instance.Current == null) return;
+
+            // 1. Modificamos ÚNICAMENTE el objeto local en memoria de la sesión actual
+            SessionManager_08YS.Instance.Current.Idioma = nuevoIdioma;
+        }
+
+        #endregion
+
+        #region Consultas
+
+        public List<User_08YS> GetAll() => _userRepository.GetAll();
+
+        #endregion
+
+        #region Operaciones
+
         public void CambiarContraseña(string passwordActual, string passwordNueva)
         {
             if (!Encriptador_08YS.Verificar(passwordActual, SessionManager_08YS.Instance.Current.Hash, SessionManager_08YS.Instance.Current.Salt))
@@ -176,14 +193,6 @@ namespace BLL_08YS
             _userRepository.UpdatePassword(SessionManager_08YS.Instance.Current.Username, hashNuevo, saltNuevo);
             DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.CambioContraseña);
-        }
-
-        public void CambiarIdiomaUsuario(string nuevoIdioma)
-        {
-            if (SessionManager_08YS.Instance.Current == null) return;
-
-            // 1. Modificamos ÚNICAMENTE el objeto local en memoria de la sesión actual
-            SessionManager_08YS.Instance.Current.Idioma = nuevoIdioma;
         }
 
         public void Logout()
@@ -209,6 +218,21 @@ namespace BLL_08YS
             SessionManager_08YS.Instance.CerrarSesion();
         }
 
-        public List<User_08YS> GetAll() => _userRepository.GetAll();
+        #endregion
+
+        #region Métodos públicos
+
+        public void UserLockOut(string username)
+        {
+            var user = _userRepository.GetByUsername(username) ?? throw new UserNotFoundException_08YS();
+
+            _userRepository.LockOut(user.Username);
+            DVManager_08YS.Recalcular();
+            _bitacoraBll.RegistrarEvento(Evento.UsuarioBloqueado, username: username);
+
+            throw new UserBloqueadoException_08YS();
+        }
+
+        #endregion
     }
 }

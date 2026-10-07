@@ -42,8 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfiguracionHotel_68SA.cs" />
+    <Compile Include="BitacoraCambioHabitacion_68SA.cs" />
+    <Compile Include="CambioHabitacion_68SA.cs" />
+    <Compile Include="CargoAdicional_68SA.cs" />
     <Compile Include="Habitacion_68SA.cs" />
     <Compile Include="Huesped_68SA.cs" />
+    <Compile Include="Metricas\MetricasServicios_68SA.cs" />
     <Compile Include="Metricas\OcupacionPorTipoItem_68SA.cs" />
     <Compile Include="Metricas\ResumenHuespedes_68SA.cs" />
     <Compile Include="Metricas\ResumenIngresos_68SA.cs" />
@@ -52,6 +56,9 @@
     <Compile Include="Piso_68SA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reserva_68SA.cs" />
+    <Compile Include="ReporteServicios_68SA.cs" />
+    <Compile Include="AnalisisDemanda_68SA.cs" />
+    <Compile Include="RoomService_68SA.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

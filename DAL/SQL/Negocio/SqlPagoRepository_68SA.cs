@@ -12,22 +12,13 @@ namespace DAL_08YS.SQL.Negocio
 {
     public class SqlPagoRepository_68SA : Connection_08YS, IPagoRepository_68SA
     {
+        #region Constructor
+
         public SqlPagoRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
 
-        public int Registrar(Pago_68SA pago)
-        {
-            return ExecuteScalar<int>(
-                @"INSERT INTO Pagos (ReservaID, Monto, MetodoPago, FechaPago)
-                  VALUES (@ReservaID, @Monto, @MetodoPago, @FechaPago);
-                  SELECT CAST(SCOPE_IDENTITY() AS int);",
-                new[]
-                {
-                    Param("@ReservaID",  pago.ReservaId),
-                    Param("@Monto",      pago.Monto),
-                    Param("@MetodoPago", (int)pago.MetodoPago),
-                    Param("@FechaPago",  pago.FechaPago)
-                });
-        }
+        #endregion
+
+        #region Consultas
 
         public List<Pago_68SA> GetByReserva(int reservaId)
         {
@@ -44,5 +35,26 @@ namespace DAL_08YS.SQL.Negocio
                 "SELECT ISNULL(SUM(Monto), 0) FROM Pagos WHERE ReservaID = @ReservaID",
                 new[] { Param("@ReservaID", reservaId) });
         }
+
+        #endregion
+
+        #region Operaciones
+
+        public int Registrar(Pago_68SA pago)
+        {
+            return ExecuteScalar<int>(
+                @"INSERT INTO Pagos (ReservaID, Monto, MetodoPago, FechaPago)
+                  VALUES (@ReservaID, @Monto, @MetodoPago, @FechaPago);
+                  SELECT CAST(SCOPE_IDENTITY() AS int);",
+                new[]
+                {
+                    Param("@ReservaID",  pago.ReservaId),
+                    Param("@Monto",      pago.Monto),
+                    Param("@MetodoPago", (int)pago.MetodoPago),
+                    Param("@FechaPago",  pago.FechaPago)
+                });
+        }
+
+        #endregion
     }
 }

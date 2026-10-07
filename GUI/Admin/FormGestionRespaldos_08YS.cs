@@ -1,22 +1,27 @@
 ﻿using BLL_08YS;
+using FontAwesome.Sharp;
+using GUI_08YS.UserControls;
 using Service_08YS;
 using Service_08YS.Entities;
+using Service_08YS.Entities.Acceso;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Service_08YS.Entities.Acceso;
 
 namespace GUI_08YS.Admin
 {
+    /// <summary>
+    /// Respaldos de la base de datos: crear un .bak en una carpeta validada, restaurar uno elegido
+    /// (con doble confirmación) y ver los respaldos que ya hay en la carpeta.
+    /// </summary>
     public partial class FormGestionRespaldos_08YS : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -26,13 +31,17 @@ namespace GUI_08YS.Admin
                 { nameof(btnRealizarRestore),           Permisos.RealizarRestore },
             };
 
-        private readonly BackupBLL_08YS _bll;
+        private static readonly Color ColorExito = Color.FromArgb(76, 217, 100);
+        private static readonly Color ColorAdvertencia = Color.FromArgb(240, 170, 60);
+        private static readonly Color ColorError = Color.FromArgb(240, 95, 85);
+        private static readonly Color TextoSuave = Color.FromArgb(160, 165, 180);
 
-        private static readonly Color ColorFondo = Color.FromArgb(5, 15, 45);
-        private static readonly Color ColorOro = Color.Goldenrod;
-        private static readonly Color ColorTexto = Color.White;
-        private static readonly Color ColorExito = Color.LimeGreen;
-        private static readonly Color ColorError = Color.OrangeRed;
+        private readonly BackupBLL_08YS _bll;
+        private bool _carpetaValida;
+
+        #endregion
+
+        #region Constructor
 
         public FormGestionRespaldos_08YS()
         {
@@ -40,47 +49,47 @@ namespace GUI_08YS.Admin
 
             PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
             _bll = BLLFactory_08YS.CreateBackupBLL();
+
+            CrudEstilo_68SA.AplicarGrilla(dgvRespaldos, 40);
+            dgvRespaldos.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) UsarRespaldoSeleccionado(); };
+            dgvRespaldos.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { UsarRespaldoSeleccionado(); e.Handled = true; } };
+
+            btnAbrirCarpeta.Click += (s, e) => AbrirCarpeta();
+            btnActualizarHistorial.Click += (s, e) => CargarHistorial();
+            btnSeleccionarCarpetaBackup.Click += btnSeleccionarCarpetaBackup_Click;
+            btnRealizarBackUp.Click += btnRealizarBackUp_Click;
+            btnSeleccionarArchivoRestore.Click += btnSeleccionarArchivoRestore_Click;
+            btnRealizarRestore.Click += btnRealizarRestore_Click;
+
+            // El MDI suscribe esta pantalla a los cambios de idioma al abrirla
+            UpdateIdioma();
         }
 
+        #endregion
+
         #region Idioma
+
         public void UpdateIdioma()
         {
             TraducirControles(this);
+            if (IsHandleCreated) CargarHistorial();
         }
 
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
             {
-                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
-                {
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
-                }
+                if (c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = T(tag);
 
                 if (c.HasChildren)
-                {
                     TraducirControles(c);
-                }
             }
         }
+
         #endregion
 
-        private void FormGestionRespaldos_Load(object sender, EventArgs e)
-        {
-            ConfigurarBotones();
-            PrecargarCarpetaDefault();
-            ActualizarPreviewNombre();
-        }
-
-        private void PrecargarCarpetaDefault()
-        {
-            string carpeta = BackupBLL_08YS.CarpetaDefault;
-            txtCarpetaDestino.Text = carpeta;
-            ActualizarPreviewNombre();
-
-            // Validar la carpeta por defecto al abrir el form
-            ValidarYMostrarCarpeta(carpeta);
-        }
+        #region Crear respaldo
 
         private void ActualizarPreviewNombre()
         {
@@ -91,16 +100,14 @@ namespace GUI_08YS.Admin
         {
             using (var dialog = new FolderBrowserDialog())
             {
-                dialog.Description = TraductorManager_08YS.Instance.GetTexto("Backups_backup_seleccionar_carpeta");
+                dialog.Description = T("Backups_backup_seleccionar_carpeta");
                 dialog.ShowNewFolderButton = true;
                 dialog.SelectedPath = txtCarpetaDestino.Text;
 
-                if (dialog.ShowDialog() != DialogResult.OK) return;
+                if (dialog.ShowDialog(this) != DialogResult.OK) return;
 
-                string carpeta = dialog.SelectedPath;
-
-                // Validar inmediatamente al seleccionar — antes de que el usuario intente el backup
-                ValidarYMostrarCarpeta(carpeta);
+                // Se valida al elegirla, antes de que el usuario intente el backup
+                ValidarYMostrarCarpeta(dialog.SelectedPath);
             }
         }
 
@@ -108,7 +115,7 @@ namespace GUI_08YS.Admin
         {
             txtCarpetaDestino.Text = carpeta;
             ActualizarPreviewNombre();
-            OcultarResultadoBackup();
+            pnlResultadoBackup.Visible = false;
 
             try
             {
@@ -116,54 +123,40 @@ namespace GUI_08YS.Admin
                 btnRealizarBackUp.Enabled = false;
 
                 var resultado = _bll.ValidarCarpeta(carpeta);
-
                 switch (resultado.Tipo)
                 {
                     case ResultadoValidacion_08YS.TipoResultado.Ok:
-                        MostrarValidacionCarpeta(true, false,
-                            TraductorManager_08YS.Instance.GetTexto("Backups_backup_carpeta_valida"));
-                        btnRealizarBackUp.Enabled = true;
+                        MostrarEstadoCarpeta(IconChar.CircleCheck, ColorExito, T("Backups_backup_carpeta_valida"));
+                        _carpetaValida = true;
                         break;
 
                     case ResultadoValidacion_08YS.TipoResultado.Advertencia:
-                        // Puede continuar pero con riesgo
-                        MostrarValidacionCarpeta(true, true, resultado.Mensaje);
-                        btnRealizarBackUp.Enabled = true;
+                        // Puede continuar, pero con riesgo
+                        MostrarEstadoCarpeta(IconChar.TriangleExclamation, ColorAdvertencia, resultado.Mensaje);
+                        _carpetaValida = true;
                         break;
 
-                    case ResultadoValidacion_08YS.TipoResultado.Error:
-                        MostrarValidacionCarpeta(false, false, resultado.Mensaje);
-                        btnRealizarBackUp.Enabled = false;
+                    default:
+                        MostrarEstadoCarpeta(IconChar.CircleXmark, ColorError, resultado.Mensaje);
+                        _carpetaValida = false;
                         break;
                 }
             }
-            finally { Cursor = Cursors.Default; }
+            finally
+            {
+                btnRealizarBackUp.Enabled = _carpetaValida && PuedeRespaldar();
+                Cursor = Cursors.Default;
+            }
+
+            CargarHistorial();
         }
 
-        private void MostrarValidacionCarpeta(bool valido, bool esAdvertencia, string mensaje)
+        private void MostrarEstadoCarpeta(IconChar icono, Color color, string mensaje)
         {
-            //if (valido && !esAdvertencia)
-            //{
-            //    picEstadoBackup.IconChar = FontAwesome.Sharp.IconChar.CheckCircle;
-            //    picEstadoBackup.IconColor = ColorExito;
-            //    lblResultadoBackup.ForeColor = ColorExito;
-            //}
-            //else if (esAdvertencia)
-            //{
-            //    picEstadoBackup.IconChar = FontAwesome.Sharp.IconChar.ExclamationTriangle;
-            //    picEstadoBackup.IconColor = Color.Orange;
-            //    lblResultadoBackup.ForeColor = Color.Orange;
-            //}
-            //else
-            //{
-            //    picEstadoBackup.IconChar = FontAwesome.Sharp.IconChar.TimesCircle;
-            //    picEstadoBackup.IconColor = ColorError;
-            //    lblResultadoBackup.ForeColor = ColorError;
-            //}
-
-            //lblResultadoBackup.Text = mensaje;
-            //picEstadoBackup.Visible = true;
-            //lblResultadoBackup.Visible = true;
+            picEstadoCarpeta.IconChar = icono;
+            picEstadoCarpeta.IconColor = color;
+            lblEstadoCarpeta.ForeColor = color;
+            lblEstadoCarpeta.Text = mensaje;
         }
 
         private void btnRealizarBackUp_Click(object sender, EventArgs e)
@@ -171,9 +164,7 @@ namespace GUI_08YS.Admin
             string carpeta = txtCarpetaDestino.Text.Trim();
             if (string.IsNullOrWhiteSpace(carpeta)) return;
 
-            // Actualizar preview con timestamp exacto del momento de backup
             ActualizarPreviewNombre();
-
             try
             {
                 Cursor = Cursors.WaitCursor;
@@ -181,76 +172,57 @@ namespace GUI_08YS.Admin
 
                 string rutaCreada = _bll.RealizarBackup(carpeta);
 
-                MostrarResultadoBackup(true,
-                    $"{TraductorManager_08YS.Instance.GetTexto("Backups_backup_ok")}\n{Path.GetFileName(rutaCreada)}");
+                MostrarResultado(pnlResultadoBackup, picResultadoBackup, lblResultadoBackup, true,
+                    $"{T("Backups_backup_ok")} {Path.GetFileName(rutaCreada)}");
+                CargarHistorial(Path.GetFileName(rutaCreada));
             }
             catch (InvalidOperationException ex)
             {
-                MostrarResultadoBackup(false, ex.Message);
+                MostrarResultado(pnlResultadoBackup, picResultadoBackup, lblResultadoBackup, false, ex.Message);
             }
             catch (Exception ex)
             {
-                MostrarResultadoBackup(false,
-                    TraductorManager_08YS.Instance.GetTexto("Backups_backup_error") + "\n" + ex.Message);
+                MostrarResultado(pnlResultadoBackup, picResultadoBackup, lblResultadoBackup, false,
+                    T("Backups_backup_error") + " " + ex.Message);
             }
             finally
             {
-                btnRealizarBackUp.Enabled = true;
+                btnRealizarBackUp.Enabled = _carpetaValida && PuedeRespaldar();
+                ActualizarPreviewNombre();
                 Cursor = Cursors.Default;
             }
         }
 
-        private void MostrarResultadoBackup(bool exito, string mensaje)
-        {
-            //picEstadoBackup.IconChar = exito
-            //    ? FontAwesome.Sharp.IconChar.CheckCircle
-            //    : FontAwesome.Sharp.IconChar.TimesCircle;
-            //picEstadoBackup.IconColor = exito ? ColorExito : ColorError;
+        #endregion
 
-            //lblResultadoBackup.ForeColor = exito ? ColorExito : ColorError;
-            //lblResultadoBackup.Text = mensaje;
-
-            //picEstadoBackup.Visible = true;
-            //lblResultadoBackup.Visible = true;
-        }
-
-        private void OcultarResultadoBackup()
-        {
-            //picEstadoBackup.Visible = false;
-            //lblResultadoBackup.Visible = false;
-        }
+        #region Restaurar respaldo
 
         private void btnSeleccionarArchivoRestore_Click(object sender, EventArgs e)
         {
             using (var dialog = new OpenFileDialog())
             {
-                dialog.Title = TraductorManager_08YS.Instance.GetTexto("Comun_restore_seleccionar_archivo");
-                dialog.Filter = "Archivos de backup (*.bak)|*.bak|Todos los archivos (*.*)|*.*";
+                dialog.Title = T("Comun_restore_seleccionar_archivo");
+                dialog.Filter = T("Backups_filtroArchivos") + " (*.bak)|*.bak";
                 dialog.FilterIndex = 1;
+                dialog.InitialDirectory = Directory.Exists(txtCarpetaDestino.Text) ? txtCarpetaDestino.Text : BackupBLL_08YS.CarpetaDefault;
 
-                // Abrir en la misma carpeta del backup si ya hay una configurada
-                if (!string.IsNullOrEmpty(txtCarpetaDestino.Text) &&
-                    Directory.Exists(txtCarpetaDestino.Text))
-                    dialog.InitialDirectory = txtCarpetaDestino.Text;
-                else
-                    dialog.InitialDirectory = BackupBLL_08YS.CarpetaDefault;
-
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-
-                txtArchivoRestore.Text = dialog.FileName;
-                btnRealizarRestore.Enabled = true;
-
-                // Mostrar info del archivo seleccionado
-                var info = new FileInfo(dialog.FileName);
-                lblInfoArchivo.Text = string.Format(
-                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_info_archivo"),
-                    info.Name,
-                    (info.Length / (1024.0 * 1024)).ToString("F1"),
-                    info.LastWriteTime.ToString("dd/MM/yyyy HH:mm:ss"));
-
-                pnlInfoArchivo.Visible = true;
-                OcultarResultadoRestore();
+                if (dialog.ShowDialog(this) != DialogResult.OK) return;
+                ElegirArchivoRestore(dialog.FileName);
             }
+        }
+
+        private void ElegirArchivoRestore(string ruta)
+        {
+            if (!File.Exists(ruta)) return;
+
+            txtArchivoRestore.Text = ruta;
+            btnRealizarRestore.Enabled = PuedeRestaurar();
+            pnlResultadoRestore.Visible = false;
+
+            var info = new FileInfo(ruta);
+            lblInfoArchivo.Text = string.Format(T("Backups_restore_detalle_archivo"),
+                info.Name, Tamano(info.Length), info.LastWriteTime.ToString("dd/MM/yyyy HH:mm"));
+            pnlInfoArchivo.Visible = true;
         }
 
         private void btnRealizarRestore_Click(object sender, EventArgs e)
@@ -260,14 +232,11 @@ namespace GUI_08YS.Admin
             string rutaBak = txtArchivoRestore.Text.Trim();
             if (string.IsNullOrWhiteSpace(rutaBak)) return;
 
-            // Confirmación doble por la gravedad de la operación
-            var confirmacion = MessageBox.Show(
-                TraductorManager_08YS.Instance.GetTexto("Backups_restore_confirm_mensaje"),
-                TraductorManager_08YS.Instance.GetTexto("Backups_restore_confirm_titulo"),
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button2); // "No" como opción por defecto
-
+            // Confirmación con "No" por defecto, por la gravedad de la operación
+            var confirmacion = MessageBox.Show(this,
+                string.Format(T("Backups_restore_confirm_detalle"), Path.GetFileName(rutaBak)),
+                T("Backups_restore_confirm_titulo"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (confirmacion != DialogResult.Yes) return;
 
             try
@@ -277,73 +246,163 @@ namespace GUI_08YS.Admin
 
                 _bll.RestaurarBackup(rutaBak);
 
-                // Restore exitoso: avisar y reiniciar
-                MessageBox.Show(
-                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_ok"),
-                    "",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
+                MessageBox.Show(this, T("Backups_restore_ok"), T("Backups_backup_restore_titulo"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Application.Restart();
             }
             catch (InvalidOperationException ex)
             {
-                btnRealizarRestore.Enabled = true;
-                MostrarResultadoRestore(false, ex.Message);
+                btnRealizarRestore.Enabled = PuedeRestaurar();
+                MostrarResultado(pnlResultadoRestore, picResultadoRestore, lblResultadoRestore, false, ex.Message);
             }
             catch (Exception ex)
             {
-                btnRealizarRestore.Enabled = true;
-                MostrarResultadoRestore(false,
-                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_error") + "\n" + ex.Message);
+                btnRealizarRestore.Enabled = PuedeRestaurar();
+                MostrarResultado(pnlResultadoRestore, picResultadoRestore, lblResultadoRestore, false,
+                    T("Backups_restore_error") + " " + ex.Message);
             }
             finally { Cursor = Cursors.Default; }
         }
 
-        private void MostrarResultadoRestore(bool exito, string mensaje)
+        #endregion
+
+        #region Respaldos guardados
+
+        private void CargarHistorial(string seleccionar = null)
         {
-            //picEstadoRestore.IconChar = exito
-            //    ? FontAwesome.Sharp.IconChar.CheckCircle
-            //    : FontAwesome.Sharp.IconChar.TimesCircle;
-            //picEstadoRestore.IconColor = exito ? ColorExito : ColorError;
+            string carpeta = txtCarpetaDestino.Text.Trim();
+            List<ArchivoRespaldo_08YS> archivos;
+            try
+            {
+                archivos = _bll.ListarRespaldos(carpeta);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                archivos = new List<ArchivoRespaldo_08YS>();
+            }
 
-            //lblResultadoRestore.ForeColor = exito ? ColorExito : ColorError;
-            //lblResultadoRestore.Text = mensaje;
+            var filas = archivos.Select(a => new FilaRespaldo_08YS
+            {
+                Fecha = a.Fecha,
+                Archivo = a.Nombre,
+                Tamano = Tamano(a.Bytes),
+                Antiguedad = Antiguedad(a.Fecha),
+                Ruta = a.Ruta
+            }).ToList();
 
-            //picEstadoRestore.Visible = true;
-            //lblResultadoRestore.Visible = true;
+            dgvRespaldos.DataSource = null;
+            dgvRespaldos.DataSource = filas;
+            ConfigurarColumnas();
+
+            lblHistorialResumen.Text = filas.Count == 0
+                ? string.Format(T("Backups_txtSinRespaldos"), carpeta)
+                : string.Format(T("Backups_txtHistorialResumen"), filas.Count, Tamano(archivos.Sum(a => a.Bytes)), carpeta);
+
+            if (seleccionar != null)
+            {
+                foreach (DataGridViewRow fila in dgvRespaldos.Rows)
+                    if (((FilaRespaldo_08YS)fila.DataBoundItem).Archivo == seleccionar)
+                    {
+                        fila.Selected = true;
+                        dgvRespaldos.CurrentCell = fila.Cells[0];
+                        break;
+                    }
+            }
+            else
+            {
+                dgvRespaldos.ClearSelection();
+            }
         }
 
-        private void OcultarResultadoRestore()
+        private void ConfigurarColumnas()
         {
-            //picEstadoRestore.Visible = false;
-            //lblResultadoRestore.Visible = false;
+            var col = dgvRespaldos.Columns;
+            if (col.Count == 0) return;
+
+            col[nameof(FilaRespaldo_08YS.Fecha)].HeaderText = T("Backups_colFecha");
+            col[nameof(FilaRespaldo_08YS.Fecha)].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+            col[nameof(FilaRespaldo_08YS.Fecha)].FillWeight = 22;
+            col[nameof(FilaRespaldo_08YS.Archivo)].HeaderText = T("Backups_colArchivo");
+            col[nameof(FilaRespaldo_08YS.Archivo)].FillWeight = 46;
+            col[nameof(FilaRespaldo_08YS.Tamano)].HeaderText = T("Backups_colTamano");
+            col[nameof(FilaRespaldo_08YS.Tamano)].FillWeight = 14;
+            col[nameof(FilaRespaldo_08YS.Tamano)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col[nameof(FilaRespaldo_08YS.Antiguedad)].HeaderText = T("Backups_colAntiguedad");
+            col[nameof(FilaRespaldo_08YS.Antiguedad)].FillWeight = 18;
         }
 
+        private void UsarRespaldoSeleccionado()
+        {
+            if (!PuedeRestaurar()) return;
+            if (dgvRespaldos.CurrentRow?.DataBoundItem is FilaRespaldo_08YS fila)
+                ElegirArchivoRestore(fila.Ruta);
+        }
+
+        private void AbrirCarpeta()
+        {
+            string carpeta = txtCarpetaDestino.Text.Trim();
+            if (!Directory.Exists(carpeta)) return;
+            try
+            {
+                Process.Start(new ProcessStartInfo("explorer.exe", "\"" + carpeta + "\"") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, T("Backups_btnAbrirCarpeta"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private string Antiguedad(DateTime fecha)
+        {
+            int dias = (DateTime.Today - fecha.Date).Days;
+            if (dias <= 0) return T("Backups_txtHoy");
+            if (dias == 1) return T("Backups_txtAyer");
+            return string.Format(T("Backups_txtHaceDias"), dias);
+        }
+
+        private static string Tamano(long bytes)
+        {
+            double mb = bytes / (1024.0 * 1024);
+            return mb >= 1024 ? $"{mb / 1024:0.0} GB" : $"{mb:0.0} MB";
+        }
+
+        #endregion
+
+        #region Estilo
+
+        private static bool PuedeRespaldar() => SessionManager_08YS.Instance.HasPermission(Permisos.RealizarBackup);
+        private static bool PuedeRestaurar() => SessionManager_08YS.Instance.HasPermission(Permisos.RealizarRestore);
+
+        private static void MostrarResultado(Control panel, IconPictureBox icono, Label etiqueta, bool exito, string mensaje)
+        {
+            icono.IconChar = exito ? IconChar.CircleCheck : IconChar.CircleXmark;
+            icono.IconColor = exito ? ColorExito : ColorError;
+            etiqueta.ForeColor = exito ? ColorExito : ColorError;
+            etiqueta.Text = mensaje;
+            panel.Visible = true;
+        }
+
+        /// <summary>Los botones secundarios se iluminan en dorado al pasar el mouse.</summary>
         private void ConfigurarBotones()
         {
-            foreach (var btn in new FontAwesome.Sharp.IconButton[]
-                { btnSeleccionarCarpetaBackup, btnSeleccionarArchivoRestore, btnRealizarBackUp, btnRealizarRestore })
+            var fondo = Color.FromArgb(5, 15, 45);
+            var oscuro = Color.FromArgb(10, 15, 35);
+            foreach (var btn in new[] { btnSeleccionarCarpetaBackup, btnSeleccionarArchivoRestore, btnAbrirCarpeta, btnActualizarHistorial })
             {
-                btn.BackColor = ColorFondo;
-                btn.ForeColor = ColorOro;
-                btn.IconColor = ColorOro;
-                btn.FlatStyle = FlatStyle.Flat;
-                btn.FlatAppearance.BorderColor = ColorOro;
-                btn.FlatAppearance.BorderSize = 1;
-
-                btn.MouseEnter += (s, _) => {
-                    var b = (FontAwesome.Sharp.IconButton)s;
+                btn.MouseEnter += (s, _) =>
+                {
+                    var b = (IconButton)s;
                     if (!b.Enabled) return;
-                    b.BackColor = ColorOro;
-                    b.ForeColor = ColorFondo;
-                    b.IconColor = ColorFondo;
+                    b.BackColor = Color.Goldenrod;
+                    b.ForeColor = oscuro;
+                    b.IconColor = oscuro;
                 };
-                btn.MouseLeave += (s, _) => {
-                    var b = (FontAwesome.Sharp.IconButton)s;
-                    b.BackColor = ColorFondo;
-                    b.ForeColor = ColorOro;
-                    b.IconColor = ColorOro;
+                btn.MouseLeave += (s, _) =>
+                {
+                    var b = (IconButton)s;
+                    b.BackColor = fondo;
+                    b.ForeColor = Color.Goldenrod;
+                    b.IconColor = Color.Gold;
                 };
             }
         }
@@ -357,5 +416,38 @@ namespace GUI_08YS.Admin
                 return cp;
             }
         }
+
+        #endregion
+
+        #region Eventos de controles
+
+        private void FormGestionRespaldos_Load(object sender, EventArgs e)
+        {
+            ConfigurarBotones();
+            txtArchivoRestore.Text = string.Empty;
+            ValidarYMostrarCarpeta(BackupBLL_08YS.CarpetaDefault);
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
+
+        #endregion
+
+        #region Tipos anidados
+
+        /// <summary>Fila de la grilla de respaldos guardados.</summary>
+        private class FilaRespaldo_08YS
+        {
+            public DateTime Fecha { get; set; }
+            public string Archivo { get; set; }
+            public string Tamano { get; set; }
+            public string Antiguedad { get; set; }
+            internal string Ruta;
+        }
+
+        #endregion
     }
 }

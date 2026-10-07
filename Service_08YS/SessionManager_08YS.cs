@@ -10,16 +10,36 @@ namespace Service_08YS
 {
     public class SessionManager_08YS
     {
+        #region Campos
+
         private static readonly Lazy<SessionManager_08YS> lazy =
             new Lazy<SessionManager_08YS>(() => new SessionManager_08YS());
 
-        public static SessionManager_08YS Instance { get { return lazy.Value; } }
+        #endregion
 
-        private SessionManager_08YS() { }
+        #region Propiedades
+
+        public static SessionManager_08YS Instance { get { return lazy.Value; } }
 
         public User_08YS Current { get; private set; }
 
         public bool IsLogged => !(Current is null);
+
+        #endregion
+
+        #region Eventos
+
+        public event Action SesionInvalidada;
+
+        #endregion
+
+        #region Constructor
+
+        private SessionManager_08YS() { }
+
+        #endregion
+
+        #region Operaciones
 
         public void SetCurrentUser(User_08YS user)
         {
@@ -30,6 +50,10 @@ namespace Service_08YS
         }
 
         public void CerrarSesion() => Current = null;
+
+        #endregion
+
+        #region Métodos públicos
 
         public bool HasPermission(Permisos permiso)
         {
@@ -45,9 +69,9 @@ namespace Service_08YS
                 throw new UnauthorizedAccessException($"El usuario actual no tiene permiso para: {permiso}");
         }
 
-        public event Action SesionInvalidada;
-
         public void InvalidarSesion()
             => SesionInvalidada?.Invoke();
+
+        #endregion
     }
 }

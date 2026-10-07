@@ -16,8 +16,14 @@ namespace DAL_08YS.Instalador
     /// </summary>
     public static class InstaladorBD_08YS
     {
+        #region Campos
+
         public const string NombreBaseDatos = "TP_Ing_Soft";
         private const string NombreArchivoScript = "script.sql";
+
+        #endregion
+
+        #region Consultas
 
         public static bool ExisteBaseDatos(string instancia)
         {
@@ -32,6 +38,10 @@ namespace DAL_08YS.Instalador
                 }
             }
         }
+
+        #endregion
+
+        #region Métodos públicos
 
         public static void InstalarBaseDatos(string instancia)
         {
@@ -98,12 +108,18 @@ namespace DAL_08YS.Instalador
                 InstalarBaseDatos(instancia);
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
         private static string ArmarConnectionStringMaster(string instancia)
             => new SqlConnectionStringBuilder(SqlDbFactory_08YS.ConnectionString)
             {
                 DataSource = instancia,
                 InitialCatalog = "master"
             }.ConnectionString;
+
+        #endregion
     }
 }
 

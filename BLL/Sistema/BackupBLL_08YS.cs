@@ -15,8 +15,14 @@ namespace BLL_08YS
 {
     public class BackupBLL_08YS
     {
+        #region Campos
+
         private readonly IBackupRepository_08YS _repo;
         private const string NombreBaseDatos = "TP_Ing_Soft";
+
+        #endregion
+
+        #region Propiedades
 
         // C:\ por defecto: el servicio de SQL Server (NT SERVICE\MSSQL$SQLEXPRESS)
         // tiene permisos de escritura en rutas del disco del sistema.
@@ -24,7 +30,49 @@ namespace BLL_08YS
         public static string CarpetaDefault
             => @"C:\HorizonHotel\Backups";
 
+        #endregion
+
+        #region Constructor
+
         public BackupBLL_08YS(IBackupRepository_08YS repo) => _repo = repo;
+
+        #endregion
+
+        #region Consultas
+
+        /// <summary>
+        /// Respaldos (.bak) que hay en la carpeta, del más nuevo al más viejo.
+        /// Si la carpeta no existe o no se puede leer, devuelve la lista vacía.
+        /// </summary>
+        public List<ArchivoRespaldo_08YS> ListarRespaldos(string carpeta)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerRespaldos);
+
+            if (string.IsNullOrWhiteSpace(carpeta)) return new List<ArchivoRespaldo_08YS>();
+            try
+            {
+                if (!Directory.Exists(carpeta)) return new List<ArchivoRespaldo_08YS>();
+                return new DirectoryInfo(carpeta).GetFiles("*.bak")
+                    .OrderByDescending(f => f.LastWriteTime)
+                    .Select(f => new ArchivoRespaldo_08YS
+                    {
+                        Nombre = f.Name,
+                        Ruta = f.FullName,
+                        Bytes = f.Length,
+                        Fecha = f.LastWriteTime
+                    })
+                    .ToList();
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is ArgumentException
+                                       || ex is NotSupportedException || ex is System.Security.SecurityException)
+            {
+                return new List<ArchivoRespaldo_08YS>();
+            }
+        }
+
+        #endregion
+
+        #region Operaciones
 
         // ── Backup ────────────────────────────────────────────────────────────────
 
@@ -47,6 +95,43 @@ namespace BLL_08YS
                 throw new InvalidOperationException(TradducirErrorBackup(ex), ex);
             }
         }
+
+        // ── Restore ───────────────────────────────────────────────────────────────
+
+        public void RestaurarBackup(string rutaBak)
+        {
+            if (!File.Exists(rutaBak))
+                throw new InvalidOperationException(
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_archivo_no_existe"));
+
+            if (!rutaBak.EndsWith(".bak", StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException(
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_formato_invalido"));
+
+            // Verificar que el archivo sea legible (no esté en uso o corrupto a nivel filesystem)
+            try { using (File.OpenRead(rutaBak)) { } }
+            catch (IOException)
+            {
+                throw new InvalidOperationException(
+                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_archivo_en_uso"));
+            }
+
+            try
+            {
+                _repo.RestoreBackup(rutaBak, NombreBaseDatos);
+            }
+            catch (SqlException ex)
+            {
+                throw new InvalidOperationException(TradducirErrorRestore(ex), ex);
+            }
+        }
+
+        public string GenerarNombreArchivo()
+            => $"{NombreBaseDatos}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+
+        #endregion
+
+        #region Validaciones
 
         /// <summary>
         /// Valida que SQL Server pueda escribir en la carpeta seleccionada.
@@ -114,38 +199,9 @@ namespace BLL_08YS
             return ResultadoValidacion_08YS.Ok();
         }
 
-        // ── Restore ───────────────────────────────────────────────────────────────
+        #endregion
 
-        public void RestaurarBackup(string rutaBak)
-        {
-            if (!File.Exists(rutaBak))
-                throw new InvalidOperationException(
-                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_archivo_no_existe"));
-
-            if (!rutaBak.EndsWith(".bak", StringComparison.OrdinalIgnoreCase))
-                throw new InvalidOperationException(
-                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_formato_invalido"));
-
-            // Verificar que el archivo sea legible (no esté en uso o corrupto a nivel filesystem)
-            try { using (File.OpenRead(rutaBak)) { } }
-            catch (IOException)
-            {
-                throw new InvalidOperationException(
-                    TraductorManager_08YS.Instance.GetTexto("Backups_restore_archivo_en_uso"));
-            }
-
-            try
-            {
-                _repo.RestoreBackup(rutaBak, NombreBaseDatos);
-            }
-            catch (SqlException ex)
-            {
-                throw new InvalidOperationException(TradducirErrorRestore(ex), ex);
-            }
-        }
-
-        public string GenerarNombreArchivo()
-            => $"{NombreBaseDatos}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+        #region Métodos públicos
 
         // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -154,6 +210,10 @@ namespace BLL_08YS
             if (!Directory.Exists(carpeta))
                 Directory.CreateDirectory(carpeta);
         }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         /// <summary>
         /// Traduce SqlExceptions de backup a mensajes entendibles para el usuario.
@@ -204,5 +264,20 @@ namespace BLL_08YS
             => string.Format(
                 TraductorManager_08YS.Instance.GetTexto("Backups_backup_error_permisos"),
                 @"NT SERVICE\MSSQL$SQLEXPRESS");
+
+        #endregion
+    }
+
+    /// <summary>Archivo de respaldo encontrado en una carpeta.</summary>
+    public class ArchivoRespaldo_08YS
+    {
+        #region Propiedades
+
+        public string Nombre { get; set; }
+        public string Ruta { get; set; }
+        public long Bytes { get; set; }
+        public DateTime Fecha { get; set; }
+
+        #endregion
     }
 }

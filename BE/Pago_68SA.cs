@@ -15,10 +15,14 @@ namespace BE_08YS
 
     public class Pago_68SA
     {
+        #region Propiedades
+
         public int Id { get; set; }
         public int ReservaId { get; set; }
         public decimal Monto { get; set; }
         public MetodoPago MetodoPago { get; set; }
         public DateTime FechaPago { get; set; }
+
+        #endregion
     }
 }

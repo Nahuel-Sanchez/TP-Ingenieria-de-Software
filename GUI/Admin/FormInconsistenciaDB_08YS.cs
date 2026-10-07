@@ -15,12 +15,18 @@ namespace GUI_08YS.Admin
 {
     public partial class FormInconsistenciaDB_08YS : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private readonly DvBLL_08YS _dvBLL;
         private readonly BackupBLL_08YS _backupBLL;
 
         private static readonly Color ColorFondo = Color.FromArgb(5, 15, 45);
         private static readonly Color ColorOro = Color.Goldenrod;
         private static readonly Color ColorPeligro = Color.OrangeRed;
+
+        #endregion
+
+        #region Constructor
 
         public FormInconsistenciaDB_08YS()  
         {
@@ -29,11 +35,7 @@ namespace GUI_08YS.Admin
             _backupBLL = BLLFactory_08YS.CreateBackupBLL();
         }
 
-        private void FormInconsistenciaDB_08YS_Load(object sender, EventArgs e)
-        {
-            ConfigurarBotones();
-            UpdateIdioma();
-        }
+        #endregion
 
         #region Idioma
         public void UpdateIdioma()
@@ -55,6 +57,14 @@ namespace GUI_08YS.Admin
             }
         }
         #endregion
+
+        #region Eventos de controles
+
+        private void FormInconsistenciaDB_08YS_Load(object sender, EventArgs e)
+        {
+            ConfigurarBotones();
+            UpdateIdioma();
+        }
 
         private void btnRecalcular_Click(object sender, EventArgs e)
         {
@@ -159,6 +169,15 @@ namespace GUI_08YS.Admin
             finally { Cursor = Cursors.Default; }
         }
 
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
         private string SeleccionarArchivoBackup()
         {
             using (var dialog = new OpenFileDialog())
@@ -172,11 +191,6 @@ namespace GUI_08YS.Admin
                     ? dialog.FileName
                     : string.Empty;
             }
-        }
-
-        private void btnSalir_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
         }
 
         private void ConfigurarBotones()
@@ -218,5 +232,7 @@ namespace GUI_08YS.Admin
                 b.IconColor = color;
             };
         }
+
+        #endregion
     }
 }

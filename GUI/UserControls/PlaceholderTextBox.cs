@@ -17,6 +17,8 @@ namespace CustomControls
     [DefaultEvent("TextChanged")]
     public class PlaceholderTextBox : TextBox
     {
+        #region Campos
+
         // ──────────────────────────────────────────────────────────────────
         // Win32
         // ──────────────────────────────────────────────────────────────────
@@ -25,18 +27,6 @@ namespace CustomControls
         private const int  WM_NCPAINT      = 0x0085;
         private const uint RDW_INVALIDATE  = 0x0001;
         private const uint RDW_FRAME       = 0x0400;
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern bool SendMessage(IntPtr hWnd, int msg, bool wParam, string lParam);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetWindowDC(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        private static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
-
-        [DllImport("user32.dll")]
-        private static extern bool RedrawWindow(IntPtr hWnd, IntPtr lprc, IntPtr hrgn, uint flags);
 
         // ──────────────────────────────────────────────────────────────────
         // Campos — Placeholder
@@ -55,13 +45,9 @@ namespace CustomControls
         private Color _borderFocusColor = Color.Empty;   // Empty = igual a BorderColor
         private bool  _isFocused        = false;
 
-        // ──────────────────────────────────────────────────────────────────
-        // Constructor
-        // ──────────────────────────────────────────────────────────────────
-        public PlaceholderTextBox()
-        {
-            _realForeColor = ForeColor;
-        }
+        #endregion
+
+        #region Propiedades
 
         // ══════════════════════════════════════════════════════════════════
         // PROPIEDADES — BORDE
@@ -168,101 +154,21 @@ namespace CustomControls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string RealText => _showingPlaceholder ? string.Empty : base.Text;
 
-        // ══════════════════════════════════════════════════════════════════
-        // PROPIEDADES — TEXT / FORECOLOR (sobrescritas)
-        // ══════════════════════════════════════════════════════════════════
+        #endregion
 
-        [Browsable(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public override string Text
+        #region Constructor
+
+        // ──────────────────────────────────────────────────────────────────
+        // Constructor
+        // ──────────────────────────────────────────────────────────────────
+        public PlaceholderTextBox()
         {
-            get => _showingPlaceholder ? string.Empty : base.Text;
-            set
-            {
-                if (_maskedInput)
-                {
-                    if (string.IsNullOrEmpty(value))
-                    {
-                        if (!Focused) InternalShowPlaceholder();
-                        else { _showingPlaceholder = false; base.PasswordChar = _maskChar; base.ForeColor = _realForeColor; base.Text = string.Empty; }
-                    }
-                    else { InternalHidePlaceholder(); base.Text = value; }
-                }
-                else { base.Text = value; }
-            }
+            _realForeColor = ForeColor;
         }
 
-        public override Color ForeColor
-        {
-            get => base.ForeColor;
-            set { _realForeColor = value; if (!_showingPlaceholder) base.ForeColor = value; }
-        }
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════
-        // CICLO DE VIDA
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-            // Desactivar EM_SETCUEBANNER: usamos pintura propia para evitar duplicados
-            SendMessage(Handle, EM_SETCUEBANNER, true, string.Empty);
-            ApplyPlaceholder();
-        }
-
-        // ══════════════════════════════════════════════════════════════════
-        // FOCO — placeholder + borde de foco
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnGotFocus(EventArgs e)
-        {
-            _isFocused = true;
-            InvalidateBorder();
-
-            if (_maskedInput && _showingPlaceholder)
-                InternalHidePlaceholder();
-
-            base.OnGotFocus(e);
-        }
-
-        protected override void OnLostFocus(EventArgs e)
-        {
-            _isFocused = false;
-            InvalidateBorder();
-
-            if (_maskedInput && string.IsNullOrEmpty(base.Text))
-                InternalShowPlaceholder();
-
-            base.OnLostFocus(e);
-        }
-
-        // ══════════════════════════════════════════════════════════════════
-        // WndProc — borde coloreado (WM_NCPAINT) + placeholder (WM_PAINT)
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-
-            switch (m.Msg)
-            {
-                case WM_NCPAINT:
-                    PaintBorder();
-                    break;
-
-                case WM_PAINT:
-                    // Solo dibujar placeholder si tiene borde propio
-                    // Con BorderStyle.None lo maneja el UserControl padre
-                    if (BorderStyle != BorderStyle.None
-                        && !_maskedInput && !Focused
-                        && string.IsNullOrEmpty(base.Text)
-                        && !string.IsNullOrEmpty(_placeholderText))
-                    {
-                        DrawPlaceholder();
-                    }
-                    break;
-            }
-        }
+        #region Métodos auxiliares
 
         // ──────────────────────────────────────────────────────────────────
         // Pintura del borde (área no cliente)
@@ -386,5 +292,123 @@ namespace CustomControls
             base.PasswordChar   = _maskChar;
             base.Text           = string.Empty;
         }
+
+        #endregion
+
+        #region Sobrescrituras
+
+        // ══════════════════════════════════════════════════════════════════
+        // PROPIEDADES — TEXT / FORECOLOR (sobrescritas)
+        // ══════════════════════════════════════════════════════════════════
+
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public override string Text
+        {
+            get => _showingPlaceholder ? string.Empty : base.Text;
+            set
+            {
+                if (_maskedInput)
+                {
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        if (!Focused) InternalShowPlaceholder();
+                        else { _showingPlaceholder = false; base.PasswordChar = _maskChar; base.ForeColor = _realForeColor; base.Text = string.Empty; }
+                    }
+                    else { InternalHidePlaceholder(); base.Text = value; }
+                }
+                else { base.Text = value; }
+            }
+        }
+
+        public override Color ForeColor
+        {
+            get => base.ForeColor;
+            set { _realForeColor = value; if (!_showingPlaceholder) base.ForeColor = value; }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // CICLO DE VIDA
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            // Desactivar EM_SETCUEBANNER: usamos pintura propia para evitar duplicados
+            SendMessage(Handle, EM_SETCUEBANNER, true, string.Empty);
+            ApplyPlaceholder();
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // FOCO — placeholder + borde de foco
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnGotFocus(EventArgs e)
+        {
+            _isFocused = true;
+            InvalidateBorder();
+
+            if (_maskedInput && _showingPlaceholder)
+                InternalHidePlaceholder();
+
+            base.OnGotFocus(e);
+        }
+
+        protected override void OnLostFocus(EventArgs e)
+        {
+            _isFocused = false;
+            InvalidateBorder();
+
+            if (_maskedInput && string.IsNullOrEmpty(base.Text))
+                InternalShowPlaceholder();
+
+            base.OnLostFocus(e);
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // WndProc — borde coloreado (WM_NCPAINT) + placeholder (WM_PAINT)
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            switch (m.Msg)
+            {
+                case WM_NCPAINT:
+                    PaintBorder();
+                    break;
+
+                case WM_PAINT:
+                    // Solo dibujar placeholder si tiene borde propio
+                    // Con BorderStyle.None lo maneja el UserControl padre
+                    if (BorderStyle != BorderStyle.None
+                        && !_maskedInput && !Focused
+                        && string.IsNullOrEmpty(base.Text)
+                        && !string.IsNullOrEmpty(_placeholderText))
+                    {
+                        DrawPlaceholder();
+                    }
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Win32
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern bool SendMessage(IntPtr hWnd, int msg, bool wParam, string lParam);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetWindowDC(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+        [DllImport("user32.dll")]
+        private static extern bool RedrawWindow(IntPtr hWnd, IntPtr lprc, IntPtr hrgn, uint flags);
+
+        #endregion
     }
 }

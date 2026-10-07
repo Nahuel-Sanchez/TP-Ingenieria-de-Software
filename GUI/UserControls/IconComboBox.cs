@@ -37,6 +37,8 @@ namespace CustomControls
     [DefaultEvent("SelectedIndexChanged")]
     public class IconComboBox : UserControl
     {
+        #region Campos
+
         private const int ArrowAreaWidth = 20;
 
         // ──────────────────────────────────────────────────────────────────
@@ -93,47 +95,9 @@ namespace CustomControls
         private string _valueMember = string.Empty;
         private bool _refreshingDataSource = false;
 
-        // ══════════════════════════════════════════════════════════════════
-        // Eventos
-        // ══════════════════════════════════════════════════════════════════
-        public event EventHandler IconClick;
-        public event EventHandler SelectedIndexChanged;
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════
-        // Constructor
-        // ══════════════════════════════════════════════════════════════════
-        public IconComboBox()
-        {
-            SetStyle(ControlStyles.UserPaint |
-                     ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.ResizeRedraw, true);
-
-            _items = new ComboBoxItemCollection(this);
-
-            _iconPicture = new PictureBox
-            {
-                SizeMode = PictureBoxSizeMode.CenterImage,
-                BackColor = Color.Transparent,
-                Cursor = Cursors.Hand,
-                Visible = false
-            };
-            _iconPicture.Click += (_, e) =>
-            {
-                IconClick?.Invoke(this, e);
-                if (IconClick == null) ToggleDropdown();
-            };
-            Controls.Add(_iconPicture);
-
-            BackColor = SystemColors.Window;
-            ForeColor = SystemColors.WindowText;
-            Size = new Size(200, 32);
-            Cursor = Cursors.Hand;
-            TabStop = true;
-
-            RefreshIcon();
-            UpdateLayout();
-        }
+        #region Propiedades
 
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES: ITEMS Y SELECCIÓN ───────────────────────────────
@@ -442,33 +406,123 @@ namespace CustomControls
             }
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── PINTURA DE LA CARA ────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
+        #endregion
 
-        protected override void OnPaint(PaintEventArgs e)
+        #region Eventos
+
+        // ══════════════════════════════════════════════════════════════════
+        // Eventos
+        // ══════════════════════════════════════════════════════════════════
+        public event EventHandler IconClick;
+        public event EventHandler SelectedIndexChanged;
+
+        #endregion
+
+        #region Constructor
+
+        // ══════════════════════════════════════════════════════════════════
+        // Constructor
+        // ══════════════════════════════════════════════════════════════════
+        public IconComboBox()
         {
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
+            SetStyle(ControlStyles.UserPaint |
+                     ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.ResizeRedraw, true);
 
-            // 1. Fondo completo (BackColor configurable)
-            using (var bg = new SolidBrush(BackColor))
-                g.FillRectangle(bg, ClientRectangle);
+            _items = new ComboBoxItemCollection(this);
 
-            // 2. Texto del ítem seleccionado
-            PaintSelectedText(g);
+            _iconPicture = new PictureBox
+            {
+                SizeMode = PictureBoxSizeMode.CenterImage,
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
+                Visible = false
+            };
+            _iconPicture.Click += (_, e) =>
+            {
+                IconClick?.Invoke(this, e);
+                if (IconClick == null) ToggleDropdown();
+            };
+            Controls.Add(_iconPicture);
 
-            // 3. Flecha ▼
-            PaintArrow(g);
+            BackColor = SystemColors.Window;
+            ForeColor = SystemColors.WindowText;
+            Size = new Size(200, 32);
+            Cursor = Cursors.Hand;
+            TabStop = true;
 
-            // 4. Borde
-            Color borderColor = _isFocused ? _borderFocusColor : _borderColor;
-            var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
-            if (_cornerRadius > 0)
-                PaintRoundedBorder(g, borderRect, borderColor);
-            else
-                PaintSquareBorder(g, borderRect, borderColor);
+            RefreshIcon();
+            UpdateLayout();
         }
+
+        #endregion
+
+        #region Eventos de controles
+
+        // ──────────────────────────────────────────────────────────────────
+        // Owner-draw del ListBox — control total del color de cada ítem
+        // ──────────────────────────────────────────────────────────────────
+
+        private void OnListBoxDrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0 || e.Index >= _listBox.Items.Count) return;
+
+            bool isHover = e.Index == _hoverIndex;
+            bool highlight = isHover;
+
+            Color back = highlight ? _dropHighlightBackColor : _dropBackColor;
+            Color fore = highlight ? _dropHighlightForeColor : _dropForeColor;
+
+            using (var bg = new SolidBrush(back))
+                e.Graphics.FillRectangle(bg, e.Bounds);
+
+            var textRect = new Rectangle(e.Bounds.X + 6, e.Bounds.Y,
+                                          e.Bounds.Width - 6, e.Bounds.Height);
+            var textFlags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left
+                          | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding;
+
+            TextRenderer.DrawText(e.Graphics,
+                                  _listBox.Items[e.Index]?.ToString() ?? string.Empty,
+                                  _listBox.Font, textRect, fore, textFlags);
+        }
+
+        private void OnListBoxMouseMove(object sender, MouseEventArgs e)
+        {
+            int idx = _listBox.IndexFromPoint(e.Location);
+            if (idx != _hoverIndex)
+            {
+                _hoverIndex = idx;
+                _listBox.Invalidate();
+            }
+        }
+
+        private void OnDataSourceListChanged(object sender,
+            System.ComponentModel.ListChangedEventArgs e)
+        {
+            RefreshDataItems();
+        }
+
+        #endregion
+
+        #region Métodos públicos
+
+        internal void OnItemsChanged()
+        {
+            // Durante RefreshDataItems() las notificaciones individuales se omiten;
+            // el método hace un único refresh al final para evitar trabajo redundante.
+            if (_refreshingDataSource) return;
+
+            if (_selectedIndex >= _items.Count)
+                _selectedIndex = _items.Count - 1;
+
+            RefreshListBoxItems();
+            Invalidate();
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         private void PaintSelectedText(Graphics g)
         {
@@ -550,79 +604,6 @@ namespace CustomControls
                 clip.CloseFigure();
                 Region = new Region(clip);
             }
-        }
-
-        // ══════════════════════════════════════════════════════════════════
-        // ── INTERACCIÓN ───────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnClick(EventArgs e)
-        {
-            base.OnClick(e);
-            // Ignorar clics en el ícono (ya los maneja _iconPicture.Click)
-            ToggleDropdown();
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-            switch (e.KeyCode)
-            {
-                case Keys.F4:
-                case Keys.Space:
-                    ToggleDropdown();
-                    e.Handled = true;
-                    break;
-
-                case Keys.Down:
-                    if (_selectedIndex < _items.Count - 1)
-                        SelectedIndex = _selectedIndex + 1;
-                    e.Handled = true;
-                    break;
-
-                case Keys.Up:
-                    if (_selectedIndex > 0)
-                        SelectedIndex = _selectedIndex - 1;
-                    e.Handled = true;
-                    break;
-
-                case Keys.Home:
-                    if (_items.Count > 0) SelectedIndex = 0;
-                    e.Handled = true;
-                    break;
-
-                case Keys.End:
-                    if (_items.Count > 0) SelectedIndex = _items.Count - 1;
-                    e.Handled = true;
-                    break;
-
-                case Keys.Delete:
-                case Keys.Back:
-                    SelectedIndex = -1;
-                    e.Handled = true;
-                    break;
-            }
-        }
-
-        protected override void OnGotFocus(EventArgs e)
-        {
-            base.OnGotFocus(e);
-            _isFocused = true;
-            Invalidate();
-        }
-
-        protected override void OnLostFocus(EventArgs e)
-        {
-            base.OnLostFocus(e);
-            _isFocused = false;
-            Invalidate();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            UpdateLayout();
-            Invalidate();
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -806,43 +787,6 @@ namespace CustomControls
             _listBox.Invalidate();
         }
 
-        // ──────────────────────────────────────────────────────────────────
-        // Owner-draw del ListBox — control total del color de cada ítem
-        // ──────────────────────────────────────────────────────────────────
-
-        private void OnListBoxDrawItem(object sender, DrawItemEventArgs e)
-        {
-            if (e.Index < 0 || e.Index >= _listBox.Items.Count) return;
-
-            bool isHover = e.Index == _hoverIndex;
-            bool highlight = isHover;
-
-            Color back = highlight ? _dropHighlightBackColor : _dropBackColor;
-            Color fore = highlight ? _dropHighlightForeColor : _dropForeColor;
-
-            using (var bg = new SolidBrush(back))
-                e.Graphics.FillRectangle(bg, e.Bounds);
-
-            var textRect = new Rectangle(e.Bounds.X + 6, e.Bounds.Y,
-                                          e.Bounds.Width - 6, e.Bounds.Height);
-            var textFlags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left
-                          | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding;
-
-            TextRenderer.DrawText(e.Graphics,
-                                  _listBox.Items[e.Index]?.ToString() ?? string.Empty,
-                                  _listBox.Font, textRect, fore, textFlags);
-        }
-
-        private void OnListBoxMouseMove(object sender, MouseEventArgs e)
-        {
-            int idx = _listBox.IndexFromPoint(e.Location);
-            if (idx != _hoverIndex)
-            {
-                _hoverIndex = idx;
-                _listBox.Invalidate();
-            }
-        }
-
         // ══════════════════════════════════════════════════════════════════
         // ── ÍCONO ─────────────────────────────────────────────────────────
         // ══════════════════════════════════════════════════════════════════
@@ -891,12 +835,6 @@ namespace CustomControls
         {
             if (_dataSource is System.ComponentModel.IBindingList bl)
                 bl.ListChanged -= OnDataSourceListChanged;
-        }
-
-        private void OnDataSourceListChanged(object sender,
-            System.ComponentModel.ListChangedEventArgs e)
-        {
-            RefreshDataItems();
         }
 
         /// <summary>
@@ -962,19 +900,6 @@ namespace CustomControls
             return prop?.GetValue(item) ?? item;
         }
 
-        internal void OnItemsChanged()
-        {
-            // Durante RefreshDataItems() las notificaciones individuales se omiten;
-            // el método hace un único refresh al final para evitar trabajo redundante.
-            if (_refreshingDataSource) return;
-
-            if (_selectedIndex >= _items.Count)
-                _selectedIndex = _items.Count - 1;
-
-            RefreshListBoxItems();
-            Invalidate();
-        }
-
         private string GetDisplayText(int index)
         {
             if (index < 0 || index >= _items.Count) return string.Empty;
@@ -996,6 +921,111 @@ namespace CustomControls
             // POCO: reflection
             var prop = item.GetType().GetProperty(_displayMember);
             return prop?.GetValue(item)?.ToString() ?? item.ToString();
+        }
+
+        #endregion
+
+        #region Sobrescrituras
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── PINTURA DE LA CARA ────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // 1. Fondo completo (BackColor configurable)
+            using (var bg = new SolidBrush(BackColor))
+                g.FillRectangle(bg, ClientRectangle);
+
+            // 2. Texto del ítem seleccionado
+            PaintSelectedText(g);
+
+            // 3. Flecha ▼
+            PaintArrow(g);
+
+            // 4. Borde
+            Color borderColor = _isFocused ? _borderFocusColor : _borderColor;
+            var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
+            if (_cornerRadius > 0)
+                PaintRoundedBorder(g, borderRect, borderColor);
+            else
+                PaintSquareBorder(g, borderRect, borderColor);
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── INTERACCIÓN ───────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnClick(EventArgs e)
+        {
+            base.OnClick(e);
+            // Ignorar clics en el ícono (ya los maneja _iconPicture.Click)
+            ToggleDropdown();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            switch (e.KeyCode)
+            {
+                case Keys.F4:
+                case Keys.Space:
+                    ToggleDropdown();
+                    e.Handled = true;
+                    break;
+
+                case Keys.Down:
+                    if (_selectedIndex < _items.Count - 1)
+                        SelectedIndex = _selectedIndex + 1;
+                    e.Handled = true;
+                    break;
+
+                case Keys.Up:
+                    if (_selectedIndex > 0)
+                        SelectedIndex = _selectedIndex - 1;
+                    e.Handled = true;
+                    break;
+
+                case Keys.Home:
+                    if (_items.Count > 0) SelectedIndex = 0;
+                    e.Handled = true;
+                    break;
+
+                case Keys.End:
+                    if (_items.Count > 0) SelectedIndex = _items.Count - 1;
+                    e.Handled = true;
+                    break;
+
+                case Keys.Delete:
+                case Keys.Back:
+                    SelectedIndex = -1;
+                    e.Handled = true;
+                    break;
+            }
+        }
+
+        protected override void OnGotFocus(EventArgs e)
+        {
+            base.OnGotFocus(e);
+            _isFocused = true;
+            Invalidate();
+        }
+
+        protected override void OnLostFocus(EventArgs e)
+        {
+            base.OnLostFocus(e);
+            _isFocused = false;
+            Invalidate();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            UpdateLayout();
+            Invalidate();
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -1020,6 +1050,8 @@ namespace CustomControls
             }
             base.Dispose(disposing);
         }
+
+        #endregion
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -1029,15 +1061,29 @@ namespace CustomControls
     // ══════════════════════════════════════════════════════════════════════
     public class ComboBoxItemCollection : Collection<object>
     {
+        #region Campos
+
         private readonly IconComboBox _owner;
 
+        #endregion
+
+        #region Constructor
+
         internal ComboBoxItemCollection(IconComboBox owner) { _owner = owner; }
+
+        #endregion
+
+        #region Métodos públicos
 
         /// <summary>Agrega varios ítems de una vez.</summary>
         public void AddRange(object[] items)
         {
             foreach (var item in items) Add(item);
         }
+
+        #endregion
+
+        #region Sobrescrituras
 
         protected override void InsertItem(int index, object item)
         {
@@ -1062,5 +1108,7 @@ namespace CustomControls
             base.SetItem(index, item);
             _owner.OnItemsChanged();
         }
+
+        #endregion
     }
 }

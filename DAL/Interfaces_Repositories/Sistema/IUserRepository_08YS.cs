@@ -9,17 +9,23 @@ namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IUserRepository_08YS
     {
+        #region Consultas
+
         List<User_08YS> GetAll();
 
         User_08YS GetByUsername(string username);
+
+        bool Exists(int DNI);
+
+        #endregion
+
+        #region Operaciones
 
         void LockOut(string username);
 
         void Unlock(string username);
 
         void Create(User_08YS user);
-
-        bool Exists(int DNI);
 
         void Modify(User_08YS user, string login);
 
@@ -28,5 +34,7 @@ namespace DAL_08YS.Interfaces_Repositories
         void UpdatePassword(string username, string hashNuevo, string saltNuevo);
 
         void UpdateLanguage(string username, string language);
+
+        #endregion
     }
 }

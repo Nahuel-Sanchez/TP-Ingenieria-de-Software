@@ -12,9 +12,13 @@ namespace BLL_08YS
 {
     public static class DVManager_08YS
     {
+        #region Campos
+
         private static DvBLL_08YS _bll;
 
-        public static void Inicializar(DvBLL_08YS bll) => _bll = bll;
+        #endregion
+
+        #region Operaciones
 
         public static void Recalcular()
         {
@@ -22,26 +26,51 @@ namespace BLL_08YS
             catch { }
         }
 
+        #endregion
+
+        #region Validaciones
+
         public static bool VerificarConsistencia()
         {
             try { return _bll?.VerificarConsistencia() ?? true; }
             catch { return true; }
         }
+
+        #endregion
+
+        #region Métodos públicos
+
+        public static void Inicializar(DvBLL_08YS bll) => _bll = bll;
+
+        #endregion
     }
 
     public class DvBLL_08YS
     {
+        #region Campos
+
         public static readonly string[] TablasMonitoreadas =
 {
             "Users", "Roles", "Familias", "Permisos",
             "FamiliaPermiso", "FamiliaIntegrada", "RolFamilia", "RolPermiso",
             "Pisos", "TiposHabitacion", "Habitaciones", "Huespedes",
-            "Reservas", "Acompanantes", "Pagos", "ConfiguracionHotel"
+            "Reservas", "Acompanantes", "Pagos", "ConfiguracionHotel",
+            // PN2 (mismo orden que sp_GetAllTablesParaDV)
+            "ItemsRoomService", "CargosAdicionales", "PedidosRoomService", "DetallePedidoRoomService",
+            "HistorialCambiosHabitacion", "Bitacora_CambiosHabitacion"
         };
 
         private readonly IDvRepository_08YS _repo;
 
+        #endregion
+
+        #region Constructor
+
         public DvBLL_08YS(IDvRepository_08YS repo) => _repo = repo;
+
+        #endregion
+
+        #region Operaciones
 
         /// <summary>
         /// Lee todas las tablas, calcula DVH y DVV cifrados por tabla,
@@ -64,6 +93,10 @@ namespace BLL_08YS
                 });
             }
         }
+
+        #endregion
+
+        #region Validaciones
 
         /// <summary>
         /// Recalcula en memoria y compara contra los valores almacenados.
@@ -96,26 +129,9 @@ namespace BLL_08YS
             return true;
         }
 
-        /// <summary>
-        /// Formatea un valor de celda para la concatenación.
-        /// Normaliza tipos para que la comparación sea consistente entre ejecuciones.
-        /// </summary>
-        private static string FormatearCelda(object valor)
-        {
-            if (valor == null || valor == DBNull.Value)
-                return string.Empty;
+        #endregion
 
-            if (valor is DateTime dt)
-                return dt.ToString("yyyy-MM-dd HH:mm:ss");
-
-            if (valor is bool b)
-                return b ? "1" : "0";
-
-            if (valor is byte by)
-                return by == 1 ? "1" : "0";  // BIT en SQL llega como byte
-
-            return valor.ToString();
-        }
+        #region Métodos públicos
 
         /// <summary>
         /// DVH de una tabla: concatena fila por fila.
@@ -159,5 +175,32 @@ namespace BLL_08YS
 
             return (dvhCifrado, dvvCifrado);
         }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        /// <summary>
+        /// Formatea un valor de celda para la concatenación.
+        /// Normaliza tipos para que la comparación sea consistente entre ejecuciones.
+        /// </summary>
+        private static string FormatearCelda(object valor)
+        {
+            if (valor == null || valor == DBNull.Value)
+                return string.Empty;
+
+            if (valor is DateTime dt)
+                return dt.ToString("yyyy-MM-dd HH:mm:ss");
+
+            if (valor is bool b)
+                return b ? "1" : "0";
+
+            if (valor is byte by)
+                return by == 1 ? "1" : "0";  // BIT en SQL llega como byte
+
+            return valor.ToString();
+        }
+
+        #endregion
     }
 }

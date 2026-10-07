@@ -10,6 +10,8 @@ namespace DAL_08YS.SQL.Negocio
 {
     public class SqlReservaRepository_68SA : Connection_08YS, IReservaRepository_68SA
     {
+        #region Campos
+
         private const string BaseColumnas = @"
             r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
             r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.MontoOriginal,
@@ -27,13 +29,24 @@ namespace DAL_08YS.SQL.Negocio
 
         private const string BaseSelect = "SELECT " + BaseColumnas + BaseFrom;
 
-        // Solo para el listado: trae el total pagado en la misma consulta (evita una query por fila)
+        // Solo para el listado: trae el total pagado y los cargos adicionales (PN2) en la misma consulta
+        // (evita una query por fila)
         private const string ListadoSelect =
-            "SELECT " + BaseColumnas + ", ISNULL(pg.MontoPagado, 0) AS MontoPagado" + BaseFrom + @"
+            "SELECT " + BaseColumnas + ", ISNULL(pg.MontoPagado, 0) AS MontoPagado, ISNULL(cg.MontoCargos, 0) AS MontoCargos" + BaseFrom + @"
              LEFT JOIN (SELECT ReservaID, SUM(Monto) AS MontoPagado FROM Pagos GROUP BY ReservaID) pg
-             ON pg.ReservaID = r.ReservaID";
+             ON pg.ReservaID = r.ReservaID
+             LEFT JOIN (SELECT ReservaID, SUM(Monto) AS MontoCargos FROM CargosAdicionales GROUP BY ReservaID) cg
+             ON cg.ReservaID = r.ReservaID";
+
+        #endregion
+
+        #region Constructor
 
         public SqlReservaRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public List<Reserva_68SA> GetAll(ReservaFiltro_68SA filtro)
         {
@@ -101,32 +114,6 @@ namespace DAL_08YS.SQL.Negocio
             return ReservaMapper_68SA.FromDataTable(dt);
         }
 
-        public int Crear(Reserva_68SA reserva)
-        {
-            var idOutput = ParamOutput("@NuevaReservaID");
-            var disponibleOutput = ParamOutput("@Disponible");
-
-            ExecuteNonQuery("sp_CrearReserva",
-                new[]
-                {
-            Param("@HuespedTitularID", reserva.Titular.Id),
-            Param("@HabitacionID",     reserva.Habitacion.Id),
-            Param("@FechaIngreso",     reserva.FechaIngreso.Date),
-            Param("@FechaEgreso",      reserva.FechaEgreso.Date),
-            Param("@CantidadAdultos",  reserva.CantidadAdultos),
-            Param("@CantidadNinos",    reserva.CantidadNinos),
-            Param("@TarifaNoche",      reserva.TarifaNoche),
-            Param("@MontoTotal",       reserva.MontoTotal),
-            Param("@UsuarioRegistroDNI", (object)reserva.UsuarioRegistroDni ?? DBNull.Value),
-            idOutput,
-            disponibleOutput
-                },
-                storedProcedure: true);
-
-            bool disponible = Convert.ToBoolean(disponibleOutput.Value);
-            return disponible ? Convert.ToInt32(idOutput.Value) : -1;
-        }
-
         public Reserva_68SA GetById(int reservaId)
         {
             DataTable dt = GetDataTable(BaseSelect + " WHERE r.ReservaID = @Id", new[] { Param("@Id", reservaId) });
@@ -173,6 +160,58 @@ namespace DAL_08YS.SQL.Negocio
             return ReservaMapper_68SA.FromDataTable(dt);
         }
 
+        public List<Huesped_68SA> GetAcompanantes(int reservaId)
+        {
+            DataTable dt = GetDataTable(
+                @"SELECT hu.HuespedID, hu.Nombre, hu.Apellido, hu.Documento, hu.TipoDocumento,
+                         hu.Nacionalidad, hu.FechaNacimiento, hu.Email, hu.Telefono
+                  FROM Huespedes hu
+                  INNER JOIN Acompanantes a ON hu.HuespedID = a.HuespedID
+                  WHERE a.ReservaID = @ReservaID",
+                new[] { Param("@ReservaID", reservaId) });
+
+            return HuespedMapper_68SA.FromDataTable(dt);
+        }
+
+        public Reserva_68SA GetEnCursoPorHabitacion(int habitacionId)
+        {
+            DataTable dt = GetDataTable(
+                BaseSelect + " WHERE r.HabitacionID = @HabitacionID AND r.Estado = 1", // EnCurso
+                new[] { Param("@HabitacionID", habitacionId) });
+
+            return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
+        }
+
+        #endregion
+
+        #region Operaciones
+
+        public int Crear(Reserva_68SA reserva)
+        {
+            var idOutput = ParamOutput("@NuevaReservaID");
+            var disponibleOutput = ParamOutput("@Disponible");
+
+            ExecuteNonQuery("sp_CrearReserva",
+                new[]
+                {
+            Param("@HuespedTitularID", reserva.Titular.Id),
+            Param("@HabitacionID",     reserva.Habitacion.Id),
+            Param("@FechaIngreso",     reserva.FechaIngreso.Date),
+            Param("@FechaEgreso",      reserva.FechaEgreso.Date),
+            Param("@CantidadAdultos",  reserva.CantidadAdultos),
+            Param("@CantidadNinos",    reserva.CantidadNinos),
+            Param("@TarifaNoche",      reserva.TarifaNoche),
+            Param("@MontoTotal",       reserva.MontoTotal),
+            Param("@UsuarioRegistroDNI", (object)reserva.UsuarioRegistroDni ?? DBNull.Value),
+            idOutput,
+            disponibleOutput
+                },
+                storedProcedure: true);
+
+            bool disponible = Convert.ToBoolean(disponibleOutput.Value);
+            return disponible ? Convert.ToInt32(idOutput.Value) : -1;
+        }
+
         public bool RegistrarCheckIn(int reservaId, DateTime fechaHora)
         {
             var resultado = ParamOutput("@Resultado");
@@ -207,28 +246,6 @@ namespace DAL_08YS.SQL.Negocio
                 new[] { Param("@ReservaID", reservaId), Param("@HuespedID", huespedId) });
         }
 
-        public List<Huesped_68SA> GetAcompanantes(int reservaId)
-        {
-            DataTable dt = GetDataTable(
-                @"SELECT hu.HuespedID, hu.Nombre, hu.Apellido, hu.Documento, hu.TipoDocumento,
-                         hu.Nacionalidad, hu.FechaNacimiento, hu.Email, hu.Telefono
-                  FROM Huespedes hu
-                  INNER JOIN Acompanantes a ON hu.HuespedID = a.HuespedID
-                  WHERE a.ReservaID = @ReservaID",
-                new[] { Param("@ReservaID", reservaId) });
-
-            return HuespedMapper_68SA.FromDataTable(dt);
-        }
-
-        public Reserva_68SA GetEnCursoPorHabitacion(int habitacionId)
-        {
-            DataTable dt = GetDataTable(
-                BaseSelect + " WHERE r.HabitacionID = @HabitacionID AND r.Estado = 1", // EnCurso
-                new[] { Param("@HabitacionID", habitacionId) });
-
-            return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
-        }
-
         public int ProcesarNoShows()
         {
             var salida = ParamOutput("@CantidadCanceladas");
@@ -261,5 +278,7 @@ namespace DAL_08YS.SQL.Negocio
                 storedProcedure: true);
             return Convert.ToBoolean(disponibleOutput.Value);
         }
+
+        #endregion
     }
 }

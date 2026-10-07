@@ -106,6 +106,29 @@
       <DependentUpon>UC_DonutChart_68SA.cs</DependentUpon>
     </Compile>
     <Compile Include="Recepcionista\Dashboard\ReporteReservasImpresor_68SA.cs" />
+    <Compile Include="Ayuda\AyudaContenido_68SA.cs" />
+    <Compile Include="Ayuda\AyudaManager_68SA.cs" />
+    <Compile Include="Ayuda\FormAyuda_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ayuda\GloboAyuda_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ayuda\ManualAyudaImpresor_68SA.cs" />
+    <Compile Include="Reportes\AnalisisDemandaImpresor_68SA.cs" />
+    <Compile Include="Reportes\FormReportes_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reportes\VisorReporte_68SA.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Usuario\FormInicio_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Dashboard\ReporteServiciosImpresor_68SA.cs" />
+    <Compile Include="Recepcionista\Dashboard\UC_BarChart_68SA.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Recepcionista\Reserva\FacturaImpresor_68SA.cs" />
     <Compile Include="Recepcionista\Reserva\Documentos\ComprobanteReserva_68SA.cs" />
     <Compile Include="Recepcionista\Reserva\Documentos\DocumentoReserva_68SA.cs" />
@@ -114,6 +137,49 @@
     <Compile Include="Recepcionista\Reserva\Documentos\FormDocumentosReserva_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Recepcionista\Cargos\FormBitacoraCambiosHabitacion_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormBitacoraCambiosHabitacion_68SA.Designer.cs">
+      <DependentUpon>FormBitacoraCambiosHabitacion_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormCambioHabitacion_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormCambioHabitacion_68SA.Designer.cs">
+      <DependentUpon>FormCambioHabitacion_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormDetalleEstadia_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormDetalleEstadia_68SA.Designer.cs">
+      <DependentUpon>FormDetalleEstadia_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormCartaRoomService_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormCartaRoomService_68SA.Designer.cs">
+      <DependentUpon>FormCartaRoomService_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormEditarItemRoomService_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormEditarItemRoomService_68SA.Designer.cs">
+      <DependentUpon>FormEditarItemRoomService_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormPedidoRoomService_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormPedidoRoomService_68SA.Designer.cs">
+      <DependentUpon>FormPedidoRoomService_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormPedidosRoomService_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\FormPedidosRoomService_68SA.Designer.cs">
+      <DependentUpon>FormPedidosRoomService_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Cargos\UiCargos_68SA.cs" />
     <Compile Include="Recepcionista\FormConfiguracionHotel_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,6 +318,24 @@
     <Compile Include="Recepcionista\Habitacion\UC_HabitacionCard_68SA.Designer.cs">
       <DependentUpon>UC_HabitacionCard_68SA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Recepcionista\Habitacion\TileEstadoHabitacion_68SA.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\BarrasDesplazamiento_68SA.cs" />
+    <Compile Include="UserControls\CheckBoxHotel_68SA.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\MenuHotelRenderer_68SA.cs" />
+    <Compile Include="UserControls\TooltipsHotel_68SA.cs" />
+    <Compile Include="UserControls\PasosReserva_68SA.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\PanelImagen_68SA.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\MensajeHotel_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UserControls\CustomCalendarPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -370,6 +454,9 @@
     <None Include="Config\packages.config" />
     <Content Include="AppIcon.ico" />
     <Content Include="idiomas.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ayuda.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\AppIcon.ico" />

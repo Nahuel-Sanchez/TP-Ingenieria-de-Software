@@ -5,6 +5,8 @@ namespace GUI_08YS.Recepcionista
 {
     public static class TarjetaValidador_68SA
     {
+        #region Métodos públicos
+
         public static string LimpiarNumero(string numero)
         {
             return new string((numero ?? "").Where(char.IsDigit).ToArray());
@@ -92,5 +94,7 @@ namespace GUI_08YS.Recepcionista
 
             return true;
         }
+
+        #endregion
     }
 }

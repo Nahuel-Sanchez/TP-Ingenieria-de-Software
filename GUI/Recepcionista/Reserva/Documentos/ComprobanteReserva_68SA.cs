@@ -13,12 +13,95 @@ namespace GUI_08YS.Recepcionista
     /// </summary>
     public class ComprobanteReserva_68SA : DocumentoReserva_68SA
     {
+        #region Campos
+
         private const float Ancho = 460f;
         private const float Alto = 710f;
         private const float Margen = 20f;
         private const float Relleno = 24f;
 
+        #endregion
+
+        #region Constructor
+
         public ComprobanteReserva_68SA(DatosDocumentoReserva_68SA datos) : base(datos) { }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private static string OpcionEnum_68SA_Texto(MetodoPago metodo) => GUI_08YS.UserControls.OpcionEnum_68SA.Texto(metodo);
+
+        private void DibujarEstado(Graphics g, string texto, EstadoReserva estado, float derecha, float y, Font fuente)
+        {
+            var colores = ColoresEstado(estado);
+            using (var negrita = new Font(fuente.FontFamily, 7.5F, FontStyle.Bold))
+            {
+                float ancho = g.MeasureString(texto, negrita).Width + 26;
+                var pastilla = new RectangleF(derecha - ancho, y, ancho, 24);
+                Rellenar(g, pastilla, colores.Fondo, 12);
+                Escribir(g, texto, negrita, colores.Frente, pastilla, StringAlignment.Center, StringAlignment.Center);
+            }
+        }
+
+        private void Caja(Graphics g, RectangleF r, string etiqueta, string etiquetaDerecha, string valor, string detalle,
+            Font fEtiqueta, Font fValor, Font fDetalle)
+        {
+            Rellenar(g, r, FondoCaja, 6);
+            Contorno(g, r, Borde, 6);
+            Escribir(g, etiqueta.ToUpper(), fEtiqueta, TextoSuave, new RectangleF(r.X + 10, r.Y + 8, r.Width - 20, 12));
+            if (!string.IsNullOrEmpty(etiquetaDerecha))
+                Escribir(g, etiquetaDerecha, fDetalle, TextoSuave, new RectangleF(r.X + 10, r.Y + 7, r.Width - 20, 12), StringAlignment.Far);
+            Escribir(g, valor, fValor, Marca, new RectangleF(r.X + 10, r.Y + 21, r.Width - 20, 22));
+            Escribir(g, detalle, fDetalle, TextoSuave, new RectangleF(r.X + 10, r.Y + 43, r.Width - 20, 14));
+        }
+
+        private static float FilaDato(Graphics g, float x, float y, float ancho, string etiqueta, string valor,
+            Font fEtiqueta, Font fValor, Color? colorValor = null, bool sinLinea = false)
+        {
+            const float alto = 22;
+            const float anchoEtiqueta = 170;
+            Escribir(g, etiqueta, fEtiqueta, TextoSuave, new RectangleF(x, y, anchoEtiqueta, alto), StringAlignment.Near, StringAlignment.Center);
+            Escribir(g, string.IsNullOrWhiteSpace(valor) ? "-" : valor, fValor, colorValor ?? Texto,
+                new RectangleF(x + anchoEtiqueta, y, ancho - anchoEtiqueta, alto), StringAlignment.Near, StringAlignment.Center);
+            if (!sinLinea) Linea(g, x, y + alto, x + ancho, y + alto, Borde);
+            return y + alto;
+        }
+
+        /// <summary>Línea punteada con "muescas" a los costados, como un ticket que se corta.</summary>
+        private static void SeparadorTicket(Graphics g, float x, float y, Color fondo)
+        {
+            const float radio = 9;
+            Linea(g, x + radio + 8, y, x + Ancho - radio - 8, y, Borde, 1.2f, punteada: true);
+            foreach (float cx in new[] { x, x + Ancho })
+            {
+                var circulo = new RectangleF(cx - radio, y - radio, radio * 2, radio * 2);
+                using (var brush = new SolidBrush(fondo))
+                    g.FillEllipse(brush, circulo);
+                // Solo se ve el borde de la mitad que "entra" en la tarjeta
+                var estado = g.Save();
+                g.SetClip(new RectangleF(x, y - radio - 1, Ancho, radio * 2 + 2));
+                using (var pen = new Pen(Borde))
+                    g.DrawEllipse(pen, circulo);
+                g.Restore(estado);
+            }
+        }
+
+        private static GraphicsPath RedondeadoArriba(RectangleF r, float radio)
+        {
+            var path = new GraphicsPath();
+            float d = radio * 2;
+            path.AddArc(r.X, r.Y, d, d, 180, 90);
+            path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
+            path.AddLine(r.Right, r.Y + radio, r.Right, r.Bottom);
+            path.AddLine(r.Right, r.Bottom, r.X, r.Bottom);
+            path.CloseFigure();
+            return path;
+        }
+
+        #endregion
+
+        #region Sobrescrituras
 
         public override string Titulo => T("Documento_tituloComprobante");
         public override string NombreArchivo => $"{T("Documento_archivoComprobante")}_{NumeroReserva}.pdf";
@@ -103,7 +186,7 @@ namespace GUI_08YS.Recepcionista
                 Escribir(g, T("Documento_pago").ToUpper(), fSeccion, Marca, new RectangleF(cx, yy, ancho, 16));
                 yy += 20;
                 string medios = string.Join(", ", Datos.Pagos.Select(p => OpcionEnum_68SA_Texto(p.MetodoPago)).Distinct());
-                yy = FilaDato(g, cx, yy, ancho, T("Documento_totalEstadia"), Moneda(Reserva.MontoTotal), fTexto, fValor);
+                yy = FilaDato(g, cx, yy, ancho, T("Documento_totalEstadia"), Moneda(Datos.Total), fTexto, fValor);
                 yy = FilaDato(g, cx, yy, ancho,
                     string.IsNullOrEmpty(medios) ? T("Documento_pagado") : $"{T("Documento_pagado")} ({medios})",
                     Moneda(Datos.TotalPagado), fTexto, fValor);
@@ -123,73 +206,6 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
-        private static string OpcionEnum_68SA_Texto(MetodoPago metodo) => GUI_08YS.UserControls.OpcionEnum_68SA.Texto(metodo);
-
-        private void DibujarEstado(Graphics g, string texto, EstadoReserva estado, float derecha, float y, Font fuente)
-        {
-            var colores = ColoresEstado(estado);
-            using (var negrita = new Font(fuente.FontFamily, 7.5F, FontStyle.Bold))
-            {
-                float ancho = g.MeasureString(texto, negrita).Width + 26;
-                var pastilla = new RectangleF(derecha - ancho, y, ancho, 24);
-                Rellenar(g, pastilla, colores.Fondo, 12);
-                Escribir(g, texto, negrita, colores.Frente, pastilla, StringAlignment.Center, StringAlignment.Center);
-            }
-        }
-
-        private void Caja(Graphics g, RectangleF r, string etiqueta, string etiquetaDerecha, string valor, string detalle,
-            Font fEtiqueta, Font fValor, Font fDetalle)
-        {
-            Rellenar(g, r, FondoCaja, 6);
-            Contorno(g, r, Borde, 6);
-            Escribir(g, etiqueta.ToUpper(), fEtiqueta, TextoSuave, new RectangleF(r.X + 10, r.Y + 8, r.Width - 20, 12));
-            if (!string.IsNullOrEmpty(etiquetaDerecha))
-                Escribir(g, etiquetaDerecha, fDetalle, TextoSuave, new RectangleF(r.X + 10, r.Y + 7, r.Width - 20, 12), StringAlignment.Far);
-            Escribir(g, valor, fValor, Marca, new RectangleF(r.X + 10, r.Y + 21, r.Width - 20, 22));
-            Escribir(g, detalle, fDetalle, TextoSuave, new RectangleF(r.X + 10, r.Y + 43, r.Width - 20, 14));
-        }
-
-        private static float FilaDato(Graphics g, float x, float y, float ancho, string etiqueta, string valor,
-            Font fEtiqueta, Font fValor, Color? colorValor = null, bool sinLinea = false)
-        {
-            const float alto = 22;
-            const float anchoEtiqueta = 170;
-            Escribir(g, etiqueta, fEtiqueta, TextoSuave, new RectangleF(x, y, anchoEtiqueta, alto), StringAlignment.Near, StringAlignment.Center);
-            Escribir(g, string.IsNullOrWhiteSpace(valor) ? "-" : valor, fValor, colorValor ?? Texto,
-                new RectangleF(x + anchoEtiqueta, y, ancho - anchoEtiqueta, alto), StringAlignment.Near, StringAlignment.Center);
-            if (!sinLinea) Linea(g, x, y + alto, x + ancho, y + alto, Borde);
-            return y + alto;
-        }
-
-        /// <summary>Línea punteada con "muescas" a los costados, como un ticket que se corta.</summary>
-        private static void SeparadorTicket(Graphics g, float x, float y, Color fondo)
-        {
-            const float radio = 9;
-            Linea(g, x + radio + 8, y, x + Ancho - radio - 8, y, Borde, 1.2f, punteada: true);
-            foreach (float cx in new[] { x, x + Ancho })
-            {
-                var circulo = new RectangleF(cx - radio, y - radio, radio * 2, radio * 2);
-                using (var brush = new SolidBrush(fondo))
-                    g.FillEllipse(brush, circulo);
-                // Solo se ve el borde de la mitad que "entra" en la tarjeta
-                var estado = g.Save();
-                g.SetClip(new RectangleF(x, y - radio - 1, Ancho, radio * 2 + 2));
-                using (var pen = new Pen(Borde))
-                    g.DrawEllipse(pen, circulo);
-                g.Restore(estado);
-            }
-        }
-
-        private static GraphicsPath RedondeadoArriba(RectangleF r, float radio)
-        {
-            var path = new GraphicsPath();
-            float d = radio * 2;
-            path.AddArc(r.X, r.Y, d, d, 180, 90);
-            path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
-            path.AddLine(r.Right, r.Y + radio, r.Right, r.Bottom);
-            path.AddLine(r.Right, r.Bottom, r.X, r.Bottom);
-            path.CloseFigure();
-            return path;
-        }
+        #endregion
     }
 }

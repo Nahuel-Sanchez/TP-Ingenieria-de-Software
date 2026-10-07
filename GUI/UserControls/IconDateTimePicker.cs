@@ -20,6 +20,8 @@ namespace CustomControls
     [DefaultEvent("ValueChanged")]
     public class IconDateTimePicker : UserControl
     {
+        #region Campos
+
         private const int ArrowAreaWidth = 20;
         private const int CheckBoxAreaWidth = 20;
 
@@ -76,49 +78,9 @@ namespace CustomControls
         private Color _calTitleForeColor = Color.White;
         private Color _calTrailingForeColor = Color.Silver;
 
-        // ══════════════════════════════════════════════════════════════════
-        // Eventos
-        // ══════════════════════════════════════════════════════════════════
-        public event EventHandler ValueChanged;
-        public event EventHandler CheckedChanged;
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════
-        // Constructor
-        // ══════════════════════════════════════════════════════════════════
-        public IconDateTimePicker()
-        {
-            SetStyle(ControlStyles.UserPaint |
-                     ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.ResizeRedraw, true);
-
-            _iconPicture = new PictureBox
-            {
-                SizeMode = PictureBoxSizeMode.CenterImage,
-                BackColor = Color.Transparent,
-                Cursor = Cursors.Hand,
-                Visible = false
-            };
-            _iconPicture.Click += (s, e) => ToggleCalendar();
-            Controls.Add(_iconPicture);
-
-            BackColor = SystemColors.Window;
-            ForeColor = SystemColors.WindowText;
-            Size = new Size(220, 32);
-            Cursor = Cursors.Hand;
-            TabStop = true;
-
-            RefreshIcon();
-            UpdateLayout();
-        }
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-            UpdateLayout();
-            UpdateRegion();
-            Invalidate();
-        }
+        #region Propiedades
 
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES: VALOR ────────────────────────────────────────────
@@ -387,31 +349,53 @@ namespace CustomControls
             set { _calTrailingForeColor = value; ApplyCalendarColors(); }
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── PINTURA ───────────────────────────════════════════════════════
-        // ══════════════════════════════════════════════════════════════════
+        #endregion
 
-        protected override void OnPaint(PaintEventArgs e)
+        #region Eventos
+
+        // ══════════════════════════════════════════════════════════════════
+        // Eventos
+        // ══════════════════════════════════════════════════════════════════
+        public event EventHandler ValueChanged;
+        public event EventHandler CheckedChanged;
+
+        #endregion
+
+        #region Constructor
+
+        // ══════════════════════════════════════════════════════════════════
+        // Constructor
+        // ══════════════════════════════════════════════════════════════════
+        public IconDateTimePicker()
         {
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
+            SetStyle(ControlStyles.UserPaint |
+                     ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.ResizeRedraw, true);
 
-            using (var bg = new SolidBrush(BackColor))
-                g.FillRectangle(bg, ClientRectangle);
+            _iconPicture = new PictureBox
+            {
+                SizeMode = PictureBoxSizeMode.CenterImage,
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
+                Visible = false
+            };
+            _iconPicture.Click += (s, e) => ToggleCalendar();
+            Controls.Add(_iconPicture);
 
-            if (_showCheckBox)
-                PaintCheckBox(g);
+            BackColor = SystemColors.Window;
+            ForeColor = SystemColors.WindowText;
+            Size = new Size(220, 32);
+            Cursor = Cursors.Hand;
+            TabStop = true;
 
-            PaintDateText(g);
-            PaintArrow(g);
-
-            Color borderColor = (_isFocused || _calendarOpen) ? _borderFocusColor : _borderColor;
-            var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
-            if (_cornerRadius > 0)
-                PaintRoundedBorder(g, borderRect, borderColor);
-            else
-                PaintSquareBorder(g, borderRect, borderColor);
+            RefreshIcon();
+            UpdateLayout();
         }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         private void PaintCheckBox(Graphics g)
         {
@@ -504,61 +488,6 @@ namespace CustomControls
                     g.DrawPath(pen, path);
                 }
             }
-        }
-
-        // ══════════════════════════════════════════════════════════════════
-        // ── INTERACCIÓN ───────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnClick(EventArgs e)
-        {
-            base.OnClick(e);
-
-            if (_showCheckBox && e is MouseEventArgs me)
-            {
-                int checkX = _borderWidth + 4;
-                int checkSize = 13;
-                var checkRect = new Rectangle(checkX, (Height - checkSize) / 2,
-                                              checkSize + 4, Height);
-                if (checkRect.Contains(me.Location))
-                {
-                    Checked = !_checked;
-                    return;
-                }
-            }
-            ToggleCalendar();
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-            if (e.KeyCode == Keys.F4 || e.KeyCode == Keys.Return || e.KeyCode == Keys.Space)
-            {
-                ToggleCalendar();
-                e.Handled = true;
-            }
-        }
-
-        protected override void OnGotFocus(EventArgs e)
-        {
-            base.OnGotFocus(e);
-            _isFocused = true;
-            Invalidate();
-        }
-
-        protected override void OnLostFocus(EventArgs e)
-        {
-            base.OnLostFocus(e);
-            _isFocused = false;
-            Invalidate();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            UpdateLayout();
-            UpdateRegion();
-            Invalidate();
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -863,6 +792,99 @@ namespace CustomControls
             return val;
         }
 
+        #endregion
+
+        #region Sobrescrituras
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            UpdateLayout();
+            UpdateRegion();
+            Invalidate();
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── PINTURA ───────────────────────────════════════════════════════
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            using (var bg = new SolidBrush(BackColor))
+                g.FillRectangle(bg, ClientRectangle);
+
+            if (_showCheckBox)
+                PaintCheckBox(g);
+
+            PaintDateText(g);
+            PaintArrow(g);
+
+            Color borderColor = (_isFocused || _calendarOpen) ? _borderFocusColor : _borderColor;
+            var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
+            if (_cornerRadius > 0)
+                PaintRoundedBorder(g, borderRect, borderColor);
+            else
+                PaintSquareBorder(g, borderRect, borderColor);
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── INTERACCIÓN ───────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnClick(EventArgs e)
+        {
+            base.OnClick(e);
+
+            if (_showCheckBox && e is MouseEventArgs me)
+            {
+                int checkX = _borderWidth + 4;
+                int checkSize = 13;
+                var checkRect = new Rectangle(checkX, (Height - checkSize) / 2,
+                                              checkSize + 4, Height);
+                if (checkRect.Contains(me.Location))
+                {
+                    Checked = !_checked;
+                    return;
+                }
+            }
+            ToggleCalendar();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            if (e.KeyCode == Keys.F4 || e.KeyCode == Keys.Return || e.KeyCode == Keys.Space)
+            {
+                ToggleCalendar();
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnGotFocus(EventArgs e)
+        {
+            base.OnGotFocus(e);
+            _isFocused = true;
+            Invalidate();
+        }
+
+        protected override void OnLostFocus(EventArgs e)
+        {
+            base.OnLostFocus(e);
+            _isFocused = false;
+            Invalidate();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            UpdateLayout();
+            UpdateRegion();
+            Invalidate();
+        }
+
         // ══════════════════════════════════════════════════════════════════
         // Dispose
         // ══════════════════════════════════════════════════════════════════
@@ -875,5 +897,7 @@ namespace CustomControls
             }
             base.Dispose(disposing);
         }
+
+        #endregion
     }
 }

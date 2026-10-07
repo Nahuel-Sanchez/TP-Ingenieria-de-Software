@@ -15,7 +15,7 @@ namespace GUI_08YS.Recepcionista
     /// </summary>
     public static class EnvioDocumentosReserva_68SA
     {
-        private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
+        #region Métodos públicos
 
         /// <summary>Motivo por el que no se puede enviar, o null si está todo listo.</summary>
         public static string MotivoNoEnvio(DatosDocumentoReserva_68SA datos)
@@ -53,6 +53,12 @@ namespace GUI_08YS.Recepcionista
                     alTerminar?.Invoke(enviado, enviado ? (avisos.Count > 0 ? string.Join(" | ", avisos) : null) : error));
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
+        private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
+
         private static string ArmarCuerpoHtml(DatosDocumentoReserva_68SA datos)
         {
             var r = datos.Reserva;
@@ -73,7 +79,7 @@ namespace GUI_08YS.Recepcionista
                 (T("Documento_ingreso"), FechaHora(r.FechaIngreso, datos.HoraCheckIn)),
                 (T("Documento_egreso"), FechaHora(r.FechaEgreso, datos.HoraCheckOut)),
                 (T("Documento_huespedes"), $"{huespedes} · {r.Noches} {T(r.Noches == 1 ? "RegistrarReserva_txtNoche" : "RegistrarReserva_txtNoches")}"),
-                (T("Documento_totalEstadia"), Moneda(r.MontoTotal)),
+                (T("Documento_totalEstadia"), Moneda(datos.Total)),
                 (T("Documento_pagado"), Moneda(datos.TotalPagado)),
                 (T("Documento_saldo"), Moneda(datos.Saldo)),
             };
@@ -120,5 +126,7 @@ namespace GUI_08YS.Recepcionista
             html.Append("</table></td></tr></table></body></html>");
             return html.ToString();
         }
+
+        #endregion
     }
 }

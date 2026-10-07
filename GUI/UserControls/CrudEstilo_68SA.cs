@@ -8,6 +8,8 @@ namespace GUI_08YS.UserControls
     /// <summary>Estilo común de los CRUDs: mismos colores y medidas que la grilla de FormReservas_68SA y los popups existentes.</summary>
     public static class CrudEstilo_68SA
     {
+        #region Métodos públicos
+
         public static void AplicarGrilla(DataGridView dgv, int alturaFila = 44)
         {
             dgv.AutoGenerateColumns = true;
@@ -97,5 +99,7 @@ namespace GUI_08YS.UserControls
             txt.PlaceholderColor = Color.LightGray;
             txt.ScrollBars = ScrollBars.None;
         }
+
+        #endregion
     }
 }

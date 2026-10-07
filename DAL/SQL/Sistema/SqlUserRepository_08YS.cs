@@ -13,24 +13,13 @@ namespace DAL_08YS
 {
     public class SqlUserRepository_08YS : Connection_08YS, IUserRepository_08YS
     {
+        #region Constructor
+
         public SqlUserRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
-        private IDbDataParameter[] ToParameters(User_08YS user)
-        {
-            return new[]
-            {
-                Param("@Username",  user.Username),
-                Param("@DNI",       user.DNI),
-                Param("@Rol",     user.Rol.RolID),
-                Param("@Nombre",    user.Nombre),
-                Param("@Apellido",  user.Apellido),
-                Param("@Hash",      user.Hash),
-                Param("@Salt",      user.Salt),
-                Param("@Email",     user.Email),
-                Param("@Bloqueado", user.Bloqueado),
-                Param("@Activo",    user.Activo),
-                Param("@Idioma",    user.Idioma)
-        };
-        }
+
+        #endregion
+
+        #region Consultas
 
         //public List<User_08YS> GetAllRoots()
         //{
@@ -58,6 +47,19 @@ namespace DAL_08YS
             return dt.Rows.Count > 0 ? UserMapper_08YS.FromDataRow(dt.Rows[0]) : null;
         }
 
+        public bool Exists(int dni)
+        {
+            return ExecuteScalar<int>
+                (   
+                    "SELECT COUNT(1) FROM Users WHERE DNI = @DNI",
+                    new[] { Param("@DNI", dni) }
+                ) > 0;
+        }
+
+        #endregion
+
+        #region Operaciones
+
         public void LockOut(string username)
         {
             ExecuteNonQuery
@@ -84,15 +86,6 @@ namespace DAL_08YS
                 "VALUES (@Username, @DNI, @Rol, @Nombre, @Apellido, @Hash, @Salt, @Email, @Bloqueado, @Activo,@Idioma)",
                 ToParameters(user)
             );
-        }
-
-        public bool Exists(int dni)
-        {
-            return ExecuteScalar<int>
-                (   
-                    "SELECT COUNT(1) FROM Users WHERE DNI = @DNI",
-                    new[] { Param("@DNI", dni) }
-                ) > 0;
         }
 
         public void Modify(User_08YS user, string login)
@@ -135,5 +128,29 @@ namespace DAL_08YS
                      Param("@Username", username)
                 });
         }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private IDbDataParameter[] ToParameters(User_08YS user)
+        {
+            return new[]
+            {
+                Param("@Username",  user.Username),
+                Param("@DNI",       user.DNI),
+                Param("@Rol",     user.Rol.RolID),
+                Param("@Nombre",    user.Nombre),
+                Param("@Apellido",  user.Apellido),
+                Param("@Hash",      user.Hash),
+                Param("@Salt",      user.Salt),
+                Param("@Email",     user.Email),
+                Param("@Bloqueado", user.Bloqueado),
+                Param("@Activo",    user.Activo),
+                Param("@Idioma",    user.Idioma)
+        };
+        }
+
+        #endregion
     }
 }

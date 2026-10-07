@@ -11,6 +11,8 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormConfiguracionHotel_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -20,6 +22,10 @@ namespace GUI_08YS.Recepcionista
 
         private readonly ConfiguracionHotelBLL_68SA _configBLL = BLLFactory_08YS.CreateConfiguracionHotelBLL();
         private ConfiguracionHotel_68SA _configuracion; // null = no hay fila cargada en la base
+
+        #endregion
+
+        #region Constructor
 
         public FormConfiguracionHotel_68SA()
         {
@@ -35,6 +41,10 @@ namespace GUI_08YS.Recepcionista
             // Igual que el resto de las pantallas: la carga va en Shown, con el handle ya creado
             Shown += (s, e) => CargarConfiguracion();
         }
+
+        #endregion
+
+        #region Idioma
 
         // ---------- Idioma ----------
 
@@ -60,6 +70,10 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        #endregion
+
+        #region Carga de datos
+
         // ---------- Carga ----------
 
         private void CargarConfiguracion()
@@ -81,6 +95,10 @@ namespace GUI_08YS.Recepcionista
             dtpCheckOut.TimeValue = _configuracion.HoraCheckOut;
             nudGracia.Value = _configuracion.GraciaNoShowHoras;
         }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         // ---------- Guardar ----------
 
@@ -123,7 +141,10 @@ namespace GUI_08YS.Recepcionista
                 MessageBox.Show(ex.Message, t.GetTexto("Comun_tituloErrorValidacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-    
+
+        #endregion
+
+        #region Sobrescrituras
 
         // Pinta el formulario completo en memoria y lo vuelca de una vez: sin parpadeo ni franjas
         // blancas mientras los controles se acomodan al abrir o redimensionar la ventana.
@@ -136,5 +157,7 @@ namespace GUI_08YS.Recepcionista
                 return cp;
             }
         }
+
+        #endregion
     }
 }

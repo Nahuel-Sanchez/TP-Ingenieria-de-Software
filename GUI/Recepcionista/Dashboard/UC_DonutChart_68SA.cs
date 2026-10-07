@@ -8,15 +8,25 @@ namespace GUI_08YS.Recepcionista.Dashboard
 {
     public partial class UC_DonutChart_68SA : UserControl
     {
+        #region Campos
+
         private List<SegmentoDonut_68SA> _segmentos = new List<SegmentoDonut_68SA>();
         private string _textoCentral = "";
         private string _subtextoCentral = "";
+
+        #endregion
+
+        #region Constructor
 
         public UC_DonutChart_68SA()
         {
             InitializeComponent();
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
         }
+
+        #endregion
+
+        #region Métodos públicos
 
         public void Cargar(List<SegmentoDonut_68SA> segmentos, string textoCentral, string subtextoCentral)
         {
@@ -25,6 +35,10 @@ namespace GUI_08YS.Recepcionista.Dashboard
             _subtextoCentral = subtextoCentral;
             Invalidate();
         }
+
+        #endregion
+
+        #region Sobrescrituras
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -98,12 +112,18 @@ namespace GUI_08YS.Recepcionista.Dashboard
                     (Width - tamano.Width) / 2, Height / 2 + 14);
             }
         }
+
+        #endregion
     }
 
     public class SegmentoDonut_68SA
     {
+        #region Propiedades
+
         public string Etiqueta { get; set; }
         public decimal Valor { get; set; }
         public Color Color { get; set; }
+
+        #endregion
     }
 }

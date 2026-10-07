@@ -22,8 +22,14 @@ namespace CustomControls
     /// </summary>
     public class DateRangeSelector
     {
+        #region Campos
+
         private DateTime _minDate = new DateTime(1753, 1, 1);
         private DateTime _maxDate = new DateTime(9998, 12, 31);
+
+        #endregion
+
+        #region Propiedades
 
         public DateTime? Start { get; private set; }
         public DateTime? End { get; private set; }
@@ -40,21 +46,27 @@ namespace CustomControls
         /// <summary>Fechas ya reservadas: no se pueden seleccionar ni formar parte de un período.</summary>
         public HashSet<DateTime> BlockedDates { get; } = new HashSet<DateTime>();
 
+        /// <summary>Si es true, no permite seleccionar fechas anteriores a hoy (hoy sí se puede).</summary>
+        public bool DisablePastDates { get; set; }
+
+        #endregion
+
+        #region Eventos
+
         /// <summary>Se dispara con cada cambio (incluye selecciones parciales).</summary>
         public event EventHandler RangeChanged;
 
         /// <summary>Se dispara solo cuando el período queda completo.</summary>
         public event DateRangeEventHandler RangeCompleted;
 
+        #endregion
+
+        #region Métodos públicos
+
         public bool IsBlocked(DateTime date) => BlockedDates.Contains(date.Date);
 
         public bool IsWithinBounds(DateTime date) =>
             date.Date >= _minDate.Date && date.Date <= _maxDate.Date;
-
-        /// <summary>Si es true, no permite seleccionar fechas anteriores a hoy (hoy sí se puede).</summary>
-        public bool DisablePastDates { get; set; }
-
-        private bool IsPastDisabled(DateTime date) => DisablePastDates && date.Date < DateTime.Today;
 
         public bool IsSelectable(DateTime date) =>
             IsWithinBounds(date) && !IsBlocked(date) && !IsPastDisabled(date);
@@ -131,5 +143,13 @@ namespace CustomControls
             End = end?.Date;
             RangeChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private bool IsPastDisabled(DateTime date) => DisablePastDates && date.Date < DateTime.Today;
+
+        #endregion
     }
 }

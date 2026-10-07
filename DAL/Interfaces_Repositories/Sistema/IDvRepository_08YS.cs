@@ -10,8 +10,17 @@ namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IDvRepository_08YS
     {
+        #region Consultas
+
         List<DataTable> GetTodasLasTablas();
         List<DigitoVerificador_08YS> GetDVGuardado();
+
+        #endregion
+
+        #region Operaciones
+
         void GuardarDVTabla(DigitoVerificador_08YS entrada);
+
+        #endregion
     }
 }

@@ -12,12 +12,35 @@ namespace BLL_08YS
 {
     public abstract class AccesoBLL_08YS
     {
+        #region Campos
+
         protected readonly IPermisoRepository_08YS _permisoRepo;
+
+        #endregion
+
+        #region Constructor
 
         protected AccesoBLL_08YS(IPermisoRepository_08YS permisoRepo)
         {
             _permisoRepo = permisoRepo;
         }
+
+        #endregion
+
+        #region Validaciones
+
+        protected void ValidarDatosEntrada(string nombre, HashSet<AccessComponent_08YS> componentes)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_val_nombre_vacio"));
+
+            if (componentes == null || !componentes.Any())
+                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_val_sin_componentes"));
+        }
+
+        #endregion
+
+        #region Métodos públicos
 
         /// <summary>
         /// Evalúa si el candidato puede agregarse a la lista actual.
@@ -74,13 +97,6 @@ namespace BLL_08YS
             return new ResultadoEvaluacion_08YS { Resultado = ResultadoEvaluacion_08YS.Tipo.Valido };
         }
 
-        protected void ValidarDatosEntrada(string nombre, HashSet<AccessComponent_08YS> componentes)
-        {
-            if (string.IsNullOrWhiteSpace(nombre))
-                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_val_nombre_vacio"));
-
-            if (componentes == null || !componentes.Any())
-                throw new InvalidOperationException(TraductorManager_08YS.Instance.GetTexto("AccesoAltaMod_bll_val_sin_componentes"));
-        }
+        #endregion
     }
 }

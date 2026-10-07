@@ -8,13 +8,21 @@ namespace Service_08YS.Entities
 {
     public class ResultadoValidacion_08YS
     {
-        public enum TipoResultado { Ok, Advertencia, Error }
+        #region Propiedades
 
         public TipoResultado Tipo { get; private set; }
         public string Mensaje { get; private set; }
         public bool EsValido => Tipo != TipoResultado.Error;
 
+        #endregion
+
+        #region Constructor
+
         private ResultadoValidacion_08YS() { }
+
+        #endregion
+
+        #region Métodos públicos
 
         public static ResultadoValidacion_08YS Ok()
             => new ResultadoValidacion_08YS { Tipo = TipoResultado.Ok };
@@ -24,5 +32,13 @@ namespace Service_08YS.Entities
 
         public static ResultadoValidacion_08YS Error(string mensaje)
             => new ResultadoValidacion_08YS { Tipo = TipoResultado.Error, Mensaje = mensaje };
+
+        #endregion
+
+        #region Tipos anidados
+
+        public enum TipoResultado { Ok, Advertencia, Error }
+
+        #endregion
     }
 }

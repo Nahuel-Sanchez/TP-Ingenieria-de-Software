@@ -19,7 +19,8 @@ namespace CustomControls
     [ToolboxItem(false)]
     public class CustomCalendarPanel : Control
     {
-        private enum CalView { Days, Months, Years }
+        #region Campos
+
         private CalView _view = CalView.Days;
 
         private const int Cols = 7;
@@ -82,38 +83,14 @@ namespace CustomControls
 
         private int _bigCellW;
         private int _bigCellH;
+        private readonly DayOfWeek _firstDayOfWeek;
+
+        #endregion
+
+        #region Propiedades
 
         // Cultura del idioma elegido en el sistema (no la de Windows), para nombres de días y meses
         private CultureInfo _culture => GUI_08YS.UserControls.OpcionEnum_68SA.CulturaActual();
-        private readonly DayOfWeek _firstDayOfWeek;
-
-        public event DateRangeEventHandler DateSelected;
-        public event EventHandler SizeChanged2;
-        public event EventHandler ViewMonthChanged;
-        public event EventHandler RangeChanged;
-        public event DateRangeEventHandler RangeSelected;
-
-        public CustomCalendarPanel()
-        {
-            SetStyle(ControlStyles.UserPaint |
-                     ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.ResizeRedraw, true);
-
-            SetStyle(ControlStyles.StandardDoubleClick, false);
-
-            _firstDayOfWeek = _culture.DateTimeFormat.FirstDayOfWeek;
-            _viewDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-            _yearRangeStart = DateTime.Today.Year - 5;
-
-            Font = new Font("Segoe UI", 9.5f);
-            BackColor = SystemColors.Window;
-            ForeColor = SystemColors.WindowText;
-
-            RecalcBaseMetrics();
-            ApplyLayout();
-            Size = PreferredSize;
-        }
 
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES ───────────────────────────────────────────────────
@@ -129,12 +106,6 @@ namespace CustomControls
                     UpdateViewDate(value.Value);
                 Invalidate();
             }
-        }
-
-        public void SetDate(DateTime date)
-        {
-            UpdateViewDate(date);
-            Invalidate();
         }
 
         public DateTime SelectionStart => _selectedDate ?? DateTime.Today;
@@ -241,16 +212,50 @@ namespace CustomControls
             }
         }
 
-        private bool IsPastDisabledFor(DateTime date)
-        {
-            bool flag = (_mode == CalendarSelectionMode.Range && _rangeSelector != null)
-                ? _rangeSelector.DisablePastDates
-                : _disablePastDates;
-            return flag && date.Date < DateTime.Today;
-        }
-
         [Browsable(false)]
         public DateTime ViewDate => _viewDate;
+
+        public new Size PreferredSize => ComputeMinSize();
+
+        #endregion
+
+        #region Eventos
+
+        public event DateRangeEventHandler DateSelected;
+        public event EventHandler SizeChanged2;
+        public event EventHandler ViewMonthChanged;
+        public event EventHandler RangeChanged;
+        public event DateRangeEventHandler RangeSelected;
+
+        #endregion
+
+        #region Constructor
+
+        public CustomCalendarPanel()
+        {
+            SetStyle(ControlStyles.UserPaint |
+                     ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.ResizeRedraw, true);
+
+            SetStyle(ControlStyles.StandardDoubleClick, false);
+
+            _firstDayOfWeek = _culture.DateTimeFormat.FirstDayOfWeek;
+            _viewDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            _yearRangeStart = DateTime.Today.Year - 5;
+
+            Font = new Font("Segoe UI", 9.5f);
+            BackColor = SystemColors.Window;
+            ForeColor = SystemColors.WindowText;
+
+            RecalcBaseMetrics();
+            ApplyLayout();
+            Size = PreferredSize;
+        }
+
+        #endregion
+
+        #region Eventos de controles
 
         private void OnRangeSelectorChanged(object sender, EventArgs e)
         {
@@ -263,9 +268,27 @@ namespace CustomControls
             RangeSelected?.Invoke(this, e);
         }
 
-        public override Size GetPreferredSize(Size proposedSize) => PreferredSize;
+        #endregion
 
-        public new Size PreferredSize => ComputeMinSize();
+        #region Métodos públicos
+
+        public void SetDate(DateTime date)
+        {
+            UpdateViewDate(date);
+            Invalidate();
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private bool IsPastDisabledFor(DateTime date)
+        {
+            bool flag = (_mode == CalendarSelectionMode.Range && _rangeSelector != null)
+                ? _rangeSelector.DisablePastDates
+                : _disablePastDates;
+            return flag && date.Date < DateTime.Today;
+        }
 
         // ══════════════════════════════════════════════════════════════════
         // ── LAYOUT ────────────────────────────────────────────────────────
@@ -355,58 +378,6 @@ namespace CustomControls
             return (int)Math.Ceiling((offset + daysInMonth) / (double)Cols);
         }
 
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            ApplyLayout();
-            Invalidate();
-        }
-
-        protected override void OnFontChanged(EventArgs e)
-        {
-            base.OnFontChanged(e);
-            RecalcBaseMetrics();
-            ApplyLayout();
-            Invalidate();
-        }
-
-        // ══════════════════════════════════════════════════════════════════
-        // ── PINTURA ───────────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-            g.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
-
-            DrawHeader(g);
-
-            using (var pen = new Pen(_separatorColor))
-                g.DrawLine(pen, 0, _headerH, Width, _headerH);
-
-            switch (_view)
-            {
-                case CalView.Days:
-                    DrawDayNames(g);
-                    using (var pen = new Pen(_separatorColor))
-                        g.DrawLine(pen, 0, _headerH + _dayNameH, Width, _headerH + _dayNameH);
-                    DrawDays(g);
-                    if (_showToday && _mode == CalendarSelectionMode.Single) DrawFooter(g);
-                    break;
-
-                case CalView.Months:
-                    DrawMonthGrid(g);
-                    break;
-
-                case CalView.Years:
-                    DrawYearGrid(g);
-                    break;
-            }
-        }
-
         private void DrawHeader(Graphics g)
         {
             g.FillRectangle(new SolidBrush(_titleBackColor), new Rectangle(0, 0, Width, _headerH));
@@ -469,14 +440,6 @@ namespace CustomControls
                 TextRenderer.DrawText(g, name, Font, rect, _dayNameForeColor,
                                       TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             }
-        }
-
-        private struct DayCellInfo
-        {
-            public bool IsCurrentMonth, IsToday, IsHover, IsDisabled, IsBlocked;
-            public bool IsSelected;
-            public bool IsRangeStart, IsRangeEnd, IsInRange;
-            public bool IsPreviewEnd, IsInPreview;
         }
 
         private void DrawDays(Graphics g)
@@ -700,6 +663,220 @@ namespace CustomControls
         }
 
         // ══════════════════════════════════════════════════════════════════
+        // ── HELPERS ───────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        private void NavigatePrev()
+        {
+            switch (_view)
+            {
+                case CalView.Days: UpdateViewDate(_viewDate.AddMonths(-1)); break;
+                case CalView.Months: UpdateViewDate(_viewDate.AddYears(-1)); break;
+                case CalView.Years: _yearRangeStart -= 12; break;
+            }
+            _hoverCell = -1;
+            Invalidate();
+        }
+
+        private void NavigateNext()
+        {
+            switch (_view)
+            {
+                case CalView.Days: UpdateViewDate(_viewDate.AddMonths(+1)); break;
+                case CalView.Months: UpdateViewDate(_viewDate.AddYears(+1)); break;
+                case CalView.Years: _yearRangeStart += 12; break;
+            }
+            _hoverCell = -1;
+            Invalidate();
+        }
+
+        private bool CanGoPrev()
+        {
+            switch (_view)
+            {
+                case CalView.Days: return CanGoToPreviousMonth;
+                case CalView.Months: return _viewDate.Year - 1 >= _minDate.Year;
+                case CalView.Years: return _yearRangeStart - 1 >= _minDate.Year;
+                default: return false;
+            }
+        }
+
+        private bool CanGoNext()
+        {
+            switch (_view)
+            {
+                case CalView.Days: return CanGoToNextMonth;
+                case CalView.Months: return _viewDate.Year + 1 <= _maxDate.Year;
+                case CalView.Years: return _yearRangeStart + 12 <= _maxDate.Year;
+                default: return false;
+            }
+        }
+
+        private int HitTestCell(Point pt)
+        {
+            switch (_view)
+            {
+                case CalView.Days:
+                    {
+                        int x = pt.X / _cellW;
+                        int y = (pt.Y - _gridTop) / _cellH;
+                        int rows = GetVisibleRowsForMonth(_viewDate);
+                        if (x < 0 || x >= Cols || y < 0 || y >= rows) return -1;
+                        return y * Cols + x;
+                    }
+                case CalView.Months:
+                case CalView.Years:
+                    {
+                        int gridTop = _headerH + 4;
+                        int x = pt.X / _bigCellW;
+                        int y = (pt.Y - gridTop) / _bigCellH;
+                        if (x < 0 || x >= GridCols || y < 0 || y >= GridRows) return -1;
+                        return y * GridCols + x;
+                    }
+                default: return -1;
+            }
+        }
+
+        private DateTime GetFirstCellDate()
+        {
+            DateTime first = new DateTime(_viewDate.Year, _viewDate.Month, 1);
+            int offset = ((int)first.DayOfWeek - (int)_firstDayOfWeek + 7) % 7;
+            return first.AddDays(-offset);
+        }
+
+        private bool MonthInRange(int month, int year)
+        {
+            var first = new DateTime(year, month, 1);
+            var last = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            return last >= _minDate && first <= _maxDate;
+        }
+
+        private void SelectDate(DateTime date)
+        {
+            _selectedDate = date;
+            UpdateViewDate(date);
+            Invalidate();
+            FireDateSelected(date);
+        }
+
+        private void TrySelect(DateTime date)
+        {
+            if (date < _minDate || date > _maxDate || IsPastDisabledFor(date)) return;
+            _selectedDate = date;
+            UpdateViewDate(date);
+            Invalidate();
+        }
+
+        private void FireDateSelected(DateTime date)
+            => DateSelected?.Invoke(this, new DateRangeEventArgs(date, date));
+
+        private void UpdateViewDate(DateTime newDate)
+        {
+            newDate = new DateTime(newDate.Year, newDate.Month, 1);
+            if (newDate == _viewDate) return;
+            _viewDate = newDate;
+            UpdateMinimumSize();
+            ApplyLayout();
+            Invalidate();
+            ViewMonthChanged?.Invoke(this, EventArgs.Empty);
+            if (_view == CalView.Days)
+                SizeChanged2?.Invoke(this, EventArgs.Empty);
+        }
+
+        private static GraphicsPath RoundedRect(Rectangle rect, int radius)
+        {
+            float d = radius * 2f;
+            var path = new GraphicsPath();
+            path.AddArc(rect.X, rect.Y, d, d, 180, 90);
+            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
+            path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);
+            path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
+
+        private static GraphicsPath BandPath(Rectangle rect, bool roundLeft, bool roundRight, int radius)
+        {
+            var path = new GraphicsPath();
+            float d = radius * 2f;
+            float x = rect.X, y = rect.Y, w = rect.Width, h = rect.Height;
+            float rL = roundLeft ? radius : 0;
+            float rR = roundRight ? radius : 0;
+
+            path.AddLine(x + rL, y, x + w - rR, y);
+            if (roundRight) path.AddArc(x + w - d, y, d, d, 270, 90);
+            path.AddLine(x + w, y + rR, x + w, y + h - rR);
+            if (roundRight) path.AddArc(x + w - d, y + h - d, d, d, 0, 90);
+            path.AddLine(x + w - rR, y + h, x + rL, y + h);
+            if (roundLeft) path.AddArc(x, y + h - d, d, d, 90, 90);
+            path.AddLine(x, y + h - rL, x, y + rL);
+            if (roundLeft) path.AddArc(x, y, d, d, 180, 90);
+            path.CloseFigure();
+            return path;
+        }
+
+        private static Rectangle Inset(Rectangle rect, int margin) =>
+            new Rectangle(rect.X + margin, rect.Y + margin, rect.Width - margin * 2, rect.Height - margin * 2);
+
+        #endregion
+
+        #region Sobrescrituras
+
+        public override Size GetPreferredSize(Size proposedSize) => PreferredSize;
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            ApplyLayout();
+            Invalidate();
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            RecalcBaseMetrics();
+            ApplyLayout();
+            Invalidate();
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── PINTURA ───────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            g.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
+
+            DrawHeader(g);
+
+            using (var pen = new Pen(_separatorColor))
+                g.DrawLine(pen, 0, _headerH, Width, _headerH);
+
+            switch (_view)
+            {
+                case CalView.Days:
+                    DrawDayNames(g);
+                    using (var pen = new Pen(_separatorColor))
+                        g.DrawLine(pen, 0, _headerH + _dayNameH, Width, _headerH + _dayNameH);
+                    DrawDays(g);
+                    if (_showToday && _mode == CalendarSelectionMode.Single) DrawFooter(g);
+                    break;
+
+                case CalView.Months:
+                    DrawMonthGrid(g);
+                    break;
+
+                case CalView.Years:
+                    DrawYearGrid(g);
+                    break;
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
         // ── INTERACCIÓN ───────────────────────────────────────────────────
         // ══════════════════════════════════════════════════════════════════
 
@@ -871,160 +1048,20 @@ namespace CustomControls
             }
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── HELPERS ───────────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
+        #endregion
 
-        private void NavigatePrev()
+        #region Tipos anidados
+
+        private enum CalView { Days, Months, Years }
+
+        private struct DayCellInfo
         {
-            switch (_view)
-            {
-                case CalView.Days: UpdateViewDate(_viewDate.AddMonths(-1)); break;
-                case CalView.Months: UpdateViewDate(_viewDate.AddYears(-1)); break;
-                case CalView.Years: _yearRangeStart -= 12; break;
-            }
-            _hoverCell = -1;
-            Invalidate();
+            public bool IsCurrentMonth, IsToday, IsHover, IsDisabled, IsBlocked;
+            public bool IsSelected;
+            public bool IsRangeStart, IsRangeEnd, IsInRange;
+            public bool IsPreviewEnd, IsInPreview;
         }
 
-        private void NavigateNext()
-        {
-            switch (_view)
-            {
-                case CalView.Days: UpdateViewDate(_viewDate.AddMonths(+1)); break;
-                case CalView.Months: UpdateViewDate(_viewDate.AddYears(+1)); break;
-                case CalView.Years: _yearRangeStart += 12; break;
-            }
-            _hoverCell = -1;
-            Invalidate();
-        }
-
-        private bool CanGoPrev()
-        {
-            switch (_view)
-            {
-                case CalView.Days: return CanGoToPreviousMonth;
-                case CalView.Months: return _viewDate.Year - 1 >= _minDate.Year;
-                case CalView.Years: return _yearRangeStart - 1 >= _minDate.Year;
-                default: return false;
-            }
-        }
-
-        private bool CanGoNext()
-        {
-            switch (_view)
-            {
-                case CalView.Days: return CanGoToNextMonth;
-                case CalView.Months: return _viewDate.Year + 1 <= _maxDate.Year;
-                case CalView.Years: return _yearRangeStart + 12 <= _maxDate.Year;
-                default: return false;
-            }
-        }
-
-        private int HitTestCell(Point pt)
-        {
-            switch (_view)
-            {
-                case CalView.Days:
-                    {
-                        int x = pt.X / _cellW;
-                        int y = (pt.Y - _gridTop) / _cellH;
-                        int rows = GetVisibleRowsForMonth(_viewDate);
-                        if (x < 0 || x >= Cols || y < 0 || y >= rows) return -1;
-                        return y * Cols + x;
-                    }
-                case CalView.Months:
-                case CalView.Years:
-                    {
-                        int gridTop = _headerH + 4;
-                        int x = pt.X / _bigCellW;
-                        int y = (pt.Y - gridTop) / _bigCellH;
-                        if (x < 0 || x >= GridCols || y < 0 || y >= GridRows) return -1;
-                        return y * GridCols + x;
-                    }
-                default: return -1;
-            }
-        }
-
-        private DateTime GetFirstCellDate()
-        {
-            DateTime first = new DateTime(_viewDate.Year, _viewDate.Month, 1);
-            int offset = ((int)first.DayOfWeek - (int)_firstDayOfWeek + 7) % 7;
-            return first.AddDays(-offset);
-        }
-
-        private bool MonthInRange(int month, int year)
-        {
-            var first = new DateTime(year, month, 1);
-            var last = new DateTime(year, month, DateTime.DaysInMonth(year, month));
-            return last >= _minDate && first <= _maxDate;
-        }
-
-        private void SelectDate(DateTime date)
-        {
-            _selectedDate = date;
-            UpdateViewDate(date);
-            Invalidate();
-            FireDateSelected(date);
-        }
-
-        private void TrySelect(DateTime date)
-        {
-            if (date < _minDate || date > _maxDate || IsPastDisabledFor(date)) return;
-            _selectedDate = date;
-            UpdateViewDate(date);
-            Invalidate();
-        }
-
-        private void FireDateSelected(DateTime date)
-            => DateSelected?.Invoke(this, new DateRangeEventArgs(date, date));
-
-        private void UpdateViewDate(DateTime newDate)
-        {
-            newDate = new DateTime(newDate.Year, newDate.Month, 1);
-            if (newDate == _viewDate) return;
-            _viewDate = newDate;
-            UpdateMinimumSize();
-            ApplyLayout();
-            Invalidate();
-            ViewMonthChanged?.Invoke(this, EventArgs.Empty);
-            if (_view == CalView.Days)
-                SizeChanged2?.Invoke(this, EventArgs.Empty);
-        }
-
-        private static GraphicsPath RoundedRect(Rectangle rect, int radius)
-        {
-            float d = radius * 2f;
-            var path = new GraphicsPath();
-            path.AddArc(rect.X, rect.Y, d, d, 180, 90);
-            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
-            path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);
-            path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
-            path.CloseFigure();
-            return path;
-        }
-
-        private static GraphicsPath BandPath(Rectangle rect, bool roundLeft, bool roundRight, int radius)
-        {
-            var path = new GraphicsPath();
-            float d = radius * 2f;
-            float x = rect.X, y = rect.Y, w = rect.Width, h = rect.Height;
-            float rL = roundLeft ? radius : 0;
-            float rR = roundRight ? radius : 0;
-
-            path.AddLine(x + rL, y, x + w - rR, y);
-            if (roundRight) path.AddArc(x + w - d, y, d, d, 270, 90);
-            path.AddLine(x + w, y + rR, x + w, y + h - rR);
-            if (roundRight) path.AddArc(x + w - d, y + h - d, d, d, 0, 90);
-            path.AddLine(x + w - rR, y + h, x + rL, y + h);
-            if (roundLeft) path.AddArc(x, y + h - d, d, d, 90, 90);
-            path.AddLine(x, y + h - rL, x, y + rL);
-            if (roundLeft) path.AddArc(x, y, d, d, 180, 90);
-            path.CloseFigure();
-            return path;
-        }
-
-        private static Rectangle Inset(Rectangle rect, int margin) =>
-            new Rectangle(rect.X + margin, rect.Y + margin, rect.Width - margin * 2, rect.Height - margin * 2);
+        #endregion
     }
 }

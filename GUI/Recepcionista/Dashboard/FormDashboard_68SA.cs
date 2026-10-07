@@ -47,6 +47,60 @@ namespace GUI_08YS.Recepcionista
         private Control _rellenoOcupacion;
         private Control _rellenoHuespedes;
 
+        // General: ingresos por día junto al donut del origen del gasto
+        private TableLayoutPanel _filaGeneral;
+        private UC_BarChart_68SA _graficoIngresos;
+        private Label _lblTituloIngresosDia;
+
+        // Pestaña Servicios (PN2): se arma por código como la de Huéspedes
+        private IconButton _btnTabServicios;
+        private FlowLayoutPanel _flpServicios;
+        private bool _serviciosInicializado;
+        private bool _historicoServicios;
+        private Control _rellenoServicios;
+        private IconDateTimePicker _dtpDesdeServicios;
+        private IconDateTimePicker _dtpHastaServicios;
+        private IconButton _btnHistoricoServicios;
+        private Label _lblTituloFiltroServicios;
+        private readonly Dictionary<string, (Label Valor, Label Detalle)> _kpisServicios = new Dictionary<string, (Label Valor, Label Detalle)>();
+        private UC_BarChart_68SA _graficoServiciosDia;
+        private UC_BarChart_68SA _graficoTopProductos;
+        private UC_BarChart_68SA _graficoHoras;
+        private Label _lblTituloServiciosDia;
+
+        // General: indicadores hoteleros del período, cobros por medio de pago y llegadas por día de la semana
+        private TableLayoutPanel _filaIndicadores;
+        private TableLayoutPanel _filaGeneral2;
+        private readonly Dictionary<string, (Label Valor, Label Detalle)> _kpisGeneral = new Dictionary<string, (Label Valor, Label Detalle)>();
+        private UC_DonutChart_68SA _donutMediosPago;
+        private FlowLayoutPanel _leyendaMediosPago;
+        private UC_BarChart_68SA _graficoDiaSemana;
+
+        // Huéspedes: perfil de las reservas, ranking de titulares, edades y composición de los grupos
+        private readonly Dictionary<string, (Label Valor, Label Detalle)> _kpisHuespedes = new Dictionary<string, (Label Valor, Label Detalle)>();
+        private UC_BarChart_68SA _graficoTopHuespedes;
+        private UC_BarChart_68SA _graficoEdades;
+        private UC_DonutChart_68SA _donutComposicion;
+        private FlowLayoutPanel _leyendaComposicion;
+
+        // Servicios: upgrades por tipo, tiempos de entrega, cola de pedidos y últimos cambios de habitación
+        private UC_BarChart_68SA _graficoUpgradesTipo;
+        private UC_BarChart_68SA _graficoTiemposEntrega;
+        private FlowLayoutPanel _listaPendientes;
+        private FlowLayoutPanel _listaCambios;
+        private Label _lblTituloPendientes;
+
+        private static readonly Color ColorAzul = Color.FromArgb(90, 155, 235);
+        private static readonly Color ColorNaranja = Color.FromArgb(235, 140, 60);
+        private static readonly Color ColorRojo = Color.FromArgb(235, 90, 90);
+        private static readonly Color ColorTextoSecundario = Color.FromArgb(150, 156, 175);
+        private static readonly Font FuenteFilaLista = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+        private static readonly Font FuenteDetalleLista = new Font("Segoe UI", 8.25F);
+        private static readonly Font FuenteValorLista = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+
+        private static readonly Color ColorRoomService = Color.FromArgb(76, 217, 100);
+        private static readonly Color ColorUpgrade = Color.FromArgb(160, 125, 235);
+
         private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
 
         public FormDashboard_68SA()
@@ -59,6 +113,7 @@ namespace GUI_08YS.Recepcionista
             btnTabGeneral.Click += (s, e) => CambiarTab(0);
             btnTabOcupacion.Click += (s, e) => CambiarTab(1);
             btnTabHuespedes.Click += (s, e) => CambiarTab(2);
+            CrearPestanaServicios();
 
             btnFiltroHoy.Click += (s, e) => AplicarPreset(DateTime.Today, DateTime.Today);
             btnFiltro7Dias.Click += (s, e) => AplicarPreset(DateTime.Today.AddDays(-7), DateTime.Today);
@@ -95,7 +150,9 @@ namespace GUI_08YS.Recepcionista
                 new Control[] { lblEtiquetaDesdeGeneral, dtpDesdeGeneral, lblEtiquetaHastaGeneral, dtpHastaGeneral, btnActualizarGeneral, _btnGenerarReporte });
 
             flpHuespedes.AutoScroll = true;
-            LayoutAdaptable_68SA.EstirarHijosAlAncho(flpGeneral, 0, pnlOrigenGasto, AltoMinimoTarjetaDonut);
+            ArmarFilaGeneral();
+            ArmarExtrasGeneral();
+            LayoutAdaptable_68SA.EstirarHijosAlAncho(flpGeneral, 0, () => _filaGeneral2, AltoMinimoTarjetaDonut);
             LayoutAdaptable_68SA.EstirarHijosAlAncho(flpOcupacion, 0, () => _rellenoOcupacion, AltoMinimoTarjetaDonut);
             LayoutAdaptable_68SA.EstirarHijosAlAncho(flpHuespedes, 0, () => _rellenoHuespedes, AltoMinimoTarjetaDonut);
 
@@ -118,8 +175,20 @@ namespace GUI_08YS.Recepcionista
             if (_huespedesInicializado)
             {
                 _rellenoHuespedes = null;
+                _kpisHuespedes.Clear();
                 LimpiarContenedor(flpHuespedes);
                 _huespedesInicializado = false;
+            }
+            _btnTabServicios.Text = T("Dashboard_btnTabServicios");
+            _lblTituloIngresosDia.Text = T("Dashboard_tituloIngresosPorDia");
+            ArmarExtrasGeneral();   // indicadores y gráficos agregados por código, con los textos nuevos
+            if (_serviciosInicializado)
+            {
+                _rellenoServicios = null;
+                _historicoServicios = false;   // la pestaña se rearma con el mes actual
+                _kpisServicios.Clear();
+                LimpiarContenedor(_flpServicios);
+                _serviciosInicializado = false;
             }
 
             // La primera traducción llega antes de mostrar el formulario; los datos se cargan en Shown
@@ -128,6 +197,7 @@ namespace GUI_08YS.Recepcionista
             if (flpGeneral.Visible) CargarGeneral();
             else if (flpOcupacion.Visible) CargarOcupacion();
             else if (flpHuespedes.Visible) CargarHuespedes();
+            else if (_flpServicios.Visible) CargarServicios();
         }
 
         private void TraducirControles(Control contenedor)
@@ -151,14 +221,56 @@ namespace GUI_08YS.Recepcionista
             flpGeneral.Visible = indice == 0;
             flpOcupacion.Visible = indice == 1;
             flpHuespedes.Visible = indice == 2;
+            _flpServicios.Visible = indice == 3;
 
             EstilizarTab(btnTabGeneral, indice == 0);
             EstilizarTab(btnTabOcupacion, indice == 1);
             EstilizarTab(btnTabHuespedes, indice == 2);
+            EstilizarTab(_btnTabServicios, indice == 3);
 
             if (indice == 0) CargarGeneral();
             if (indice == 1) CargarOcupacion();
             if (indice == 2) CargarHuespedes();
+            if (indice == 3) CargarServicios();
+        }
+
+        /// <summary>Cuarta pestaña (PN2): mismo estilo que las del diseñador, a la derecha de Huéspedes.</summary>
+        private void CrearPestanaServicios()
+        {
+            _btnTabServicios = new IconButton
+            {
+                BackColor = btnTabHuespedes.BackColor,
+                FlatStyle = FlatStyle.Flat,
+                Font = btnTabHuespedes.Font,
+                ForeColor = btnTabHuespedes.ForeColor,
+                IconChar = IconChar.BellConcierge,
+                IconColor = btnTabHuespedes.IconColor,
+                IconSize = 20,
+                ImageAlign = ContentAlignment.MiddleLeft,
+                Location = new Point(btnTabHuespedes.Right + 10, btnTabHuespedes.Top),
+                Padding = new Padding(12, 0, 0, 0),
+                Size = new Size(170, btnTabHuespedes.Height),
+                Text = T("Dashboard_btnTabServicios"),
+                TextAlign = ContentAlignment.MiddleLeft,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                UseVisualStyleBackColor = false
+            };
+            _btnTabServicios.FlatAppearance.BorderSize = btnTabHuespedes.FlatAppearance.BorderSize;
+            _btnTabServicios.FlatAppearance.BorderColor = btnTabHuespedes.FlatAppearance.BorderColor;
+            _btnTabServicios.Click += (s, e) => CambiarTab(3);
+            pnlTabs.Controls.Add(_btnTabServicios);
+
+            _flpServicios = new FlowLayoutPanel
+            {
+                AutoScroll = true,
+                BackColor = flpHuespedes.BackColor,
+                Dock = DockStyle.Fill,
+                Padding = flpHuespedes.Padding,
+                Visible = false
+            };
+            pnlContenido.Controls.Add(_flpServicios);
+            _flpServicios.BringToFront();
+            LayoutAdaptable_68SA.EstirarHijosAlAncho(_flpServicios, 0, () => _rellenoServicios, AltoMinimoTarjetaDonut);
         }
 
         private static void EstilizarTab(FontAwesome.Sharp.IconButton boton, bool activo)
@@ -423,6 +535,143 @@ namespace GUI_08YS.Recepcionista
             lblValorMontoAnulado.Text = $"${resumen.MontoAnuladoPeriodo:N2}";
 
             CargarDonutOrigenGasto(resumen);
+            CargarIngresosPorDia(desde, hasta);
+            CargarIndicadoresGeneral(desde, hasta, resumen);
+        }
+
+        /// <summary>
+        /// Arma (o vuelve a armar al cambiar el idioma) lo que el General agrega por código: la fila de
+        /// indicadores hoteleros debajo de los ingresos y, al final, medios de pago y llegadas por día.
+        /// </summary>
+        private void ArmarExtrasGeneral()
+        {
+            flpGeneral.SuspendLayout();
+            try
+            {
+                if (_filaIndicadores != null) { flpGeneral.Controls.Remove(_filaIndicadores); _filaIndicadores.Dispose(); }
+                if (_filaGeneral2 != null) { flpGeneral.Controls.Remove(_filaGeneral2); _filaGeneral2.Dispose(); }
+                _kpisGeneral.Clear();
+
+                _filaIndicadores = CrearFilaKpis(new[]
+                {
+                    (T("Dashboard_kpiAdr"), IconChar.Tag, Color.Goldenrod, "—", ""),
+                    (T("Dashboard_kpiRevpar"), IconChar.ChartLine, ColorAzul, "—", ""),
+                    (T("Dashboard_kpiOcupacionPeriodo"), IconChar.Bed, ColorRoomService, "—", ""),
+                    (T("Dashboard_kpiEstadiaPromedio"), IconChar.Moon, ColorNaranja, "—", ""),
+                    (T("Dashboard_kpiPesoServicios"), IconChar.BellConcierge, ColorUpgrade, "—", ""),
+                }, out var etiquetas);
+                string[] claves = { "adr", "revpar", "ocupacion", "estadia", "servicios" };
+                for (int i = 0; i < claves.Length; i++) _kpisGeneral[claves[i]] = etiquetas[i];
+                flpGeneral.Controls.Add(_filaIndicadores);
+                flpGeneral.Controls.SetChildIndex(_filaIndicadores, flpGeneral.Controls.GetChildIndex(pnlCardsIngresos) + 1);
+
+                var tarjetaPagos = CrearTarjetaDonut(T("Dashboard_tituloMediosPago"), new Size(600, AltoMinimoTarjetaDonut),
+                    out _donutMediosPago, out _leyendaMediosPago);
+                var tarjetaDias = CrearTarjetaGrafico(T("Dashboard_tituloLlegadasDiaSemana"), out _graficoDiaSemana, out _);
+                _filaGeneral2 = CrearFila(AltoMinimoTarjetaDonut, new Padding(3, 0, 3, 3), (tarjetaPagos, 44F), (tarjetaDias, 56F));
+                flpGeneral.Controls.Add(_filaGeneral2);
+            }
+            finally
+            {
+                flpGeneral.ResumeLayout(true);
+            }
+        }
+
+        private void CargarIndicadoresGeneral(DateTime? desde, DateTime? hasta, ResumenIngresos_68SA ingresos)
+        {
+            IndicadoresPeriodo_68SA ind = _metricasBLL.GetIndicadoresPeriodo(desde, hasta);
+            ResumenServicios_68SA servicios = _metricasBLL.GetResumenServicios(desde, hasta);
+
+            PonerKpi(_kpisGeneral["adr"], $"${ind.TarifaPromedio:N0}", string.Format(T("Dashboard_kpiAdrDetalle"), ind.NochesVendidas));
+            PonerKpi(_kpisGeneral["revpar"], $"${ind.RevPar:N0}", T("Dashboard_kpiRevparDetalle"));
+            PonerKpi(_kpisGeneral["ocupacion"], $"{ind.OcupacionPorcentaje:0.#}%",
+                string.Format(T("Dashboard_kpiOcupacionPeriodoDetalle"), ind.NochesVendidas, ind.NochesDisponibles));
+            PonerKpi(_kpisGeneral["estadia"],
+                ind.EstadiaPromedioNoches.HasValue ? string.Format(T("Dashboard_txtNoches"), ind.EstadiaPromedioNoches.Value) : "—",
+                string.Format(T("Dashboard_kpiEstadiaDetalle"), ind.Reservas));
+            decimal baseServicios = ind.IngresoAlojamiento + servicios.Total;
+            decimal peso = baseServicios > 0 ? Math.Round(servicios.Total / baseServicios * 100, 1) : 0;
+            PonerKpi(_kpisGeneral["servicios"], $"{peso:0.#}%",
+                string.Format(T("Dashboard_kpiPesoServiciosDetalle"), $"${servicios.Total:N0}"));
+
+            // Cobros por medio de pago
+            var coloresPago = new Dictionary<MetodoPago, Color>
+            {
+                { MetodoPago.Efectivo, ColorRoomService },
+                { MetodoPago.Tarjeta, ColorAzul },
+                { MetodoPago.Transferencia, ColorUpgrade }
+            };
+            var segmentos = new List<SegmentoDonut_68SA>();
+            foreach (var item in _metricasBLL.GetPagosPorMetodo(desde, hasta))
+            {
+                bool conocido = int.TryParse(item.Etiqueta, out int numero) && Enum.IsDefined(typeof(MetodoPago), numero);
+                var metodo = conocido ? (MetodoPago)numero : MetodoPago.Efectivo;
+                segmentos.Add(new SegmentoDonut_68SA
+                {
+                    Etiqueta = conocido ? OpcionEnum_68SA.Texto(metodo) : item.Etiqueta,
+                    Valor = item.Valor,
+                    Color = conocido ? coloresPago[metodo] : Color.Gray
+                });
+            }
+            MostrarDonut(_donutMediosPago, _leyendaMediosPago, segmentos, $"${segmentos.Sum(x => x.Valor):N0}",
+                T("Dashboard_txtCobrado"), v => $"${v:N2}");
+
+            // Llegadas según el día de la semana del ingreso
+            int[] llegadas = _metricasBLL.GetLlegadasPorDiaSemana(desde, hasta);
+            var cultura = OpcionEnum_68SA.CulturaActual();
+            _graficoDiaSemana.TextoVacio = T("Dashboard_txtSinLlegadas");
+            _graficoDiaSemana.Cargar(llegadas.Sum() == 0 ? new List<BarraGrafico_68SA>() : Enumerable.Range(0, 7).Select(i => new BarraGrafico_68SA
+                {
+                    // 0 = lunes; en DayNames el 0 es domingo
+                    Etiqueta = cultura.DateTimeFormat.AbbreviatedDayNames[(i + 1) % 7],
+                    Titulo = cultura.TextInfo.ToTitleCase(cultura.DateTimeFormat.DayNames[(i + 1) % 7]),
+                    Valores = new decimal[] { llegadas[i] }
+                }).ToList(),
+                new[] { ColorAzul }, new[] { T("Dashboard_serieLlegadas") }, v => v.ToString("0"));
+        }
+
+        /// <summary>
+        /// El donut del origen del gasto comparte la última fila del General con el gráfico de cobros
+        /// por día del período (la fila completa el alto de la pantalla).
+        /// </summary>
+        private void ArmarFilaGeneral()
+        {
+            _filaGeneral = new TableLayoutPanel
+            {
+                BackColor = flpGeneral.BackColor,
+                ColumnCount = 2,
+                RowCount = 1,
+                Margin = new Padding(3, 0, 3, 10),
+                Padding = Padding.Empty,
+                Size = new Size(pnlOrigenGasto.Width, Math.Max(AltoMinimoTarjetaDonut, pnlOrigenGasto.Height))
+            };
+            _filaGeneral.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44F));
+            _filaGeneral.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56F));
+            _filaGeneral.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            int indice = flpGeneral.Controls.GetChildIndex(pnlOrigenGasto);
+            flpGeneral.Controls.Remove(pnlOrigenGasto);
+            pnlOrigenGasto.Dock = DockStyle.Fill;
+            pnlOrigenGasto.Margin = new Padding(0, 0, 12, 0);
+            _filaGeneral.Controls.Add(pnlOrigenGasto, 0, 0);
+
+            var tarjeta = CrearTarjetaGrafico(T("Dashboard_tituloIngresosPorDia"), out _graficoIngresos, out _lblTituloIngresosDia);
+            tarjeta.Dock = DockStyle.Fill;
+            tarjeta.Margin = new Padding(12, 0, 0, 0);
+            _filaGeneral.Controls.Add(tarjeta, 1, 0);
+
+            flpGeneral.Controls.Add(_filaGeneral);
+            flpGeneral.Controls.SetChildIndex(_filaGeneral, indice);
+        }
+
+        private void CargarIngresosPorDia(DateTime? desde, DateTime? hasta)
+        {
+            var serie = MetricasBLL_68SA.Agrupar(_metricasBLL.GetIngresosPorDia(desde, hasta), out var agrupacion);
+            _lblTituloIngresosDia.Text = T("Dashboard_tituloIngresosPorDia") + "  ·  " + T("Dashboard_agrupado" + agrupacion);
+            _graficoIngresos.TextoVacio = T("Dashboard_txtSinCobros");
+            _graficoIngresos.TextoTotal = T("Dashboard_txtTotal");
+            _graficoIngresos.Cargar(Barras(serie, agrupacion, false), new[] { Color.Goldenrod },
+                new[] { T("Dashboard_serieCobros") }, ValorCorto);
         }
 
         private void CargarDonutOrigenGasto(ResumenIngresos_68SA resumen)
@@ -433,7 +682,7 @@ namespace GUI_08YS.Recepcionista
                 { "Reserva", Color.Goldenrod },
                 { "Renovación", Color.FromArgb(90, 155, 235) },
                 { "Servicio a la Habitación", Color.FromArgb(76, 217, 100) },
-                { "Cambio de Habitación", Color.FromArgb(160, 165, 180) }
+                { "Cambio de Habitación", ColorUpgrade }
             };
 
             var clavesPorOrigen = new Dictionary<string, string>
@@ -477,10 +726,17 @@ namespace GUI_08YS.Recepcionista
                 return;
             }
 
-            var filtro = new ReservaFiltro_68SA { FechaDesde = desde, FechaHasta = hasta };
-            var reservas = _reservaBLL.GetTodas(filtro);
+            // El reporte se arma en la pantalla de Reportes (con vista previa), con el período elegido acá
+            AbrirEnReportes(Reportes.TipoReporte_68SA.Reservas, desde, hasta);
+        }
 
-            new ReporteReservasImpresor_68SA(reservas, desde, hasta).Imprimir();
+        /// <summary>Abre la pantalla de Reportes en la pestaña indicada y genera el reporte con este período.</summary>
+        private void AbrirEnReportes(Reportes.TipoReporte_68SA pestaña, DateTime? desde, DateTime? hasta)
+        {
+            if (ParentForm is FormMDI_08YS mdi)
+                mdi.AbrirReportes(pestaña, desde, hasta, generar: true);
+            else
+                new Reportes.FormReportes_68SA(pestaña, desde, hasta, true).Show(this);
         }
 
         #endregion
@@ -497,13 +753,28 @@ namespace GUI_08YS.Recepcionista
 
                 ResumenOcupacion_68SA resumenEstado = _metricasBLL.GetResumenOcupacion();
                 List<OcupacionPorTipoItem_68SA> porTipo = _metricasBLL.GetOcupacionPorTipo();
+                MovimientoHoy_68SA hoy = _metricasBLL.GetMovimientoHoy();
+
+                // ---- Movimiento de hoy (recepción)
+                var filaHoy = CrearFilaKpis(new[]
+                {
+                    (T("Dashboard_kpiLlegadasHoy"), IconChar.PlaneArrival, Color.FromArgb(90, 155, 235),
+                        hoy.Llegadas.ToString(), string.Format(T("Dashboard_kpiLlegadasHoyDetalle"), hoy.LlegadasPendientes)),
+                    (T("Dashboard_kpiSalidasHoy"), IconChar.PlaneDeparture, Color.FromArgb(235, 140, 60),
+                        hoy.Salidas.ToString(), string.Format(T("Dashboard_kpiSalidasHoyDetalle"), hoy.SalidasPendientes)),
+                    (T("Dashboard_kpiAlojados"), IconChar.PeopleRoof, Color.FromArgb(76, 217, 100),
+                        hoy.HuespedesAlojados.ToString(), string.Format(T("Dashboard_kpiAlojadosDetalle"), hoy.EstadiasEnCurso)),
+                    (T("Dashboard_kpiTarifaPromedio"), IconChar.Tag, Color.Goldenrod,
+                        $"${hoy.TarifaPromedio:N0}", T("Dashboard_kpiTarifaPromedioDetalle")),
+                }, out _);
+                flpOcupacion.Controls.Add(filaHoy);
 
                 // Dos tarjetas lado a lado que se reparten el ancho en partes iguales
                 var filaDonuts = new TableLayoutPanel
                 {
                     ColumnCount = 2,
                     RowCount = 1,
-                    Size = new Size(1424, AltoMinimoTarjetaDonut),
+                    Size = new Size(1424, 300),
                     Margin = new Padding(3, 3, 3, 10),
                     Padding = Padding.Empty
                 };
@@ -521,8 +792,35 @@ namespace GUI_08YS.Recepcionista
                 panelTipo.Margin = new Padding(12, 0, 0, 0);
                 filaDonuts.Controls.Add(panelTipo, 1, 0);
 
-                _rellenoOcupacion = filaDonuts;
                 flpOcupacion.Controls.Add(filaDonuts);
+
+                // ---- Llegadas y salidas de la próxima semana + habitaciones más ocupadas
+                var cultura = OpcionEnum_68SA.CulturaActual();
+                var proximos = _metricasBLL.GetMovimientoProximosDias(7);
+                var tarjetaProximos = CrearTarjetaGrafico(T("Dashboard_tituloProximosDias"), out var graficoProximos, out _);
+                graficoProximos.TextoVacio = T("Dashboard_txtSinDatos");
+                graficoProximos.TextoTotal = T("Dashboard_txtMovimientos");
+                graficoProximos.Cargar(proximos.Select(d => new BarraGrafico_68SA
+                    {
+                        Etiqueta = d.Fecha.ToString("ddd dd", cultura),
+                        Titulo = d.Fecha.ToString("dddd dd/MM", cultura),
+                        Valores = new[] { d.Valor, d.Valor2 }
+                    }).ToList(),
+                    new[] { ColorAzul, ColorNaranja }, new[] { T("Dashboard_serieLlegadas"), T("Dashboard_serieSalidas") }, v => v.ToString("0"));
+
+                var masOcupadas = _metricasBLL.GetHabitacionesMasOcupadas(90, 8);
+                var tarjetaRanking = CrearTarjetaGrafico(T("Dashboard_tituloHabitacionesMasOcupadas"), out var graficoRanking, out _);
+                graficoRanking.Horizontal = true;
+                graficoRanking.TextoVacio = T("Dashboard_txtSinDatos");
+                graficoRanking.Cargar(masOcupadas.Select(h => new BarraGrafico_68SA
+                    {
+                        Etiqueta = h.Etiqueta,
+                        Titulo = h.Etiqueta + "  ·  " + string.Format(T("Dashboard_txtEstadias"), h.Cantidad),
+                        Valores = new[] { h.Valor }
+                    }).ToList(),
+                    new[] { Color.Goldenrod }, new[] { T("Dashboard_serieNoches") }, v => string.Format(T("Dashboard_txtNochesCorto"), v.ToString("0")));
+
+                flpOcupacion.Controls.Add(CrearFila(290, new Padding(3, 0, 3, 10), (tarjetaProximos, 55F), (tarjetaRanking, 45F)));
 
                 var segmentosEstado = new List<SegmentoDonut_68SA>
                 {
@@ -552,6 +850,38 @@ namespace GUI_08YS.Recepcionista
                     totalOcupadasPorTipo += porTipo[i].CantidadOcupadas;
                 }
                 MostrarDonut(donutTipo, leyendaTipo, segmentosTipo, totalOcupadasPorTipo.ToString(), T("Dashboard_txtOcupadas"), v => v.ToString("0"));
+
+                // ---- Ocupación prevista: % de habitaciones con estadía o reserva cada noche (completa el alto)
+                var prevista = _metricasBLL.GetOcupacionPrevista(14);
+                var tarjetaPrevista = CrearTarjetaGrafico(T("Dashboard_tituloOcupacionPrevista"), out var graficoPrevista, out _);
+                tarjetaPrevista.Size = new Size(1424, AltoMinimoTarjetaDonut);
+                tarjetaPrevista.Margin = new Padding(3, 0, 3, 10);
+                graficoPrevista.TextoVacio = T("Dashboard_txtSinDatos");
+                graficoPrevista.Cargar(prevista.Select(d => new BarraGrafico_68SA
+                    {
+                        Etiqueta = d.Fecha.ToString("ddd dd", cultura),
+                        Titulo = d.Fecha.ToString("dddd dd/MM", cultura) + "  ·  " + string.Format(T("Dashboard_txtHabitacionesOcupadas"), d.Ocupadas, d.Total),
+                        Valores = new[] { d.Porcentaje }
+                    }).ToList(),
+                    new[] { Color.Goldenrod }, new[] { T("Dashboard_serieOcupacion") }, v => v.ToString("0") + "%", 100);
+                _rellenoOcupacion = tarjetaPrevista;
+                flpOcupacion.Controls.Add(tarjetaPrevista);
+
+                // ---- Ocupación de los últimos 12 meses (noches vendidas sobre noches disponibles)
+                var mensual = _metricasBLL.GetOcupacionMensual(12);
+                var tarjetaMensual = CrearTarjetaGrafico(T("Dashboard_tituloOcupacionMensual"), out var graficoMensual, out _);
+                tarjetaMensual.Size = new Size(1424, 260);
+                tarjetaMensual.Margin = new Padding(3, 0, 3, 10);
+                graficoMensual.TextoVacio = T("Dashboard_txtSinDatos");
+                graficoMensual.Cargar(mensual.Select(m => new BarraGrafico_68SA
+                    {
+                        Etiqueta = m.Fecha.ToString("MMM yy", cultura),
+                        Titulo = cultura.TextInfo.ToTitleCase(m.Fecha.ToString("MMMM yyyy", cultura)) + "  ·  "
+                                 + string.Format(T("Dashboard_kpiOcupacionPeriodoDetalle"), m.Ocupadas, m.Total),
+                        Valores = new[] { m.Porcentaje }
+                    }).ToList(),
+                    new[] { ColorRoomService }, new[] { T("Dashboard_serieOcupacion") }, v => v.ToString("0") + "%", 100);
+                flpOcupacion.Controls.Add(tarjetaMensual);
 
                 var panelEstadia = new UserControls.RoundedPanel_68SA
                 {
@@ -785,11 +1115,30 @@ namespace GUI_08YS.Recepcionista
 
             flpHuespedes.Controls.Add(filaCards);
 
-            // ---- Donut de nacionalidad ----
-            var panelNacionalidad = CrearTarjetaDonut(T("Dashboard_tituloNacionalidad"), new Size(1424, AltoMinimoTarjetaDonut), out _donutNacionalidad, out _leyendaNacionalidad);
-            panelNacionalidad.Margin = new Padding(3, 0, 3, 3);
-            _rellenoHuespedes = panelNacionalidad;
-            flpHuespedes.Controls.Add(panelNacionalidad);
+            // ---- Perfil de las reservas del período
+            var filaPerfil = CrearFilaKpis(new[]
+            {
+                (T("Dashboard_kpiEstadiaPromedio"), IconChar.Moon, ColorAzul, "—", ""),
+                (T("Dashboard_kpiAnticipacion"), IconChar.CalendarCheck, Color.Goldenrod, "—", ""),
+                (T("Dashboard_kpiPersonasReserva"), IconChar.PeopleGroup, ColorRoomService, "—", ""),
+                (T("Dashboard_kpiConNinos"), IconChar.Child, ColorNaranja, "—", ""),
+            }, out var etiquetasPerfil);
+            string[] claves = { "estadia", "anticipacion", "personas", "ninos" };
+            for (int i = 0; i < claves.Length; i++) _kpisHuespedes[claves[i]] = etiquetasPerfil[i];
+            flpHuespedes.Controls.Add(filaPerfil);
+
+            // ---- Titulares que más gastaron + edades de los alojados
+            var tarjetaTop = CrearTarjetaGrafico(T("Dashboard_tituloTopHuespedes"), out _graficoTopHuespedes, out _);
+            _graficoTopHuespedes.Horizontal = true;
+            var tarjetaEdades = CrearTarjetaGrafico(T("Dashboard_tituloRangoEtario"), out _graficoEdades, out _);
+            flpHuespedes.Controls.Add(CrearFila(320, new Padding(3, 0, 3, 10), (tarjetaTop, 55F), (tarjetaEdades, 45F)));
+
+            // ---- Nacionalidad y composición de los grupos (completan el alto de la pantalla)
+            var panelNacionalidad = CrearTarjetaDonut(T("Dashboard_tituloNacionalidad"), new Size(700, AltoMinimoTarjetaDonut), out _donutNacionalidad, out _leyendaNacionalidad);
+            var panelComposicion = CrearTarjetaDonut(T("Dashboard_tituloComposicion"), new Size(700, AltoMinimoTarjetaDonut), out _donutComposicion, out _leyendaComposicion);
+            var filaDonuts = CrearFila(AltoMinimoTarjetaDonut, new Padding(3, 0, 3, 3), (panelNacionalidad, 50F), (panelComposicion, 50F));
+            _rellenoHuespedes = filaDonuts;
+            flpHuespedes.Controls.Add(filaDonuts);
         }
 
         private static IconDateTimePicker CrearSelectorFecha(DateTime valor)
@@ -918,10 +1267,669 @@ namespace GUI_08YS.Recepcionista
                 });
             }
             MostrarDonut(_donutNacionalidad, _leyendaNacionalidad, segmentos, resumen.TotalAtendidos.ToString(), T("Dashboard_txtHuespedes"), v => v.ToString("0"));
+
+            CargarPerfilHuespedes(desde, hasta);
+        }
+
+        private void CargarPerfilHuespedes(DateTime? desde, DateTime? hasta)
+        {
+            IndicadoresPeriodo_68SA ind = _metricasBLL.GetIndicadoresPeriodo(desde, hasta);
+            PonerKpi(_kpisHuespedes["estadia"],
+                ind.EstadiaPromedioNoches.HasValue ? string.Format(T("Dashboard_txtNoches"), ind.EstadiaPromedioNoches.Value) : "—",
+                string.Format(T("Dashboard_kpiEstadiaDetalle"), ind.Reservas));
+            PonerKpi(_kpisHuespedes["anticipacion"],
+                ind.AnticipacionPromedioDias.HasValue ? string.Format(T("Dashboard_txtDias"), ind.AnticipacionPromedioDias.Value) : "—",
+                T("Dashboard_kpiAnticipacionDetalle"));
+            PonerKpi(_kpisHuespedes["personas"],
+                ind.PersonasPorReserva.HasValue ? ind.PersonasPorReserva.Value.ToString("0.#", OpcionEnum_68SA.CulturaActual()) : "—",
+                T("Dashboard_kpiPersonasReservaDetalle"));
+            PonerKpi(_kpisHuespedes["ninos"],
+                ind.PorcentajeConNinos.HasValue ? $"{ind.PorcentajeConNinos.Value:0.#}%" : "—",
+                T("Dashboard_kpiConNinosDetalle"));
+
+            // Ranking de titulares: la barra es el total y el globo separa alojamiento y servicios
+            var top = _metricasBLL.GetTopHuespedes(desde, hasta, 8);
+            _graficoTopHuespedes.TextoVacio = T("Dashboard_txtSinHuespedes");
+            _graficoTopHuespedes.TextoTotal = T("Dashboard_txtTotal");
+            _graficoTopHuespedes.Cargar(top.Select(h => new BarraGrafico_68SA
+                {
+                    Etiqueta = h.Nombre,
+                    Titulo = h.Nombre + "  ·  " + string.Format(T("Dashboard_txtEstadiasNoches"), h.Estadias, h.Noches),
+                    Valores = new[] { h.MontoAlojamiento, h.MontoServicios }
+                }).ToList(),
+                new[] { Color.Goldenrod, ColorRoomService }, new[] { T("Dashboard_serieAlojamiento"), T("Dashboard_serieServicios") }, ValorCorto);
+
+            // Edades: siempre los 6 rangos, en orden (los que no tienen huéspedes quedan en cero)
+            var edades = _metricasBLL.GetRangoEtario(desde, hasta);
+            var porRango = new decimal[6];
+            foreach (var e in edades)
+                if (int.TryParse(e.Etiqueta, out int rango) && rango >= 0 && rango < porRango.Length) porRango[rango] = e.Cantidad;
+            _graficoEdades.TextoVacio = T("Dashboard_txtSinHuespedes");
+            _graficoEdades.Cargar(porRango.Sum() == 0 ? new List<BarraGrafico_68SA>() : Enumerable.Range(0, porRango.Length).Select(i => new BarraGrafico_68SA
+                {
+                    Etiqueta = T("Dashboard_edad" + i),
+                    Titulo = T("Dashboard_edadTitulo" + i),
+                    Valores = new[] { porRango[i] }
+                }).ToList(),
+                new[] { ColorAzul }, new[] { T("Dashboard_serieHuespedes") }, v => v.ToString("0"));
+
+            // Composición de los grupos de cada reserva
+            var coloresGrupo = new[] { ColorAzul, Color.Goldenrod, ColorRoomService, ColorUpgrade };
+            var segmentosGrupo = new List<SegmentoDonut_68SA>();
+            foreach (var g in _metricasBLL.GetComposicionGrupos(desde, hasta))
+            {
+                if (!int.TryParse(g.Etiqueta, out int grupo) || grupo < 0 || grupo > 3) continue;
+                segmentosGrupo.Add(new SegmentoDonut_68SA { Etiqueta = T("Dashboard_grupo" + grupo), Valor = g.Cantidad, Color = coloresGrupo[grupo] });
+            }
+            MostrarDonut(_donutComposicion, _leyendaComposicion, segmentosGrupo, segmentosGrupo.Sum(x => x.Valor).ToString("0"),
+                T("Dashboard_txtReservas"), v => v.ToString("0"));
         }
 
         #endregion
-    
+
+        #region Pestaña Servicios (PN2)
+
+        private void CargarServicios()
+        {
+            if (!_serviciosInicializado)
+            {
+                InicializarControlesServicios();
+                _serviciosInicializado = true;
+            }
+            ActualizarDatosServicios();
+        }
+
+        private void InicializarControlesServicios()
+        {
+            _flpServicios.SuspendLayout();
+
+            // ---- Filtro (mismo armado que Huéspedes) + acceso al reporte de servicios
+            var pnlFiltro = new UserControls.RoundedPanel_68SA
+            {
+                BackColor = Color.FromArgb(10, 18, 50),
+                CornerRadius = 12,
+                Size = new Size(1424, 112),
+                Margin = new Padding(3, 3, 3, 10)
+            };
+            _lblTituloFiltroServicios = new Label
+            {
+                Text = T("Dashboard_tituloServiciosPeriodo"),
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                ForeColor = Color.Goldenrod,
+                Location = new Point(16, 10),
+                AutoSize = true
+            };
+            pnlFiltro.Controls.Add(_lblTituloFiltroServicios);
+
+            var lblDesde = new Label { Text = T("Dashboard_lblEtiquetaDesdeGeneral"), ForeColor = Color.FromArgb(160, 165, 180), AutoSize = true };
+            var lblHasta = new Label { Text = T("Dashboard_lblEtiquetaHastaGeneral"), ForeColor = Color.FromArgb(160, 165, 180), AutoSize = true };
+            _dtpDesdeServicios = CrearSelectorFecha(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1));
+            _dtpHastaServicios = CrearSelectorFecha(DateTime.Today);
+
+            var btnActualizar = new IconButton
+            {
+                BackColor = Color.Goldenrod,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(10, 15, 35),
+                IconChar = IconChar.ArrowsRotate,
+                IconColor = Color.FromArgb(10, 15, 35),
+                IconSize = 20,
+                ImageAlign = ContentAlignment.MiddleLeft,
+                Padding = new Padding(14, 0, 0, 0),
+                Size = new Size(170, 44),
+                Text = T("Dashboard_btnActualizarGeneral"),
+                TextAlign = ContentAlignment.MiddleLeft,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                UseVisualStyleBackColor = false
+            };
+            btnActualizar.Click += (s, e) => { _historicoServicios = false; ActualizarEstiloHistoricoServicios(); ActualizarDatosServicios(); };
+
+            var btnReporte = new IconButton
+            {
+                BackColor = Color.FromArgb(90, 155, 235),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(10, 15, 35),
+                IconChar = IconChar.FileInvoiceDollar,
+                IconColor = Color.FromArgb(10, 15, 35),
+                IconSize = 26,
+                ImageAlign = ContentAlignment.MiddleLeft,
+                Padding = new Padding(12, 0, 0, 0),
+                Size = new Size(260, 44),
+                Text = T("Dashboard_btnReporteServicios"),
+                TextAlign = ContentAlignment.MiddleLeft,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                UseVisualStyleBackColor = false,
+                Visible = SessionManager_08YS.Instance.HasPermission(Permisos.GenerarReporteServicios)
+            };
+            btnReporte.Click += (s, e) => AbrirReporteServicios();
+
+            void Preset(DateTime desde, DateTime hasta)
+            {
+                _historicoServicios = false;
+                _dtpDesdeServicios.Enabled = _dtpHastaServicios.Enabled = true;
+                _dtpDesdeServicios.Value = desde;
+                _dtpHastaServicios.Value = hasta;
+                ActualizarEstiloHistoricoServicios();
+                ActualizarDatosServicios();
+            }
+
+            var btnHoy = CrearBotonPreset(T("Dashboard_btnFiltroHoy"), 130);
+            btnHoy.Click += (s, e) => Preset(DateTime.Today, DateTime.Today);
+            var btn7 = CrearBotonPreset(T("Dashboard_btnFiltro7Dias"), 140);
+            btn7.Click += (s, e) => Preset(DateTime.Today.AddDays(-7), DateTime.Today);
+            var btn30 = CrearBotonPreset(T("Dashboard_btnFiltro30Dias"), 140);
+            btn30.Click += (s, e) => Preset(DateTime.Today.AddDays(-30), DateTime.Today);
+            var btnMes = CrearBotonPreset(T("Dashboard_btnFiltroEsteMes"), 130);
+            btnMes.Click += (s, e) => Preset(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), DateTime.Today);
+
+            _btnHistoricoServicios = new IconButton
+            {
+                BackColor = Color.FromArgb(5, 15, 45),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9F),
+                ForeColor = Color.Goldenrod,
+                IconChar = IconChar.Infinity,
+                IconColor = Color.Goldenrod,
+                IconSize = 16,
+                ImageAlign = ContentAlignment.MiddleLeft,
+                Padding = new Padding(10, 0, 0, 0),
+                Size = new Size(150, 36),
+                Text = T("Dashboard_btnFiltroHistorico"),
+                TextAlign = ContentAlignment.MiddleLeft,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                UseVisualStyleBackColor = false
+            };
+            _btnHistoricoServicios.Click += (s, e) =>
+            {
+                _historicoServicios = true;
+                _dtpDesdeServicios.Enabled = _dtpHastaServicios.Enabled = false;
+                ActualizarEstiloHistoricoServicios();
+                ActualizarDatosServicios();
+            };
+
+            ArmarBarraFiltro(pnlFiltro, _lblTituloFiltroServicios,
+                new Control[] { btnHoy, btn7, btn30, btnMes, _btnHistoricoServicios },
+                new Control[] { lblDesde, _dtpDesdeServicios, lblHasta, _dtpHastaServicios, btnActualizar, btnReporte });
+            _flpServicios.Controls.Add(pnlFiltro);
+
+            // ---- Indicadores
+            var filaKpis = CrearFilaKpis(new[]
+            {
+                (T("Dashboard_kpiIngresosServicios"), IconChar.MoneyBillTrendUp, Color.Goldenrod, "—", ""),
+                (T("Dashboard_kpiPedidosRS"), IconChar.BellConcierge, ColorRoomService, "—", ""),
+                (T("Dashboard_kpiUpgrades"), IconChar.ArrowUpRightDots, ColorUpgrade, "—", ""),
+                (T("Dashboard_kpiEstadiasConConsumo"), IconChar.Percent, Color.FromArgb(90, 155, 235), "—", ""),
+                (T("Dashboard_kpiEntregaPromedio"), IconChar.Stopwatch, Color.FromArgb(80, 200, 200), "—", ""),
+            }, out var etiquetas);
+            string[] claves = { "ingresos", "pedidos", "upgrades", "estadias", "entrega" };
+            for (int i = 0; i < claves.Length; i++) _kpisServicios[claves[i]] = etiquetas[i];
+            _flpServicios.Controls.Add(filaKpis);
+
+            // ---- Ingresos por día (apilado) y productos más pedidos
+            var fila = new TableLayoutPanel
+            {
+                ColumnCount = 2,
+                RowCount = 1,
+                Size = new Size(1424, 300),
+                Margin = new Padding(3, 0, 3, 10),
+                Padding = Padding.Empty
+            };
+            fila.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            fila.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            fila.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            var tarjetaDia = CrearTarjetaGrafico(T("Dashboard_tituloServiciosPorDia"), out _graficoServiciosDia, out _lblTituloServiciosDia);
+            tarjetaDia.Dock = DockStyle.Fill;
+            tarjetaDia.Margin = new Padding(0, 0, 12, 0);
+            fila.Controls.Add(tarjetaDia, 0, 0);
+
+            var tarjetaTop = CrearTarjetaGrafico(T("Dashboard_tituloTopProductos"), out _graficoTopProductos, out _);
+            _graficoTopProductos.Horizontal = true;
+            tarjetaTop.Dock = DockStyle.Fill;
+            tarjetaTop.Margin = new Padding(12, 0, 0, 0);
+            fila.Controls.Add(tarjetaTop, 1, 0);
+            _flpServicios.Controls.Add(fila);
+
+            // ---- Pedidos según la hora (completa el alto de la pantalla)
+            var tarjetaHoras = CrearTarjetaGrafico(T("Dashboard_tituloPedidosPorHora"), out _graficoHoras, out _);
+            tarjetaHoras.Size = new Size(1424, AltoMinimoTarjetaDonut);
+            tarjetaHoras.Margin = new Padding(3, 0, 3, 10);
+            _rellenoServicios = tarjetaHoras;
+            _flpServicios.Controls.Add(tarjetaHoras);
+
+            // ---- Upgrades por tipo de habitación y tiempos de entrega del room service
+            var tarjetaUpgrades = CrearTarjetaGrafico(T("Dashboard_tituloUpgradesPorTipo"), out _graficoUpgradesTipo, out _);
+            _graficoUpgradesTipo.Horizontal = true;
+            var tarjetaTiempos = CrearTarjetaGrafico(T("Dashboard_tituloTiemposEntrega"), out _graficoTiemposEntrega, out _);
+            _flpServicios.Controls.Add(CrearFila(280, new Padding(3, 0, 3, 10), (tarjetaUpgrades, 50F), (tarjetaTiempos, 50F)));
+
+            // ---- Cola de pedidos sin entregar y últimos cambios de habitación (con acceso a sus pantallas)
+            var tarjetaPendientes = CrearTarjetaLista(T("Dashboard_tituloPedidosPendientes"), out _listaPendientes, out _lblTituloPendientes,
+                T("Dashboard_btnVerPedidos"), SessionManager_08YS.Instance.HasPermission(Permisos.ConfirmarEntregaRoomService),
+                () => AbrirPantalla(Permisos.ConfirmarEntregaRoomService, () => new FormPedidosRoomService_68SA()));
+            var tarjetaCambios = CrearTarjetaLista(T("Dashboard_tituloCambiosHabitacion"), out _listaCambios, out _,
+                T("Dashboard_btnVerBitacoraCambios"), SessionManager_08YS.Instance.HasPermission(Permisos.VerBitacoraCambiosHabitacion),
+                () => AbrirPantalla(Permisos.VerBitacoraCambiosHabitacion, () => new FormBitacoraCambiosHabitacion_68SA()));
+            _flpServicios.Controls.Add(CrearFila(320, new Padding(3, 0, 3, 3), (tarjetaPendientes, 50F), (tarjetaCambios, 50F)));
+
+            _flpServicios.ResumeLayout(true);
+        }
+
+        private void ActualizarEstiloHistoricoServicios()
+        {
+            _btnHistoricoServicios.BackColor = _historicoServicios ? Color.Goldenrod : Color.FromArgb(5, 15, 45);
+            _btnHistoricoServicios.ForeColor = _historicoServicios ? Color.FromArgb(10, 15, 35) : Color.Goldenrod;
+            _btnHistoricoServicios.IconColor = _btnHistoricoServicios.ForeColor;
+            _lblTituloFiltroServicios.Text = T(_historicoServicios ? "Dashboard_tituloServiciosHistorico" : "Dashboard_tituloServiciosPeriodo");
+        }
+
+        private bool PeriodoServicios(out DateTime? desde, out DateTime? hasta)
+        {
+            desde = _historicoServicios ? null : _dtpDesdeServicios.Value?.Date;
+            hasta = _historicoServicios ? null : _dtpHastaServicios.Value?.Date;
+            if (_historicoServicios) return true;
+            if (!desde.HasValue || !hasta.HasValue) return false;
+            if (desde.Value > hasta.Value)
+            {
+                MessageBox.Show(T("Dashboard_msgFiltroInvalido"), T("Reservas_tituloFiltroInvalido"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
+        }
+
+        private void ActualizarDatosServicios()
+        {
+            if (!PeriodoServicios(out var desde, out var hasta)) return;
+
+            ResumenServicios_68SA resumen = _metricasBLL.GetResumenServicios(desde, hasta);
+            PonerKpi(_kpisServicios["ingresos"], $"${resumen.Total:N2}",
+                string.Format(T("Dashboard_kpiIngresosServiciosDetalle"), $"${resumen.MontoRoomService:N0}", $"${resumen.MontoUpgrades:N0}"));
+            PonerKpi(_kpisServicios["pedidos"], resumen.Pedidos.ToString(),
+                string.Format(T("Dashboard_kpiPedidosRSDetalle"), resumen.PedidosPendientes, $"${resumen.TicketPromedioPedido:N0}"));
+            PonerKpi(_kpisServicios["upgrades"], resumen.Upgrades.ToString(),
+                string.Format(T("Dashboard_kpiUpgradesDetalle"), resumen.Reubicaciones));
+            PonerKpi(_kpisServicios["estadias"], $"{resumen.PorcentajeEstadiasConConsumo:0.#}%",
+                string.Format(T("Dashboard_kpiEstadiasConConsumoDetalle"), resumen.EstadiasConConsumo, resumen.EstadiasPeriodo));
+            PonerKpi(_kpisServicios["entrega"],
+                resumen.MinutosEntregaPromedio.HasValue ? string.Format(T("RepServ_txtMinutos"), Math.Round(resumen.MinutosEntregaPromedio.Value)) : "—",
+                T(resumen.MinutosEntregaPromedio.HasValue ? "RepServ_kpiEntregaDetalle" : "RepServ_kpiEntregaSinDatos"));
+
+            var serie = MetricasBLL_68SA.Agrupar(_metricasBLL.GetServiciosPorDia(desde, hasta), out var agrupacion);
+            _lblTituloServiciosDia.Text = T("Dashboard_tituloServiciosPorDia") + "  ·  " + T("Dashboard_agrupado" + agrupacion);
+            _graficoServiciosDia.TextoVacio = T("Dashboard_txtSinServicios");
+            _graficoServiciosDia.TextoTotal = T("Dashboard_txtTotal");
+            _graficoServiciosDia.Cargar(Barras(serie, agrupacion, true), new[] { ColorRoomService, ColorUpgrade },
+                new[] { OpcionEnum_68SA.Texto(TipoCargo.RoomService), OpcionEnum_68SA.Texto(TipoCargo.Upgrade) }, ValorCorto);
+
+            var top = _metricasBLL.GetTopProductos(desde, hasta, 8);
+            _graficoTopProductos.TextoVacio = T("RepServ_txtSinProductos");
+            _graficoTopProductos.Cargar(top.Select(p => new BarraGrafico_68SA
+                {
+                    Etiqueta = p.Nombre,
+                    Titulo = $"{p.Nombre}  ·  ${p.Monto:N0}",
+                    Valores = new decimal[] { p.Cantidad }
+                }).ToList(),
+                new[] { Color.Gold }, new[] { T("Dashboard_serieUnidades") }, v => string.Format(T("RepServ_txtUnidades"), v.ToString("0")));
+
+            int[] horas = _metricasBLL.GetPedidosPorHora(desde, hasta);
+            _graficoHoras.TextoVacio = T("Dashboard_txtSinServicios");
+            _graficoHoras.Cargar(Enumerable.Range(0, 24).Select(h => new BarraGrafico_68SA
+                {
+                    Etiqueta = h.ToString("00"),
+                    Titulo = string.Format(T("Dashboard_txtFranjaHoraria"), h.ToString("00"), ((h + 1) % 24).ToString("00")),
+                    Valores = new decimal[] { horas[h] }
+                }).ToList(),
+                new[] { ColorRoomService }, new[] { T("Dashboard_seriePedidos") }, v => v.ToString("0"));
+
+            // Upgrades por tipo de la habitación nueva (monto cobrado; el globo muestra la cantidad)
+            var upgrades = _metricasBLL.GetUpgradesPorTipo(desde, hasta);
+            _graficoUpgradesTipo.TextoVacio = T("Dashboard_txtSinUpgrades");
+            _graficoUpgradesTipo.Cargar(upgrades.Select(u => new BarraGrafico_68SA
+                {
+                    Etiqueta = u.Etiqueta,
+                    Titulo = u.Etiqueta + "  ·  " + string.Format(T("Dashboard_txtCantidadUpgrades"), u.Cantidad),
+                    Valores = new[] { u.Valor }
+                }).ToList(),
+                new[] { ColorUpgrade }, new[] { T("Dashboard_serieMonto") }, ValorCorto);
+
+            // Pedidos entregados según cuánto tardaron
+            int[] tramos = _metricasBLL.GetTiemposEntrega(desde, hasta);
+            _graficoTiemposEntrega.TextoVacio = T("RepServ_kpiEntregaSinDatos");
+            _graficoTiemposEntrega.Cargar(tramos.Sum() == 0 ? new List<BarraGrafico_68SA>() : Enumerable.Range(0, tramos.Length).Select(i => new BarraGrafico_68SA
+                {
+                    Etiqueta = T("Dashboard_tramoEntrega" + i),
+                    Titulo = T("Dashboard_tramoEntrega" + i),
+                    Valores = new decimal[] { tramos[i] }
+                }).ToList(),
+                new[] { Color.FromArgb(80, 200, 200) }, new[] { T("Dashboard_seriePedidos") }, v => v.ToString("0"));
+
+            CargarListasServicios(desde, hasta);
+        }
+
+        private void CargarListasServicios(DateTime? desde, DateTime? hasta)
+        {
+            // La cola de pedidos es la de ahora (no depende del período elegido)
+            var pendientes = _metricasBLL.GetPedidosPendientes();
+            _lblTituloPendientes.Text = string.Format(T("Dashboard_tituloPedidosPendientesCantidad"), pendientes.Count);
+            LlenarLista(_listaPendientes, pendientes.Select(p =>
+            {
+                int minutos = (int)Math.Max(0, (DateTime.Now - p.FechaHora).TotalMinutes);
+                Color color = minutos > 30 ? ColorRojo : minutos > 15 ? ColorNaranja : ColorRoomService;
+                return CrearFilaLista(string.Format(T("Dashboard_txtHabitacionNro"), p.NroHabitacion),
+                    string.Format(T("Dashboard_txtPedidoDetalle"), p.PedidoID, p.Unidades, $"${p.Monto:N0}"),
+                    TiempoTranscurrido(minutos), color);
+            }), T("Dashboard_txtSinPendientes"));
+
+            var cambios = _metricasBLL.GetCambiosHabitacion(desde, hasta, 10);
+            LlenarLista(_listaCambios, cambios.Select(c => CrearFilaLista(
+                $"{c.HabitacionAnterior} → {c.HabitacionNueva}  ·  {c.TipoNuevo}",
+                string.Format(T("Dashboard_txtCambioDetalle"), c.FechaCambio.ToString("dd/MM/yyyy HH:mm"), c.ReservaID),
+                c.Motivo == 0 ? $"${c.Monto:N0}" : T("Dashboard_txtReubicacion"),
+                c.Motivo == 0 ? ColorUpgrade : ColorAzul)), T("Dashboard_txtSinCambios"));
+        }
+
+        private static string TiempoTranscurrido(int minutos)
+            => minutos < 60
+                ? string.Format(T("Dashboard_txtHaceMinutos"), minutos)
+                : string.Format(T("Dashboard_txtHaceHoras"), minutos / 60, minutos % 60);
+
+        /// <summary>Abre otra pantalla del sistema dentro del MDI (con su permiso) desde el Dashboard.</summary>
+        private void AbrirPantalla(Permisos permiso, Func<Form> crear)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(permiso);
+            if (ParentForm is FormMDI_08YS mdi)
+                mdi.OpenChildForm(crear());
+            else
+                crear().Show(this);
+        }
+
+        private static void PonerKpi((Label Valor, Label Detalle) kpi, string valor, string detalle)
+        {
+            kpi.Valor.Text = valor;
+            kpi.Detalle.Text = detalle;
+        }
+
+        /// <summary>Abre el reporte de servicios con el período elegido en la pestaña.</summary>
+        private void AbrirReporteServicios()
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.GenerarReporteServicios);
+            if (!PeriodoServicios(out var desde, out var hasta)) return;
+
+            AbrirEnReportes(Reportes.TipoReporte_68SA.Servicios, desde, hasta);
+        }
+
+        #endregion
+
+        #region Gráficos e indicadores reutilizables
+
+        /// <summary>Tarjeta con título arriba y un gráfico de barras que ocupa el resto.</summary>
+        private static UserControls.RoundedPanel_68SA CrearTarjetaGrafico(string titulo, out UC_BarChart_68SA grafico, out Label lblTitulo)
+        {
+            var panel = new UserControls.RoundedPanel_68SA
+            {
+                BackColor = Color.FromArgb(10, 18, 50),
+                CornerRadius = 12,
+                Padding = new Padding(16, 46, 18, 12),
+                Size = new Size(700, AltoMinimoTarjetaDonut)
+            };
+            grafico = new UC_BarChart_68SA { Dock = DockStyle.Fill, BackColor = Color.FromArgb(10, 18, 50) };
+            panel.Controls.Add(grafico);
+            lblTitulo = new Label
+            {
+                Text = titulo,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.Goldenrod,
+                Location = new Point(16, 14),
+                AutoSize = true
+            };
+            panel.Controls.Add(lblTitulo);
+            lblTitulo.BringToFront();
+            return panel;
+        }
+
+        /// <summary>Fila de tarjetas KPI con título, valor, detalle e ícono (columnas iguales).</summary>
+        private static TableLayoutPanel CrearFilaKpis((string Titulo, IconChar Icono, Color Color, string Valor, string Detalle)[] kpis,
+            out List<(Label Valor, Label Detalle)> etiquetas)
+        {
+            var fila = new TableLayoutPanel
+            {
+                ColumnCount = kpis.Length,
+                RowCount = 1,
+                Size = new Size(1424, 116),
+                Margin = new Padding(3, 0, 3, 10),
+                Padding = Padding.Empty
+            };
+            for (int i = 0; i < kpis.Length; i++)
+                fila.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / kpis.Length));
+            fila.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            etiquetas = new List<(Label Valor, Label Detalle)>();
+            for (int i = 0; i < kpis.Length; i++)
+            {
+                var k = kpis[i];
+                var panel = new UserControls.RoundedPanel_68SA
+                {
+                    BackColor = Color.FromArgb(10, 18, 50),
+                    CornerRadius = 12,
+                    Dock = DockStyle.Fill,
+                    Margin = new Padding(i == 0 ? 3 : 6, 3, i == kpis.Length - 1 ? 3 : 6, 3)
+                };
+                var icono = new IconPictureBox { IconChar = k.Icono, IconColor = k.Color, IconSize = 26, Size = new Size(30, 30), BackColor = Color.FromArgb(10, 18, 50) };
+                var lblTitulo = new Label
+                {
+                    Text = k.Titulo.ToUpper(), AutoEllipsis = true, Location = new Point(16, 14), Size = new Size(200, 18),
+                    Font = new Font("Segoe UI", 8F, FontStyle.Bold), ForeColor = Color.FromArgb(160, 165, 180)
+                };
+                var lblValor = new Label
+                {
+                    Text = k.Valor, AutoEllipsis = true, Location = new Point(14, 34), Size = new Size(200, 36),
+                    Font = new Font("Segoe UI", 16F, FontStyle.Bold), ForeColor = Color.WhiteSmoke
+                };
+                var lblDetalle = new Label
+                {
+                    Text = k.Detalle, AutoEllipsis = true, Location = new Point(16, 74), Size = new Size(200, 18),
+                    Font = new Font("Segoe UI", 8.25F), ForeColor = Color.FromArgb(150, 156, 175)
+                };
+                var barra = new Panel { BackColor = k.Color, Dock = DockStyle.Left, Width = 4 };
+                panel.Controls.Add(icono);
+                panel.Controls.Add(lblTitulo);
+                panel.Controls.Add(lblValor);
+                panel.Controls.Add(lblDetalle);
+                panel.Controls.Add(barra);
+                panel.Resize += (s, e) =>
+                {
+                    icono.Location = new Point(Math.Max(16, panel.ClientSize.Width - icono.Width - 14), 14);
+                    int ancho = Math.Max(40, panel.ClientSize.Width - 30);
+                    lblTitulo.Width = Math.Max(20, ancho - icono.Width - 6);
+                    lblValor.Width = ancho;
+                    lblDetalle.Width = ancho;
+                };
+                fila.Controls.Add(panel, i, 0);
+                etiquetas.Add((lblValor, lblDetalle));
+            }
+            return fila;
+        }
+
+        /// <summary>Fila de tarjetas lado a lado que se reparten el ancho según el porcentaje de cada una.</summary>
+        private static TableLayoutPanel CrearFila(int alto, Padding margen, params (Control Tarjeta, float Porcentaje)[] celdas)
+        {
+            var fila = new TableLayoutPanel
+            {
+                ColumnCount = celdas.Length,
+                RowCount = 1,
+                Size = new Size(1424, alto),
+                Margin = margen,
+                Padding = Padding.Empty
+            };
+            fila.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            for (int i = 0; i < celdas.Length; i++)
+            {
+                fila.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, celdas[i].Porcentaje));
+                var tarjeta = celdas[i].Tarjeta;
+                tarjeta.Dock = DockStyle.Fill;
+                tarjeta.Margin = new Padding(i == 0 ? 0 : 12, 0, i == celdas.Length - 1 ? 0 : 12, 0);
+                fila.Controls.Add(tarjeta, i, 0);
+            }
+            return fila;
+        }
+
+        /// <summary>
+        /// Tarjeta con título y una lista de filas (con barra si no entran). Opcionalmente, un botón
+        /// arriba a la derecha que lleva a la pantalla donde se gestiona lo que muestra la lista.
+        /// </summary>
+        private static UserControls.RoundedPanel_68SA CrearTarjetaLista(string titulo, out FlowLayoutPanel lista, out Label lblTitulo,
+            string textoAccion, bool accionVisible, Action accion)
+        {
+            var panel = new UserControls.RoundedPanel_68SA
+            {
+                BackColor = Color.FromArgb(10, 18, 50),
+                CornerRadius = 12,
+                Padding = new Padding(16, 50, 16, 12),
+                Size = new Size(700, 300)
+            };
+            lista = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                WrapContents = false,
+                AutoScroll = true,
+                BackColor = panel.BackColor,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+            panel.Controls.Add(lista);
+            LayoutAdaptable_68SA.EstirarHijosAlAncho(lista);
+
+            // Variable local: el parámetro out no se puede usar dentro de la función local de abajo
+            var etiquetaTitulo = new Label
+            {
+                Text = titulo,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.Goldenrod,
+                Location = new Point(16, 14),
+                AutoSize = true,
+                UseMnemonic = false
+            };
+            lblTitulo = etiquetaTitulo;
+            panel.Controls.Add(etiquetaTitulo);
+            etiquetaTitulo.BringToFront();
+
+            if (accionVisible && accion != null)
+            {
+                var boton = new IconButton
+                {
+                    BackColor = Color.FromArgb(5, 15, 45),
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Segoe UI", 9F),
+                    ForeColor = Color.Goldenrod,
+                    IconChar = IconChar.ArrowUpRightFromSquare,
+                    IconColor = Color.Goldenrod,
+                    IconSize = 14,
+                    ImageAlign = ContentAlignment.MiddleLeft,
+                    Padding = new Padding(8, 0, 6, 0),
+                    AutoSize = true,
+                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                    MinimumSize = new Size(0, 30),
+                    Text = textoAccion,
+                    TextAlign = ContentAlignment.MiddleLeft,
+                    TextImageRelation = TextImageRelation.ImageBeforeText,
+                    UseVisualStyleBackColor = false,
+                    Cursor = Cursors.Hand
+                };
+                boton.FlatAppearance.BorderColor = Color.Goldenrod;
+                boton.Click += (s, e) => accion();
+                panel.Controls.Add(boton);
+                boton.BringToFront();
+                void Ubicar() => boton.Location = new Point(Math.Max(etiquetaTitulo.Right + 10, panel.ClientSize.Width - boton.Width - 14), 9);
+                panel.Resize += (s, e) => Ubicar();
+                boton.SizeChanged += (s, e) => Ubicar();
+                etiquetaTitulo.SizeChanged += (s, e) => Ubicar();
+                Ubicar();
+            }
+            return panel;
+        }
+
+        /// <summary>Fila de una lista: punto de color, texto principal, detalle debajo y valor a la derecha.</summary>
+        private static Panel CrearFilaLista(string texto, string detalle, string valor, Color color)
+        {
+            const int alto = 46, anchoValor = 130;
+            var fila = new Panel { Size = new Size(400, alto), Margin = new Padding(0, 0, 0, 4), BackColor = Color.FromArgb(14, 24, 60) };
+            var barra = new Panel { BackColor = color, Dock = DockStyle.Left, Width = 4 };
+            var lblTexto = new Label
+            {
+                Text = texto, Font = FuenteFilaLista, ForeColor = Color.WhiteSmoke, AutoEllipsis = true, UseMnemonic = false,
+                Location = new Point(14, 5), Size = new Size(fila.Width - 14 - anchoValor - 8, 20),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            };
+            var lblDetalle = new Label
+            {
+                Text = detalle, Font = FuenteDetalleLista, ForeColor = ColorTextoSecundario, AutoEllipsis = true, UseMnemonic = false,
+                Location = new Point(14, 25), Size = new Size(fila.Width - 14 - anchoValor - 8, 17),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            };
+            var lblValor = new Label
+            {
+                Text = valor, Font = FuenteValorLista, ForeColor = color, AutoEllipsis = true, UseMnemonic = false,
+                TextAlign = ContentAlignment.MiddleRight,
+                Location = new Point(fila.Width - anchoValor - 10, 0), Size = new Size(anchoValor, alto),
+                Anchor = AnchorStyles.Top | AnchorStyles.Right
+            };
+            fila.Controls.Add(lblTexto);
+            fila.Controls.Add(lblDetalle);
+            fila.Controls.Add(lblValor);
+            fila.Controls.Add(barra);
+            return fila;
+        }
+
+        private static void LlenarLista(FlowLayoutPanel lista, IEnumerable<Control> filas, string textoVacio)
+        {
+            lista.SuspendLayout();
+            try
+            {
+                LimpiarContenedor(lista);
+                foreach (var fila in filas) lista.Controls.Add(fila);
+                if (lista.Controls.Count == 0)
+                    lista.Controls.Add(new Label
+                    {
+                        Text = textoVacio, Font = FuenteDetalleLista, ForeColor = ColorTextoSecundario,
+                        Size = new Size(400, 30), TextAlign = ContentAlignment.MiddleLeft, UseMnemonic = false
+                    });
+            }
+            finally
+            {
+                lista.ResumeLayout(true);
+            }
+        }
+
+        /// <summary>Barras del gráfico a partir de una serie por fecha (con la etiqueta según la agrupación).</summary>
+        private static List<BarraGrafico_68SA> Barras(List<PuntoSerie_68SA> serie, AgrupacionSerie agrupacion, bool dosSeries)
+        {
+            var cultura = OpcionEnum_68SA.CulturaActual();
+            return serie.Select(p => new BarraGrafico_68SA
+            {
+                Etiqueta = agrupacion == AgrupacionSerie.Mes ? p.Fecha.ToString("MMM yy", cultura) : p.Fecha.ToString("dd/MM"),
+                Titulo = agrupacion == AgrupacionSerie.Mes ? p.Fecha.ToString("MMMM yyyy", cultura)
+                       : agrupacion == AgrupacionSerie.Semana ? string.Format(T("Dashboard_txtSemanaDel"), p.Fecha.ToString("dd/MM/yyyy"))
+                       : p.Fecha.ToString("dddd dd/MM/yyyy", cultura),
+                Valores = dosSeries ? new[] { p.Valor, p.Valor2 } : new[] { p.Valor }
+            }).ToList();
+        }
+
+        /// <summary>Montos abreviados para los ejes ($850, $12,5k, $1,2M).</summary>
+        private static string ValorCorto(decimal valor)
+        {
+            var cultura = OpcionEnum_68SA.CulturaActual();
+            if (valor >= 1000000) return "$" + (valor / 1000000).ToString("0.#", cultura) + "M";
+            if (valor >= 1000) return "$" + (valor / 1000).ToString("0.#", cultura) + "k";
+            return "$" + valor.ToString("0", cultura);
+        }
+
+        #endregion
+
+        #region Sobrescrituras
 
         // Pinta el formulario completo en memoria y lo vuelca de una vez: sin parpadeo ni franjas
         // blancas mientras los controles se acomodan al abrir o redimensionar la ventana.
@@ -934,5 +1942,7 @@ namespace GUI_08YS.Recepcionista
                 return cp;
             }
         }
+
+        #endregion
     }
 }

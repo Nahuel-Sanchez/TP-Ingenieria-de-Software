@@ -384,6 +384,8 @@ namespace GUI_08YS.Recepcionista
     /// <summary>Fila de la grilla: aplana Habitacion_68SA (la DGV no bindea propiedades anidadas).</summary>
     public class HabitacionListItem_68SA
     {
+        #region Propiedades
+
         [Browsable(false)] public Habitacion_68SA Origen { get; set; }
         [Browsable(false)] public Color ColorEstado { get; set; }
 
@@ -393,5 +395,7 @@ namespace GUI_08YS.Recepcionista
         public int Capacidad { get; set; }
         public decimal TarifaNoche { get; set; }
         public string Estado { get; set; }
+
+        #endregion
     }
 }

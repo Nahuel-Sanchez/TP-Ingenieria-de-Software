@@ -8,18 +8,28 @@ namespace Service_08YS.Entities.Bitacora
 {
     public sealed class EventoMetadata_08YS
     {
+        #region Propiedades
+
         public Modulo Modulo { get; }
         public Criticidad Criticidad { get; }
+
+        #endregion
+
+        #region Constructor
 
         public EventoMetadata_08YS(Modulo modulo, Criticidad criticidad)
         {
             Modulo = modulo;
             Criticidad = criticidad;
         }
+
+        #endregion
     }
 
     public static class EventCatalog_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<Evento, EventoMetadata_08YS> _catalogo =
             new Dictionary<Evento, EventoMetadata_08YS>
             {
@@ -62,8 +72,20 @@ namespace Service_08YS.Entities.Bitacora
                 { Evento.PisoEliminado,                     new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Alto   )         },
                 { Evento.HuespedModificado,                 new EventoMetadata_08YS(   Modulo.Huespedes,      Criticidad.Bajo   )         },
                 { Evento.HuespedEliminado,                  new EventoMetadata_08YS(   Modulo.Huespedes,      Criticidad.Alto   )         },
-                { Evento.ReservaModificada,                 new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Medio  )         }
+                { Evento.ReservaModificada,                 new EventoMetadata_08YS(   Modulo.Reservas,       Criticidad.Medio  )         },
+                // PN2 - Cargos adicionales durante la estadía
+                { Evento.HabitacionUpgradeRegistrado,       new EventoMetadata_08YS(   Modulo.CargosAdicionales, Criticidad.Alto  )      },
+                { Evento.HuespedReubicado,                  new EventoMetadata_08YS(   Modulo.Habitaciones,      Criticidad.Alto  )      },
+                { Evento.PedidoRoomServiceRegistrado,       new EventoMetadata_08YS(   Modulo.CargosAdicionales, Criticidad.Medio )      },
+                { Evento.PedidoRoomServiceEntregado,        new EventoMetadata_08YS(   Modulo.CargosAdicionales, Criticidad.Bajo  )      },
+                { Evento.ItemRoomServiceCreado,             new EventoMetadata_08YS(   Modulo.CargosAdicionales, Criticidad.Medio )      },
+                { Evento.ItemRoomServiceModificado,         new EventoMetadata_08YS(   Modulo.CargosAdicionales, Criticidad.Medio )      },
+                { Evento.CambioHabitacionReactivado,        new EventoMetadata_08YS(   Modulo.Habitaciones,      Criticidad.Critico )    }
             };
+
+        #endregion
+
+        #region Consultas
 
         public static EventoMetadata_08YS GetMetadata(Evento evento) => _catalogo[evento];
 
@@ -82,6 +104,10 @@ namespace Service_08YS.Entities.Bitacora
                 .Select(kvp => kvp.Key)
                 .ToList();
         }
+
+        #endregion
+
+        #region Métodos públicos
 
         /// <summary>
         /// Llamar una sola vez al iniciar la aplicación.
@@ -103,5 +129,7 @@ namespace Service_08YS.Entities.Bitacora
                     $"Agregá su Modulo y Criticidad correspondiente antes de continuar.");
             }
         }
+
+        #endregion
     }
 }

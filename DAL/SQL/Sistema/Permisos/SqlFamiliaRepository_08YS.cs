@@ -12,7 +12,13 @@ namespace DAL_08YS.SQL
 {
     public class SqlFamiliaRepository_08YS : Connection_08YS , IFamiliaRepository_08YS
     {
+        #region Constructor
+
         public SqlFamiliaRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public List<Familia_08YS> GetAllRoots()
         {
@@ -27,28 +33,10 @@ namespace DAL_08YS.SQL
             DataSet ds = GetDataSet("sp_GetAllFamilias", storedProcedure: true);
             return AccessMapper_08YS.EnsamblarFamilias(ds.Tables[0], ds.Tables[1]);
         }
-        public (List<int> FamiliaIds, List<int> RolIds) GetAncestors(int familiaId)
-        {
-            DataSet ds = GetDataSet("sp_GetAncestrosFamilia",
-                new[] { Param("@FamiliaID", familiaId) },
-                storedProcedure: true);
 
-            var familiaIds = ds.Tables[0].AsEnumerable()
-                .Select(r => Convert.ToInt32(r["FamiliaID"])).ToList();
+        #endregion
 
-            var rolIds = ds.Tables[1].AsEnumerable()
-                .Select(r => Convert.ToInt32(r["RolID"])).ToList();
-
-            return (familiaIds, rolIds);
-        }
-
-        public bool IsInUse(int familiaId)
-            => ExecuteScalar<int>(
-                "SELECT COUNT(1) FROM RolFamilia WHERE FamiliaID = @id",
-                new[] { Param("@id", familiaId) }) > 0
-            || ExecuteScalar<int>(
-                "SELECT COUNT(1) FROM FamiliaIntegrada WHERE FamiliaID = @id",
-                new[] { Param("@id", familiaId) }) > 0;
+        #region Operaciones
 
         public void Create(string nombre, List<AccessComponent_08YS> componentes)
         {
@@ -89,5 +77,34 @@ namespace DAL_08YS.SQL
             => ExecuteNonQuery("sp_DeleteFamilia",
                 new[] { Param("@FamiliaID", familiaId) },
                 storedProcedure: true);
+
+        #endregion
+
+        #region Métodos públicos
+
+        public (List<int> FamiliaIds, List<int> RolIds) GetAncestors(int familiaId)
+        {
+            DataSet ds = GetDataSet("sp_GetAncestrosFamilia",
+                new[] { Param("@FamiliaID", familiaId) },
+                storedProcedure: true);
+
+            var familiaIds = ds.Tables[0].AsEnumerable()
+                .Select(r => Convert.ToInt32(r["FamiliaID"])).ToList();
+
+            var rolIds = ds.Tables[1].AsEnumerable()
+                .Select(r => Convert.ToInt32(r["RolID"])).ToList();
+
+            return (familiaIds, rolIds);
+        }
+
+        public bool IsInUse(int familiaId)
+            => ExecuteScalar<int>(
+                "SELECT COUNT(1) FROM RolFamilia WHERE FamiliaID = @id",
+                new[] { Param("@id", familiaId) }) > 0
+            || ExecuteScalar<int>(
+                "SELECT COUNT(1) FROM FamiliaIntegrada WHERE FamiliaID = @id",
+                new[] { Param("@id", familiaId) }) > 0;
+
+        #endregion
     }
 }

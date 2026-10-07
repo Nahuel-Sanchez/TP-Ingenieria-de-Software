@@ -11,6 +11,8 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormModificarReserva_68SA : Form
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -20,6 +22,10 @@ namespace GUI_08YS.Recepcionista
         private readonly Reserva_68SA _reserva;
         private readonly Habitacion_68SA _habitacion;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
+
+        #endregion
+
+        #region Constructor
 
         public FormModificarReserva_68SA(Reserva_68SA reserva)
         {
@@ -56,15 +62,25 @@ namespace GUI_08YS.Recepcionista
             ActualizarResumen();
         }
 
-        private void SincronizarMinimoEgreso()
-        {
-            if (!dtpFechaIngreso.Value.HasValue) return;
+        #endregion
 
-            DateTime minimoEgreso = dtpFechaIngreso.Value.Value.AddDays(1);
-            dtpFechaEgreso.MinDate = minimoEgreso;
-            if (dtpFechaEgreso.Value.HasValue && dtpFechaEgreso.Value.Value < minimoEgreso)
-                dtpFechaEgreso.Value = minimoEgreso;
+        #region Idioma
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
         }
+
+        #endregion
+
+        #region Carga de datos
 
         private void ActualizarResumen()
         {
@@ -77,6 +93,10 @@ namespace GUI_08YS.Recepcionista
             int composicion = (int)nudAdultos.Value + (int)nudNinos.Value;
             lblAdvertenciaCapacidad.Visible = composicion > _habitacion.Tipo.Capacidad;
         }
+
+        #endregion
+
+        #region Eventos de controles
 
         private void BtnGuardar_Click(object sender, EventArgs e)
         {
@@ -111,6 +131,20 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
+        private void SincronizarMinimoEgreso()
+        {
+            if (!dtpFechaIngreso.Value.HasValue) return;
+
+            DateTime minimoEgreso = dtpFechaIngreso.Value.Value.AddDays(1);
+            dtpFechaEgreso.MinDate = minimoEgreso;
+            if (dtpFechaEgreso.Value.HasValue && dtpFechaEgreso.Value.Value < minimoEgreso)
+                dtpFechaEgreso.Value = minimoEgreso;
+        }
+
         private static void MostrarNoSePudoGuardar(string claveMensaje)
         {
             MessageBox.Show(TraductorManager_08YS.Instance.GetTexto(claveMensaje),
@@ -118,16 +152,6 @@ namespace GUI_08YS.Recepcionista
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
-
-                if (c.HasChildren)
-                    TraducirControles(c);
-            }
-        }
+        #endregion
     }
 }

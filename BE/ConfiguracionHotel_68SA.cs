@@ -5,9 +5,13 @@ namespace BE_08YS
 {
     public class ConfiguracionHotel_68SA
     {
+        #region Propiedades
+
         public int Id { get; set; }
         public TimeSpan HoraCheckIn { get; set; }
         public TimeSpan HoraCheckOut { get; set; }
         public decimal GraciaNoShowHoras { get; set; }
+
+        #endregion
     }
 }

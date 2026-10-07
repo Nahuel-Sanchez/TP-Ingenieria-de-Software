@@ -15,6 +15,8 @@ namespace BE_08YS
     }
     public class Reserva_68SA
     {
+        #region Propiedades
+
         public int Id { get; set; }
         public Huesped_68SA Titular { get; set; }
         public Habitacion_68SA Habitacion { get; set; }
@@ -31,6 +33,10 @@ namespace BE_08YS
         public decimal MontoOriginal { get; set; }
         public decimal MontoPagado { get; set; }
 
+        // PN2: upgrades y servicio a la habitación que se liquidan en el check-out (solo lo trae el listado)
+        public decimal MontoCargos { get; set; }
+        public decimal SaldoPendiente => Estado == EstadoReserva.Cancelada ? 0 : Math.Max(0, MontoTotal + MontoCargos - MontoPagado);
+
         // Se completa recién en el check-in, no al momento de reservar (PN1)
         public List<Huesped_68SA> Acompanantes { get; set; } = new List<Huesped_68SA>();
 
@@ -39,10 +45,14 @@ namespace BE_08YS
         public int? UsuarioRegistroDni { get; set; }
         public string UsuarioRegistroNombre { get; set; } // solo para mostrar (Nombre + Apellido)
         public DateTime FechaRegistro { get; set; }
+
+        #endregion
     }
 
     public class ReservaFiltro_68SA
     {
+        #region Propiedades
+
         public string Huesped { get; set; }
         public string Habitacion { get; set; }
         public string Registro { get; set; }
@@ -54,5 +64,7 @@ namespace BE_08YS
         public DateTime? FechaEgresoHasta { get; set; }
         public decimal? CostoDesde { get; set; }
         public decimal? CostoHasta { get; set; }
+
+        #endregion
     }
 }

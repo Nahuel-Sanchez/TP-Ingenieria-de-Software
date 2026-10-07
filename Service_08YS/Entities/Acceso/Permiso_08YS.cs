@@ -69,16 +69,34 @@ namespace Service_08YS.Entities.Acceso
         VerDashboard,
         GenerarReporteReservas,
         VerConfiguracionHotel,
-        ModificarConfiguracionHotel
+        ModificarConfiguracionHotel,
+
+        // Negocio - Cargos adicionales durante la estadía (PN2)
+        RegistrarUpgradeHabitacion,     // upgrade pedido por el huésped (genera cargo)
+        ReubicarHuesped,                // cambio de habitación por motivos del hotel (sin cargo)
+        RegistrarRoomService,
+        GestionarItemsRoomService,
+        ConfirmarEntregaRoomService,
+        VerBitacoraCambiosHabitacion,
+        GenerarReporteServicios,        // reporte de servicios consumidos por huésped
+        GenerarAnalisisDemanda          // análisis predictivo de ocupación y demanda (reporte inteligente)
     }
 
     public class Permiso_08YS : AccessComponent_08YS
     {
+        #region Propiedades
+
         public int PermisoID { get => ID; set => ID = value; }
         public string Descripcion { get; set; }
+
+        #endregion
+
+        #region Sobrescrituras
 
         // El leaf devuelve un HashSet con sí mismo — ya usa el comparer correcto
         public override HashSet<Permiso_08YS> GetPermisos()
             => new HashSet<Permiso_08YS>(new[] { this }, PermisoComparer.Instance);
+
+        #endregion
     }
 }

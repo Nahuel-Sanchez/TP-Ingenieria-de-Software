@@ -8,11 +8,15 @@ namespace BE_08YS.Metricas
 {
     public class ResumenIngresos_68SA
     {
+        #region Propiedades
+
         public decimal IngresosPeriodo { get; set; }
         public decimal TicketPromedio { get; set; }
         public decimal PorcentajeReservasAnuladas { get; set; }
         public decimal MontoAnuladoPeriodo { get; set; }
         public List<OrigenGastoItem_68SA> OrigenDelGasto { get; set; } = new List<OrigenGastoItem_68SA>();
+
+        #endregion
     }
 
     public class OrigenGastoItem_68SA

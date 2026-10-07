@@ -16,6 +16,8 @@ namespace CustomControls
     [DefaultEvent("TextChanged")]
     public class IconPlaceholderTextBox : UserControl
     {
+        #region Campos
+
         // ──────────────────────────────────────────────────────────────────
         // Controles internos
         // ──────────────────────────────────────────────────────────────────
@@ -56,118 +58,9 @@ namespace CustomControls
         // ──────────────────────────────────────────────────────────────────
         private int _textLeftPadding = 4;
 
-        // ──────────────────────────────────────────────────────────────────
-        // Eventos
-        // ──────────────────────────────────────────────────────────────────
-        /// <summary>
-        /// Se dispara cuando el usuario hace clic sobre el ícono principal.
-        /// Si no hay suscriptores, el clic pasa el foco al TextBox.
-        /// </summary>
-        public event EventHandler IconClick;
+        #endregion
 
-        /// <summary>
-        /// Se dispara cuando el usuario hace clic sobre el ícono derecho independiente.
-        /// </summary>
-        public event EventHandler IconRightClick;
-
-        // ══════════════════════════════════════════════════════════════════
-        // Constructor
-        // ══════════════════════════════════════════════════════════════════
-        public IconPlaceholderTextBox()
-        {
-            SetStyle(ControlStyles.UserPaint |
-                     ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.ResizeRedraw, true);
-
-            // ── Ícono principal ───────────────────────────────────────────
-            _iconPicture = new PictureBox
-            {
-                SizeMode = PictureBoxSizeMode.CenterImage,
-                BackColor = Color.Transparent,
-                Cursor = Cursors.Hand,
-                Visible = false
-            };
-            _iconPicture.Click += OnIconPictureClick;
-
-            // ── Ícono derecho independiente ───────────────────────────────
-            _iconPictureRight = new PictureBox
-            {
-                SizeMode = PictureBoxSizeMode.CenterImage,
-                BackColor = Color.Transparent,
-                Cursor = Cursors.Hand,
-                Visible = false
-            };
-            _iconPictureRight.Click += OnIconRightPictureClick;
-
-            // ── TextBox interno ───────────────────────────────────────────
-            _innerTextBox = new PlaceholderTextBox
-            {
-                BorderStyle = BorderStyle.None,
-                BackColor = SystemColors.Window
-            };
-
-            _innerTextBox.GotFocus += (_, e) =>
-            {
-                _isFocused = true;
-                _innerTextBox.Visible = true;
-                Invalidate();
-                OnGotFocus(e);
-            };
-
-            _innerTextBox.LostFocus += (_, e) =>
-            {
-                _isFocused = false;
-                if (string.IsNullOrEmpty(_innerTextBox.RealText))
-                    _innerTextBox.Visible = false;
-                Invalidate();
-                OnLostFocus(e);
-            };
-
-            _innerTextBox.TextChanged += (_, e) =>
-            {
-                _innerTextBox.Visible = !string.IsNullOrEmpty(_innerTextBox.RealText) || _innerTextBox.Focused;
-                Invalidate();
-                OnTextChanged(e);
-            };
-
-            _innerTextBox.KeyDown += (_, e) => OnKeyDown(e);
-            _innerTextBox.KeyPress += (_, e) => OnKeyPress(e);
-            _innerTextBox.KeyUp += (_, e) => OnKeyUp(e);
-
-            Controls.Add(_innerTextBox);
-            Controls.Add(_iconPicture);
-            Controls.Add(_iconPictureRight);
-
-            BackColor = SystemColors.Window;
-            Size = new Size(250, 32);
-            TabStop = true;
-
-            UpdateLayout();
-            _innerTextBox.Visible = false;
-        }
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-            _innerTextBox.Font = this.Font; // ← sincronizar antes de medir
-            RefreshIcon();
-            RefreshIconRight();
-            UpdateLayout();
-            Invalidate();
-        }
-
-        protected override void OnParentChanged(EventArgs e)
-        {
-            base.OnParentChanged(e);
-            if (IsHandleCreated)
-            {
-                _innerTextBox.Font = this.Font; // ← sincronizar antes de medir
-                RefreshIcon();
-                RefreshIconRight();
-                UpdateLayout();
-                Invalidate();
-            }
-        }
+        #region Propiedades
 
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES: ÍCONO PRINCIPAL ──────────────────────────────────
@@ -360,46 +253,8 @@ namespace CustomControls
             set => _innerTextBox.MaskChar = value;
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── PROPIEDADES: TEXTBOX ──────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        [Browsable(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public override string Text
-        {
-            get => _innerTextBox.Text;
-            set => _innerTextBox.Text = value;
-        }
-
         [Browsable(false)]
         public string RealText => _innerTextBox.RealText;
-
-        protected override void OnFontChanged(EventArgs e)
-        {
-            base.OnFontChanged(e);
-            if (_innerTextBox != null)
-            {
-                _innerTextBox.Font = this.Font;
-                UpdateLayout();
-                Invalidate();
-            }
-        }
-
-        protected override void OnForeColorChanged(EventArgs e)
-        {
-            base.OnForeColorChanged(e);
-            if (_innerTextBox != null)
-                _innerTextBox.ForeColor = base.ForeColor;
-        }
-
-        protected override void OnBackColorChanged(EventArgs e)
-        {
-            base.OnBackColorChanged(e);
-            if (_innerTextBox != null)
-                _innerTextBox.BackColor = base.BackColor;
-            Invalidate();
-        }
 
         [DefaultValue(false)]
         public bool ReadOnly
@@ -454,6 +309,109 @@ namespace CustomControls
             set { _textLeftPadding = Math.Max(0, value); UpdateLayout(); Invalidate(); }
         }
 
+        #endregion
+
+        #region Eventos
+
+        // ──────────────────────────────────────────────────────────────────
+        // Eventos
+        // ──────────────────────────────────────────────────────────────────
+        /// <summary>
+        /// Se dispara cuando el usuario hace clic sobre el ícono principal.
+        /// Si no hay suscriptores, el clic pasa el foco al TextBox.
+        /// </summary>
+        public event EventHandler IconClick;
+
+        /// <summary>
+        /// Se dispara cuando el usuario hace clic sobre el ícono derecho independiente.
+        /// </summary>
+        public event EventHandler IconRightClick;
+
+        #endregion
+
+        #region Constructor
+
+        // ══════════════════════════════════════════════════════════════════
+        // Constructor
+        // ══════════════════════════════════════════════════════════════════
+        public IconPlaceholderTextBox()
+        {
+            SetStyle(ControlStyles.UserPaint |
+                     ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.ResizeRedraw, true);
+
+            // ── Ícono principal ───────────────────────────────────────────
+            _iconPicture = new PictureBox
+            {
+                SizeMode = PictureBoxSizeMode.CenterImage,
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
+                Visible = false
+            };
+            _iconPicture.Click += OnIconPictureClick;
+
+            // ── Ícono derecho independiente ───────────────────────────────
+            _iconPictureRight = new PictureBox
+            {
+                SizeMode = PictureBoxSizeMode.CenterImage,
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
+                Visible = false
+            };
+            _iconPictureRight.Click += OnIconRightPictureClick;
+
+            // ── TextBox interno ───────────────────────────────────────────
+            _innerTextBox = new PlaceholderTextBox
+            {
+                BorderStyle = BorderStyle.None,
+                BackColor = SystemColors.Window
+            };
+
+            _innerTextBox.GotFocus += (_, e) =>
+            {
+                _isFocused = true;
+                _innerTextBox.Visible = true;
+                Invalidate();
+                OnGotFocus(e);
+            };
+
+            _innerTextBox.LostFocus += (_, e) =>
+            {
+                _isFocused = false;
+                if (string.IsNullOrEmpty(_innerTextBox.RealText))
+                    _innerTextBox.Visible = false;
+                Invalidate();
+                OnLostFocus(e);
+            };
+
+            _innerTextBox.TextChanged += (_, e) =>
+            {
+                _innerTextBox.Visible = !string.IsNullOrEmpty(_innerTextBox.RealText) || _innerTextBox.Focused;
+                Invalidate();
+                OnTextChanged(e);
+            };
+
+            _innerTextBox.KeyDown += (_, e) => OnKeyDown(e);
+            _innerTextBox.KeyPress += (_, e) => OnKeyPress(e);
+            _innerTextBox.KeyUp += (_, e) => OnKeyUp(e);
+
+            Controls.Add(_innerTextBox);
+            Controls.Add(_iconPicture);
+            Controls.Add(_iconPictureRight);
+
+            BackColor = SystemColors.Window;
+            Size = new Size(250, 32);
+            TabStop = true;
+
+            UpdateLayout();
+            _innerTextBox.Visible = false;
+        }
+
+        #endregion
+
+        #region Eventos de controles
+
         // ══════════════════════════════════════════════════════════════════
         // ── FOCO ──────────────────────────────────────────────────────────
         // ══════════════════════════════════════════════════════════════════
@@ -470,40 +428,9 @@ namespace CustomControls
             IconRightClick?.Invoke(this, e);
         }
 
-        protected override void OnEnter(EventArgs e)
-        {
-            _innerTextBox.Visible = true;
-            _innerTextBox.Focus();
-            base.OnEnter(e);
-        }
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── PINTURA ───────────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-
-            using (var bgBrush = new SolidBrush(BackColor))
-                g.FillRectangle(bgBrush, ClientRectangle);
-
-            if (!_innerTextBox.Multiline
-                && !_innerTextBox.Focused
-                && string.IsNullOrEmpty(_innerTextBox.RealText)
-                && !string.IsNullOrEmpty(_innerTextBox.PlaceholderText))
-            {
-                PaintPlaceholder(g);
-            }
-
-            Color border = _isFocused ? _borderFocusColor : _borderColor;
-            var rect = new Rectangle(0, 0, Width - 1, Height - 1);
-            if (_cornerRadius > 0)
-                PaintRoundedBorder(g, rect, border);
-            else
-                PaintSquareBorder(g, rect, border);
-        }
+        #region Métodos auxiliares
 
         private void PaintPlaceholder(Graphics g)
         {
@@ -604,17 +531,6 @@ namespace CustomControls
             _iconPictureRight.Visible = true;
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── LAYOUT ────────────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            UpdateLayout();
-            Invalidate();
-        }
-
         private void UpdateLayout()
         {
             int bw = _borderWidth;
@@ -672,6 +588,117 @@ namespace CustomControls
             _innerTextBox.Width = Math.Max(1, tbW);
         }
 
+        #endregion
+
+        #region Sobrescrituras
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            _innerTextBox.Font = this.Font; // ← sincronizar antes de medir
+            RefreshIcon();
+            RefreshIconRight();
+            UpdateLayout();
+            Invalidate();
+        }
+
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+            if (IsHandleCreated)
+            {
+                _innerTextBox.Font = this.Font; // ← sincronizar antes de medir
+                RefreshIcon();
+                RefreshIconRight();
+                UpdateLayout();
+                Invalidate();
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── PROPIEDADES: TEXTBOX ──────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public override string Text
+        {
+            get => _innerTextBox.Text;
+            set => _innerTextBox.Text = value;
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            if (_innerTextBox != null)
+            {
+                _innerTextBox.Font = this.Font;
+                UpdateLayout();
+                Invalidate();
+            }
+        }
+
+        protected override void OnForeColorChanged(EventArgs e)
+        {
+            base.OnForeColorChanged(e);
+            if (_innerTextBox != null)
+                _innerTextBox.ForeColor = base.ForeColor;
+        }
+
+        protected override void OnBackColorChanged(EventArgs e)
+        {
+            base.OnBackColorChanged(e);
+            if (_innerTextBox != null)
+                _innerTextBox.BackColor = base.BackColor;
+            Invalidate();
+        }
+
+        protected override void OnEnter(EventArgs e)
+        {
+            _innerTextBox.Visible = true;
+            _innerTextBox.Focus();
+            base.OnEnter(e);
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── PINTURA ───────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            using (var bgBrush = new SolidBrush(BackColor))
+                g.FillRectangle(bgBrush, ClientRectangle);
+
+            if (!_innerTextBox.Multiline
+                && !_innerTextBox.Focused
+                && string.IsNullOrEmpty(_innerTextBox.RealText)
+                && !string.IsNullOrEmpty(_innerTextBox.PlaceholderText))
+            {
+                PaintPlaceholder(g);
+            }
+
+            Color border = _isFocused ? _borderFocusColor : _borderColor;
+            var rect = new Rectangle(0, 0, Width - 1, Height - 1);
+            if (_cornerRadius > 0)
+                PaintRoundedBorder(g, rect, border);
+            else
+                PaintSquareBorder(g, rect, border);
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── LAYOUT ────────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            UpdateLayout();
+            Invalidate();
+        }
+
         // ══════════════════════════════════════════════════════════════════
         // Dispose
         // ══════════════════════════════════════════════════════════════════
@@ -680,5 +707,7 @@ namespace CustomControls
             // Los bitmaps son del caché estático — no se liberan aquí
             base.Dispose(disposing);
         }
+
+        #endregion
     }
 }

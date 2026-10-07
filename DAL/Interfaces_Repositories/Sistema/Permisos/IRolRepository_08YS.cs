@@ -11,18 +11,30 @@ namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IRolRepository_08YS
     {
+        #region Consultas
+
         List<Rol_08YS> GetAllPlano();
 
         List<Rol_08YS> GetAll(Dictionary<int, Familia_08YS> familiasCompartidas = null);
 
-        void Create(string nombre, List<AccessComponent_08YS> componentes);
+        Rol_08YS GetById(int rolID);
 
-        bool IsInUse(int rolId);
+        #endregion
+
+        #region Operaciones
+
+        void Create(string nombre, List<AccessComponent_08YS> componentes);
 
         void Delete(int rolId);
 
         void Modify(int rolId, string nombre, List<AccessComponent_08YS> componentes);
 
-        Rol_08YS GetById(int rolID);
+        #endregion
+
+        #region Métodos públicos
+
+        bool IsInUse(int rolId);
+
+        #endregion
     }
 }

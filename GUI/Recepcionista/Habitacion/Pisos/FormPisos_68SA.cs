@@ -15,6 +15,8 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormPisos_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -22,6 +24,10 @@ namespace GUI_08YS.Recepcionista
             };
 
         private readonly PisoBLL_68SA _pisoBLL = BLLFactory_08YS.CreatePisoBLL();
+
+        #endregion
+
+        #region Constructor
 
         public FormPisos_68SA()
         {
@@ -45,6 +51,10 @@ namespace GUI_08YS.Recepcionista
 
             Shown += (s, e) => CargarLista();
         }
+
+        #endregion
+
+        #region Idioma
 
         // ---------- Idioma ----------
 
@@ -80,6 +90,10 @@ namespace GUI_08YS.Recepcionista
             if (dgvPisos.Columns["CantidadHabitaciones"] != null) dgvPisos.Columns["CantidadHabitaciones"].HeaderText = t.GetTexto("Pisos_colHabitaciones");
         }
 
+        #endregion
+
+        #region Carga de datos
+
         // ---------- Carga ----------
 
         private void CargarLista()
@@ -94,6 +108,26 @@ namespace GUI_08YS.Recepcionista
             dgvPisos.DataSource = _pisoBLL.GetAll(filtro);
             AplicarColumnas();
         }
+
+        #endregion
+
+        #region Eventos de controles
+
+        // ---------- Acciones ----------
+
+        private void DgvPisos_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (!(dgvPisos.Rows[e.RowIndex].DataBoundItem is Piso_68SA piso)) return;
+
+            string columna = dgvPisos.Columns[e.ColumnIndex].Name;
+            if (columna == "colEditar") AbrirEdicion(piso);
+            else if (columna == "colEliminar") EliminarPiso(piso);
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         private void AplicarColumnas()
         {
@@ -125,18 +159,6 @@ namespace GUI_08YS.Recepcionista
 
             AplicarEncabezados();
             dgvPisos.Invalidate();
-        }
-
-        // ---------- Acciones ----------
-
-        private void DgvPisos_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (!(dgvPisos.Rows[e.RowIndex].DataBoundItem is Piso_68SA piso)) return;
-
-            string columna = dgvPisos.Columns[e.ColumnIndex].Name;
-            if (columna == "colEditar") AbrirEdicion(piso);
-            else if (columna == "colEliminar") EliminarPiso(piso);
         }
 
         private void AbrirEdicion(Piso_68SA piso)
@@ -180,5 +202,7 @@ namespace GUI_08YS.Recepcionista
 
             CargarLista();
         }
+
+        #endregion
     }
 }

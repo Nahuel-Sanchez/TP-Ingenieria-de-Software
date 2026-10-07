@@ -13,10 +13,20 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormBuscarReserva_68SA : Form
     {
-        public Reserva_68SA ReservaSeleccionada { get; private set; }
+        #region Campos
 
         private readonly EstadoReserva _estadoBuscado;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
+
+        #endregion
+
+        #region Propiedades
+
+        public Reserva_68SA ReservaSeleccionada { get; private set; }
+
+        #endregion
+
+        #region Constructor
 
         public FormBuscarReserva_68SA(EstadoReserva estadoBuscado, string titulo, IconChar icono)
         {
@@ -35,6 +45,26 @@ namespace GUI_08YS.Recepcionista
             btnBuscar.Click += BtnBuscar_Click;
             btnSeleccionar.Click += (s, e) => { DialogResult = DialogResult.OK; Close(); };
         }
+
+        #endregion
+
+        #region Idioma
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
+        }
+
+        #endregion
+
+        #region Eventos de controles
 
         private void BtnBuscar_Click(object sender, EventArgs e)
         {
@@ -65,16 +95,6 @@ namespace GUI_08YS.Recepcionista
             btnSeleccionar.Enabled = true;
         }
 
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
-
-                if (c.HasChildren)
-                    TraducirControles(c);
-            }
-        }
+        #endregion
     }
 }

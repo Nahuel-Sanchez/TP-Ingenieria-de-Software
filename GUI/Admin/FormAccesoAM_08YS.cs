@@ -16,6 +16,8 @@ namespace GUI_08YS.Admin
 {
     public partial class FormAccesoAM_08YS : Form,IIdiomaObserver_08YS
     {
+        #region Campos
+
         private readonly TipoEntidad _tipo;
         private readonly OperacionAM _operacion;
         private readonly FamiliaBLL_08YS _familiaBLL;
@@ -37,9 +39,17 @@ namespace GUI_08YS.Admin
         // Evita cascada de eventos entre los dos dgv durante refreshes
         private bool _actualizandoSeleccion = false;
 
+        #endregion
+
+        #region Propiedades
+
         private AccesoBLL_08YS BLL => _tipo == TipoEntidad.Familia
                ? (AccesoBLL_08YS)_familiaBLL
                :            _rolBLL;
+
+        #endregion
+
+        #region Constructor
 
         public FormAccesoAM_08YS(
             TipoEntidad tipo,
@@ -65,13 +75,7 @@ namespace GUI_08YS.Admin
             dgvSeleccionados.AutoGenerateColumns = false;
         }
 
-        private void FormAccesoAM_08YS_Load(object sender, EventArgs e)
-        {
-            ConfigurarFrontPorTipo();
-            //ConfigurarBotones();
-            CargarDatos();
-            UpdateIdioma();
-        }
+        #endregion
 
         #region idiomas
         public void UpdateIdioma()
@@ -145,18 +149,6 @@ namespace GUI_08YS.Admin
         }
         #endregion
 
-        private void ConfigurarFrontPorTipo()
-        {
-            bool esFamilia = _tipo == TipoEntidad.Familia;
-
-            iconPictureBox.IconChar = esFamilia
-                ? FontAwesome.Sharp.IconChar.LayerGroup
-                : FontAwesome.Sharp.IconChar.UserShield;
-
-            if (_operacion == OperacionAM.Modificacion)
-                txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;
-        }
-        
         #region Datagrids
 
         private void CargarDatos()
@@ -455,14 +447,35 @@ namespace GUI_08YS.Admin
 
         #endregion
 
-        private class ComponentRow //clase auxiliar para mostrar componentes en el dgv debido a autogenerate columns false manteniendo control sobre las columnas y un acceso al objeto original
-        {
-            public AccessComponent_08YS Componente { get; }
-            public string Nombre => Componente.Nombre;
-            public string TipoDisplay => Componente is Familia_08YS ? "Familia" : "Permiso";
+        #region Eventos de controles
 
-            public ComponentRow(AccessComponent_08YS c) => Componente = c;
+        private void FormAccesoAM_08YS_Load(object sender, EventArgs e)
+        {
+            ConfigurarFrontPorTipo();
+            //ConfigurarBotones();
+            CargarDatos();
+            UpdateIdioma();
         }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private void ConfigurarFrontPorTipo()
+        {
+            bool esFamilia = _tipo == TipoEntidad.Familia;
+
+            iconPictureBox.IconChar = esFamilia
+                ? FontAwesome.Sharp.IconChar.LayerGroup
+                : FontAwesome.Sharp.IconChar.UserShield;
+
+            if (_operacion == OperacionAM.Modificacion)
+                txtNombre.Text = esFamilia ? _familiaAEditar.Nombre : _rolAEditar.Nombre;
+        }
+
+        #endregion
+
+        #region Sobrescrituras
 
         protected override CreateParams CreateParams
         {
@@ -474,5 +487,19 @@ namespace GUI_08YS.Admin
             }
         }
 
+        #endregion
+
+        #region Tipos anidados
+
+        private class ComponentRow //clase auxiliar para mostrar componentes en el dgv debido a autogenerate columns false manteniendo control sobre las columnas y un acceso al objeto original
+        {
+            public AccessComponent_08YS Componente { get; }
+            public string Nombre => Componente.Nombre;
+            public string TipoDisplay => Componente is Familia_08YS ? "Familia" : "Permiso";
+
+            public ComponentRow(AccessComponent_08YS c) => Componente = c;
+        }
+
+        #endregion
     }
 }

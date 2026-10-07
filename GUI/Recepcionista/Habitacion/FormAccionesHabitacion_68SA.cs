@@ -9,7 +9,13 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormAccionesHabitacion_68SA : Form
     {
+        #region Propiedades
+
         public AccionHabitacion? AccionSeleccionada { get; private set; }
+
+        #endregion
+
+        #region Constructor
 
         public FormAccionesHabitacion_68SA(Habitacion_68SA habitacion, List<(string Texto, IconChar Icono, AccionHabitacion Accion)> acciones)
         {
@@ -60,6 +66,10 @@ namespace GUI_08YS.Recepcionista
             ClientSize = new Size(ClientSize.Width, flpAcciones.Top + alturaAcciones + 24);
         }
 
+        #endregion
+
+        #region Idioma
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -72,6 +82,10 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        #endregion
+
+        #region Sobrescrituras
+
         protected override CreateParams CreateParams
         {
             get
@@ -81,6 +95,8 @@ namespace GUI_08YS.Recepcionista
                 return cp;
             }
         }
+
+        #endregion
     }
 }
     

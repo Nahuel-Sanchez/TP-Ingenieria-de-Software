@@ -9,12 +9,24 @@ namespace DAL_08YS.Interfaces_Repositories
 {
     public interface IBitacoraRepository_08YS
     {
-        void RegistrarEvento(BitacoraEvento_08YS evento);
+        #region Consultas
 
         List<BitacoraEvento_08YS> GetAll();
 
+        int ContarIntentosFallidos(string username, int ventanaHoras);
+
+        #endregion
+
+        #region Operaciones
+
+        void RegistrarEvento(BitacoraEvento_08YS evento);
+
+        #endregion
+
+        #region Métodos públicos
+
         List<BitacoraEvento_08YS> Filtrar(BitacoraFiltro_08YS filtro);
 
-        int ContarIntentosFallidos(string username, int ventanaHoras);
+        #endregion
     }
 }

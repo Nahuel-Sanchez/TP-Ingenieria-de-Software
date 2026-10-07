@@ -12,6 +12,8 @@ namespace DAL_08YS.SQL.Negocio
 {
     public class SqlHabitacionRepository_68SA : Connection_08YS, IHabitacionRepository_68SA
     {
+        #region Campos
+
         // Alias usados por HabitacionMapper_08YS: HabitacionID, NroHabitacion, Estado,
         // PisoID, Numero, NombrePiso, TipoHabitacionID, NombreTipo, Descripcion, Capacidad, TarifaNoche
         private const string BaseColumnas = @"
@@ -32,12 +34,23 @@ namespace DAL_08YS.SQL.Negocio
 
         private const string ListadoSelect =
             "SELECT " + BaseColumnas + @",
-           ISNULL(rc.Total, 0) AS CantidadReservas,
+           ISNULL(rc.Total, 0) + ISNULL(rh.Total, 0) AS CantidadReservas,
            ISNULL(rc.Activas, 0) AS CantidadReservasActivas" + BaseFrom + @"
            LEFT JOIN (SELECT HabitacionID, COUNT(1) AS Total, SUM(CASE WHEN Estado IN (0, 1) THEN 1 ELSE 0 END) AS Activas
-           FROM Reservas GROUP BY HabitacionID) rc ON rc.HabitacionID = h.HabitacionID";
+           FROM Reservas GROUP BY HabitacionID) rc ON rc.HabitacionID = h.HabitacionID
+           -- PN2: reservas que estuvieron en la habitación y se cambiaron a otra (quedan en su historial)
+           LEFT JOIN (SELECT HabitacionAnteriorID AS HabitacionID, COUNT(DISTINCT ReservaID) AS Total
+           FROM HistorialCambiosHabitacion GROUP BY HabitacionAnteriorID) rh ON rh.HabitacionID = h.HabitacionID";
+
+        #endregion
+
+        #region Constructor
 
         public SqlHabitacionRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public List<Habitacion_68SA> GetAll(int? idTipoHabitacion = null)
         {
@@ -83,13 +96,6 @@ namespace DAL_08YS.SQL.Negocio
             return dt.Rows.Count > 0 ? HabitacionMapper_68SA.FromDataRow(dt.Rows[0]) : null;
         }
 
-        public void CambiarEstado(int habitacionId, EstadoHabitacion nuevoEstado)
-        {
-            ExecuteNonQuery(
-                "UPDATE Habitaciones SET Estado = @Estado WHERE HabitacionID = @Id",
-                new[] { Param("@Estado", (int)nuevoEstado), Param("@Id", habitacionId) });
-        }
-
         public List<Habitacion_68SA> GetListado(HabitacionFiltro_68SA filtro)
         {
             var where = new List<string>();
@@ -116,6 +122,38 @@ namespace DAL_08YS.SQL.Negocio
                 + " ORDER BY p.Numero, h.NroHabitacion";
 
             return HabitacionMapper_68SA.FromDataTable(GetDataTable(query, parametros.ToArray()));
+        }
+
+        public bool ExisteNumero(string nroHabitacion, int? excluirHabitacionId = null)
+        {
+            string query = "SELECT COUNT(1) FROM Habitaciones WHERE NroHabitacion = @Nro";
+            var parametros = new List<IDbDataParameter> { Param("@Nro", nroHabitacion) };
+
+            if (excluirHabitacionId.HasValue)
+            {
+                query += " AND HabitacionID <> @Excluir";
+                parametros.Add(Param("@Excluir", excluirHabitacionId.Value));
+            }
+
+            return ExecuteScalar<int>(query, parametros.ToArray()) > 0;
+        }
+
+        public bool TieneReservasActivas(int habitacionId)
+        {
+            return ExecuteScalar<int>(
+                "SELECT COUNT(1) FROM Reservas WHERE HabitacionID = @Id AND Estado IN (0, 1)", // Confirmada, En curso
+                new[] { Param("@Id", habitacionId) }) > 0;
+        }
+
+        #endregion
+
+        #region Operaciones
+
+        public void CambiarEstado(int habitacionId, EstadoHabitacion nuevoEstado)
+        {
+            ExecuteNonQuery(
+                "UPDATE Habitaciones SET Estado = @Estado WHERE HabitacionID = @Id",
+                new[] { Param("@Estado", (int)nuevoEstado), Param("@Id", habitacionId) });
         }
 
         public int Crear(Habitacion_68SA habitacion)
@@ -149,35 +187,19 @@ namespace DAL_08YS.SQL.Negocio
                 });
         }
 
-        // Un solo DELETE atómico: si alguna vez tuvo reservas (FK Reservas→Habitaciones) o no existe, no afecta filas y devuelve false
+        // Un solo DELETE atómico: si alguna vez tuvo reservas (FK Reservas→Habitaciones), figura en el historial de
+        // cambios de habitación / su bitácora (PN2) o no existe, no afecta filas y devuelve false
         public bool Eliminar(int habitacionId)
         {
             return ExecuteNonQuery(
                 @"DELETE FROM Habitaciones
           WHERE HabitacionID = @Id
-            AND NOT EXISTS (SELECT 1 FROM Reservas WHERE HabitacionID = @Id)",
+            AND NOT EXISTS (SELECT 1 FROM Reservas WHERE HabitacionID = @Id)
+            AND NOT EXISTS (SELECT 1 FROM HistorialCambiosHabitacion WHERE HabitacionAnteriorID = @Id OR HabitacionNuevaID = @Id)
+            AND NOT EXISTS (SELECT 1 FROM Bitacora_CambiosHabitacion WHERE HabitacionID = @Id OR HabitacionAnteriorID = @Id)",
                 new[] { Param("@Id", habitacionId) });
         }
 
-        public bool ExisteNumero(string nroHabitacion, int? excluirHabitacionId = null)
-        {
-            string query = "SELECT COUNT(1) FROM Habitaciones WHERE NroHabitacion = @Nro";
-            var parametros = new List<IDbDataParameter> { Param("@Nro", nroHabitacion) };
-
-            if (excluirHabitacionId.HasValue)
-            {
-                query += " AND HabitacionID <> @Excluir";
-                parametros.Add(Param("@Excluir", excluirHabitacionId.Value));
-            }
-
-            return ExecuteScalar<int>(query, parametros.ToArray()) > 0;
-        }
-
-        public bool TieneReservasActivas(int habitacionId)
-        {
-            return ExecuteScalar<int>(
-                "SELECT COUNT(1) FROM Reservas WHERE HabitacionID = @Id AND Estado IN (0, 1)", // Confirmada, En curso
-                new[] { Param("@Id", habitacionId) }) > 0;
-        }
+        #endregion
     }
 }

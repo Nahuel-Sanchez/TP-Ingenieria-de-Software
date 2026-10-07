@@ -14,6 +14,8 @@ namespace GUI_08YS.UserControls
     /// </summary>
     public static class LayoutAdaptable_68SA
     {
+        #region Métodos públicos
+
         /// <summary>
         /// Cada hijo directo del FlowLayoutPanel ocupa todo el ancho útil (menos Padding y Margin).
         /// El ancho se ajusta en el evento Layout, ANTES de que el FlowLayoutPanel acomode los hijos:
@@ -182,10 +184,16 @@ namespace GUI_08YS.UserControls
             Ajustar();
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
         private static Control AnchoCampo(Control[] columna)
         {
             // El control más ancho que no sea Label define el borde derecho de la columna
             return columna.Where(c => !(c is Label)).DefaultIfEmpty(columna[0]).OrderByDescending(c => c.Right).First();
         }
+
+        #endregion
     }
 }

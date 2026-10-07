@@ -17,6 +17,8 @@ namespace BE_08YS
 
     public class Habitacion_68SA
     {
+        #region Propiedades
+
         public int Id { get; set; }
         public string NroHabitacion { get; set; }
         public Piso_68SA Piso { get; set; }
@@ -34,17 +36,24 @@ namespace BE_08YS
         public int CantidadReservas { get; set; }   // todas, incluido el historial
         public int CantidadReservasActivas { get; set; }
 
+        #endregion
     }
     public class HabitacionFiltro_68SA
     {
+        #region Propiedades
+
         public string NroHabitacion { get; set; }
         public int? PisoId { get; set; }
         public int? TipoHabitacionId { get; set; }
         public EstadoHabitacion? Estado { get; set; } // se compara contra EstadoVisual (mismo criterio que Control de habitaciones)
+
+        #endregion
     }
 
     public class TipoHabitacion_68SA
     {
+        #region Propiedades
+
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
@@ -53,14 +62,20 @@ namespace BE_08YS
 
         // para listado
         public int CantidadHabitaciones { get; set; }
+
+        #endregion
     }
 
     public class TipoHabitacionFiltro_68SA
     {
+        #region Propiedades
+
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public int? Capacidad { get; set; }
         public decimal? TarifaDesde { get; set; }
         public decimal? TarifaHasta { get; set; }
+
+        #endregion
     }
 }

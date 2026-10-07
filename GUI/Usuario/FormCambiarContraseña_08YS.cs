@@ -16,6 +16,8 @@ namespace GUI_08YS
 {
     public partial class FormCambiarContraseña_08YS : Form,IIdiomaObserver_08YS
     {
+        #region Campos
+
         private UserBLL_08YS _userBLL;
         private bool _syncingPasswords = false;
 
@@ -28,6 +30,10 @@ namespace GUI_08YS
         private bool _actualTienePlaceholder = true;
         private bool _nuevaTienePlaceholder = true;
         private bool _confirmarTienePlaceholder = true;
+
+        #endregion
+
+        #region Constructor
 
         public FormCambiarContraseña_08YS()
         {
@@ -48,53 +54,7 @@ namespace GUI_08YS
             UpdateIdioma();
         }
 
-        public void UpdateIdioma()
-        {
-            // 1. Cargamos las traducciones vigentes desde el diccionario de recursos
-            _hintActual = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdActual_hint");
-            _hintNueva = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdNueva_hint");
-            _hintConfirmar = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdConfirmar_hint");
-
-            // 2. Traducimos etiquetas y botones usando Tags
-            TraducirControles(this);
-
-            // 3. Forzamos refresco visual de campos según su estado booleano
-            RefrescarEstadoPlaceholder(txtContraseñaActual, _hintActual, _actualTienePlaceholder);
-            RefrescarEstadoPlaceholder(txtNuevaContraseña, _hintNueva, _nuevaTienePlaceholder);
-            RefrescarEstadoPlaceholder(txtConfirmarContraseña, _hintConfirmar, _confirmarTienePlaceholder);
-        }
-
-        private void RefrescarEstadoPlaceholder(IconPlaceholderTextBox txt, string placeholder, bool tienePlaceholder)
-        {
-            if (tienePlaceholder)
-            {
-                txt.Text = placeholder;
-                txt.ForeColor = Color.DarkGray;
-                txt.MaskedInput = false; // Desactivar máscara para que se lea el hint informativo
-            }
-        }
-
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                // Ignoramos la propiedad Text directa de los cuadros de texto
-                if (c is TextBox || c is IconPlaceholderTextBox)
-                {
-                    continue;
-                }
-
-                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
-                {
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
-                }
-
-                if (c.HasChildren)
-                {
-                    TraducirControles(c);
-                }
-            }
-        }
+        #endregion
 
         #region Lógica Controladora de Placeholders Basada en Estados
 
@@ -162,6 +122,65 @@ namespace GUI_08YS
         }
 
         #endregion
+
+        #region Idioma
+
+        public void UpdateIdioma()
+        {
+            // 1. Cargamos las traducciones vigentes desde el diccionario de recursos
+            _hintActual = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdActual_hint");
+            _hintNueva = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdNueva_hint");
+            _hintConfirmar = TraductorManager_08YS.Instance.GetTexto("CambiarPassword_txtPwdConfirmar_hint");
+
+            // 2. Traducimos etiquetas y botones usando Tags
+            TraducirControles(this);
+
+            // 3. Forzamos refresco visual de campos según su estado booleano
+            RefrescarEstadoPlaceholder(txtContraseñaActual, _hintActual, _actualTienePlaceholder);
+            RefrescarEstadoPlaceholder(txtNuevaContraseña, _hintNueva, _nuevaTienePlaceholder);
+            RefrescarEstadoPlaceholder(txtConfirmarContraseña, _hintConfirmar, _confirmarTienePlaceholder);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                // Ignoramos la propiedad Text directa de los cuadros de texto
+                if (c is TextBox || c is IconPlaceholderTextBox)
+                {
+                    continue;
+                }
+
+                if (c.Tag != null && !string.IsNullOrWhiteSpace(c.Tag.ToString()))
+                {
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(c.Tag.ToString());
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControles(c);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Carga de datos
+
+        private void RefrescarEstadoPlaceholder(IconPlaceholderTextBox txt, string placeholder, bool tienePlaceholder)
+        {
+            if (tienePlaceholder)
+            {
+                txt.Text = placeholder;
+                txt.ForeColor = Color.DarkGray;
+                txt.MaskedInput = false; // Desactivar máscara para que se lea el hint informativo
+            }
+        }
+
+        #endregion
+
+        #region Eventos de controles
+
         private void OnLinkedPasswordToggle(object sender, EventArgs e)
         {
             if (_nuevaTienePlaceholder || _confirmarTienePlaceholder) return;
@@ -178,12 +197,6 @@ namespace GUI_08YS
             {
                 _syncingPasswords = false;
             }
-        }
-
-        private static void ApplyPasswordToggle(IconPlaceholderTextBox tb, bool masked)
-        {
-            tb.MaskedInput = masked;
-            tb.IconChar = masked ? IconChar.EyeSlash : IconChar.Eye;
         }
         private void btnCambiarContraseña_Click(object sender, EventArgs e)
         {
@@ -217,6 +230,16 @@ namespace GUI_08YS
             }
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
+        private static void ApplyPasswordToggle(IconPlaceholderTextBox tb, bool masked)
+        {
+            tb.MaskedInput = masked;
+            tb.IconChar = masked ? IconChar.EyeSlash : IconChar.Eye;
+        }
+
         private bool ValidarCampos()
         {
             if (string.IsNullOrWhiteSpace(txtContraseñaActual.Text) || string.IsNullOrWhiteSpace(txtNuevaContraseña.Text) || string.IsNullOrWhiteSpace(txtConfirmarContraseña.Text))
@@ -237,6 +260,10 @@ namespace GUI_08YS
             return true;
         }
 
+        #endregion
+
+        #region Sobrescrituras
+
         protected override CreateParams CreateParams
         {
             get
@@ -247,5 +274,6 @@ namespace GUI_08YS
             }
         }
 
+        #endregion
     }
 }

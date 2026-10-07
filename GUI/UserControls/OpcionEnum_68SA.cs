@@ -12,22 +12,22 @@ namespace GUI_08YS.UserControls
     /// </summary>
     public sealed class OpcionEnum_68SA
     {
+        #region Propiedades
+
         public Enum Valor { get; }
+
+        #endregion
+
+        #region Constructor
 
         public OpcionEnum_68SA(Enum valor)
         {
             Valor = valor ?? throw new ArgumentNullException(nameof(valor));
         }
 
-        public override string ToString() => Texto(Valor);
+        #endregion
 
-        public override bool Equals(object obj)
-        {
-            if (obj is OpcionEnum_68SA otra) return Valor.Equals(otra.Valor);
-            return obj != null && Valor.Equals(obj);
-        }
-
-        public override int GetHashCode() => Valor.GetHashCode();
+        #region Métodos públicos
 
         /// <summary>Texto traducido de un valor de enum; si no hay traducción, el nombre del valor.</summary>
         public static string Texto(Enum valor)
@@ -81,5 +81,21 @@ namespace GUI_08YS.UserControls
                 return CultureInfo.CurrentCulture;
             }
         }
+
+        #endregion
+
+        #region Sobrescrituras
+
+        public override string ToString() => Texto(Valor);
+
+        public override bool Equals(object obj)
+        {
+            if (obj is OpcionEnum_68SA otra) return Valor.Equals(otra.Valor);
+            return obj != null && Valor.Equals(obj);
+        }
+
+        public override int GetHashCode() => Valor.GetHashCode();
+
+        #endregion
     }
 }

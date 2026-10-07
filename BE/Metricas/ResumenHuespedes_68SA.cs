@@ -8,12 +8,16 @@ namespace BE_08YS.Metricas
 {
     public class ResumenHuespedes_68SA
     {
+        #region Propiedades
+
         public int TotalAtendidos { get; set; }
         public int Nuevos { get; set; }
         public int Recurrentes { get; set; }
         public decimal TasaRecurrenciaPorcentaje { get; set; }
         public decimal GastoPromedioPorHuesped { get; set; }
         public List<NacionalidadItem_68SA> PorNacionalidad { get; set; } = new List<NacionalidadItem_68SA>();
+
+        #endregion
     }
 
     public class NacionalidadItem_68SA

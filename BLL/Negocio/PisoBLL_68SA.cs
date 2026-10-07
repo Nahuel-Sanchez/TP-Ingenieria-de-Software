@@ -10,8 +10,14 @@ namespace BLL_08YS.Negocio
 {
     public class PisoBLL_68SA
     {
+        #region Campos
+
         private readonly IPisoRepository_68SA _pisoRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
+        #endregion
+
+        #region Constructor
 
         public PisoBLL_68SA(IPisoRepository_68SA pisoRepo, BitacoraBLL_08YS bitacoraBll)
         {
@@ -19,11 +25,19 @@ namespace BLL_08YS.Negocio
             _bitacoraBll = bitacoraBll;
         }
 
+        #endregion
+
+        #region Consultas
+
         public List<Piso_68SA> GetAll() => _pisoRepo.GetAll();
 
         public List<Piso_68SA> GetAll(PisoFiltro_68SA filtro) => _pisoRepo.GetAll(filtro ?? new PisoFiltro_68SA());
 
         public Piso_68SA GetById(int pisoId) => _pisoRepo.GetById(pisoId);
+
+        #endregion
+
+        #region Operaciones
 
         public int Crear(Piso_68SA piso)
         {
@@ -68,6 +82,10 @@ namespace BLL_08YS.Negocio
             _bitacoraBll.RegistrarEvento(Evento.PisoEliminado, targetUsername: pisoId.ToString());
         }
 
+        #endregion
+
+        #region Validaciones
+
         private static void Validar(Piso_68SA piso)
         {
             if (piso == null) throw new ArgumentNullException(nameof(piso));
@@ -78,5 +96,7 @@ namespace BLL_08YS.Negocio
             if (piso.Nombre.Length > 50)
                 throw new DatosInvalidosException_68SA("El nombre del piso no puede superar los 50 caracteres.");
         }
+
+        #endregion
     }
 }

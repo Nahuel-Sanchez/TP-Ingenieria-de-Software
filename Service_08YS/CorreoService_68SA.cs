@@ -13,9 +13,15 @@ namespace Service_08YS
     /// <summary>Archivo adjunto de un mail (por ejemplo, el PDF del comprobante).</summary>
     public class AdjuntoCorreo_68SA
     {
+        #region Propiedades
+
         public string Nombre { get; }
         public byte[] Contenido { get; }
         public string TipoMime { get; }
+
+        #endregion
+
+        #region Constructor
 
         public AdjuntoCorreo_68SA(string nombre, byte[] contenido, string tipoMime = "application/pdf")
         {
@@ -23,6 +29,8 @@ namespace Service_08YS
             Contenido = contenido ?? throw new ArgumentNullException(nameof(contenido));
             TipoMime = tipoMime;
         }
+
+        #endregion
     }
 
     /// <summary>
@@ -32,7 +40,14 @@ namespace Service_08YS
     /// </summary>
     public sealed class CorreoService_68SA
     {
+        #region Campos
+
         private static readonly Lazy<CorreoService_68SA> _instancia = new Lazy<CorreoService_68SA>(() => new CorreoService_68SA());
+
+        #endregion
+
+        #region Propiedades
+
         public static CorreoService_68SA Instance => _instancia.Value;
 
         public string Host { get; }
@@ -42,6 +57,13 @@ namespace Service_08YS
         public string Clave { get; }
         public string Remitente { get; }
         public string NombreRemitente { get; }
+
+        /// <summary>true si hay servidor y remitente cargados en el App.config.</summary>
+        public bool EstaConfigurado => !string.IsNullOrWhiteSpace(Host) && !string.IsNullOrWhiteSpace(Remitente);
+
+        #endregion
+
+        #region Constructor
 
         private CorreoService_68SA()
         {
@@ -55,8 +77,9 @@ namespace Service_08YS
             NombreRemitente = config["Correo.NombreRemitente"] ?? "Horizon Hotel & Resort";
         }
 
-        /// <summary>true si hay servidor y remitente cargados en el App.config.</summary>
-        public bool EstaConfigurado => !string.IsNullOrWhiteSpace(Host) && !string.IsNullOrWhiteSpace(Remitente);
+        #endregion
+
+        #region Consultas
 
         public static bool EsDireccionValida(string direccion)
         {
@@ -64,6 +87,10 @@ namespace Service_08YS
             try { return new MailAddress(direccion.Trim()).Address == direccion.Trim(); }
             catch (FormatException) { return false; }
         }
+
+        #endregion
+
+        #region Operaciones
 
         /// <summary>Envía el mail de forma sincrónica (se usa desde el hilo de envío).</summary>
         public void Enviar(string destinatario, string asunto, string cuerpoHtml, IEnumerable<AdjuntoCorreo_68SA> adjuntos)
@@ -155,6 +182,10 @@ namespace Service_08YS
             return hilo;
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
         private static string DescribirError(Exception ex)
         {
             var mensajes = new List<string>();
@@ -163,5 +194,7 @@ namespace Service_08YS
                     mensajes.Add(actual.Message);
             return string.Join(" — ", mensajes);
         }
+
+        #endregion
     }
 }

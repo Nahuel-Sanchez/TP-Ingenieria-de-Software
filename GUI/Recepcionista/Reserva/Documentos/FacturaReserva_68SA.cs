@@ -14,33 +14,41 @@ namespace GUI_08YS.Recepcionista
     /// </summary>
     public class FacturaReserva_68SA : DocumentoReserva_68SA
     {
+        #region Campos
+
         private const float AnchoA4 = 827f;
         private const float AltoA4 = 1169f;
         private const float Margen = 56f;
 
-        public FacturaReserva_68SA(DatosDocumentoReserva_68SA datos) : base(datos) { }
+        // Más pedidos de room service que esto se agrupan en un solo renglón (la factura es de una sola hoja)
+        private const int MaxPedidosDetallados = 3;
 
-        public override string Titulo => T("Documento_tituloFactura");
-        public override string NombreArchivo => $"{T("Documento_archivoFactura")}_{NumeroFactura}.pdf";
-        public override SizeF TamanoVista => new SizeF(AnchoA4, AltoA4);
+        #endregion
+
+        #region Propiedades
 
         private string NumeroFactura => $"0001-{Reserva.Id:00000000}";
 
-        private sealed class Concepto
-        {
-            public string Descripcion;
-            public string Detalle;
-            public int Cantidad;
-            public decimal PrecioUnitario;
-            public decimal Importe;
-        }
+        #endregion
+
+        #region Constructor
+
+        public FacturaReserva_68SA(DatosDocumentoReserva_68SA datos) : base(datos) { }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         private List<Concepto> Conceptos()
         {
             var lista = new List<Concepto>();
             decimal tarifa = Reserva.TarifaNoche;
             int nochesOriginales = tarifa > 0 ? (int)Math.Round(Reserva.MontoOriginal / tarifa) : Reserva.Noches;
-            string habitacion = $"{Reserva.Habitacion?.NroHabitacion} · {Reserva.Habitacion?.Tipo?.Nombre}";
+            // Si hubo cambios de habitación, el alojamiento se reservó en la primera habitación
+            var primerCambio = Datos.Cambios.FirstOrDefault();
+            string habitacion = primerCambio != null
+                ? primerCambio.NroHabitacionAnterior
+                : $"{Reserva.Habitacion?.NroHabitacion} · {Reserva.Habitacion?.Tipo?.Nombre}";
 
             lista.Add(new Concepto
             {
@@ -55,31 +63,68 @@ namespace GUI_08YS.Recepcionista
             decimal renovacion = Reserva.MontoTotal - Reserva.MontoOriginal;
             if (renovacion > 0)
             {
-                int nochesExtra = tarifa > 0 ? (int)Math.Round(renovacion / tarifa) : 0;
+                // Las noches salen de las fechas: después de un upgrade la renovación se cobra a otra tarifa
+                int nochesExtra = Math.Max(1, Reserva.Noches - nochesOriginales);
                 lista.Add(new Concepto
                 {
                     Descripcion = T("Factura_conceptoRenovacion"),
                     Detalle = string.Format(T("Factura_detalleRenovacion"), Fecha(Reserva.FechaIngreso.AddDays(nochesOriginales)), Fecha(Reserva.FechaEgreso)),
                     Cantidad = nochesExtra,
-                    PrecioUnitario = tarifa,
+                    PrecioUnitario = Math.Round(renovacion / nochesExtra, 2),
                     Importe = renovacion
                 });
             }
+
+            AgregarCargos(lista);
             return lista;
         }
 
-        protected override void DibujarContenido(Graphics g, RectangleF area, Color fondo)
+        /// <summary>PN2: diferencia de tarifa de cada upgrade y los pedidos de servicio a la habitación.</summary>
+        private void AgregarCargos(List<Concepto> lista)
         {
-            float escalaX = area.Width / AnchoA4;
-            float escalaY = area.Height / AltoA4;
-            float escala = Math.Min(1f, Math.Min(escalaX, escalaY));
+            foreach (var cargo in Datos.Cargos.Where(c => c.Tipo == TipoCargo.Upgrade))
+            {
+                var cambio = Datos.Cambios.FirstOrDefault(c => c.CargoId == cargo.Id);
+                int noches = cambio?.NochesRestantes ?? 1;
+                lista.Add(new Concepto
+                {
+                    Descripcion = cambio == null
+                        ? T("Factura_conceptoUpgrade")
+                        : string.Format(T("Factura_conceptoUpgradeHab"), cambio.NroHabitacionAnterior, cambio.NroHabitacionNueva),
+                    Detalle = cambio == null
+                        ? cargo.Descripcion
+                        : string.Format(T("Factura_detalleUpgrade"), Fecha(cambio.FechaCambio), Moneda(cambio.TarifaAnterior), Moneda(cambio.TarifaNueva)),
+                    Cantidad = noches,
+                    PrecioUnitario = noches > 0 ? Math.Round(cargo.Monto / noches, 2) : cargo.Monto,
+                    Importe = cargo.Monto
+                });
+            }
 
-            // La factura se diseña en A4; si la hoja es distinta (Carta, por ejemplo) se ajusta sin deformarse
-            var estado = g.Save();
-            g.TranslateTransform(area.X + (area.Width - AnchoA4 * escala) / 2, area.Y);
-            g.ScaleTransform(escala, escala);
-            DibujarA4(g);
-            g.Restore(estado);
+            var pedidos = Datos.Cargos.Where(c => c.Tipo == TipoCargo.RoomService).ToList();
+            if (pedidos.Count > MaxPedidosDetallados)
+            {
+                lista.Add(new Concepto
+                {
+                    Descripcion = T("Factura_conceptoRoomService"),
+                    Detalle = string.Format(T("Factura_detalleRoomServiceAgrupado"), pedidos.Count,
+                        Fecha(pedidos.Min(p => p.FechaHora)), Fecha(pedidos.Max(p => p.FechaHora))),
+                    Cantidad = pedidos.Count,
+                    PrecioUnitario = Math.Round(pedidos.Sum(p => p.Monto) / pedidos.Count, 2),
+                    Importe = pedidos.Sum(p => p.Monto)
+                });
+                return;
+            }
+            foreach (var pedido in pedidos)
+            {
+                lista.Add(new Concepto
+                {
+                    Descripcion = $"{T("Factura_conceptoRoomService")} · {pedido.FechaHora:dd/MM HH:mm}",
+                    Detalle = pedido.Descripcion,
+                    Cantidad = 1,
+                    PrecioUnitario = pedido.Monto,
+                    Importe = pedido.Monto
+                });
+            }
         }
 
         private void DibujarA4(Graphics g)
@@ -191,11 +236,11 @@ namespace GUI_08YS.Recepcionista
                 // ---------- Totales y sello ----------
                 y += 18;
                 float anchoTotales = 300, xTotales = x + ancho - anchoTotales;
-                y = FilaTotal(g, xTotales, y, anchoTotales, T("Factura_subtotal"), Moneda(Reserva.MontoTotal), fTexto, fTexto, Texto);
+                y = FilaTotal(g, xTotales, y, anchoTotales, T("Factura_subtotal"), Moneda(Datos.Total), fTexto, fTexto, Texto);
                 var bandaTotal = new RectangleF(xTotales, y + 4, anchoTotales, 36);
                 Rellenar(g, bandaTotal, Marca, 4);
                 Escribir(g, T("Factura_total").ToUpper(), fNegrita, Dorado, new RectangleF(bandaTotal.X + 14, bandaTotal.Y, 140, bandaTotal.Height), StringAlignment.Near, StringAlignment.Center);
-                Escribir(g, Moneda(Reserva.MontoTotal), fTotal, Color.White, new RectangleF(bandaTotal.X, bandaTotal.Y, bandaTotal.Width - 14, bandaTotal.Height), StringAlignment.Far, StringAlignment.Center);
+                Escribir(g, Moneda(Datos.Total), fTotal, Color.White, new RectangleF(bandaTotal.X, bandaTotal.Y, bandaTotal.Width - 14, bandaTotal.Height), StringAlignment.Far, StringAlignment.Center);
                 y = bandaTotal.Bottom + 6;
                 y = FilaTotal(g, xTotales, y, anchoTotales, T("Documento_pagado"), Moneda(Datos.TotalPagado), fTexto, fNegrita, Verde);
                 y = FilaTotal(g, xTotales, y, anchoTotales, T("Documento_saldo"), Moneda(Datos.Saldo), fTexto, fNegrita, Datos.Saldo > 0 ? Rojo : Texto);
@@ -278,5 +323,42 @@ namespace GUI_08YS.Recepcionista
             Escribir(g, texto.ToUpper(), fuente, Color.FromArgb(210, color), marco, StringAlignment.Center, StringAlignment.Center);
             g.Restore(estado);
         }
+
+        #endregion
+
+        #region Sobrescrituras
+
+        public override string Titulo => T("Documento_tituloFactura");
+        public override string NombreArchivo => $"{T("Documento_archivoFactura")}_{NumeroFactura}.pdf";
+        public override SizeF TamanoVista => new SizeF(AnchoA4, AltoA4);
+
+        protected override void DibujarContenido(Graphics g, RectangleF area, Color fondo)
+        {
+            float escalaX = area.Width / AnchoA4;
+            float escalaY = area.Height / AltoA4;
+            float escala = Math.Min(1f, Math.Min(escalaX, escalaY));
+
+            // La factura se diseña en A4; si la hoja es distinta (Carta, por ejemplo) se ajusta sin deformarse
+            var estado = g.Save();
+            g.TranslateTransform(area.X + (area.Width - AnchoA4 * escala) / 2, area.Y);
+            g.ScaleTransform(escala, escala);
+            DibujarA4(g);
+            g.Restore(estado);
+        }
+
+        #endregion
+
+        #region Tipos anidados
+
+        private sealed class Concepto
+        {
+            public string Descripcion;
+            public string Detalle;
+            public int Cantidad;
+            public decimal PrecioUnitario;
+            public decimal Importe;
+        }
+
+        #endregion
     }
 }

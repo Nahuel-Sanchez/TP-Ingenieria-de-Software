@@ -16,6 +16,8 @@ namespace BE_08YS
 
     public class Huesped_68SA
     {
+        #region Propiedades
+
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
@@ -39,10 +41,14 @@ namespace BE_08YS
 
         //para listado
         public int CantidadReservas { get; set; }
+
+        #endregion
     }
 
     public class HuespedFiltro_68SA
     {
+        #region Propiedades
+
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Documento { get; set; }
@@ -53,5 +59,7 @@ namespace BE_08YS
         public int? EdadDesde { get; set; } // "mayor o igual a"
         public int? EdadHasta { get; set; } // "menor o igual a"
         public int Maximo { get; set; } // tope de filas: lo fija el BLL (HuespedBLL_68SA.LimiteListado)
+
+        #endregion
     }
 }

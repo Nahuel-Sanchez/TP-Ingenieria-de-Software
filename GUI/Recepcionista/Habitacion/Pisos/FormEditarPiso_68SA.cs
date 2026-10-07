@@ -9,8 +9,14 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormEditarPiso_68SA : Form
     {
+        #region Campos
+
         private readonly PisoBLL_68SA _pisoBLL = BLLFactory_08YS.CreatePisoBLL();
         private readonly Piso_68SA _piso; // null = alta
+
+        #endregion
+
+        #region Constructor
 
         public FormEditarPiso_68SA(Piso_68SA piso = null)
         {
@@ -37,6 +43,10 @@ namespace GUI_08YS.Recepcionista
             btnGuardar.Click += (s, e) => Guardar();
         }
 
+        #endregion
+
+        #region Idioma
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -48,6 +58,10 @@ namespace GUI_08YS.Recepcionista
                     TraducirControles(c);
             }
         }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         private void Guardar()
         {
@@ -97,5 +111,7 @@ namespace GUI_08YS.Recepcionista
                 MessageBox.Show(ex.Message, t.GetTexto("Comun_tituloErrorValidacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #endregion
     }
 }

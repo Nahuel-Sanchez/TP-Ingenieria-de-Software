@@ -10,12 +10,18 @@ namespace GUI_08YS
 {
     public class MenuColorTable : ProfessionalColorTable
     {
+        #region Campos
+
         //Fields
         private Color backColor;
         private Color leftColumnColor;
         private Color borderColor;
         private Color menuItemBorderColor;
         private Color menuItemSelectedColor;
+
+        #endregion
+
+        #region Constructor
 
         //Constructor
         public MenuColorTable(bool isMainMenu, Color primaryColor)
@@ -38,6 +44,10 @@ namespace GUI_08YS
             }
         }
 
+        #endregion
+
+        #region Sobrescrituras
+
         //Overrides
         public override Color ToolStripDropDownBackground { get { return backColor; } }
         public override Color MenuBorder { get { return borderColor; } }
@@ -46,5 +56,7 @@ namespace GUI_08YS
         public override Color ImageMarginGradientBegin { get { return leftColumnColor; } }
         public override Color ImageMarginGradientMiddle { get { return leftColumnColor; } }
         public override Color ImageMarginGradientEnd { get { return leftColumnColor; } }
+
+        #endregion
     }
 }

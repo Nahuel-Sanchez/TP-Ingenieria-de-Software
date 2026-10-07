@@ -8,6 +8,8 @@ namespace BLL_08YS
 {
     public class UserDesactivadoException_08YS:Exception
     {
+        #region Constructor
+
         public UserDesactivadoException_08YS()
         : base("Su usuario se encuentra deshabilitado. Por favor, comuníquese con un administrador.")
         {
@@ -16,5 +18,7 @@ namespace BLL_08YS
         public UserDesactivadoException_08YS(string message) : base(message) { }
 
         public UserDesactivadoException_08YS(string message, Exception innerException) : base(message, innerException) { }
+
+        #endregion
     }
 }

@@ -5,6 +5,8 @@ namespace BLL_08YS
 {
     public class UserNoRegistradoException_08YS : Exception
     {
+         #region Constructor
+
          public UserNoRegistradoException_08YS()
         : base("El nombre de usuario ingresado no existe en nuestro sistema.")
         {
@@ -13,5 +15,7 @@ namespace BLL_08YS
         public UserNoRegistradoException_08YS(string message) : base(message) { }
 
         public UserNoRegistradoException_08YS(string message, Exception innerException) : base(message, innerException) { }
+
+         #endregion
     }
 }

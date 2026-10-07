@@ -11,6 +11,8 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormRenovarEstadia_68SA : Form
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -20,9 +22,17 @@ namespace GUI_08YS.Recepcionista
         private readonly Reserva_68SA _reserva;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
 
+        // PN2: si hubo un upgrade, las noches agregadas se cobran a la tarifa nueva (la vigente)
+        private readonly decimal _tarifaVigente;
+
+        #endregion
+
+        #region Constructor
+
         public FormRenovarEstadia_68SA(Reserva_68SA reserva, Habitacion_68SA habitacion)
         {
             _reserva = reserva;
+            _tarifaVigente = BLLFactory_08YS.CreateCambioHabitacionBLL().GetTarifaVigente(reserva.Id);
             InitializeComponent();
 
             PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
@@ -31,7 +41,7 @@ namespace GUI_08YS.Recepcionista
             lblHabitacion.Text = habitacion.NroHabitacion;
             lblTitular.Text = $"{reserva.Titular.Nombre} {reserva.Titular.Apellido}";
             lblFechaActual.Text = reserva.FechaEgreso.ToString("dd/MM/yyyy");
-            lblTarifa.Text = $"${reserva.TarifaNoche:N2}";
+            lblTarifa.Text = $"${_tarifaVigente:N2}";
 
             dtpNuevaFechaEgreso.MinDate = reserva.FechaEgreso.AddDays(1);
             dtpNuevaFechaEgreso.Value = reserva.FechaEgreso.AddDays(1);
@@ -42,14 +52,38 @@ namespace GUI_08YS.Recepcionista
             btnCancelar.Click += (s, e) => { DialogResult = DialogResult.Cancel; Close(); };
         }
 
+        #endregion
+
+        #region Idioma
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
+        }
+
+        #endregion
+
+        #region Carga de datos
+
         private void ActualizarCosto()
         {
             if (!dtpNuevaFechaEgreso.Value.HasValue) return;
 
             int noches = (dtpNuevaFechaEgreso.Value.Value.Date - _reserva.FechaEgreso.Date).Days;
             lblNochesAdicionales.Text = $"{noches} {(noches == 1 ? TraductorManager_08YS.Instance.GetTexto("RenovarEstadia_txtNoche") : TraductorManager_08YS.Instance.GetTexto("RenovarEstadia_txtNoches"))}";
-            lblCostoAdicional.Text = $"${noches * _reserva.TarifaNoche:N2}";
+            lblCostoAdicional.Text = $"${noches * _tarifaVigente:N2}";
         }
+
+        #endregion
+
+        #region Eventos de controles
 
         private void BtnConfirmar_Click(object sender, EventArgs e)
         {
@@ -78,16 +112,6 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
-
-                if (c.HasChildren)
-                    TraducirControles(c);
-            }
-        }
+        #endregion
     }
 }

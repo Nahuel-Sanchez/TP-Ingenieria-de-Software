@@ -12,7 +12,13 @@ namespace DAL_08YS.SQL.Negocio
 {
     public class SqlConfiguracionHotelRepository_68SA : Connection_08YS, IConfiguracionHotelRepository_68SA
     {
+        #region Constructor
+
         public SqlConfiguracionHotelRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public ConfiguracionHotel_68SA GetConfiguracion()
         {
@@ -21,6 +27,10 @@ namespace DAL_08YS.SQL.Negocio
 
             return dt.Rows.Count > 0 ? ConfiguracionHotelMapper_68SA.FromDataRow(dt.Rows[0]) : null;
         }
+
+        #endregion
+
+        #region Operaciones
 
         public void Actualizar(ConfiguracionHotel_68SA configuracion)
         {
@@ -34,5 +44,7 @@ namespace DAL_08YS.SQL.Negocio
                     Param("@Id", configuracion.Id)
                 });
         }
+
+        #endregion
     }
 }

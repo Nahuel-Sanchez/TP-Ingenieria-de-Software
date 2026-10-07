@@ -12,7 +12,13 @@ namespace DAL_08YS.SQL.Negocio
 {
     public class SqlPisoRepository_68SA : Connection_08YS, IPisoRepository_68SA
     {
+        #region Constructor
+
         public SqlPisoRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public List<Piso_68SA> GetAll()
         {
@@ -56,6 +62,24 @@ namespace DAL_08YS.SQL.Negocio
             return PisoMapper_08YS.FromDataTable(GetDataTable(query, parametros.ToArray()));
         }
 
+        public bool ExisteNumero(int numero, int? excluirPisoId = null)
+        {
+            string query = "SELECT COUNT(1) FROM Pisos WHERE Numero = @Numero";
+            var parametros = new List<IDbDataParameter> { Param("@Numero", numero) };
+
+            if (excluirPisoId.HasValue)
+            {
+                query += " AND PisoID <> @Excluir";
+                parametros.Add(Param("@Excluir", excluirPisoId.Value));
+            }
+
+            return ExecuteScalar<int>(query, parametros.ToArray()) > 0;
+        }
+
+        #endregion
+
+        #region Operaciones
+
         public int Crear(Piso_68SA piso)
         {
             return ExecuteScalar<int>(
@@ -81,18 +105,6 @@ namespace DAL_08YS.SQL.Negocio
                 new[] { Param("@PisoID", pisoId) });
         }
 
-        public bool ExisteNumero(int numero, int? excluirPisoId = null)
-        {
-            string query = "SELECT COUNT(1) FROM Pisos WHERE Numero = @Numero";
-            var parametros = new List<IDbDataParameter> { Param("@Numero", numero) };
-
-            if (excluirPisoId.HasValue)
-            {
-                query += " AND PisoID <> @Excluir";
-                parametros.Add(Param("@Excluir", excluirPisoId.Value));
-            }
-
-            return ExecuteScalar<int>(query, parametros.ToArray()) > 0;
-        }
+        #endregion
     }
 }

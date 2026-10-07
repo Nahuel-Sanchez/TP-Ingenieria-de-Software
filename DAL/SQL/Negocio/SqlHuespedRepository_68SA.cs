@@ -12,10 +12,32 @@ namespace DAL_08YS.SQL.Negocio
 {
     public class SqlHuespedRepository_68SA : Connection_08YS, IHuespedRepository_68SA
     {
+        #region Campos
+
         private const string BaseSelect =
             "SELECT HuespedID, Nombre, Apellido, Documento, TipoDocumento, Nacionalidad, FechaNacimiento, Email, Telefono FROM Huespedes";
 
+        // Cantidad de reservas (como titular + como acompañante) en la misma consulta, con una pasada agrupada por tabla
+        private const string ListadoSelect = @"
+    SELECT TOP (@Maximo)
+           h.HuespedID, h.Nombre, h.Apellido, h.Documento, h.TipoDocumento, h.Nacionalidad,
+           h.FechaNacimiento, h.Email, h.Telefono,
+           ISNULL(rt.Cant, 0) + ISNULL(ra.Cant, 0) AS CantidadReservas
+    FROM Huespedes h
+    LEFT JOIN (SELECT HuespedTitularID AS HuespedID, COUNT(1) AS Cant
+               FROM Reservas GROUP BY HuespedTitularID) rt ON rt.HuespedID = h.HuespedID
+    LEFT JOIN (SELECT HuespedID, COUNT(1) AS Cant
+               FROM Acompanantes GROUP BY HuespedID) ra ON ra.HuespedID = h.HuespedID";
+
+        #endregion
+
+        #region Constructor
+
         public SqlHuespedRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public Huesped_68SA GetByDocumento(string documento)
         {
@@ -33,25 +55,6 @@ namespace DAL_08YS.SQL.Negocio
                 new[] { Param("@Documento", documento) }) > 0;
         }
 
-        public int Create(Huesped_68SA huesped)
-        {
-            return ExecuteScalar<int>(
-                @"INSERT INTO Huespedes (Nombre, Apellido, Documento, TipoDocumento, Nacionalidad, FechaNacimiento, Email, Telefono)
-                  VALUES (@Nombre, @Apellido, @Documento, @TipoDocumento, @Nacionalidad, @FechaNacimiento, @Email, @Telefono);
-                  SELECT CAST(SCOPE_IDENTITY() AS int);",
-                new[]
-                {
-                    Param("@Nombre",          huesped.Nombre),
-                    Param("@Apellido",        huesped.Apellido),
-                    Param("@Documento",       huesped.Documento),
-                    Param("@TipoDocumento",   (int)huesped.TipoDocumento),
-                    Param("@Nacionalidad",    huesped.Nacionalidad),
-                    Param("@FechaNacimiento", huesped.FechaNacimiento.Date),
-                    Param("@Email",           huesped.Email),
-                    Param("@Telefono",        huesped.Telefono)
-                });
-        }
-
         public Huesped_68SA GetPorClaveCompleta(string documento, TipoDocumento tipoDocumento, string nacionalidad)
         {
             DataTable dt = GetDataTable(
@@ -66,18 +69,6 @@ namespace DAL_08YS.SQL.Negocio
 
             return dt.Rows.Count > 0 ? HuespedMapper_68SA.FromDataRow(dt.Rows[0]) : null;
         }
-
-        // Cantidad de reservas (como titular + como acompañante) en la misma consulta, con una pasada agrupada por tabla
-        private const string ListadoSelect = @"
-    SELECT TOP (@Maximo)
-           h.HuespedID, h.Nombre, h.Apellido, h.Documento, h.TipoDocumento, h.Nacionalidad,
-           h.FechaNacimiento, h.Email, h.Telefono,
-           ISNULL(rt.Cant, 0) + ISNULL(ra.Cant, 0) AS CantidadReservas
-    FROM Huespedes h
-    LEFT JOIN (SELECT HuespedTitularID AS HuespedID, COUNT(1) AS Cant
-               FROM Reservas GROUP BY HuespedTitularID) rt ON rt.HuespedID = h.HuespedID
-    LEFT JOIN (SELECT HuespedID, COUNT(1) AS Cant
-               FROM Acompanantes GROUP BY HuespedID) ra ON ra.HuespedID = h.HuespedID";
 
         public Huesped_68SA GetById(int huespedId)
         {
@@ -133,6 +124,44 @@ namespace DAL_08YS.SQL.Negocio
             return HuespedMapper_68SA.FromDataTable(GetDataTable(query, parametros.ToArray()));
         }
 
+        public bool ExisteOtroConClave(int excluirHuespedId, string documento, TipoDocumento tipoDocumento, string nacionalidad)
+        {
+            return ExecuteScalar<int>(
+                @"SELECT COUNT(1) FROM Huespedes
+          WHERE HuespedID <> @Id AND Documento = @Documento
+            AND TipoDocumento = @TipoDocumento AND Nacionalidad = @Nacionalidad",
+                new[]
+                {
+            Param("@Id", excluirHuespedId),
+            Param("@Documento", documento),
+            Param("@TipoDocumento", (int)tipoDocumento),
+            Param("@Nacionalidad", nacionalidad)
+                }) > 0;
+        }
+
+        #endregion
+
+        #region Operaciones
+
+        public int Create(Huesped_68SA huesped)
+        {
+            return ExecuteScalar<int>(
+                @"INSERT INTO Huespedes (Nombre, Apellido, Documento, TipoDocumento, Nacionalidad, FechaNacimiento, Email, Telefono)
+                  VALUES (@Nombre, @Apellido, @Documento, @TipoDocumento, @Nacionalidad, @FechaNacimiento, @Email, @Telefono);
+                  SELECT CAST(SCOPE_IDENTITY() AS int);",
+                new[]
+                {
+                    Param("@Nombre",          huesped.Nombre),
+                    Param("@Apellido",        huesped.Apellido),
+                    Param("@Documento",       huesped.Documento),
+                    Param("@TipoDocumento",   (int)huesped.TipoDocumento),
+                    Param("@Nacionalidad",    huesped.Nacionalidad),
+                    Param("@FechaNacimiento", huesped.FechaNacimiento.Date),
+                    Param("@Email",           huesped.Email),
+                    Param("@Telefono",        huesped.Telefono)
+                });
+        }
+
         public void Modificar(Huesped_68SA huesped)
         {
             ExecuteNonQuery(
@@ -165,19 +194,6 @@ namespace DAL_08YS.SQL.Negocio
                 new[] { Param("@Id", huespedId) });
         }
 
-        public bool ExisteOtroConClave(int excluirHuespedId, string documento, TipoDocumento tipoDocumento, string nacionalidad)
-        {
-            return ExecuteScalar<int>(
-                @"SELECT COUNT(1) FROM Huespedes
-          WHERE HuespedID <> @Id AND Documento = @Documento
-            AND TipoDocumento = @TipoDocumento AND Nacionalidad = @Nacionalidad",
-                new[]
-                {
-            Param("@Id", excluirHuespedId),
-            Param("@Documento", documento),
-            Param("@TipoDocumento", (int)tipoDocumento),
-            Param("@Nacionalidad", nacionalidad)
-                }) > 0;
-        }
+        #endregion
     }
 }

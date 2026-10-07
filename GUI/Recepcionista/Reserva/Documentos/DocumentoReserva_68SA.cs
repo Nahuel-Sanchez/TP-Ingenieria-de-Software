@@ -22,17 +22,29 @@ namespace GUI_08YS.Recepcionista
     /// </summary>
     public class DatosDocumentoReserva_68SA
     {
+        #region Propiedades
+
         public Reserva_68SA Reserva { get; set; }
         public Huesped_68SA Titular { get; set; }
         public List<Pago_68SA> Pagos { get; set; } = new List<Pago_68SA>();
+        // PN2: upgrades y servicio a la habitación cargados a la cuenta, y los cambios de habitación de la estadía
+        public List<CargoAdicional_68SA> Cargos { get; set; } = new List<CargoAdicional_68SA>();
+        public List<CambioHabitacion_68SA> Cambios { get; set; } = new List<CambioHabitacion_68SA>();
         public TimeSpan HoraCheckIn { get; set; } = TimeSpan.FromHours(14);
         public TimeSpan HoraCheckOut { get; set; } = TimeSpan.FromHours(10);
         public DateTime FechaEmision { get; set; } = DateTime.Now;
         public string EmitidoPor { get; set; }
 
         public decimal TotalPagado => Pagos.Sum(p => p.Monto);
-        public decimal Saldo => Reserva.Estado == EstadoReserva.Cancelada ? 0 : Math.Max(0, Reserva.MontoTotal - TotalPagado);
+        public decimal TotalCargos => Cargos.Sum(c => c.Monto);
+        /// <summary>Alojamiento + cargos adicionales (lo que se factura por la estadía).</summary>
+        public decimal Total => Reserva.MontoTotal + TotalCargos;
+        public decimal Saldo => Reserva.Estado == EstadoReserva.Cancelada ? 0 : Math.Max(0, Total - TotalPagado);
         public string Email => Titular?.Email;
+
+        #endregion
+
+        #region Métodos públicos
 
         /// <summary>
         /// Arma los datos de la reserva. <paramref name="titularCompleto"/> evita volver a buscar al huésped
@@ -56,6 +68,8 @@ namespace GUI_08YS.Recepcionista
                 Reserva = reserva,
                 Titular = titular ?? reserva.Titular,
                 Pagos = pagos.OrderBy(p => p.FechaPago).ToList(),
+                Cargos = BLLFactory_08YS.CreateCuentaEstadiaBLL().GetCargos(reservaId),
+                Cambios = BLLFactory_08YS.CreateCambioHabitacionBLL().GetHistorial(reservaId),
                 EmitidoPor = UsuarioActual()
             };
 
@@ -73,11 +87,17 @@ namespace GUI_08YS.Recepcionista
             return datos;
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
         private static string UsuarioActual()
         {
             var usuario = SessionManager_08YS.Instance.Current;
             return usuario == null ? "-" : $"{usuario.Nombre} {usuario.Apellido}".Trim();
         }
+
+        #endregion
     }
 
     /// <summary>
@@ -87,6 +107,8 @@ namespace GUI_08YS.Recepcionista
     /// </summary>
     public abstract class DocumentoReserva_68SA
     {
+        #region Campos
+
         public const string ImpresoraPdf = "Microsoft Print to PDF";
 
         protected static readonly Color Marca = Color.FromArgb(10, 18, 50);
@@ -104,14 +126,13 @@ namespace GUI_08YS.Recepcionista
         protected static readonly Color Azul = Color.FromArgb(40, 100, 190);
         protected static readonly Color AzulClaro = Color.FromArgb(226, 237, 252);
 
+        #endregion
+
+        #region Propiedades
+
         protected DatosDocumentoReserva_68SA Datos { get; }
         protected Reserva_68SA Reserva => Datos.Reserva;
         protected CultureInfo Cultura { get; } = OpcionEnum_68SA.CulturaActual();
-
-        protected DocumentoReserva_68SA(DatosDocumentoReserva_68SA datos)
-        {
-            Datos = datos ?? throw new ArgumentNullException(nameof(datos));
-        }
 
         /// <summary>Nombre para la pestaña del visor.</summary>
         public abstract string Titulo { get; }
@@ -122,13 +143,16 @@ namespace GUI_08YS.Recepcionista
         /// <summary>Tamaño del documento en la vista previa (centésimas de pulgada).</summary>
         public abstract SizeF TamanoVista { get; }
 
-        /// <summary>Dibuja el documento dentro del área (página impresa o PDF, sobre papel blanco).</summary>
-        public void Dibujar(Graphics g, RectangleF area) => DibujarContenido(g, area, Color.White);
+        #endregion
 
-        /// <param name="fondo">Color de lo que queda alrededor del documento (papel blanco o el fondo de la vista previa).</param>
-        protected abstract void DibujarContenido(Graphics g, RectangleF area, Color fondo);
+        #region Constructor
 
-        protected static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
+        protected DocumentoReserva_68SA(DatosDocumentoReserva_68SA datos)
+        {
+            Datos = datos ?? throw new ArgumentNullException(nameof(datos));
+        }
+
+        #endregion
 
         #region Pantalla, impresión y PDF
 
@@ -386,6 +410,22 @@ namespace GUI_08YS.Recepcionista
             var destino = new RectangleF(zona.X + (zona.Width - ancho) / 2, zona.Y + (zona.Height - alto) / 2, ancho, alto);
             g.DrawImage(logo, destino, origen, GraphicsUnit.Pixel);
         }
+
+        #endregion
+
+        #region Métodos públicos
+
+        /// <summary>Dibuja el documento dentro del área (página impresa o PDF, sobre papel blanco).</summary>
+        public void Dibujar(Graphics g, RectangleF area) => DibujarContenido(g, area, Color.White);
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        /// <param name="fondo">Color de lo que queda alrededor del documento (papel blanco o el fondo de la vista previa).</param>
+        protected abstract void DibujarContenido(Graphics g, RectangleF area, Color fondo);
+
+        protected static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
 
         #endregion
     }

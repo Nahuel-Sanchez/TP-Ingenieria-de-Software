@@ -10,12 +10,22 @@ namespace DAL_08YS
 {
     public abstract class Connection_08YS
     {
+        #region Campos
+
         private readonly IDbFactory_08YS _factory;
+
+        #endregion
+
+        #region Constructor
 
         protected Connection_08YS(IDbFactory_08YS factory)
         {
             _factory = factory;
         }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         // Helper para crear parametros de los repositorios concretos sin necesitar una referencia directa al factory
         protected IDbDataParameter Param(string name, object value)
@@ -23,6 +33,16 @@ namespace DAL_08YS
 
         protected IDbDataParameter ParamOutput(string name)
             => _factory.CreateOutputParameter(name);
+
+        // Salida DECIMAL(precision, escala): los montos que calcula un SP (ej. el cargo de un upgrade)
+        protected IDbDataParameter ParamOutputDecimal(string name, byte precision = 10, byte escala = 2)
+        {
+            IDbDataParameter parametro = _factory.CreateOutputParameter(name);
+            parametro.DbType = DbType.Decimal;
+            parametro.Precision = precision;
+            parametro.Scale = escala;
+            return parametro;
+        }
 
         protected IDbDataParameter ParamTVP(string name, DataTable value, string typeName = "dbo.IntList")
             => _factory.CreateTableValuedParameter(name, value, typeName);
@@ -96,5 +116,7 @@ namespace DAL_08YS
                 return (T)Convert.ChangeType(result, typeof(T));
             }
         }
+
+        #endregion
     }
 }

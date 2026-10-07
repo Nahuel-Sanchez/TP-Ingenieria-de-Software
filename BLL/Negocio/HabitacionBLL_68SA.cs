@@ -13,14 +13,24 @@ namespace BLL_08YS.Negocio
 {
     public class HabitacionBLL_68SA
     {
+        #region Campos
+
         private readonly IHabitacionRepository_68SA _habitacionRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
+        #endregion
+
+        #region Constructor
 
         public HabitacionBLL_68SA(IHabitacionRepository_68SA habitacionRepo, BitacoraBLL_08YS bitacoraBll)
         {
             _habitacionRepo = habitacionRepo;
             _bitacoraBll = bitacoraBll;
         }
+
+        #endregion
+
+        #region Consultas
 
         // Modo Gestión
         public List<Habitacion_68SA> GetAll(int? idTipoHabitacion = null, EstadoHabitacion? estado = null)
@@ -44,6 +54,22 @@ namespace BLL_08YS.Negocio
             return _habitacionRepo.GetById(habitacionId);
         }
 
+        // CRUD
+        public List<Habitacion_68SA> GetListado(HabitacionFiltro_68SA filtro)
+        {
+            filtro = filtro ?? new HabitacionFiltro_68SA();
+            var habitaciones = _habitacionRepo.GetListado(filtro);
+
+            // Mismo criterio que GetAll(tipo, estado): el estado se compara contra EstadoVisual
+            return filtro.Estado.HasValue
+                ? habitaciones.Where(h => h.EstadoVisual == filtro.Estado.Value).ToList()
+                : habitaciones;
+        }
+
+        #endregion
+
+        #region Operaciones
+
         public void CambiarEstado(int habitacionId, EstadoHabitacion nuevoEstado)
         {
             SessionManager_08YS.Instance.ValidatePermission(Permisos.CambiarEstadoHabitacion);
@@ -58,28 +84,6 @@ namespace BLL_08YS.Negocio
 
             DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(evento, targetUsername: habitacionId.ToString());
-        }
-
-        // Pública y estática para que ReservaBLL_68SA la reutilice sin duplicar la regla
-        public static void ValidarRango(DateTime fechaIngreso, DateTime fechaEgreso)
-        {
-            if (fechaIngreso.Date < DateTime.Today)
-                throw new RangoFechasInvalidoException_68SA("La fecha de ingreso no puede ser anterior a hoy.");
-
-            if (fechaEgreso.Date <= fechaIngreso.Date)
-                throw new RangoFechasInvalidoException_68SA("La fecha de egreso debe ser posterior a la fecha de ingreso.");
-        }
-
-        // CRUD
-        public List<Habitacion_68SA> GetListado(HabitacionFiltro_68SA filtro)
-        {
-            filtro = filtro ?? new HabitacionFiltro_68SA();
-            var habitaciones = _habitacionRepo.GetListado(filtro);
-
-            // Mismo criterio que GetAll(tipo, estado): el estado se compara contra EstadoVisual
-            return filtro.Estado.HasValue
-                ? habitaciones.Where(h => h.EstadoVisual == filtro.Estado.Value).ToList()
-                : habitaciones;
         }
 
         public int Crear(Habitacion_68SA habitacion)
@@ -130,6 +134,20 @@ namespace BLL_08YS.Negocio
             _bitacoraBll.RegistrarEvento(Evento.HabitacionEliminada, targetUsername: habitacionId.ToString());
         }
 
+        #endregion
+
+        #region Validaciones
+
+        // Pública y estática para que ReservaBLL_68SA la reutilice sin duplicar la regla
+        public static void ValidarRango(DateTime fechaIngreso, DateTime fechaEgreso)
+        {
+            if (fechaIngreso.Date < DateTime.Today)
+                throw new RangoFechasInvalidoException_68SA("La fecha de ingreso no puede ser anterior a hoy.");
+
+            if (fechaEgreso.Date <= fechaIngreso.Date)
+                throw new RangoFechasInvalidoException_68SA("La fecha de egreso debe ser posterior a la fecha de ingreso.");
+        }
+
         private static void Validar(Habitacion_68SA habitacion)
         {
             if (habitacion == null) throw new ArgumentNullException(nameof(habitacion));
@@ -144,5 +162,7 @@ namespace BLL_08YS.Negocio
             if (habitacion.Tipo == null || habitacion.Tipo.Id <= 0)
                 throw new DatosInvalidosException_68SA("Debe seleccionar un tipo de habitación.");
         }
+
+        #endregion
     }
 }

@@ -43,6 +43,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Negocio\ConfiguracionHotelBLL_68SA.cs" />
+    <Compile Include="Negocio\Cargos\BitacoraCambioHabitacionBLL_68SA.cs" />
+    <Compile Include="Negocio\Cargos\CambioHabitacionBLL_68SA.cs" />
+    <Compile Include="Negocio\Cargos\CatalogoRoomServiceBLL_68SA.cs" />
+    <Compile Include="Negocio\Cargos\CuentaEstadiaBLL_68SA.cs" />
+    <Compile Include="Negocio\Cargos\PoliticasCambioHabitacion_68SA.cs" />
+    <Compile Include="Negocio\Cargos\ReporteServiciosBLL_68SA.cs" />
+    <Compile Include="Negocio\AnalisisDemandaBLL_68SA.cs" />
+    <Compile Include="Negocio\Cargos\RoomServiceBLL_68SA.cs" />
     <Compile Include="Negocio\Excepciones.cs" />
     <Compile Include="Negocio\HabitacionBLL_68SA.cs" />
     <Compile Include="Negocio\HuespedBLL_68SA.cs" />

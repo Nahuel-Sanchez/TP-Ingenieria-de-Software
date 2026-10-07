@@ -12,9 +12,29 @@ namespace BLL_08YS
 {
     public class BitacoraBLL_08YS
     {
+        #region Campos
+
         private readonly IBitacoraRepository_08YS _repo;
 
+        #endregion
+
+        #region Constructor
+
         public BitacoraBLL_08YS(IBitacoraRepository_08YS repo) => _repo = repo;
+
+        #endregion
+
+        #region Consultas
+
+        public int ContarIntentosFallidos(string username, int ventanaHoras = 2)
+            => _repo.ContarIntentosFallidos(username, ventanaHoras);
+
+        public List<BitacoraEvento_08YS> GetAll()
+            => _repo.GetAll();
+
+        #endregion
+
+        #region Operaciones
 
         // username = null → toma el usuario de sesión (flujo normal post-username)
         // username = "username" → se pasa explicitamente (flujo de intento fallido, sin sesion aun)
@@ -35,13 +55,13 @@ namespace BLL_08YS
                 targetUsername));   // null para eventos sin sujeto
         }
 
-        public int ContarIntentosFallidos(string username, int ventanaHoras = 2)
-            => _repo.ContarIntentosFallidos(username, ventanaHoras);
+        #endregion
 
-        public List<BitacoraEvento_08YS> GetAll()
-            => _repo.GetAll();
+        #region Métodos públicos
 
         public List<BitacoraEvento_08YS> Filtrar(BitacoraFiltro_08YS filtro)
             => _repo.Filtrar(filtro);
+
+        #endregion
     }
 }

@@ -9,13 +9,21 @@ namespace Service_08YS.Entities.Acceso
 {
     public class Rol_08YS
     {
-        public int RolID { get; set; }
-        public string Nombre { get; set; }
+        #region Campos
 
         private readonly List<AccessComponent_08YS> _componentes = new List<AccessComponent_08YS>();
+
+        #endregion
+
+        #region Propiedades
+
+        public int RolID { get; set; }
+        public string Nombre { get; set; }
         public IReadOnlyList<AccessComponent_08YS> Componentes => _componentes.AsReadOnly();
 
-        public void Agregar(AccessComponent_08YS c) => _componentes.Add(c);
+        #endregion
+
+        #region Consultas
 
         public HashSet<Permiso_08YS> GetPermisos()
         {
@@ -24,9 +32,22 @@ namespace Service_08YS.Entities.Acceso
                 resultado.UnionWith(c.GetPermisos());
             return resultado;
         }
+
+        #endregion
+
+        #region Operaciones
+
+        public void Agregar(AccessComponent_08YS c) => _componentes.Add(c);
+
+        #endregion
+
+        #region Sobrescrituras
+
         public override string ToString()
         {
             return $"{Nombre}";
         }
+
+        #endregion
     }
 }

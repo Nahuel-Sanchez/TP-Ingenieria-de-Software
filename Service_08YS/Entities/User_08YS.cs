@@ -15,6 +15,8 @@ namespace Service_08YS
     }
     public class User_08YS
     {
+        #region Campos
+
         private string _username;
         private int _dni;
         private Rol_08YS _rol;
@@ -26,32 +28,6 @@ namespace Service_08YS
         private bool _bloqueado;
         private bool _activo;
         private string _idioma;
-      
-        public User_08YS(string username, int dni, Rol_08YS rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true,string idioma="es")
-        {
-            this._username = username;
-            this._dni = dni;
-            this._rol = rol;
-            this._nombre = nombre;
-            this._apellido = ape;
-            this._hash = hash;
-            this._salt = salt;
-            this._email = email;
-            this._bloqueado = bloqueado;
-            this._activo = activo;
-            this.Idioma = idioma;
-        }
-
-        public User_08YS() { }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is User_08YS other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return DNI == other.DNI;
-        }
-
-        public override int GetHashCode() => DNI.GetHashCode();
 
         public static bool operator ==(User_08YS a, User_08YS b)
         {
@@ -61,6 +37,10 @@ namespace Service_08YS
         }
 
         public static bool operator !=(User_08YS a, User_08YS b) => !(a == b);
+
+        #endregion
+
+        #region Propiedades
 
         public string Username
         {
@@ -110,7 +90,6 @@ namespace Service_08YS
             set { _email = value; }
         }
 
-
         public bool Bloqueado
         {
             get { return _bloqueado; }
@@ -128,5 +107,41 @@ namespace Service_08YS
             get { return _idioma; }
             set { _idioma = value; }
         }
+
+        #endregion
+
+        #region Constructor
+
+        public User_08YS(string username, int dni, Rol_08YS rol, string nombre, string ape, string email, string hash, string salt, bool bloqueado = false, bool activo = true,string idioma="es")
+        {
+            this._username = username;
+            this._dni = dni;
+            this._rol = rol;
+            this._nombre = nombre;
+            this._apellido = ape;
+            this._hash = hash;
+            this._salt = salt;
+            this._email = email;
+            this._bloqueado = bloqueado;
+            this._activo = activo;
+            this.Idioma = idioma;
+        }
+
+        public User_08YS() { }
+
+        #endregion
+
+        #region Sobrescrituras
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is User_08YS other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return DNI == other.DNI;
+        }
+
+        public override int GetHashCode() => DNI.GetHashCode();
+
+        #endregion
     }
 }

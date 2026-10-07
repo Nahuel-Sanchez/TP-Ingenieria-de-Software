@@ -16,6 +16,8 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormReservas_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -42,6 +44,10 @@ namespace GUI_08YS.Recepcionista
         private DateTime _fechaBaseCalendario = InicioAlineado(DateTime.Today, ModoCalendarioReservas.Semana);
         private readonly ToolTip _tooltipNavegacion = new ToolTip();
         private ModoCalendarioReservas _modoCalendario = ModoCalendarioReservas.Semana;
+
+        #endregion
+
+        #region Constructor
 
         public FormReservas_68SA(Action<Form> openChildForm)
         {
@@ -90,6 +96,8 @@ namespace GUI_08YS.Recepcionista
             // antes de que la ventana tenga su handle de Windows los deja sin pintar.
             this.Shown += (s, e) => CargarLista();
         }
+
+        #endregion
 
         #region Grid
 
@@ -256,24 +264,6 @@ namespace GUI_08YS.Recepcionista
 
         #endregion
 
-        private void CambiarTab(bool lista)
-        {
-            pnlLista.Visible = lista;
-            pnlCalendario.Visible = !lista;
-
-            btnTabLista.BackColor = lista ? Color.FromArgb(10, 18, 50) : Color.FromArgb(5, 10, 40);
-            btnTabLista.ForeColor = lista ? Color.Goldenrod : Color.FromArgb(160, 165, 180);
-            btnTabLista.IconColor = btnTabLista.ForeColor;
-            btnTabLista.Font = new Font("Segoe UI", 10F, lista ? FontStyle.Bold : FontStyle.Regular);
-
-            btnTabCalendario.BackColor = !lista ? Color.FromArgb(10, 18, 50) : Color.FromArgb(5, 10, 40);
-            btnTabCalendario.ForeColor = !lista ? Color.Goldenrod : Color.FromArgb(160, 165, 180);
-            btnTabCalendario.IconColor = btnTabCalendario.ForeColor;
-            btnTabCalendario.Font = new Font("Segoe UI", 10F, !lista ? FontStyle.Bold : FontStyle.Regular);
-
-            if (!lista) CargarCalendario();
-        }
-
         #region Filtros
 
         private const int OperadorCostoCualquiera = 0;
@@ -422,9 +412,9 @@ namespace GUI_08YS.Recepcionista
                 FechaRegistro = r.FechaRegistro,
                 FechaEntrada = r.FechaIngreso,
                 FechaSalida = r.FechaEgreso,
-                Costo = r.MontoTotal,
+                Costo = r.MontoTotal + r.MontoCargos,   // alojamiento + cargos adicionales de la estadía (PN2)
                 Adelanto = r.MontoPagado,
-                Saldo = Math.Max(0, r.MontoTotal - r.MontoPagado),
+                Saldo = r.SaldoPendiente,
                 Estado = TextoEstadoReserva(r.Estado),
                 PuedeCancelar = r.Estado == EstadoReserva.Confirmada
             }).ToList();
@@ -495,7 +485,90 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        private void ActualizarTarjetas(List<Reserva_68SA> reservas)
+        {
+            var vigentes = reservas.Where(r => r.Estado == EstadoReserva.Confirmada || r.Estado == EstadoReserva.EnCurso).ToList();
+            var pendientes = reservas.Where(r => r.Estado == EstadoReserva.Confirmada).ToList();
+            var ocupadas = reservas.Where(r => r.Estado == EstadoReserva.EnCurso).ToList();
+            var finalizadas = reservas.Where(r => r.Estado == EstadoReserva.Finalizada).ToList();
+            var canceladas = reservas.Where(r => r.Estado == EstadoReserva.Cancelada).ToList();
+
+            lblMontoVigentes.Text = $"${vigentes.Sum(r => r.MontoTotal + r.MontoCargos):N2}";
+            lblCantVigentes.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {vigentes.Count}";
+
+            lblMontoPendientes.Text = $"${pendientes.Sum(r => r.MontoTotal + r.MontoCargos):N2}";
+            lblCantPendientes.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {pendientes.Count}";
+
+            lblMontoOcupadas.Text = $"${ocupadas.Sum(r => r.MontoTotal + r.MontoCargos):N2}";
+            lblCantOcupadas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {ocupadas.Count}";
+
+            lblMontoFinalizadas.Text = $"${finalizadas.Sum(r => r.MontoTotal + r.MontoCargos):N2}";
+            lblCantFinalizadas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {finalizadas.Count}";
+
+            lblMontoCanceladas.Text = $"${canceladas.Sum(r => r.MontoTotal):N2}";
+            lblCantCanceladas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {canceladas.Count}";
+        }
+
         #endregion
+
+        #region Idioma
+        public void UpdateIdioma()
+        {
+            TraducirControles(this);
+            CargarCombosFiltro();
+            TraducirTooltipsCalendario();
+
+            // Si ya hay datos cargados, se recargan para traducir estados y encabezados
+            if (dgvReservas.DataSource != null)
+            {
+                CargarLista();
+                if (pnlCalendario.Visible) CargarCalendario();
+            }
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
+        }
+
+        private void TraducirTooltipsCalendario()
+        {
+            var t = TraductorManager_08YS.Instance;
+            bool semana = _modoCalendario == ModoCalendarioReservas.Semana;
+            _tooltipNavegacion.SetToolTip(btnCalAnterior, t.GetTexto("Reservas_ttDiaAnterior"));
+            _tooltipNavegacion.SetToolTip(btnCalSiguiente, t.GetTexto("Reservas_ttDiaSiguiente"));
+            _tooltipNavegacion.SetToolTip(btnCalAnteriorPeriodo, t.GetTexto(semana ? "Reservas_ttSemanaAnterior" : "Reservas_ttMesAnterior"));
+            _tooltipNavegacion.SetToolTip(btnCalSiguientePeriodo, t.GetTexto(semana ? "Reservas_ttSemanaSiguiente" : "Reservas_ttMesSiguiente"));
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private void CambiarTab(bool lista)
+        {
+            pnlLista.Visible = lista;
+            pnlCalendario.Visible = !lista;
+
+            btnTabLista.BackColor = lista ? Color.FromArgb(10, 18, 50) : Color.FromArgb(5, 10, 40);
+            btnTabLista.ForeColor = lista ? Color.Goldenrod : Color.FromArgb(160, 165, 180);
+            btnTabLista.IconColor = btnTabLista.ForeColor;
+            btnTabLista.Font = new Font("Segoe UI", 10F, lista ? FontStyle.Bold : FontStyle.Regular);
+
+            btnTabCalendario.BackColor = !lista ? Color.FromArgb(10, 18, 50) : Color.FromArgb(5, 10, 40);
+            btnTabCalendario.ForeColor = !lista ? Color.Goldenrod : Color.FromArgb(160, 165, 180);
+            btnTabCalendario.IconColor = btnTabCalendario.ForeColor;
+            btnTabCalendario.Font = new Font("Segoe UI", 10F, !lista ? FontStyle.Bold : FontStyle.Regular);
+
+            if (!lista) CargarCalendario();
+        }
 
         /// <summary>
         /// Semana: arranca el lunes. Mes: arranca el día 1. (Punto de partida al tocar "Hoy" o cambiar de vista.)
@@ -521,16 +594,6 @@ namespace GUI_08YS.Recepcionista
             CargarCalendario();
         }
 
-        private void TraducirTooltipsCalendario()
-        {
-            var t = TraductorManager_08YS.Instance;
-            bool semana = _modoCalendario == ModoCalendarioReservas.Semana;
-            _tooltipNavegacion.SetToolTip(btnCalAnterior, t.GetTexto("Reservas_ttDiaAnterior"));
-            _tooltipNavegacion.SetToolTip(btnCalSiguiente, t.GetTexto("Reservas_ttDiaSiguiente"));
-            _tooltipNavegacion.SetToolTip(btnCalAnteriorPeriodo, t.GetTexto(semana ? "Reservas_ttSemanaAnterior" : "Reservas_ttMesAnterior"));
-            _tooltipNavegacion.SetToolTip(btnCalSiguientePeriodo, t.GetTexto(semana ? "Reservas_ttSemanaSiguiente" : "Reservas_ttMesSiguiente"));
-        }
-
         private void CambiarVistaCalendario(ModoCalendarioReservas modo)
         {
             _modoCalendario = modo;
@@ -547,30 +610,6 @@ namespace GUI_08YS.Recepcionista
             btnCalVistaMes.Font = new Font("Segoe UI", 9.5F, !esSemana ? FontStyle.Bold : FontStyle.Regular);
 
             CargarCalendario();
-        }
-
-        private void ActualizarTarjetas(List<Reserva_68SA> reservas)
-        {
-            var vigentes = reservas.Where(r => r.Estado == EstadoReserva.Confirmada || r.Estado == EstadoReserva.EnCurso).ToList();
-            var pendientes = reservas.Where(r => r.Estado == EstadoReserva.Confirmada).ToList();
-            var ocupadas = reservas.Where(r => r.Estado == EstadoReserva.EnCurso).ToList();
-            var finalizadas = reservas.Where(r => r.Estado == EstadoReserva.Finalizada).ToList();
-            var canceladas = reservas.Where(r => r.Estado == EstadoReserva.Cancelada).ToList();
-
-            lblMontoVigentes.Text = $"${vigentes.Sum(r => r.MontoTotal):N2}";
-            lblCantVigentes.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {vigentes.Count}";
-
-            lblMontoPendientes.Text = $"${pendientes.Sum(r => r.MontoTotal):N2}";
-            lblCantPendientes.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {pendientes.Count}";
-
-            lblMontoOcupadas.Text = $"${ocupadas.Sum(r => r.MontoTotal):N2}";
-            lblCantOcupadas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {ocupadas.Count}";
-
-            lblMontoFinalizadas.Text = $"${finalizadas.Sum(r => r.MontoTotal):N2}";
-            lblCantFinalizadas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {finalizadas.Count}";
-
-            lblMontoCanceladas.Text = $"${canceladas.Sum(r => r.MontoTotal):N2}";
-            lblCantCanceladas.Text = $"{TraductorManager_08YS.Instance.GetTexto("Reservas_txtCantidad")}: {canceladas.Count}";
         }
 
         private void CancelarReserva(int reservaId)
@@ -618,38 +657,14 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
-        #region Idioma
-        public void UpdateIdioma()
-        {
-            TraducirControles(this);
-            CargarCombosFiltro();
-            TraducirTooltipsCalendario();
-
-            // Si ya hay datos cargados, se recargan para traducir estados y encabezados
-            if (dgvReservas.DataSource != null)
-            {
-                CargarLista();
-                if (pnlCalendario.Visible) CargarCalendario();
-            }
-        }
-
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
-
-                if (c.HasChildren)
-                    TraducirControles(c);
-            }
-        }
         #endregion
     }
 
 
     public class ReservaListItem_68SA
     {
+        #region Propiedades
+
         public int ReservaId { get; set; }
         public string Huesped { get; set; }
         public string Documento { get; set; }
@@ -668,5 +683,7 @@ namespace GUI_08YS.Recepcionista
         public decimal Saldo { get; set; }
         public string Estado { get; set; }
         public bool PuedeCancelar { get; set; }
+
+        #endregion
     }
 }

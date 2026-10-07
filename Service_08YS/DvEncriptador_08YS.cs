@@ -9,8 +9,14 @@ namespace Service_08YS
 {
     public class DvEncriptador_08YS
     {
+        #region Campos
+
         private static readonly byte[] _clave =
         Encoding.UTF8.GetBytes("Horizon2024_DV_SecretKey_32bytes");
+
+        #endregion
+
+        #region Métodos públicos
 
         /// <summary>
         /// Cifra el valor usando AES-256-CBC.
@@ -37,6 +43,10 @@ namespace Service_08YS
             }
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
         /// <summary>
         /// Deriva un IV de 16 bytes a partir del nombre de la tabla usando SHA-256.
         /// Mismo nombre de tabla → mismo IV siempre.
@@ -51,5 +61,7 @@ namespace Service_08YS
                 return iv;
             }
         }
+
+        #endregion
     }
 }

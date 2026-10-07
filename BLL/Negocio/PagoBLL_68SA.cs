@@ -13,14 +13,38 @@ namespace BLL_08YS.Negocio
 {
     public class PagoBLL_68SA
     {
+        #region Campos
+
         private readonly IPagoRepository_68SA _pagoRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
+        #endregion
+
+        #region Constructor
 
         public PagoBLL_68SA(IPagoRepository_68SA pagoRepo, BitacoraBLL_08YS bitacoraBll)
         {
             _pagoRepo = pagoRepo;
             _bitacoraBll = bitacoraBll;
         }
+
+        #endregion
+
+        #region Consultas
+
+        public List<Pago_68SA> GetByReserva(int reservaId)
+        {
+            return _pagoRepo.GetByReserva(reservaId);
+        }
+
+        public decimal GetTotalPagado(int reservaId)
+        {
+            return _pagoRepo.GetTotalPagado(reservaId);
+        }
+
+        #endregion
+
+        #region Operaciones
 
         public int Registrar(Pago_68SA pago)
         {
@@ -38,14 +62,6 @@ namespace BLL_08YS.Negocio
             return nuevoId;
         }
 
-        public List<Pago_68SA> GetByReserva(int reservaId)
-        {
-            return _pagoRepo.GetByReserva(reservaId);
-        }
-
-        public decimal GetTotalPagado(int reservaId)
-        {
-            return _pagoRepo.GetTotalPagado(reservaId);
-        }
+        #endregion
     }
 }

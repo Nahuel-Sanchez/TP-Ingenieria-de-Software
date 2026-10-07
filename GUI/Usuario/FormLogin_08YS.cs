@@ -21,12 +21,18 @@ namespace GUI_08YS
 {
     public partial class FormLogin_08YS : Form,IIdiomaObserver_08YS
     {
+        #region Campos
+
         private UserBLL_08YS _userBLL;
         private readonly bool ModoRelogin;
         private string _userPlaceholder = "";
         private string _passPlaceholder = "";
         private bool _userTienePlaceholder = true;
         private bool _passTienePlaceholder = true;
+
+        #endregion
+
+        #region Constructor
 
         public FormLogin_08YS(bool modoRelogin = false)
         {
@@ -43,7 +49,13 @@ namespace GUI_08YS
             // 2. Ejecutamos la carga inicial de traducciones
             UpdateIdioma();
 
+            // Aviso de Bloq Mayús (KeyPreview: el formulario recibe todas las teclas)
+            KeyUp += (s, e) => ActualizarBloqMayus();
+            Activated += (s, e) => ActualizarBloqMayus();
+            Shown += (s, e) => ActualizarBloqMayus();
         }
+
+        #endregion
 
         #region Idioma
         private void ConfigurarCombo()
@@ -131,6 +143,98 @@ namespace GUI_08YS
             }
         }
         #endregion
+
+        #region BarraSuperior
+
+        [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
+        private extern static void ReleaseCapture();
+
+        [DllImport("user32.DLL", EntryPoint = "SendMessage")]
+        private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if(ModoRelogin)
+                this.Close();
+            else Application.Exit();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal)
+                this.WindowState = FormWindowState.Maximized;
+            else
+                this.WindowState = FormWindowState.Normal;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+
+        #endregion
+
+        #region Lógica Efecto Placeholder Avanzada
+
+        private void AsignarEventosPlaceholder()
+        {
+            // Eventos de Foco - Username
+            txtUsername.Enter += (s, e) => {
+                if (_userTienePlaceholder)
+                {
+                    txtUsername.Text = "";
+                    txtUsername.ForeColor = Color.White;
+                    _userTienePlaceholder = false;
+                }
+            };
+            txtUsername.Leave += (s, e) => {
+                if (string.IsNullOrWhiteSpace(txtUsername.Text))
+                {
+                    txtUsername.Text = _userPlaceholder;
+                    txtUsername.ForeColor = Color.DarkGray;
+                    _userTienePlaceholder = true;
+                }
+            };
+
+            // Eventos de Foco - Password
+            txtPassword.Enter += (s, e) => {
+                if (_passTienePlaceholder)
+                {
+                    txtPassword.Text = "";
+                    txtPassword.ForeColor = Color.White;
+                    txtPassword.MaskedInput = true; // Activamos máscara al escribir
+                    _passTienePlaceholder = false;
+                }
+            };
+            txtPassword.Leave += (s, e) => {
+                if (string.IsNullOrWhiteSpace(txtPassword.Text))
+                {
+                    txtPassword.Text = _passPlaceholder;
+                    txtPassword.ForeColor = Color.DarkGray;
+                    txtPassword.MaskedInput = false; // Desactivamos máscara para leer el hint
+                    _passTienePlaceholder = true;
+                }
+            };
+        }
+
+        #endregion
+
+        #region Carga de datos
+
+        private void ActualizarBloqMayus()
+        {
+            lblBloqMayus.Visible = Control.IsKeyLocked(Keys.CapsLock);
+        }
+
+        #endregion
+
+        #region Eventos de controles
 
         private void btnAcceder_Click(object sender, EventArgs e)
         {
@@ -259,49 +363,6 @@ namespace GUI_08YS
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void ResetearCamposAForcePlaceholder()
-        {
-            // Forzar el vaciado y re-inyección de Placeholders limpios al desloguearse o resetear
-            _userTienePlaceholder = true;
-            _passTienePlaceholder = true;
-            UpdateIdioma();
-        }
-
-        #region BarraSuperior
-
-        [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
-        private extern static void ReleaseCapture();
-
-        [DllImport("user32.DLL", EntryPoint = "SendMessage")]
-        private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            if(ModoRelogin)
-                this.Close();
-            else Application.Exit();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Normal)
-                this.WindowState = FormWindowState.Maximized;
-            else
-                this.WindowState = FormWindowState.Normal;
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
-
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
-        {
-            ReleaseCapture();
-            SendMessage(this.Handle, 0x112, 0xf012, 0);
-        }
-
-        #endregion
 
         private void txtPassword_IconRightClick(object sender, EventArgs e)
         {
@@ -328,47 +389,16 @@ namespace GUI_08YS
             }
         }
 
-        #region Lógica Efecto Placeholder Avanzada
+        #endregion
 
-        private void AsignarEventosPlaceholder()
+        #region Métodos auxiliares
+
+        private void ResetearCamposAForcePlaceholder()
         {
-            // Eventos de Foco - Username
-            txtUsername.Enter += (s, e) => {
-                if (_userTienePlaceholder)
-                {
-                    txtUsername.Text = "";
-                    txtUsername.ForeColor = Color.White;
-                    _userTienePlaceholder = false;
-                }
-            };
-            txtUsername.Leave += (s, e) => {
-                if (string.IsNullOrWhiteSpace(txtUsername.Text))
-                {
-                    txtUsername.Text = _userPlaceholder;
-                    txtUsername.ForeColor = Color.DarkGray;
-                    _userTienePlaceholder = true;
-                }
-            };
-
-            // Eventos de Foco - Password
-            txtPassword.Enter += (s, e) => {
-                if (_passTienePlaceholder)
-                {
-                    txtPassword.Text = "";
-                    txtPassword.ForeColor = Color.White;
-                    txtPassword.MaskedInput = true; // Activamos máscara al escribir
-                    _passTienePlaceholder = false;
-                }
-            };
-            txtPassword.Leave += (s, e) => {
-                if (string.IsNullOrWhiteSpace(txtPassword.Text))
-                {
-                    txtPassword.Text = _passPlaceholder;
-                    txtPassword.ForeColor = Color.DarkGray;
-                    txtPassword.MaskedInput = false; // Desactivamos máscara para leer el hint
-                    _passTienePlaceholder = true;
-                }
-            };
+            // Forzar el vaciado y re-inyección de Placeholders limpios al desloguearse o resetear
+            _userTienePlaceholder = true;
+            _passTienePlaceholder = true;
+            UpdateIdioma();
         }
 
         #endregion

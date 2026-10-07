@@ -13,14 +13,26 @@ namespace BLL_08YS.Negocio
 {
     public class HuespedBLL_68SA
     {
+        #region Campos
+
         private readonly IHuespedRepository_68SA _huespedRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
+        public const int LimiteListado = 500;
+
+        #endregion
+
+        #region Constructor
 
         public HuespedBLL_68SA(IHuespedRepository_68SA huespedRepo, BitacoraBLL_08YS bitacoraBll)
         {
             _huespedRepo = huespedRepo;
             _bitacoraBll = bitacoraBll;
         }
+
+        #endregion
+
+        #region Consultas
 
         public Huesped_68SA GetByDocumento(string documento)
         {
@@ -31,6 +43,28 @@ namespace BLL_08YS.Negocio
         {
             return _huespedRepo.GetPorClaveCompleta(documento, tipoDocumento, nacionalidad) != null;
         }
+
+        public static bool EsMayorDeEdad(Huesped_68SA huesped)
+        {
+            return huesped.Edad >= 18;
+        }
+
+        public static bool EsNino(Huesped_68SA huesped)
+        {
+            return huesped.Edad >= 2 && huesped.Edad <= 11;
+        }
+
+        // --- CRUD ---
+        public List<Huesped_68SA> GetListado(HuespedFiltro_68SA filtro)
+        {
+            filtro = filtro ?? new HuespedFiltro_68SA();
+            filtro.Maximo = LimiteListado;
+            return _huespedRepo.GetListado(filtro);
+        }
+
+        #endregion
+
+        #region Operaciones
 
         public Huesped_68SA ObtenerOCrear(Huesped_68SA huesped)
         {
@@ -47,26 +81,6 @@ namespace BLL_08YS.Negocio
             DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.HuespedRegistrado, targetUsername: huesped.Documento);
             return huesped;
-        }
-
-        public static bool EsMayorDeEdad(Huesped_68SA huesped)
-        {
-            return huesped.Edad >= 18;
-        }
-
-        public static bool EsNino(Huesped_68SA huesped)
-        {
-            return huesped.Edad >= 2 && huesped.Edad <= 11;
-        }
-
-        public const int LimiteListado = 500;
-
-        // --- CRUD ---
-        public List<Huesped_68SA> GetListado(HuespedFiltro_68SA filtro)
-        {
-            filtro = filtro ?? new HuespedFiltro_68SA();
-            filtro.Maximo = LimiteListado;
-            return _huespedRepo.GetListado(filtro);
         }
 
         public void Modificar(Huesped_68SA huesped)
@@ -99,6 +113,10 @@ namespace BLL_08YS.Negocio
             _bitacoraBll.RegistrarEvento(Evento.HuespedEliminado, targetUsername: huesped.Documento);
         }
 
+        #endregion
+
+        #region Validaciones
+
         private static void Validar(Huesped_68SA huesped)
         {
             if (huesped == null) throw new ArgumentNullException(nameof(huesped));
@@ -125,6 +143,10 @@ namespace BLL_08YS.Negocio
                 throw new DatosInvalidosException_68SA("El teléfono no puede superar los 30 caracteres.");
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
         private static void Requerido(string valor, int max, string campo)
         {
             if (string.IsNullOrEmpty(valor))
@@ -132,5 +154,7 @@ namespace BLL_08YS.Negocio
             if (valor.Length > max)
                 throw new DatosInvalidosException_68SA($"{campo} no puede superar los {max} caracteres.");
         }
+
+        #endregion
     }
 }

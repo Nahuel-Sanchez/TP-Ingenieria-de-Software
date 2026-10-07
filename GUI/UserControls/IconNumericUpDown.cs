@@ -25,6 +25,8 @@ namespace CustomControls
     [DefaultEvent(nameof(ValueChanged))]
     public class IconNumericUpDown : UserControl
     {
+        #region Campos
+
         private const int MinSpinnerWidth = 18;
 
         // ──────────────────────────────────────────────────────────────────
@@ -85,65 +87,9 @@ namespace CustomControls
         private bool _repeatIsUp;
         private int _repeatStep;
 
-        // ══════════════════════════════════════════════════════════════════
-        // Eventos
-        // ══════════════════════════════════════════════════════════════════
-        public event EventHandler ValueChanged;
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════
-        // Constructor
-        // ══════════════════════════════════════════════════════════════════
-        public IconNumericUpDown()
-        {
-            SetStyle(ControlStyles.UserPaint |
-                     ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.StandardDoubleClick, false); // clicks rápidos en ▲▼
-
-            _iconPicture = new PictureBox
-            {
-                SizeMode = PictureBoxSizeMode.CenterImage,
-                BackColor = Color.Transparent,
-                Visible = false
-            };
-            _iconPicture.Click += (s, e) => _textBox.Focus();
-            Controls.Add(_iconPicture);
-
-            _textBox = new TextBox
-            {
-                BorderStyle = BorderStyle.None,
-                TextAlign = _numberAlignment
-            };
-            _textBox.KeyPress += TextBox_KeyPress;
-            _textBox.KeyDown += TextBox_KeyDown;
-            _textBox.Enter += TextBox_Enter;
-            _textBox.Leave += TextBox_Leave;
-            _textBox.TextChanged += TextBox_TextChanged; // atrapa lo que KeyPress no ve (pegado, drag&drop)
-            _textBox.MouseWheel += (s, e) => HandleWheel(((HandledMouseEventArgs)e).Delta);
-            Controls.Add(_textBox);
-
-            _repeatTimer = new Timer { Interval = 400 };
-            _repeatTimer.Tick += RepeatTimer_Tick;
-
-            BackColor = SystemColors.Window;
-            ForeColor = SystemColors.WindowText;
-            Size = new Size(120, 32);
-            TabStop = true;
-
-            DisplayValue();
-            RefreshIcon();
-            UpdateLayout();
-            SyncTextBoxAppearance();
-        }
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-            UpdateLayout();
-            UpdateRegion();
-            Invalidate();
-        }
+        #region Propiedades
 
         // ══════════════════════════════════════════════════════════════════
         // ── PROPIEDADES: VALOR ────────────────────────────────────────────
@@ -241,75 +187,6 @@ namespace CustomControls
         {
             get => _disabledForeColor;
             set { _disabledForeColor = value; SyncTextBoxAppearance(); Invalidate(); }
-        }
-
-        /// <summary>Sube el valor un Increment — equivalente a clickear ▲.</summary>
-        public void UpButton() => Step(_increment);
-
-        /// <summary>Baja el valor un Increment — equivalente a clickear ▼.</summary>
-        public void DownButton() => Step(-_increment);
-
-        private void Step(decimal delta)
-        {
-            if (_readOnly || !Enabled) return;
-            decimal next = _value + delta;
-
-            if (next > _maximum) next = _wrapAround ? _minimum : _maximum;
-            else if (next < _minimum) next = _wrapAround ? _maximum : _minimum;
-
-            SetValue(next, true);
-        }
-
-        private void SetValue(decimal newValue, bool updateText)
-        {
-            newValue = Clamp(newValue, _minimum, _maximum);
-            newValue = Math.Round(newValue, _decimalPlaces);
-            bool changed = newValue != _value;
-            _value = newValue;
-            if (updateText) DisplayValue(); // sin guarda de foco: Step()/CommitText() necesitan refrescar SIEMPRE
-            if (changed) ValueChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void DisplayValue()
-        {
-            if (_textBox == null) return;
-            _suppressTextChanged = true;
-            _textBox.Text = FormatValue(_value);
-            _suppressTextChanged = false;
-        }
-
-        private string FormatValue(decimal v)
-        {
-            string numberFormat = (_thousandsSeparator ? "N" : "F") + _decimalPlaces;
-            return _prefix + v.ToString(numberFormat, CultureInfo.CurrentCulture) + _suffix;
-        }
-
-        /// <summary>Representación editable: sin prefijo/sufijo/separador de miles,
-        /// siempre con "." como separador decimal (independiente de la cultura),
-        /// para que la edición y el filtro de teclas sean simples y predecibles.</summary>
-        private string RawValueString(decimal v) => v.ToString("F" + _decimalPlaces, CultureInfo.CurrentCulture);
-
-        private void CommitText()
-        {
-            string raw = _textBox.Text.Trim();
-            if (string.IsNullOrEmpty(raw))
-            {
-                SetValue(_minimum, true);
-                return;
-            }
-
-            string decSep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            if (decSep == "," && raw.Contains(".") && !raw.Contains(","))
-            {
-                raw = raw.Replace(".", ",");
-            }
-
-            if (!decimal.TryParse(raw, NumberStyles.Number | NumberStyles.AllowThousands, CultureInfo.CurrentCulture, out decimal parsed))
-            {
-                parsed = _minimum;
-            }
-
-            SetValue(parsed, true);
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -410,26 +287,222 @@ namespace CustomControls
         [Category("Spinner")]
         public Color SpinnerPressedBackColor { get => _spinnerPressedBackColor; set { _spinnerPressedBackColor = value; Invalidate(); } }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── PINTURA ───────────────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
+        #endregion
 
-        protected override void OnPaint(PaintEventArgs e)
+        #region Eventos
+
+        // ══════════════════════════════════════════════════════════════════
+        // Eventos
+        // ══════════════════════════════════════════════════════════════════
+        public event EventHandler ValueChanged;
+
+        #endregion
+
+        #region Constructor
+
+        // ══════════════════════════════════════════════════════════════════
+        // Constructor
+        // ══════════════════════════════════════════════════════════════════
+        public IconNumericUpDown()
         {
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
+            SetStyle(ControlStyles.UserPaint |
+                     ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.StandardDoubleClick, false); // clicks rápidos en ▲▼
 
-            using (var bg = new SolidBrush(BackColor))
-                g.FillRectangle(bg, ClientRectangle);
+            _iconPicture = new PictureBox
+            {
+                SizeMode = PictureBoxSizeMode.CenterImage,
+                BackColor = Color.Transparent,
+                Visible = false
+            };
+            _iconPicture.Click += (s, e) => _textBox.Focus();
+            Controls.Add(_iconPicture);
 
-            PaintSpinner(g);
+            _textBox = new TextBox
+            {
+                BorderStyle = BorderStyle.None,
+                TextAlign = _numberAlignment
+            };
+            _textBox.KeyPress += TextBox_KeyPress;
+            _textBox.KeyDown += TextBox_KeyDown;
+            _textBox.Enter += TextBox_Enter;
+            _textBox.Leave += TextBox_Leave;
+            _textBox.TextChanged += TextBox_TextChanged; // atrapa lo que KeyPress no ve (pegado, drag&drop)
+            _textBox.MouseWheel += (s, e) => HandleWheel(((HandledMouseEventArgs)e).Delta);
+            Controls.Add(_textBox);
 
-            Color borderColor = _isFocused ? _borderFocusColor : _borderColor;
-            var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
-            if (_cornerRadius > 0)
-                PaintRoundedBorder(g, borderRect, borderColor);
-            else
-                PaintSquareBorder(g, borderRect, borderColor);
+            _repeatTimer = new Timer { Interval = 400 };
+            _repeatTimer.Tick += RepeatTimer_Tick;
+
+            BackColor = SystemColors.Window;
+            ForeColor = SystemColors.WindowText;
+            Size = new Size(120, 32);
+            TabStop = true;
+
+            DisplayValue();
+            RefreshIcon();
+            UpdateLayout();
+            SyncTextBoxAppearance();
+        }
+
+        #endregion
+
+        #region Eventos de controles
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── INTERACCIÓN: TEXTO ────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        private void TextBox_Enter(object sender, EventArgs e)
+        {
+            _isFocused = true;
+            _suppressTextChanged = true;
+            _textBox.Text = RawValueString(_value);
+            _suppressTextChanged = false;
+            _textBox.SelectAll();
+            Invalidate();
+        }
+
+        private void TextBox_Leave(object sender, EventArgs e)
+        {
+            _isFocused = false;
+            CommitText();
+            Invalidate();
+        }
+
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (_readOnly) { e.Handled = true; return; }
+
+            char c = e.KeyChar;
+            if (char.IsControl(c)) return;
+            if (char.IsDigit(c)) return;
+            if (c == '-' && _minimum < 0 && _textBox.SelectionStart == 0 && !_textBox.Text.Contains('-')) return;
+
+            string decSep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            if ((c == '.' || c == ',') && _decimalPlaces > 0 && !_textBox.Text.Contains(decSep))
+            {
+                e.KeyChar = decSep[0];
+                return;
+            }
+
+            e.Handled = true;
+        }
+
+        private void TextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (_suppressTextChanged) return;
+
+            string original = _textBox.Text;
+            string sanitized = SanitizeRawInput(original);
+            if (sanitized == original) return;
+
+            int caret = _textBox.SelectionStart - (original.Length - sanitized.Length);
+            if (caret < 0) caret = 0;
+
+            _suppressTextChanged = true;
+            _textBox.Text = sanitized;
+            _textBox.SelectionStart = Math.Min(caret, sanitized.Length);
+            _suppressTextChanged = false;
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Up: UpButton(); e.Handled = true; e.SuppressKeyPress = true; break;
+                case Keys.Down: DownButton(); e.Handled = true; e.SuppressKeyPress = true; break;
+                case Keys.PageUp: Step(_largeIncrement); e.Handled = true; e.SuppressKeyPress = true; break;
+                case Keys.PageDown: Step(-_largeIncrement); e.Handled = true; e.SuppressKeyPress = true; break;
+                case Keys.Enter: CommitText(); e.Handled = true; e.SuppressKeyPress = true; break;
+            }
+        }
+
+        private void RepeatTimer_Tick(object sender, EventArgs e)
+        {
+            _repeatStep++;
+            if (_repeatStep == 1) _repeatTimer.Interval = 80; // acelera tras el primer disparo
+
+            if (_repeatIsUp) UpButton(); else DownButton();
+        }
+
+        #endregion
+
+        #region Métodos públicos
+
+        /// <summary>Sube el valor un Increment — equivalente a clickear ▲.</summary>
+        public void UpButton() => Step(_increment);
+
+        /// <summary>Baja el valor un Increment — equivalente a clickear ▼.</summary>
+        public void DownButton() => Step(-_increment);
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private void Step(decimal delta)
+        {
+            if (_readOnly || !Enabled) return;
+            decimal next = _value + delta;
+
+            if (next > _maximum) next = _wrapAround ? _minimum : _maximum;
+            else if (next < _minimum) next = _wrapAround ? _maximum : _minimum;
+
+            SetValue(next, true);
+        }
+
+        private void SetValue(decimal newValue, bool updateText)
+        {
+            newValue = Clamp(newValue, _minimum, _maximum);
+            newValue = Math.Round(newValue, _decimalPlaces);
+            bool changed = newValue != _value;
+            _value = newValue;
+            if (updateText) DisplayValue(); // sin guarda de foco: Step()/CommitText() necesitan refrescar SIEMPRE
+            if (changed) ValueChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void DisplayValue()
+        {
+            if (_textBox == null) return;
+            _suppressTextChanged = true;
+            _textBox.Text = FormatValue(_value);
+            _suppressTextChanged = false;
+        }
+
+        private string FormatValue(decimal v)
+        {
+            string numberFormat = (_thousandsSeparator ? "N" : "F") + _decimalPlaces;
+            return _prefix + v.ToString(numberFormat, CultureInfo.CurrentCulture) + _suffix;
+        }
+
+        /// <summary>Representación editable: sin prefijo/sufijo/separador de miles,
+        /// siempre con "." como separador decimal (independiente de la cultura),
+        /// para que la edición y el filtro de teclas sean simples y predecibles.</summary>
+        private string RawValueString(decimal v) => v.ToString("F" + _decimalPlaces, CultureInfo.CurrentCulture);
+
+        private void CommitText()
+        {
+            string raw = _textBox.Text.Trim();
+            if (string.IsNullOrEmpty(raw))
+            {
+                SetValue(_minimum, true);
+                return;
+            }
+
+            string decSep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            if (decSep == "," && raw.Contains(".") && !raw.Contains(","))
+            {
+                raw = raw.Replace(".", ",");
+            }
+
+            if (!decimal.TryParse(raw, NumberStyles.Number | NumberStyles.AllowThousands, CultureInfo.CurrentCulture, out decimal parsed))
+            {
+                parsed = _minimum;
+            }
+
+            SetValue(parsed, true);
         }
 
         private void PaintSpinner(Graphics g)
@@ -506,63 +579,6 @@ namespace CustomControls
             }
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // ── INTERACCIÓN: TEXTO ────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        private void TextBox_Enter(object sender, EventArgs e)
-        {
-            _isFocused = true;
-            _suppressTextChanged = true;
-            _textBox.Text = RawValueString(_value);
-            _suppressTextChanged = false;
-            _textBox.SelectAll();
-            Invalidate();
-        }
-
-        private void TextBox_Leave(object sender, EventArgs e)
-        {
-            _isFocused = false;
-            CommitText();
-            Invalidate();
-        }
-
-        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (_readOnly) { e.Handled = true; return; }
-
-            char c = e.KeyChar;
-            if (char.IsControl(c)) return;
-            if (char.IsDigit(c)) return;
-            if (c == '-' && _minimum < 0 && _textBox.SelectionStart == 0 && !_textBox.Text.Contains('-')) return;
-
-            string decSep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            if ((c == '.' || c == ',') && _decimalPlaces > 0 && !_textBox.Text.Contains(decSep))
-            {
-                e.KeyChar = decSep[0];
-                return;
-            }
-
-            e.Handled = true;
-        }
-
-        private void TextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (_suppressTextChanged) return;
-
-            string original = _textBox.Text;
-            string sanitized = SanitizeRawInput(original);
-            if (sanitized == original) return;
-
-            int caret = _textBox.SelectionStart - (original.Length - sanitized.Length);
-            if (caret < 0) caret = 0;
-
-            _suppressTextChanged = true;
-            _textBox.Text = sanitized;
-            _textBox.SelectionStart = Math.Min(caret, sanitized.Length);
-            _suppressTextChanged = false;
-        }
-
         /// <summary>Deja pasar solo dígitos, un único "-" al inicio (si Minimum permite
         /// negativos) y un único "." (si DecimalPlaces > 0) — mismo criterio que
         /// TextBox_KeyPress, pero aplicado también a texto pegado o soltado por drag&drop.</summary>
@@ -588,99 +604,10 @@ namespace CustomControls
             return sb.ToString();
         }
 
-        private void TextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.Up: UpButton(); e.Handled = true; e.SuppressKeyPress = true; break;
-                case Keys.Down: DownButton(); e.Handled = true; e.SuppressKeyPress = true; break;
-                case Keys.PageUp: Step(_largeIncrement); e.Handled = true; e.SuppressKeyPress = true; break;
-                case Keys.PageDown: Step(-_largeIncrement); e.Handled = true; e.SuppressKeyPress = true; break;
-                case Keys.Enter: CommitText(); e.Handled = true; e.SuppressKeyPress = true; break;
-            }
-        }
-
         private void HandleWheel(int delta)
         {
             if (delta > 0) UpButton();
             else if (delta < 0) DownButton();
-        }
-
-        protected override void OnMouseWheel(MouseEventArgs e)
-        {
-            base.OnMouseWheel(e);
-            HandleWheel(e.Delta);
-        }
-
-        // ══════════════════════════════════════════════════════════════════
-        // ── INTERACCIÓN: SPINNER ──────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-
-            bool newUpHover = _upRect.Contains(e.Location);
-            bool newDownHover = _downRect.Contains(e.Location);
-
-            if ((_upPressed && !newUpHover) || (_downPressed && !newDownHover))
-                StopRepeat();
-
-            if (newUpHover != _upHover || newDownHover != _downHover)
-            {
-                _upHover = newUpHover;
-                _downHover = newDownHover;
-                Cursor = (newUpHover || newDownHover) ? Cursors.Default : Cursors.IBeam;
-                Invalidate();
-            }
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            _upHover = _downHover = false;
-            StopRepeat();
-            Cursor = Cursors.IBeam;
-            Invalidate();
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            if (e.Button != MouseButtons.Left || _readOnly || !Enabled) return;
-
-            if (_upRect.Contains(e.Location))
-            {
-                _upPressed = true;
-                _repeatIsUp = true;
-                _repeatStep = 0;
-                UpButton();
-                _textBox.Focus();
-                _repeatTimer.Interval = 400;
-                _repeatTimer.Start();
-                Invalidate();
-            }
-            else if (_downRect.Contains(e.Location))
-            {
-                _downPressed = true;
-                _repeatIsUp = false;
-                _repeatStep = 0;
-                DownButton();
-                _textBox.Focus();
-                _repeatTimer.Interval = 400;
-                _repeatTimer.Start();
-                Invalidate();
-            }
-            else
-            {
-                _textBox.Focus();
-            }
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            StopRepeat();
         }
 
         private void StopRepeat()
@@ -691,54 +618,6 @@ namespace CustomControls
                 _upPressed = _downPressed = false;
                 Invalidate();
             }
-        }
-
-        private void RepeatTimer_Tick(object sender, EventArgs e)
-        {
-            _repeatStep++;
-            if (_repeatStep == 1) _repeatTimer.Interval = 80; // acelera tras el primer disparo
-
-            if (_repeatIsUp) UpButton(); else DownButton();
-        }
-
-        // ══════════════════════════════════════════════════════════════════
-        // ── LAYOUT / ESTADO ───────────────────────────────────────────────
-        // ══════════════════════════════════════════════════════════════════
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            UpdateLayout();
-            UpdateRegion();
-            Invalidate();
-        }
-
-        protected override void OnFontChanged(EventArgs e)
-        {
-            base.OnFontChanged(e);
-            _textBox.Font = Font;
-            UpdateLayout();
-            Invalidate();
-        }
-
-        protected override void OnBackColorChanged(EventArgs e)
-        {
-            base.OnBackColorChanged(e);
-            SyncTextBoxAppearance();
-        }
-
-        protected override void OnForeColorChanged(EventArgs e)
-        {
-            base.OnForeColorChanged(e);
-            SyncTextBoxAppearance();
-        }
-
-        protected override void OnEnabledChanged(EventArgs e)
-        {
-            base.OnEnabledChanged(e);
-            _textBox.Enabled = Enabled;
-            SyncTextBoxAppearance();
-            Invalidate();
         }
 
         private void SyncTextBoxAppearance()
@@ -823,6 +702,157 @@ namespace CustomControls
             return val;
         }
 
+        #endregion
+
+        #region Sobrescrituras
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            UpdateLayout();
+            UpdateRegion();
+            Invalidate();
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── PINTURA ───────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            using (var bg = new SolidBrush(BackColor))
+                g.FillRectangle(bg, ClientRectangle);
+
+            PaintSpinner(g);
+
+            Color borderColor = _isFocused ? _borderFocusColor : _borderColor;
+            var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
+            if (_cornerRadius > 0)
+                PaintRoundedBorder(g, borderRect, borderColor);
+            else
+                PaintSquareBorder(g, borderRect, borderColor);
+        }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            HandleWheel(e.Delta);
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── INTERACCIÓN: SPINNER ──────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            bool newUpHover = _upRect.Contains(e.Location);
+            bool newDownHover = _downRect.Contains(e.Location);
+
+            if ((_upPressed && !newUpHover) || (_downPressed && !newDownHover))
+                StopRepeat();
+
+            if (newUpHover != _upHover || newDownHover != _downHover)
+            {
+                _upHover = newUpHover;
+                _downHover = newDownHover;
+                Cursor = (newUpHover || newDownHover) ? Cursors.Default : Cursors.IBeam;
+                Invalidate();
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            _upHover = _downHover = false;
+            StopRepeat();
+            Cursor = Cursors.IBeam;
+            Invalidate();
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (e.Button != MouseButtons.Left || _readOnly || !Enabled) return;
+
+            if (_upRect.Contains(e.Location))
+            {
+                _upPressed = true;
+                _repeatIsUp = true;
+                _repeatStep = 0;
+                UpButton();
+                _textBox.Focus();
+                _repeatTimer.Interval = 400;
+                _repeatTimer.Start();
+                Invalidate();
+            }
+            else if (_downRect.Contains(e.Location))
+            {
+                _downPressed = true;
+                _repeatIsUp = false;
+                _repeatStep = 0;
+                DownButton();
+                _textBox.Focus();
+                _repeatTimer.Interval = 400;
+                _repeatTimer.Start();
+                Invalidate();
+            }
+            else
+            {
+                _textBox.Focus();
+            }
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            StopRepeat();
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ── LAYOUT / ESTADO ───────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            UpdateLayout();
+            UpdateRegion();
+            Invalidate();
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            _textBox.Font = Font;
+            UpdateLayout();
+            Invalidate();
+        }
+
+        protected override void OnBackColorChanged(EventArgs e)
+        {
+            base.OnBackColorChanged(e);
+            SyncTextBoxAppearance();
+        }
+
+        protected override void OnForeColorChanged(EventArgs e)
+        {
+            base.OnForeColorChanged(e);
+            SyncTextBoxAppearance();
+        }
+
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+            _textBox.Enabled = Enabled;
+            SyncTextBoxAppearance();
+            Invalidate();
+        }
+
         // ══════════════════════════════════════════════════════════════════
         // Dispose
         // ══════════════════════════════════════════════════════════════════
@@ -834,5 +864,7 @@ namespace CustomControls
             }
             base.Dispose(disposing);
         }
+
+        #endregion
     }
 }

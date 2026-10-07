@@ -10,17 +10,29 @@ namespace GUI_08YS.Recepcionista
     /// </summary>
     public class FacturaImpresor_68SA
     {
+        #region Campos
+
         private readonly Reserva_68SA _reserva;
+
+        #endregion
+
+        #region Constructor
 
         public FacturaImpresor_68SA(Reserva_68SA reserva, List<Pago_68SA> pagos)
         {
             _reserva = reserva;
         }
 
+        #endregion
+
+        #region Métodos públicos
+
         public void Imprimir(IWin32Window propietario = null)
         {
             if (_reserva == null) return;
             FormDocumentosReserva_68SA.Mostrar(propietario, _reserva.Id, indiceInicial: 1);
         }
+
+        #endregion
     }
 }

@@ -5,8 +5,14 @@ namespace GUI_08YS.UserControls
     /// <summary>Ítem de IconComboBox: texto visible + Id (null = "Todos" en los filtros).</summary>
     public class ItemCombo_68SA
     {
+        #region Propiedades
+
         public int? Id { get; }
         public string Texto { get; }
+
+        #endregion
+
+        #region Constructor
 
         public ItemCombo_68SA(int? id, string texto)
         {
@@ -14,7 +20,9 @@ namespace GUI_08YS.UserControls
             Texto = texto;
         }
 
-        public override string ToString() => Texto;
+        #endregion
+
+        #region Métodos públicos
 
         public static int? IdSeleccionado(IconComboBox cmb) => (cmb.SelectedItem as ItemCombo_68SA)?.Id;
 
@@ -31,5 +39,13 @@ namespace GUI_08YS.UserControls
             }
             cmb.SelectedIndex = cmb.Items.Count > 0 ? 0 : -1;
         }
+
+        #endregion
+
+        #region Sobrescrituras
+
+        public override string ToString() => Texto;
+
+        #endregion
     }
 }

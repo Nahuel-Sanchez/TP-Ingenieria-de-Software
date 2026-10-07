@@ -19,6 +19,8 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormHuespedes_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -27,28 +29,9 @@ namespace GUI_08YS.Recepcionista
                 { nameof(btnDeserializar), Permisos.DeserializarHuespedes },
             };
 
-        #region Campos y tipos auxiliares
-
-        // Se identifica por id (no por el texto del combo) para que no se rompa al cambiar de idioma
-        private enum OperadorEdad { Cualquiera = 0, MayorA = 1, MenorA = 2, Entre = 3 }
-
-        // Columnas de datos en el orden en que se muestran (Apellido primero, como se ordena el listado)
-        private static readonly string[] ColumnasDatos =
-        {
-            "Apellido", "Nombre", "TipoDocumento", "Documento", "Nacionalidad",
-            "FechaNacimiento", "Edad", "Telefono", "Email"
-        };
-
-        private readonly HuespedBLL_68SA _huespedBLL = BLLFactory_08YS.CreateHuespedBLL();
-
-        // Lo que está actualmente en la grilla: viene de la base (CargarLista) o de un XML deserializado.
-        // Es lo único que lee Serializar; en ningún caso se escribe en la base de datos.
-        private List<Huesped_68SA> _listadoActual;
-
-        // Último ancho para el que se repartió el espacio de los filtros (evita recalcular sin necesidad)
-        private int _anchoFiltrosAplicado = -1;
-
         #endregion
+
+        #region Constructor
 
         public FormHuespedes_68SA()
         {
@@ -89,6 +72,30 @@ namespace GUI_08YS.Recepcionista
             };
         }
 
+        #endregion
+
+        #region Campos y tipos auxiliares
+
+        // Se identifica por id (no por el texto del combo) para que no se rompa al cambiar de idioma
+        private enum OperadorEdad { Cualquiera = 0, MayorA = 1, MenorA = 2, Entre = 3 }
+
+        // Columnas de datos en el orden en que se muestran (Apellido primero, como se ordena el listado)
+        private static readonly string[] ColumnasDatos =
+        {
+            "Apellido", "Nombre", "TipoDocumento", "Documento", "Nacionalidad",
+            "FechaNacimiento", "Edad", "Telefono", "Email"
+        };
+
+        private readonly HuespedBLL_68SA _huespedBLL = BLLFactory_08YS.CreateHuespedBLL();
+
+        // Lo que está actualmente en la grilla: viene de la base (CargarLista) o de un XML deserializado.
+        // Es lo único que lee Serializar; en ningún caso se escribe en la base de datos.
+        private List<Huesped_68SA> _listadoActual;
+
+        // Último ancho para el que se repartió el espacio de los filtros (evita recalcular sin necesidad)
+        private int _anchoFiltrosAplicado = -1;
+
+        #endregion
 
         #region Idioma
 

@@ -9,8 +9,14 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormEditarTipoHabitacion_68SA : Form
     {
+        #region Campos
+
         private readonly TipoHabitacionBLL_68SA _tipoBLL = BLLFactory_08YS.CreateTipoHabitacionBLL();
         private readonly TipoHabitacion_68SA _tipo; // null = alta
+
+        #endregion
+
+        #region Constructor
 
         public FormEditarTipoHabitacion_68SA(TipoHabitacion_68SA tipo = null)
         {
@@ -39,6 +45,10 @@ namespace GUI_08YS.Recepcionista
             btnGuardar.Click += (s, e) => Guardar();
         }
 
+        #endregion
+
+        #region Idioma
+
         private void TraducirControles(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -50,6 +60,10 @@ namespace GUI_08YS.Recepcionista
                     TraducirControles(c);
             }
         }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         private void Guardar()
         {
@@ -96,5 +110,7 @@ namespace GUI_08YS.Recepcionista
                 MessageBox.Show(ex.Message, t.GetTexto("Comun_tituloErrorValidacion"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #endregion
     }
 }

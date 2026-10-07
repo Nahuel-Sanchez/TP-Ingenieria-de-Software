@@ -3,8 +3,11 @@ using BLL_08YS.Negocio;
 using FontAwesome.Sharp;
 using GUI;
 using GUI_08YS.Admin;
+using GUI_08YS.Ayuda;
 using GUI_08YS.Recepcionista;
 using GUI_08YS.Recepcionista.Dashboard;
+using GUI_08YS.Reportes;
+using GUI_08YS.UserControls;
 using Service_08YS;
 using Service_08YS.Entities.Acceso;
 using System;
@@ -22,17 +25,30 @@ namespace GUI_08YS
 {
     public partial class FormMDI_08YS : Form,IIdiomaObserver_08YS
     {
-        public event Action CerrarSesion;
+        #region Campos
+
         private UserBLL_08YS _userBLL;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
 
+        #endregion
+
+        #region Eventos
+
+        public event Action CerrarSesion;
+
+        #endregion
+
+        #region Constructor
 
         public FormMDI_08YS()
         {
             InitializeComponent();
+            AsignarIconosMenus();
+            ConfigurarNavegacion();
             _userBLL = BLLFactory_08YS.CreateUserBLL();
             lblRolSistema.Text = SessionManager_08YS.Instance.Current.Rol.Nombre;
             lblNombreApellido.Text= SessionManager_08YS.Instance.Current.Nombre + " " + SessionManager_08YS.Instance.Current.Apellido;
+            picAvatar.Image = CrearAvatar(SessionManager_08YS.Instance.Current.Nombre, SessionManager_08YS.Instance.Current.Apellido);
             ConfigurarCombo();
             AplicarPermisos();
             TraductorManager_08YS.Instance.CambiarIdioma(SessionManager_08YS.Instance.Current.Idioma);
@@ -43,7 +59,254 @@ namespace GUI_08YS
             ProcesarNoShows();
             timerNoShow.Tick += (s, e) => ProcesarNoShows();
             timerNoShow.Start();
+
+            ActualizarReloj();
+            timerReloj.Tick += (s, e) => ActualizarReloj();
+            timerReloj.Start();
         }
+
+        #endregion
+
+        #region Menús
+
+        /// <summary>Ícono dorado para cada opción de los menús desplegables.</summary>
+        private void AsignarIconosMenus()
+        {
+            var iconos = new (ToolStripMenuItem Item, IconChar Icono)[]
+            {
+                (gestionUsuarioToolStripMenuItem,             IconChar.UsersGear),
+                (bitacoraToolStripMenuItem,                   IconChar.ClipboardList),
+                (gestionAccesosToolStripMenuItem,             IconChar.ShieldHalved),
+                (rolesToolStripMenuItem,                      IconChar.UserTag),
+                (familiasToolStripMenuItem,                   IconChar.LayerGroup),
+                (gestionRespaldosToolStripMenuItem,           IconChar.Database),
+                (cambiarContraseñaToolStripMenuItem,          IconChar.Key),
+                (ReLoginToolStripMenuItem,                    IconChar.RightToBracket),
+                (cerrarSesionToolStripMenuItem1,              IconChar.RightFromBracket),
+                (reservarToolStripMenuItem,                   IconChar.CalendarPlus),
+                (controlDeHabitacionesToolStripMenuItem,      IconChar.TableCells),
+                (checkInToolStripMenuItem,                    IconChar.DoorOpen),
+                (checkOutToolStripMenuItem,                   IconChar.DoorClosed),
+                (cambioHabitacionToolStripMenuItem,           IconChar.Retweet),
+                (servicioHabitacionToolStripMenuItem,         IconChar.CirclePlus),
+                (pedidosRoomServiceToolStripMenuItem,         IconChar.ListCheck),
+                (cartaRoomServiceToolStripMenuItem,           IconChar.Utensils),
+                (habitacionesToolStripMenuItem,               IconChar.Bed),
+                (tiposDeHabitacionToolStripMenuItem,          IconChar.Tags),
+                (pisosToolStripMenuItem,                      IconChar.Building),
+                (bitacoraCambiosHabitacionToolStripMenuItem,  IconChar.ClockRotateLeft),
+                (ayudaPantallaToolStripMenuItem,              IconChar.CircleQuestion),
+                (queEsEstoToolStripMenuItem,                  IconChar.ArrowPointer),
+                (indiceAyudaToolStripMenuItem,                IconChar.Sitemap),
+                (manualAyudaToolStripMenuItem,                IconChar.FilePdf),
+            };
+            foreach (var (item, icono) in iconos)
+                DropdownMenuStrip_08YS.AsignarIcono(item, icono);
+        }
+
+        #endregion
+
+        #region Navegación (botón activo y sección actual)
+
+        private static readonly Color FondoLateral = Color.FromArgb(8, 13, 38);
+        private static readonly Color FondoActivo = Color.FromArgb(20, 32, 76);
+        private static readonly Color TextoNavegacion = Color.FromArgb(205, 210, 225);
+        private static readonly Font FuenteNavegacion = new Font("Segoe UI", 10.5f, FontStyle.Regular);
+        // El activo se distingue por el color, el fondo y la barra dorada: misma fuente para que el texto
+        // ocupe lo mismo y no se parta en dos renglones (por ejemplo "Configuración del hotel")
+        private static readonly Font FuenteNavegacionActiva = FuenteNavegacion;
+
+        private IconButton _botonActivo;
+        private ToolStripItem _itemActivo;          // opción del menú desplegable que abrió la pantalla actual
+        private object _pantallaMarcada;
+
+        // Botón del panel lateral al que pertenece cada menú desplegable
+        private Dictionary<ContextMenuStrip, IconButton> _botonDeMenu;
+
+        private IEnumerable<IconButton> BotonesNavegacion => flowLayoutPanel1.Controls.OfType<IconButton>();
+
+        private void ConfigurarNavegacion()
+        {
+            _botonDeMenu = new Dictionary<ContextMenuStrip, IconButton>
+            {
+                { AdministrativoDropDownMenu, btnAdministrativo },
+                { PerfilDropDownMenu,         btnPerfil         },
+                { RecepcionDropDownMenu,      btnRecepcion      },
+                { RoomServiceDropDownMenu,    btnRoomService    },
+                { HabitacionesDropdownMenu,   btnHabitaciones   },
+            };
+
+            // Cuando una opción de un menú abre una pantalla nueva, su botón queda marcado como activo.
+            // Se engancha después del Click del diseñador, así ya se sabe si la pantalla cambió
+            // (las opciones que abren una ventanita, como el pedido de room service, no cambian nada).
+            foreach (var par in _botonDeMenu)
+                foreach (ToolStripItem item in par.Key.Items)
+                    EngancharSeccion(item, par.Value);
+
+            foreach (var boton in BotonesNavegacion)
+                boton.Paint += PintarIndicador;
+
+            // Los botones ocupan todo el ancho disponible (sin barra horizontal aunque aparezca la vertical)
+            flowLayoutPanel1.Layout += (s, e) => AjustarAnchoBotones();
+            Resize += (s, e) => button2.IconChar = WindowState == FormWindowState.Maximized ? IconChar.WindowRestore : IconChar.WindowMaximize;
+        }
+
+        private void EngancharSeccion(ToolStripItem item, IconButton boton)
+        {
+            item.Click += (s, e) =>
+            {
+                if (ReferenceEquals(panel2.Tag, _pantallaMarcada)) return;
+                MarcarSeccion(boton, item);
+            };
+            if (item is ToolStripMenuItem conSubmenu)
+                foreach (ToolStripItem sub in conSubmenu.DropDownItems)
+                    EngancharSeccion(sub, boton);
+        }
+
+        private void AjustarAnchoBotones()
+        {
+            int ancho = flowLayoutPanel1.ClientSize.Width - 16;
+            if (ancho <= 0) return;
+            foreach (Control c in flowLayoutPanel1.Controls)
+                if (c.Width != ancho) c.Width = ancho;
+        }
+
+        /// <summary>Marca el botón de la sección actual y muestra "Sección › Pantalla" en la barra superior.</summary>
+        private void MarcarSeccion(IconButton boton, ToolStripItem item = null)
+        {
+            _pantallaMarcada = panel2.Tag;
+            _botonActivo = boton;
+            _itemActivo = item;
+
+            foreach (var b in BotonesNavegacion)
+            {
+                bool activo = ReferenceEquals(b, boton);
+                b.BackColor = activo ? FondoActivo : FondoLateral;
+                b.ForeColor = activo ? Color.Gold : TextoNavegacion;
+                b.IconColor = activo ? Color.Gold : Color.Goldenrod;
+                b.Font = activo ? FuenteNavegacionActiva : FuenteNavegacion;
+                b.Invalidate();
+            }
+            ActualizarTextoSeccion();
+        }
+
+        private void ActualizarTextoSeccion()
+        {
+            if (_botonActivo == null) { lblSeccion.Text = string.Empty; return; }
+            lblSeccion.Text = _itemActivo == null ? _botonActivo.Text.Trim() : $"{_botonActivo.Text.Trim()}  ›  {_itemActivo.Text}";
+        }
+
+        // Barra dorada a la izquierda del botón activo
+        private void PintarIndicador(object sender, PaintEventArgs e)
+        {
+            if (!ReferenceEquals(sender, _botonActivo)) return;
+            var boton = (Control)sender;
+            using (var barra = new SolidBrush(Color.Goldenrod))
+                e.Graphics.FillRectangle(barra, 0, 8, 4, boton.Height - 16);
+        }
+
+        /// <summary>Círculo dorado con las iniciales del usuario.</summary>
+        private static Image CrearAvatar(string nombre, string apellido)
+        {
+            string iniciales = ((string.IsNullOrWhiteSpace(nombre) ? "" : nombre.Trim().Substring(0, 1)) +
+                                (string.IsNullOrWhiteSpace(apellido) ? "" : apellido.Trim().Substring(0, 1))).ToUpper();
+            const int lado = 104;   // se dibuja al doble y la PictureBox lo achica: bordes más suaves
+            var imagen = new Bitmap(lado, lado);
+            using (var g = Graphics.FromImage(imagen))
+            {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+                g.Clear(FondoLateral);
+                using (var fondo = new System.Drawing.Drawing2D.LinearGradientBrush(new Rectangle(0, 0, lado, lado),
+                           Color.FromArgb(214, 170, 60), Color.FromArgb(150, 110, 25), 45f))
+                    g.FillEllipse(fondo, 2, 2, lado - 4, lado - 4);
+                using (var fuente = new Font("Segoe UI", 34f, FontStyle.Bold, GraphicsUnit.Pixel))
+                using (var texto = new SolidBrush(Color.FromArgb(10, 15, 35)))
+                using (var formato = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                    g.DrawString(iniciales, fuente, texto, new RectangleF(0, 2, lado, lado), formato);
+            }
+            return imagen;
+        }
+
+        private void ActualizarReloj()
+        {
+            var cultura = OpcionEnum_68SA.CulturaActual();
+            string texto = DateTime.Now.ToString(TraductorManager_08YS.Instance.GetTexto("MDI_formatoReloj"), cultura);
+            lblReloj.Text = texto.Length > 0 ? char.ToUpper(texto[0], cultura) + texto.Substring(1) : texto;
+        }
+
+        #endregion
+
+        #region Ayuda en línea
+
+        private readonly ToolTip _ttAyuda = new ToolTip();
+
+        /// <summary>Pantalla abierta en el área de trabajo (la usa la ayuda en línea para saber qué explicar).</summary>
+        public Form PantallaActual => panel2.Tag as Form;
+
+        private void btnAyuda_Click(object sender, EventArgs e)
+        {
+            AyudaDropDownMenu.Show(btnAyuda, btnAyuda.Width - AyudaDropDownMenu.Width, btnAyuda.Height);
+        }
+
+        private void ayudaPantallaToolStripMenuItem_Click(object sender, EventArgs e) => AyudaManager_68SA.AyudaDePantalla();
+
+        private void queEsEstoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Se activa cuando el menú ya se cerró, para que el próximo clic sea sobre la pantalla
+            BeginInvoke((Action)AyudaManager_68SA.ActivarModoQueEsEsto);
+        }
+
+        private void indiceAyudaToolStripMenuItem_Click(object sender, EventArgs e) => AyudaManager_68SA.MostrarIndice();
+
+        private void manualAyudaToolStripMenuItem_Click(object sender, EventArgs e) => AyudaManager_68SA.MostrarManual();
+
+        #endregion
+
+        #region Inicio
+
+        private void btnInicio_Click(object sender, EventArgs e) => MostrarInicio();
+
+        /// <summary>
+        /// Pantalla de inicio: la misma que aparece al entrar al sistema. Los accesos directos dependen
+        /// de los permisos del usuario (solo aparecen las tareas que puede hacer).
+        /// </summary>
+        private void MostrarInicio()
+        {
+            var sesion = SessionManager_08YS.Instance;
+            var accesos = new List<AccesoInicio_68SA>();
+            void Agregar(bool visible, string clave, IconChar icono, Action accion)
+            {
+                if (visible) accesos.Add(new AccesoInicio_68SA { Clave = clave, Icono = icono, Accion = accion });
+            }
+
+            Agregar(sesion.HasPermission(Permisos.RegistrarReserva), "Inicio_accesoReservar", IconChar.CalendarPlus,
+                    () => reservarToolStripMenuItem.PerformClick());
+            Agregar(sesion.HasPermission(Permisos.RegistrarCheckIn), "Inicio_accesoCheckIn", IconChar.DoorOpen,
+                    () => checkInToolStripMenuItem.PerformClick());
+            Agregar(sesion.HasPermission(Permisos.RegistrarCheckOut), "Inicio_accesoCheckOut", IconChar.DoorClosed,
+                    () => checkOutToolStripMenuItem.PerformClick());
+            Agregar(sesion.HasPermission(Permisos.VerControlHabitaciones), "Inicio_accesoControl", IconChar.TableCells,
+                    () => controlDeHabitacionesToolStripMenuItem.PerformClick());
+            Agregar(sesion.HasPermission(Permisos.RegistrarRoomService), "Inicio_accesoPedidoRS", IconChar.BellConcierge,
+                    () => servicioHabitacionToolStripMenuItem.PerformClick());
+            Agregar(sesion.HasPermission(Permisos.ConfirmarEntregaRoomService), "Inicio_accesoPedidosRS", IconChar.ListCheck,
+                    () => pedidosRoomServiceToolStripMenuItem.PerformClick());
+            Agregar(sesion.HasPermission(Permisos.VerDashboard), "Inicio_accesoDashboard", IconChar.ChartColumn,
+                    () => btnDashboard.PerformClick());
+            Agregar(PuedeVerReportes(), "Inicio_accesoReportes", IconChar.FileLines,
+                    () => btnReportes.PerformClick());
+
+            bool verMovimiento = sesion.HasPermission(Permisos.VerDashboard)
+                              || sesion.HasPermission(Permisos.VerControlHabitaciones)
+                              || sesion.HasPermission(Permisos.RegistrarCheckIn)
+                              || sesion.HasPermission(Permisos.RegistrarCheckOut);
+
+            OpenChildForm(new FormInicio_68SA(accesos, verMovimiento));
+            MarcarSeccion(btnInicio);
+        }
+
+        #endregion
 
         #region Permisos
 
@@ -78,6 +341,15 @@ namespace GUI_08YS
                 { nameof(checkOutToolStripMenuItem),              Permisos.RegistrarCheckOut      },
             };
 
+        // Items del menu desplegable de room service
+        private static readonly Dictionary<string, Permisos> _mapaMenuRoomService =
+            new Dictionary<string, Permisos>
+            {
+                { nameof(servicioHabitacionToolStripMenuItem),    Permisos.RegistrarRoomService        },
+                { nameof(pedidosRoomServiceToolStripMenuItem),    Permisos.ConfirmarEntregaRoomService },
+                { nameof(cartaRoomServiceToolStripMenuItem),      Permisos.GestionarItemsRoomService   },
+            };
+
         // Items del menu desplegable de habitaciones
         private static readonly Dictionary<string, Permisos> _mapaMenuHabitaciones =
             new Dictionary<string, Permisos>
@@ -85,39 +357,72 @@ namespace GUI_08YS
                 { nameof(habitacionesToolStripMenuItem),      Permisos.VerHabitaciones    },
                 { nameof(tiposDeHabitacionToolStripMenuItem), Permisos.VerTiposHabitacion },
                 { nameof(pisosToolStripMenuItem),             Permisos.VerPisos           },
+                { nameof(bitacoraCambiosHabitacionToolStripMenuItem), Permisos.VerBitacoraCambiosHabitacion },
             };
 
         private void AplicarPermisos()
         {
-            // Botón "Administrativo" del panel lateral — solo visible si tiene algún permiso admin
-            btnAdministrativo.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.VerUsuarios)
-                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerBitacora)
-                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerFamilias)
-                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerRoles   )
-                                     || SessionManager_08YS.Instance.HasPermission(Permisos.VerRespaldos);
+            var sesion = SessionManager_08YS.Instance;
+            bool puedeCambiarHabitacion = sesion.HasPermission(Permisos.RegistrarUpgradeHabitacion)
+                                       || sesion.HasPermission(Permisos.ReubicarHuesped);
 
-            gestionAccesosToolStripMenuItem.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.VerRoles   )
-                                                   || SessionManager_08YS.Instance.HasPermission(Permisos.VerFamilias);
+            // Visibilidad de cada botón del panel lateral. Se calcula acá (y no se lee de .Visible, que da
+            // false mientras el formulario todavía no se mostró) para decidir también los títulos de grupo.
+            var visibles = new Dictionary<IconButton, bool>
+            {
+                { btnInicio, true },
+                { btnPerfil, true },
+                // Con menú desplegable: visibles si tiene algún permiso de su menú
+                { btnAdministrativo, sesion.HasPermission(Permisos.VerUsuarios)
+                                  || sesion.HasPermission(Permisos.VerBitacora)
+                                  || sesion.HasPermission(Permisos.VerFamilias)
+                                  || sesion.HasPermission(Permisos.VerRoles)
+                                  || sesion.HasPermission(Permisos.VerRespaldos) },
+                { btnRecepcion, sesion.HasPermission(Permisos.RegistrarReserva)
+                             || sesion.HasPermission(Permisos.VerControlHabitaciones)
+                             || sesion.HasPermission(Permisos.RegistrarCheckIn)
+                             || sesion.HasPermission(Permisos.RegistrarCheckOut)
+                             || puedeCambiarHabitacion },
+                { btnRoomService, sesion.HasPermission(Permisos.RegistrarRoomService)
+                               || sesion.HasPermission(Permisos.ConfirmarEntregaRoomService)
+                               || sesion.HasPermission(Permisos.GestionarItemsRoomService) },
+                { btnHabitaciones, sesion.HasPermission(Permisos.VerHabitaciones)
+                                || sesion.HasPermission(Permisos.VerTiposHabitacion)
+                                || sesion.HasPermission(Permisos.VerPisos)
+                                || sesion.HasPermission(Permisos.VerBitacoraCambiosHabitacion) },
+                { btnReportes, PuedeVerReportes() },
+            };
+            // Botones que abren directamente una pantalla de negocio
+            foreach (var par in _mapaBotonesNegocio)
+            {
+                var boton = flowLayoutPanel1.Controls.Find(par.Key, false).OfType<IconButton>().FirstOrDefault();
+                if (boton != null) visibles[boton] = sesion.HasPermission(par.Value);
+            }
+            foreach (var par in visibles)
+                par.Key.Visible = par.Value;
 
-            // Items del menu desplegable de admin
+            // Opciones de cada menú desplegable
+            gestionAccesosToolStripMenuItem.Visible = sesion.HasPermission(Permisos.VerRoles) || sesion.HasPermission(Permisos.VerFamilias);
             PermissionFilter_08YS.AplicarMenuStrip(AdministrativoDropDownMenu, _mapaMenuAdmin);
-
-            // Panel lateral de negocio
-            PermissionFilter_08YS.Aplicar(this, _mapaBotonesNegocio);
-
-            // Botones con menú desplegable — solo visibles si tiene algún permiso de su menú
-            btnRecepcion.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarReserva      )
-                                || SessionManager_08YS.Instance.HasPermission(Permisos.VerControlHabitaciones)
-                                || SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarCheckIn      )
-                                || SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarCheckOut     );
-
-            btnHabitaciones.Visible = SessionManager_08YS.Instance.HasPermission(Permisos.VerHabitaciones   )
-                                   || SessionManager_08YS.Instance.HasPermission(Permisos.VerTiposHabitacion)
-                                   || SessionManager_08YS.Instance.HasPermission(Permisos.VerPisos          );
-
             PermissionFilter_08YS.AplicarMenuStrip(RecepcionDropDownMenu, _mapaMenuRecepcion);
+            PermissionFilter_08YS.AplicarMenuStrip(RoomServiceDropDownMenu, _mapaMenuRoomService);
             PermissionFilter_08YS.AplicarMenuStrip(HabitacionesDropdownMenu, _mapaMenuHabitaciones);
+            // Cambio de habitación: alcanza con uno de sus dos permisos (upgrade o reubicación)
+            cambioHabitacionToolStripMenuItem.Visible = puedeCambiarHabitacion;
+
+            // Títulos de grupo del panel lateral: solo si queda algún botón visible debajo
+            bool Alguno(params IconButton[] botones) => botones.Any(b => visibles.TryGetValue(b, out bool v) && v);
+            lblGrupoOperacion.Visible = Alguno(btnRecepcion, btnReservas, btnHuespedes, btnRoomService);
+            lblGrupoHotel.Visible     = Alguno(btnHabitaciones, btnHotelConfig);
+            lblGrupoAnalisis.Visible  = Alguno(btnDashboard, btnReportes);
+            lblGrupoSistema.Visible   = Alguno(btnAdministrativo, btnPerfil);
         }
+
+        /// <summary>Puede abrir la pantalla de reportes si tiene permiso para al menos uno de ellos.</summary>
+        internal static bool PuedeVerReportes()
+            => SessionManager_08YS.Instance.HasPermission(Permisos.GenerarReporteReservas)
+            || SessionManager_08YS.Instance.HasPermission(Permisos.GenerarReporteServicios)
+            || SessionManager_08YS.Instance.HasPermission(Permisos.GenerarAnalisisDemanda);
 
         #endregion
 
@@ -179,7 +484,20 @@ namespace GUI_08YS
             {
                 TraducirMenuFlotanteCustom(HabitacionesDropdownMenu);
             }
+
+            if (RoomServiceDropDownMenu != null)
+            {
+                TraducirMenuFlotanteCustom(RoomServiceDropDownMenu);
+            }
+
+            if (AyudaDropDownMenu != null)
+            {
+                TraducirMenuFlotanteCustom(AyudaDropDownMenu);
+            }
+            _ttAyuda.SetToolTip(btnAyuda, TraductorManager_08YS.Instance.GetTexto("MDI_ttAyuda"));
             RefrescarContenidoComboIdioma();
+            ActualizarTextoSeccion();
+            ActualizarReloj();
         }
 
         // NUEVO MÉTODO: Dedicado a los ContextMenuStrip / DropdownMenuStrip personalizados
@@ -214,7 +532,9 @@ namespace GUI_08YS
                 {
                     if (botonIcono.Tag != null && !string.IsNullOrWhiteSpace(botonIcono.Tag.ToString()))
                     {
-                        botonIcono.Text = TraductorManager_08YS.Instance.GetTexto(botonIcono.Tag.ToString());
+                        // Los botones del panel lateral llevan un pequeño espacio entre el ícono y el texto
+                        string separacion = ReferenceEquals(botonIcono.Parent, flowLayoutPanel1) || ReferenceEquals(botonIcono, btnCerrarSesion) ? "  " : "";
+                        botonIcono.Text = separacion + TraductorManager_08YS.Instance.GetTexto(botonIcono.Tag.ToString());
                     }
                     continue;
                 }
@@ -274,8 +594,11 @@ namespace GUI_08YS
             PerfilDropDownMenu.IsMainMenu = true;
             RecepcionDropDownMenu.IsMainMenu = true;
             HabitacionesDropdownMenu.IsMainMenu = true;
+            RoomServiceDropDownMenu.IsMainMenu = true;
+            AyudaDropDownMenu.IsMainMenu = true;
 
             AjustarAPantalla();
+            MostrarInicio();   // lo primero que se ve al entrar es la pantalla de inicio
         }
 
         // Área de trabajo del monitor actual (relativa al monitor, como la espera MaximizedBounds)
@@ -523,6 +846,64 @@ namespace GUI_08YS
             OpenChildForm(new FormCheckOut_68SA(OpenChildForm, ModoHabitaciones.Gestion));
         }
 
+        #region Cargos adicionales (PN2)
+
+        private void servicioHabitacionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarRoomService);
+            var reserva = BuscarEstadiaEnCurso("MDI_tituloBuscarServicio", IconChar.BellConcierge);
+            if (reserva == null) return;
+            using (var popup = new FormPedidoRoomService_68SA(reserva))
+                popup.ShowDialog(this);
+        }
+
+        private void cambioHabitacionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!SessionManager_08YS.Instance.HasPermission(Permisos.ReubicarHuesped))
+                SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarUpgradeHabitacion);
+            var reserva = BuscarEstadiaEnCurso("MDI_tituloBuscarCambio", IconChar.Retweet);
+            if (reserva == null) return;
+            using (var popup = new FormCambioHabitacion_68SA(reserva))
+            {
+                // Si se está viendo Control de habitaciones, se vuelve a abrir para reflejar el cambio
+                if (popup.ShowDialog(this) == DialogResult.OK && panel2.Tag is FormControlHabitaciones_68SA)
+                {
+                    OpenChildForm(new FormControlHabitaciones_68SA(OpenChildForm, ModoHabitaciones.Gestion));
+                    MarcarSeccion(btnRecepcion, controlDeHabitacionesToolStripMenuItem);
+                }
+            }
+        }
+
+        private void pedidosRoomServiceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.ConfirmarEntregaRoomService);
+            OpenChildForm(new FormPedidosRoomService_68SA());
+        }
+
+        private void cartaRoomServiceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.GestionarItemsRoomService);
+            OpenChildForm(new FormCartaRoomService_68SA());
+        }
+
+        private void bitacoraCambiosHabitacionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerBitacoraCambiosHabitacion);
+            OpenChildForm(new FormBitacoraCambiosHabitacion_68SA());
+        }
+
+        /// <summary>Pide la estadía en curso (por documento del titular) y la devuelve completa.</summary>
+        private BE_08YS.Reserva_68SA BuscarEstadiaEnCurso(string claveTitulo, IconChar icono)
+        {
+            using (var popup = new FormBuscarReserva_68SA(BE_08YS.EstadoReserva.EnCurso, TraductorManager_08YS.Instance.GetTexto(claveTitulo), icono))
+            {
+                if (popup.ShowDialog(this) != DialogResult.OK || popup.ReservaSeleccionada == null) return null;
+                return _reservaBLL.GetById(popup.ReservaSeleccionada.Id);
+            }
+        }
+
+        #endregion
+
         private void ProcesarNoShows()
         {
             try
@@ -593,16 +974,27 @@ namespace GUI_08YS
 
         #endregion
 
+        #region Eventos de controles
+
         private void btnReservas_Click(object sender, EventArgs e)
         {
             SessionManager_08YS.Instance.ValidatePermission(Permisos.VerReservas);
             OpenChildForm(new FormReservas_68SA(OpenChildForm));
+            MarcarSeccion(btnReservas);
         }
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
             SessionManager_08YS.Instance.ValidatePermission(Permisos.VerDashboard);
             OpenChildForm(new FormDashboard_68SA());
+            MarcarSeccion(btnDashboard);
+        }
+
+        private void btnReportes_Click(object sender, EventArgs e) => AbrirReportes(null);
+
+        private void btnRoomService_Click(object sender, EventArgs e)
+        {
+            RoomServiceDropDownMenu.Show(btnRoomService, btnRoomService.Width, 0);
         }
 
         private void btnHabitaciones_Click(object sender, EventArgs e)
@@ -632,12 +1024,32 @@ namespace GUI_08YS
         {
             SessionManager_08YS.Instance.ValidatePermission(Permisos.VerHuespedes);
             OpenChildForm(new FormHuespedes_68SA());
+            MarcarSeccion(btnHuespedes);
         }
 
         private void btnHotelConfig_Click(object sender, EventArgs e)
         {
             SessionManager_08YS.Instance.ValidatePermission(Permisos.VerConfiguracionHotel);
             OpenChildForm(new FormConfiguracionHotel_68SA());
+            MarcarSeccion(btnHotelConfig);
         }
+
+        #endregion
+
+        #region Métodos públicos
+
+        /// <summary>
+        /// Abre la pantalla de reportes (también la usa el Dashboard para ir directo a un reporte).
+        /// Si se indica una pestaña y el usuario tiene permiso, arranca en ella.
+        /// </summary>
+        public void AbrirReportes(TipoReporte_68SA? pestaña, DateTime? desde = null, DateTime? hasta = null, bool generar = false)
+        {
+            if (!PuedeVerReportes())
+                SessionManager_08YS.Instance.ValidatePermission(Permisos.GenerarReporteReservas);
+            OpenChildForm(new FormReportes_68SA(pestaña, desde, hasta, generar));
+            MarcarSeccion(btnReportes);
+        }
+
+        #endregion
     }
 }

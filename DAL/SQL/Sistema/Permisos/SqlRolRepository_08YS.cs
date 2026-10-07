@@ -12,7 +12,13 @@ namespace DAL_08YS.SQL
 {
     public class SqlRolRepository_08YS : Connection_08YS , IRolRepository_08YS
     {
+        #region Constructor
+
         public SqlRolRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public List<Rol_08YS> GetAllPlano()
         {
@@ -57,50 +63,6 @@ namespace DAL_08YS.SQL
             return roles.Values.ToList();
         }
 
-        public void Create(string nombre, List<AccessComponent_08YS> componentes)
-        {
-            var familiasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
-            var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
-
-            var outputParam = ParamOutput("@NuevoRolID");
-
-            ExecuteNonQuery("sp_CreateRol",
-                new IDbDataParameter[]
-                {
-                Param("@Nombre",   nombre),
-                ParamTVP("@Familias", AccessMapper_08YS.ToIdTable(familiasIds)),
-                ParamTVP("@Permisos", AccessMapper_08YS.ToIdTable(permisosIds)),
-                outputParam
-                },
-                storedProcedure: true);
-        }
-
-        public void Modify(int rolId, string nombre, List<AccessComponent_08YS> componentes)
-        {
-            var familiasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
-            var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
-
-            ExecuteNonQuery("sp_ModifyRol",
-                new IDbDataParameter[]
-                {
-                    Param("@RolID",   rolId),
-                    Param("@Nombre",  nombre),
-                    ParamTVP("@Familias", AccessMapper_08YS.ToIdTable(familiasIds)),
-                    ParamTVP("@Permisos", AccessMapper_08YS.ToIdTable(permisosIds))
-                },
-                storedProcedure: true);
-        }
-
-        public bool IsInUse(int rolId)
-            => ExecuteScalar<int>(
-                "SELECT COUNT(1) FROM Users WHERE RolID = @id",
-                new[] { Param("@id", rolId) }) > 0;
-
-        public void Delete(int rolId)
-            => ExecuteNonQuery("sp_DeleteRol",
-                new[] { Param("@RolID", rolId) },
-                storedProcedure: true);
-
         public Rol_08YS GetById(int rolId)
         {
             DataSet ds = GetDataSet("sp_GetRolByID",
@@ -135,5 +97,59 @@ namespace DAL_08YS.SQL
 
             return rol;
         }
+
+        #endregion
+
+        #region Operaciones
+
+        public void Create(string nombre, List<AccessComponent_08YS> componentes)
+        {
+            var familiasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
+            var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
+
+            var outputParam = ParamOutput("@NuevoRolID");
+
+            ExecuteNonQuery("sp_CreateRol",
+                new IDbDataParameter[]
+                {
+                Param("@Nombre",   nombre),
+                ParamTVP("@Familias", AccessMapper_08YS.ToIdTable(familiasIds)),
+                ParamTVP("@Permisos", AccessMapper_08YS.ToIdTable(permisosIds)),
+                outputParam
+                },
+                storedProcedure: true);
+        }
+
+        public void Modify(int rolId, string nombre, List<AccessComponent_08YS> componentes)
+        {
+            var familiasIds = componentes.OfType<Familia_08YS>().Select(f => f.FamiliaID).ToList();
+            var permisosIds = componentes.OfType<Permiso_08YS>().Select(p => p.PermisoID).ToList();
+
+            ExecuteNonQuery("sp_ModifyRol",
+                new IDbDataParameter[]
+                {
+                    Param("@RolID",   rolId),
+                    Param("@Nombre",  nombre),
+                    ParamTVP("@Familias", AccessMapper_08YS.ToIdTable(familiasIds)),
+                    ParamTVP("@Permisos", AccessMapper_08YS.ToIdTable(permisosIds))
+                },
+                storedProcedure: true);
+        }
+
+        public void Delete(int rolId)
+            => ExecuteNonQuery("sp_DeleteRol",
+                new[] { Param("@RolID", rolId) },
+                storedProcedure: true);
+
+        #endregion
+
+        #region Métodos públicos
+
+        public bool IsInUse(int rolId)
+            => ExecuteScalar<int>(
+                "SELECT COUNT(1) FROM Users WHERE RolID = @id",
+                new[] { Param("@id", rolId) }) > 0;
+
+        #endregion
     }
 }

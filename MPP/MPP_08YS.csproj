@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Negocio\ConfiguracionHotelMapper_68SA.cs" />
+    <Compile Include="Negocio\CargosMapper_68SA.cs" />
+    <Compile Include="Negocio\AnalisisDemandaMapper_68SA.cs" />
     <Compile Include="Sistema\AccessMapper_08YS.cs" />
     <Compile Include="Sistema\BitacoraMapper_08YS.cs" />
     <Compile Include="Negocio\HabitacionMapper_68SA.cs" />

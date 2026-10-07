@@ -18,9 +18,15 @@ namespace GUI
 {
     public partial class FormBitacora_08YS : Form,IIdiomaObserver_08YS
     {
+        #region Campos
+
         private BitacoraBLL_08YS _bll = BLLFactory_08YS.CreateBitacoraBLL();
 
         private int _indiceFilaActual = 0;
+
+        #endregion
+
+        #region Constructor
 
         public FormBitacora_08YS()
         {
@@ -43,6 +49,86 @@ namespace GUI
 
             UpdateIdioma();
         }
+
+        #endregion
+
+        #region FrontEnd
+
+        private void dgvEventos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvEventos.Columns[e.ColumnIndex].Name == "Criticidad")
+            {
+                if (e.Value != null)
+                {
+                    string valor = e.Value.ToString();
+                    if (valor == "Critico")
+                    {
+                        e.CellStyle.ForeColor = Color.Red;
+                    }
+                    else if (valor == "Alto")
+                    {
+                        e.CellStyle.ForeColor = Color.OrangeRed;
+                    }
+                    else if (valor == "Medio")
+                    {
+                        e.CellStyle.ForeColor = Color.Gold;
+                    }
+                    else if (valor == "Bajo")
+                    {
+                        e.CellStyle.ForeColor = Color.LimeGreen;
+                    }
+                }
+            }
+        }
+
+        private Color btnBackNormal = Color.FromArgb(5, 15, 45);
+        private Color btnBackHover = Color.Goldenrod;
+
+        private Color btnForeNormal = Color.Goldenrod;
+        private Color btnForeHover = Color.FromArgb(5, 15, 45);
+
+        private void ConfigurarBoton(IconButton btn)
+        {
+            btn.BackColor = btnBackNormal;
+            btn.ForeColor = btnForeNormal;
+            btn.IconColor = btnForeNormal;
+
+            btn.MouseEnter += Boton_MouseEnter;
+            btn.MouseLeave += Boton_MouseLeave;
+        }
+
+        private void Boton_MouseEnter(object sender, EventArgs e)
+        {
+            IconButton btn = (IconButton)sender;
+
+            btn.BackColor = btnBackHover;
+            btn.ForeColor = btnForeHover;
+            btn.IconColor = btnForeHover;
+        }
+
+        private void Boton_MouseLeave(object sender, EventArgs e)
+        {
+            IconButton btn = (IconButton)sender;
+
+            btn.BackColor = btnBackNormal;
+            btn.ForeColor = btnForeNormal;
+            btn.IconColor = btnForeNormal;
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
+                return cp;
+            }
+        }
+
+        #endregion
+
+        #region Idioma
+
         public void UpdateIdioma()
         {
             TraducirControles(this);
@@ -77,7 +163,10 @@ namespace GUI
                 }
             }
         }
-        private void FormBitacora_Load(object sender, EventArgs e) => CargarGrid();
+
+        #endregion
+
+        #region Carga de datos
 
         private void CargarGrid()
         {
@@ -94,6 +183,12 @@ namespace GUI
                 MessageBox.Show(ex.Message);
             }
         }
+
+        #endregion
+
+        #region Eventos de controles
+
+        private void FormBitacora_Load(object sender, EventArgs e) => CargarGrid();
 
         private void pd_PrintPage(object sender, PrintPageEventArgs e)
         {
@@ -228,41 +323,6 @@ namespace GUI
             }
         }
 
-        private bool ValidarFechas()
-        {
-            DateTime? desde = dtpDesde.Value.HasValue ? dtpDesde.Value.Value.Date : (DateTime?)null;
-            DateTime? hasta = dtpHasta.Value.HasValue ? dtpHasta.Value.Value.Date : (DateTime?)null;
-
-            string tituloError = TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion");
-
-            if (!desde.HasValue && hasta.HasValue)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_partida_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            if (desde.HasValue && !hasta.HasValue)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_fin_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            if (desde.HasValue && desde.Value > DateTime.Today)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_partida_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            if (hasta.HasValue && hasta.Value > DateTime.Today)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_fin_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
-            {
-                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fechas_invertidas"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            return true;
-        }
-
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             txtUsername.Text = "";
@@ -279,33 +339,6 @@ namespace GUI
         {
             Modulo? moduloSeleccionado = comboBoxModulo.SelectedItem as Modulo?;
             RefreshComboEventos(moduloSeleccionado);
-        }
-
-        private void RefreshComboEventos(Modulo? modulo)
-        {
-            comboBoxEvento.SelectedIndexChanged -= comboBoxEvento_SelectedIndexChanged;
-
-            Evento? eventoAnterior = comboBoxEvento.SelectedItem as Evento?;
-
-            Criticidad? criticidadActual = comboBoxCriticidad.SelectedItem as Criticidad?;
-
-            var eventos = modulo.HasValue
-                ? EventCatalog_08YS.GetEventsByModule(modulo.Value)
-                : Enum.GetValues(typeof(Evento)).Cast<Evento>().ToList();
-
-            if (criticidadActual.HasValue)
-                eventos = eventos
-                    .Where(ev => EventCatalog_08YS.GetMetadata(ev).Criticidad == criticidadActual.Value)
-                    .ToList();
-
-            comboBoxEvento.DataSource = eventos;
-
-            if (!eventoAnterior.HasValue || !eventos.Contains(eventoAnterior.Value))
-                comboBoxEvento.SelectedIndex = -1;
-            else
-                comboBoxEvento.SelectedItem = eventoAnterior.Value;
-
-            comboBoxEvento.SelectedIndexChanged += comboBoxEvento_SelectedIndexChanged;
         }
 
         private void comboBoxEvento_SelectedIndexChanged(object sender, EventArgs e)
@@ -352,77 +385,70 @@ namespace GUI
             comboBoxEvento.SelectedIndexChanged += comboBoxEvento_SelectedIndexChanged;
         }
 
-        #region FrontEnd
+        #endregion
 
-        private void dgvEventos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        #region Métodos auxiliares
+
+        private bool ValidarFechas()
         {
-            if (dgvEventos.Columns[e.ColumnIndex].Name == "Criticidad")
+            DateTime? desde = dtpDesde.Value.HasValue ? dtpDesde.Value.Value.Date : (DateTime?)null;
+            DateTime? hasta = dtpHasta.Value.HasValue ? dtpHasta.Value.Value.Date : (DateTime?)null;
+
+            string tituloError = TraductorManager_08YS.Instance.GetTexto("Comun_error_validacion");
+
+            if (!desde.HasValue && hasta.HasValue)
             {
-                if (e.Value != null)
-                {
-                    string valor = e.Value.ToString();
-                    if (valor == "Critico")
-                    {
-                        e.CellStyle.ForeColor = Color.Red;
-                    }
-                    else if (valor == "Alto")
-                    {
-                        e.CellStyle.ForeColor = Color.OrangeRed;
-                    }
-                    else if (valor == "Medio")
-                    {
-                        e.CellStyle.ForeColor = Color.Gold;
-                    }
-                    else if (valor == "Bajo")
-                    {
-                        e.CellStyle.ForeColor = Color.LimeGreen;
-                    }
-                }
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_partida_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
-        }
-
-        private Color btnBackNormal = Color.FromArgb(5, 15, 45);
-        private Color btnBackHover = Color.Goldenrod;
-
-        private Color btnForeNormal = Color.Goldenrod;
-        private Color btnForeHover = Color.FromArgb(5, 15, 45);
-
-        private void ConfigurarBoton(IconButton btn)
-        {
-            btn.BackColor = btnBackNormal;
-            btn.ForeColor = btnForeNormal;
-            btn.IconColor = btnForeNormal;
-
-            btn.MouseEnter += Boton_MouseEnter;
-            btn.MouseLeave += Boton_MouseLeave;
-        }
-
-        private void Boton_MouseEnter(object sender, EventArgs e)
-        {
-            IconButton btn = (IconButton)sender;
-
-            btn.BackColor = btnBackHover;
-            btn.ForeColor = btnForeHover;
-            btn.IconColor = btnForeHover;
-        }
-
-        private void Boton_MouseLeave(object sender, EventArgs e)
-        {
-            IconButton btn = (IconButton)sender;
-
-            btn.BackColor = btnBackNormal;
-            btn.ForeColor = btnForeNormal;
-            btn.IconColor = btnForeNormal;
-        }
-
-        protected override CreateParams CreateParams
-        {
-            get
+            if (desde.HasValue && !hasta.HasValue)
             {
-                CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
-                return cp;
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_fin_req"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
+            if (desde.HasValue && desde.Value > DateTime.Today)
+            {
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_partida_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (hasta.HasValue && hasta.Value > DateTime.Today)
+            {
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fecha_fin_futura"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value)
+            {
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("Bitacora_msg_fechas_invertidas"), tituloError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+
+        private void RefreshComboEventos(Modulo? modulo)
+        {
+            comboBoxEvento.SelectedIndexChanged -= comboBoxEvento_SelectedIndexChanged;
+
+            Evento? eventoAnterior = comboBoxEvento.SelectedItem as Evento?;
+
+            Criticidad? criticidadActual = comboBoxCriticidad.SelectedItem as Criticidad?;
+
+            var eventos = modulo.HasValue
+                ? EventCatalog_08YS.GetEventsByModule(modulo.Value)
+                : Enum.GetValues(typeof(Evento)).Cast<Evento>().ToList();
+
+            if (criticidadActual.HasValue)
+                eventos = eventos
+                    .Where(ev => EventCatalog_08YS.GetMetadata(ev).Criticidad == criticidadActual.Value)
+                    .ToList();
+
+            comboBoxEvento.DataSource = eventos;
+
+            if (!eventoAnterior.HasValue || !eventos.Contains(eventoAnterior.Value))
+                comboBoxEvento.SelectedIndex = -1;
+            else
+                comboBoxEvento.SelectedItem = eventoAnterior.Value;
+
+            comboBoxEvento.SelectedIndexChanged += comboBoxEvento_SelectedIndexChanged;
         }
 
         #endregion

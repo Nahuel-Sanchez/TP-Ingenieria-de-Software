@@ -47,6 +47,14 @@
             this.lblSaldo = new System.Windows.Forms.Label();
             this.lblEtiquetaSaldo = new System.Windows.Forms.Label();
             this.lblTotalPagado = new System.Windows.Forms.Label();
+            this.lblEtiquetaRenovacion = new System.Windows.Forms.Label();
+            this.lblRenovacion = new System.Windows.Forms.Label();
+            this.lnkDetalleCuenta = new System.Windows.Forms.LinkLabel();
+            this.lblEtiquetaCargos = new System.Windows.Forms.Label();
+            this.lblCargos = new System.Windows.Forms.Label();
+            this.lblDetalleCargos = new System.Windows.Forms.Label();
+            this.lblEtiquetaTotalEstadia = new System.Windows.Forms.Label();
+            this.lblTotalEstadia = new System.Windows.Forms.Label();
             this.lblEtiquetaTotalPagado = new System.Windows.Forms.Label();
             this.lblMontoTotal = new System.Windows.Forms.Label();
             this.lblEtiquetaMontoTotal = new System.Windows.Forms.Label();
@@ -304,6 +312,14 @@
             this.pnlCuenta.Controls.Add(this.pnlLineaCuenta2);
             this.pnlCuenta.Controls.Add(this.lblSaldo);
             this.pnlCuenta.Controls.Add(this.lblEtiquetaSaldo);
+            this.pnlCuenta.Controls.Add(this.lblEtiquetaCargos);
+            this.pnlCuenta.Controls.Add(this.lblCargos);
+            this.pnlCuenta.Controls.Add(this.lblDetalleCargos);
+            this.pnlCuenta.Controls.Add(this.lblEtiquetaTotalEstadia);
+            this.pnlCuenta.Controls.Add(this.lblTotalEstadia);
+            this.pnlCuenta.Controls.Add(this.lblEtiquetaRenovacion);
+            this.pnlCuenta.Controls.Add(this.lblRenovacion);
+            this.pnlCuenta.Controls.Add(this.lnkDetalleCuenta);
             this.pnlCuenta.Controls.Add(this.lblTotalPagado);
             this.pnlCuenta.Controls.Add(this.lblEtiquetaTotalPagado);
             this.pnlCuenta.Controls.Add(this.lblMontoTotal);
@@ -314,7 +330,7 @@
             this.pnlCuenta.Location = new System.Drawing.Point(3, 3);
             this.pnlCuenta.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.pnlCuenta.Name = "pnlCuenta";
-            this.pnlCuenta.Size = new System.Drawing.Size(700, 330);
+            this.pnlCuenta.Size = new System.Drawing.Size(700, 414);
             this.pnlCuenta.TabIndex = 2;
             // 
             // lblSeccionCuenta
@@ -345,10 +361,10 @@
             this.lblEtiquetaMontoTotal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
             this.lblEtiquetaMontoTotal.Location = new System.Drawing.Point(16, 50);
             this.lblEtiquetaMontoTotal.Name = "lblEtiquetaMontoTotal";
-            this.lblEtiquetaMontoTotal.Tag = "CheckOut_lblEtiquetaMontoTotal";
+            this.lblEtiquetaMontoTotal.Tag = "CheckOut_lblEtiquetaAlojamiento";
             this.lblEtiquetaMontoTotal.Size = new System.Drawing.Size(80, 15);
             this.lblEtiquetaMontoTotal.TabIndex = 2;
-            this.lblEtiquetaMontoTotal.Text = "Monto Total:";
+            this.lblEtiquetaMontoTotal.Text = "Alojamiento:";
             // 
             // lblMontoTotal
             // 
@@ -360,11 +376,106 @@
             this.lblMontoTotal.TabIndex = 3;
             this.lblMontoTotal.Text = "-";
             // 
+            // lblEtiquetaCargos
+            // 
+            this.lblEtiquetaCargos.AutoSize = true;
+            this.lblEtiquetaCargos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblEtiquetaCargos.Location = new System.Drawing.Point(16, 106);
+            this.lblEtiquetaCargos.Name = "lblEtiquetaCargos";
+            this.lblEtiquetaCargos.Tag = "CheckOut_lblEtiquetaCargos";
+            this.lblEtiquetaCargos.Size = new System.Drawing.Size(120, 15);
+            this.lblEtiquetaCargos.TabIndex = 20;
+            this.lblEtiquetaCargos.Text = "Cargos adicionales:";
+            // 
+            // lblCargos
+            // 
+            this.lblCargos.AutoSize = true;
+            this.lblCargos.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lblCargos.Location = new System.Drawing.Point(160, 106);
+            this.lblCargos.Name = "lblCargos";
+            this.lblCargos.Size = new System.Drawing.Size(50, 15);
+            this.lblCargos.TabIndex = 21;
+            this.lblCargos.Text = "-";
+            // 
+            // lblDetalleCargos
+            // 
+            this.lblDetalleCargos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDetalleCargos.AutoEllipsis = true;
+            this.lblDetalleCargos.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDetalleCargos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblDetalleCargos.Location = new System.Drawing.Point(290, 106);
+            this.lblDetalleCargos.Name = "lblDetalleCargos";
+            this.lblDetalleCargos.Size = new System.Drawing.Size(394, 15);
+            this.lblDetalleCargos.TabIndex = 22;
+            this.lblDetalleCargos.Text = "";
+            // 
+            // lblEtiquetaTotalEstadia
+            // 
+            this.lblEtiquetaTotalEstadia.AutoSize = true;
+            this.lblEtiquetaTotalEstadia.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEtiquetaTotalEstadia.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lblEtiquetaTotalEstadia.Location = new System.Drawing.Point(16, 134);
+            this.lblEtiquetaTotalEstadia.Name = "lblEtiquetaTotalEstadia";
+            this.lblEtiquetaTotalEstadia.Tag = "CheckOut_lblEtiquetaTotalEstadia";
+            this.lblEtiquetaTotalEstadia.Size = new System.Drawing.Size(120, 15);
+            this.lblEtiquetaTotalEstadia.TabIndex = 23;
+            this.lblEtiquetaTotalEstadia.Text = "Total de la estadía:";
+            // 
+            // lblTotalEstadia
+            // 
+            this.lblTotalEstadia.AutoSize = true;
+            this.lblTotalEstadia.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalEstadia.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblTotalEstadia.Location = new System.Drawing.Point(160, 134);
+            this.lblTotalEstadia.Name = "lblTotalEstadia";
+            this.lblTotalEstadia.Size = new System.Drawing.Size(50, 15);
+            this.lblTotalEstadia.TabIndex = 24;
+            this.lblTotalEstadia.Text = "-";
+            // 
+            // lblEtiquetaRenovacion
+            // 
+            this.lblEtiquetaRenovacion.AutoSize = true;
+            this.lblEtiquetaRenovacion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
+            this.lblEtiquetaRenovacion.Location = new System.Drawing.Point(16, 78);
+            this.lblEtiquetaRenovacion.Name = "lblEtiquetaRenovacion";
+            this.lblEtiquetaRenovacion.Tag = "CheckOut_lblEtiquetaRenovacion";
+            this.lblEtiquetaRenovacion.Size = new System.Drawing.Size(130, 15);
+            this.lblEtiquetaRenovacion.TabIndex = 25;
+            this.lblEtiquetaRenovacion.Text = "Renovación:";
+            // 
+            // lblRenovacion
+            // 
+            this.lblRenovacion.AutoSize = true;
+            this.lblRenovacion.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lblRenovacion.Location = new System.Drawing.Point(160, 78);
+            this.lblRenovacion.Name = "lblRenovacion";
+            this.lblRenovacion.Size = new System.Drawing.Size(50, 15);
+            this.lblRenovacion.TabIndex = 26;
+            this.lblRenovacion.Text = "-";
+            // 
+            // lnkDetalleCuenta
+            // 
+            this.lnkDetalleCuenta.ActiveLinkColor = System.Drawing.Color.Gold;
+            this.lnkDetalleCuenta.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lnkDetalleCuenta.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lnkDetalleCuenta.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lnkDetalleCuenta.LinkColor = System.Drawing.Color.Goldenrod;
+            this.lnkDetalleCuenta.Location = new System.Drawing.Point(444, 12);
+            this.lnkDetalleCuenta.Name = "lnkDetalleCuenta";
+            this.lnkDetalleCuenta.Size = new System.Drawing.Size(240, 19);
+            this.lnkDetalleCuenta.TabIndex = 27;
+            this.lnkDetalleCuenta.TabStop = true;
+            this.lnkDetalleCuenta.Tag = "CheckOut_lnkDetalleCuenta";
+            this.lnkDetalleCuenta.Text = "Ver detalle de la cuenta ›";
+            this.lnkDetalleCuenta.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lnkDetalleCuenta.VisitedLinkColor = System.Drawing.Color.Goldenrod;
+            // 
             // lblEtiquetaTotalPagado
             // 
             this.lblEtiquetaTotalPagado.AutoSize = true;
             this.lblEtiquetaTotalPagado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblEtiquetaTotalPagado.Location = new System.Drawing.Point(16, 78);
+            this.lblEtiquetaTotalPagado.Location = new System.Drawing.Point(16, 162);
             this.lblEtiquetaTotalPagado.Name = "lblEtiquetaTotalPagado";
             this.lblEtiquetaTotalPagado.Tag = "CheckOut_lblEtiquetaTotalPagado";
             this.lblEtiquetaTotalPagado.Size = new System.Drawing.Size(90, 15);
@@ -375,7 +486,7 @@
             // 
             this.lblTotalPagado.AutoSize = true;
             this.lblTotalPagado.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblTotalPagado.Location = new System.Drawing.Point(160, 78);
+            this.lblTotalPagado.Location = new System.Drawing.Point(160, 162);
             this.lblTotalPagado.Name = "lblTotalPagado";
             this.lblTotalPagado.Size = new System.Drawing.Size(50, 15);
             this.lblTotalPagado.TabIndex = 5;
@@ -384,7 +495,7 @@
             // pnlLineaCuenta2
             // 
             this.pnlLineaCuenta2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(75)))), ((int)(((byte)(110)))));
-            this.pnlLineaCuenta2.Location = new System.Drawing.Point(16, 106);
+            this.pnlLineaCuenta2.Location = new System.Drawing.Point(16, 190);
             this.pnlLineaCuenta2.Name = "pnlLineaCuenta2";
             this.pnlLineaCuenta2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -396,7 +507,7 @@
             this.lblEtiquetaSaldo.AutoSize = true;
             this.lblEtiquetaSaldo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEtiquetaSaldo.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblEtiquetaSaldo.Location = new System.Drawing.Point(16, 118);
+            this.lblEtiquetaSaldo.Location = new System.Drawing.Point(16, 202);
             this.lblEtiquetaSaldo.Name = "lblEtiquetaSaldo";
             this.lblEtiquetaSaldo.Tag = "CheckOut_lblEtiquetaSaldo";
             this.lblEtiquetaSaldo.Size = new System.Drawing.Size(120, 22);
@@ -408,7 +519,7 @@
             this.lblSaldo.AutoSize = true;
             this.lblSaldo.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSaldo.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblSaldo.Location = new System.Drawing.Point(200, 116);
+            this.lblSaldo.Location = new System.Drawing.Point(200, 200);
             this.lblSaldo.Name = "lblSaldo";
             this.lblSaldo.Size = new System.Drawing.Size(80, 25);
             this.lblSaldo.TabIndex = 8;
@@ -418,7 +529,7 @@
             // 
             this.lblEtiquetaMetodoPagoFinal.AutoSize = true;
             this.lblEtiquetaMetodoPagoFinal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblEtiquetaMetodoPagoFinal.Location = new System.Drawing.Point(16, 156);
+            this.lblEtiquetaMetodoPagoFinal.Location = new System.Drawing.Point(16, 240);
             this.lblEtiquetaMetodoPagoFinal.Name = "lblEtiquetaMetodoPagoFinal";
             this.lblEtiquetaMetodoPagoFinal.Tag = "CheckOut_lblEtiquetaMetodoPagoFinal";
             this.lblEtiquetaMetodoPagoFinal.Size = new System.Drawing.Size(90, 15);
@@ -442,7 +553,7 @@
             this.cmbMetodoPagoFinal.IconChar = FontAwesome.Sharp.IconChar.CreditCard;
             this.cmbMetodoPagoFinal.IconColor = System.Drawing.Color.Goldenrod;
             this.cmbMetodoPagoFinal.IconSize = 24;
-            this.cmbMetodoPagoFinal.Location = new System.Drawing.Point(16, 174);
+            this.cmbMetodoPagoFinal.Location = new System.Drawing.Point(16, 258);
             this.cmbMetodoPagoFinal.Name = "cmbMetodoPagoFinal";
             this.cmbMetodoPagoFinal.Size = new System.Drawing.Size(300, 40);
             this.cmbMetodoPagoFinal.TabIndex = 10;
@@ -451,7 +562,7 @@
             // 
             this.lblEtiquetaMontoRecibidoFinal.AutoSize = true;
             this.lblEtiquetaMontoRecibidoFinal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblEtiquetaMontoRecibidoFinal.Location = new System.Drawing.Point(16, 224);
+            this.lblEtiquetaMontoRecibidoFinal.Location = new System.Drawing.Point(16, 308);
             this.lblEtiquetaMontoRecibidoFinal.Name = "lblEtiquetaMontoRecibidoFinal";
             this.lblEtiquetaMontoRecibidoFinal.Tag = "CheckOut_lblEtiquetaMontoRecibidoFinal";
             this.lblEtiquetaMontoRecibidoFinal.Size = new System.Drawing.Size(105, 15);
@@ -470,7 +581,7 @@
             this.nudMontoRecibidoFinal.IconColor = System.Drawing.Color.Goldenrod;
             this.nudMontoRecibidoFinal.IconSize = 22;
             this.nudMontoRecibidoFinal.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            this.nudMontoRecibidoFinal.Location = new System.Drawing.Point(16, 242);
+            this.nudMontoRecibidoFinal.Location = new System.Drawing.Point(16, 326);
             this.nudMontoRecibidoFinal.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
             this.nudMontoRecibidoFinal.Name = "nudMontoRecibidoFinal";
             this.nudMontoRecibidoFinal.Size = new System.Drawing.Size(300, 40);
@@ -481,7 +592,7 @@
             // 
             this.lblEtiquetaVueltoFinal.AutoSize = true;
             this.lblEtiquetaVueltoFinal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(210)))));
-            this.lblEtiquetaVueltoFinal.Location = new System.Drawing.Point(16, 292);
+            this.lblEtiquetaVueltoFinal.Location = new System.Drawing.Point(16, 376);
             this.lblEtiquetaVueltoFinal.Name = "lblEtiquetaVueltoFinal";
             this.lblEtiquetaVueltoFinal.Tag = "CheckOut_lblEtiquetaVueltoFinal";
             this.lblEtiquetaVueltoFinal.Size = new System.Drawing.Size(50, 15);
@@ -493,7 +604,7 @@
             this.lblVueltoFinal.AutoSize = true;
             this.lblVueltoFinal.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVueltoFinal.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblVueltoFinal.Location = new System.Drawing.Point(100, 288);
+            this.lblVueltoFinal.Location = new System.Drawing.Point(100, 372);
             this.lblVueltoFinal.Name = "lblVueltoFinal";
             this.lblVueltoFinal.Size = new System.Drawing.Size(60, 20);
             this.lblVueltoFinal.TabIndex = 14;
@@ -608,6 +719,14 @@
         private System.Windows.Forms.Label lblMontoTotal;
         private System.Windows.Forms.Label lblEtiquetaTotalPagado;
         private System.Windows.Forms.Label lblTotalPagado;
+        private System.Windows.Forms.Label lblEtiquetaRenovacion;
+        private System.Windows.Forms.Label lblRenovacion;
+        private System.Windows.Forms.LinkLabel lnkDetalleCuenta;
+        private System.Windows.Forms.Label lblEtiquetaCargos;
+        private System.Windows.Forms.Label lblCargos;
+        private System.Windows.Forms.Label lblDetalleCargos;
+        private System.Windows.Forms.Label lblEtiquetaTotalEstadia;
+        private System.Windows.Forms.Label lblTotalEstadia;
         private System.Windows.Forms.Panel pnlLineaCuenta2;
         private System.Windows.Forms.Label lblEtiquetaSaldo;
         private System.Windows.Forms.Label lblSaldo;

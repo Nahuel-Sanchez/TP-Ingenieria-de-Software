@@ -11,6 +11,8 @@ namespace GUI_08YS
 {
     internal static class PermissionFilter_08YS
     {
+        #region Métodos públicos
+
         public static void Aplicar(Control raiz, Dictionary<string, Permisos> mapa)
         {
             foreach (var kvp in mapa)
@@ -24,6 +26,10 @@ namespace GUI_08YS
         public static void AplicarMenuStrip(ContextMenuStrip menu, Dictionary<string, Permisos> mapa)
             => AplicarItems(menu.Items, mapa);
 
+        #endregion
+
+        #region Métodos auxiliares
+
         private static void AplicarItems(ToolStripItemCollection items, Dictionary<string, Permisos> mapa)
         {
             foreach (ToolStripItem item in items)
@@ -36,5 +42,7 @@ namespace GUI_08YS
                     AplicarItems(menuItem.DropDownItems, mapa);
             }
         }
+
+        #endregion
     }
 }

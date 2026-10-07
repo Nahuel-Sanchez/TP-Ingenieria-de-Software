@@ -19,6 +19,8 @@ namespace GUI_08YS.Admin
 
     public partial class FormGestionAcceso_08YS : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaFamilia =
             new Dictionary<string, Permisos>
             {
@@ -35,11 +37,14 @@ namespace GUI_08YS.Admin
                 { nameof(btnEliminar),  Permisos.EliminarRoles  },
             };
 
-
         private readonly TipoEntidad _modo;
         private readonly FamiliaBLL_08YS _familiaBLL;
         private readonly RolBLL_08YS _rolBLL;
         private readonly Action<Form> _openChildForm;
+
+        #endregion
+
+        #region Constructor
 
         public FormGestionAcceso_08YS(TipoEntidad tipo, Action<Form> openChildForm)
         {
@@ -55,12 +60,8 @@ namespace GUI_08YS.Admin
             dgvEntidades.AutoGenerateColumns = false;
         }
 
-        private void FormGestionAcceso_Load(object sender, EventArgs e)
-        {
-            ConfigurarPorTipo();
-            CargarGrid();
-            UpdateIdioma();
-        }
+        #endregion
+
         #region Idioma
         public void UpdateIdioma()
         {
@@ -123,98 +124,6 @@ namespace GUI_08YS.Admin
             }
         }
         #endregion
-        private void AplicarPermisos()
-        {
-            var mapa = _modo == TipoEntidad.Familia ? _mapaFamilia : _mapaRol;
-            PermissionFilter_08YS.Aplicar(this, mapa);
-        }
-
-        private void ConfigurarPorTipo()
-        {
-            bool esFamilia = _modo == TipoEntidad.Familia;
-
-            //lblTitulo.Text = esFamilia ? "Gestión de Familias" : "Gestión de Roles";
-            iconPictureBox.IconChar = esFamilia
-                ? FontAwesome.Sharp.IconChar.LayerGroup
-                : FontAwesome.Sharp.IconChar.UserShield;
-
-            AplicarPermisos();
-
-            if( esFamilia && 
-                   !SessionManager_08YS.Instance.HasPermission(Permisos.CrearFamilias    )  &&
-                   !SessionManager_08YS.Instance.HasPermission(Permisos.ModificarFamilias)  &&
-                   !SessionManager_08YS.Instance.HasPermission(Permisos.EliminarFamilias )
-              )
-              pnlBottom.Visible = false;
-
-            else if( !esFamilia && 
-                       !SessionManager_08YS.Instance.HasPermission(Permisos.CrearRoles    )  &&
-                       !SessionManager_08YS.Instance.HasPermission(Permisos.ModificarRoles)  &&
-                       !SessionManager_08YS.Instance.HasPermission(Permisos.EliminarRoles )
-                   )
-                   pnlBottom.Visible = false;
-        }
-
-        private void CargarGrid()
-        {
-            try
-            {
-                trvDetalle.Nodes.Clear();
-
-                if (_modo == TipoEntidad.Familia)
-                {
-                    var familias = _familiaBLL.GetAll();
-                    dgvEntidades.DataSource = familias
-                        .Select(f => new { f.Nombre, TipoDisplay = "Familia", Entidad = (object)f })
-                        .ToList();
-                }
-                else
-                {
-                    var roles = _rolBLL.GetAll();
-                    dgvEntidades.DataSource = roles
-                        .Select(r => new { r.Nombre, TipoDisplay = "Rol", Entidad = (object)r })
-                        .ToList();
-                }
-
-                ActualizarEstadoBotones();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("GestionAcceso_msg_error_cargar_datos")}{ex.Message}",
-                                TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            TraducirColumnas();
-        }
-
-        private void AbrirAM(
-            OperacionAM operacion,
-            Familia_08YS familiaAEditar = null,
-            Rol_08YS rolAEditar = null)
-        {
-            // Captura referencia a este form antes de que el panel lo reemplace
-            var formGestion = this;
-
-            Action onSave = () =>
-            {
-                formGestion.CargarGrid();
-                _openChildForm(formGestion);   // vuelve a mostrar FormGestion actualizado
-            };
-
-            Action onCancel = () =>
-                _openChildForm(formGestion);   // vuelve a FormGestion sin cambios
-
-            var formABM = new FormAccesoAM_08YS(
-                _modo,
-                operacion,
-                _familiaBLL,
-                _rolBLL,
-                familiaAEditar,
-                rolAEditar,
-                onSave,
-                onCancel);
-
-            _openChildForm(formABM);           // reemplaza FormGestion por FormAM en el panel del MDI
-        }
 
         #region Buttons
 
@@ -279,12 +188,6 @@ namespace GUI_08YS.Admin
         }
 
         #endregion
-
-        private void dgvEntidades_SelectionChanged(object sender, EventArgs e)
-        {
-            ActualizarEstadoBotones();
-            ActualizarTreeView();
-        }
 
         #region Treeview
 
@@ -352,6 +255,126 @@ namespace GUI_08YS.Admin
 
         #endregion
 
+        #region Carga de datos
+
+        private void CargarGrid()
+        {
+            try
+            {
+                trvDetalle.Nodes.Clear();
+
+                if (_modo == TipoEntidad.Familia)
+                {
+                    var familias = _familiaBLL.GetAll();
+                    dgvEntidades.DataSource = familias
+                        .Select(f => new { f.Nombre, TipoDisplay = "Familia", Entidad = (object)f })
+                        .ToList();
+                }
+                else
+                {
+                    var roles = _rolBLL.GetAll();
+                    dgvEntidades.DataSource = roles
+                        .Select(r => new { r.Nombre, TipoDisplay = "Rol", Entidad = (object)r })
+                        .ToList();
+                }
+
+                ActualizarEstadoBotones();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{TraductorManager_08YS.Instance.GetTexto("GestionAcceso_msg_error_cargar_datos")}{ex.Message}",
+                                TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            TraducirColumnas();
+        }
+
+        #endregion
+
+        #region Eventos de controles
+
+        private void FormGestionAcceso_Load(object sender, EventArgs e)
+        {
+            ConfigurarPorTipo();
+            CargarGrid();
+            UpdateIdioma();
+        }
+
+        private void dgvEntidades_SelectionChanged(object sender, EventArgs e)
+        {
+            ActualizarEstadoBotones();
+            ActualizarTreeView();
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private void AplicarPermisos()
+        {
+            var mapa = _modo == TipoEntidad.Familia ? _mapaFamilia : _mapaRol;
+            PermissionFilter_08YS.Aplicar(this, mapa);
+        }
+
+        private void ConfigurarPorTipo()
+        {
+            bool esFamilia = _modo == TipoEntidad.Familia;
+
+            //lblTitulo.Text = esFamilia ? "Gestión de Familias" : "Gestión de Roles";
+            iconPictureBox.IconChar = esFamilia
+                ? FontAwesome.Sharp.IconChar.LayerGroup
+                : FontAwesome.Sharp.IconChar.UserShield;
+
+            AplicarPermisos();
+
+            if( esFamilia && 
+                   !SessionManager_08YS.Instance.HasPermission(Permisos.CrearFamilias    )  &&
+                   !SessionManager_08YS.Instance.HasPermission(Permisos.ModificarFamilias)  &&
+                   !SessionManager_08YS.Instance.HasPermission(Permisos.EliminarFamilias )
+              )
+              pnlBottom.Visible = false;
+
+            else if( !esFamilia && 
+                       !SessionManager_08YS.Instance.HasPermission(Permisos.CrearRoles    )  &&
+                       !SessionManager_08YS.Instance.HasPermission(Permisos.ModificarRoles)  &&
+                       !SessionManager_08YS.Instance.HasPermission(Permisos.EliminarRoles )
+                   )
+                   pnlBottom.Visible = false;
+        }
+
+        private void AbrirAM(
+            OperacionAM operacion,
+            Familia_08YS familiaAEditar = null,
+            Rol_08YS rolAEditar = null)
+        {
+            // Captura referencia a este form antes de que el panel lo reemplace
+            var formGestion = this;
+
+            Action onSave = () =>
+            {
+                formGestion.CargarGrid();
+                _openChildForm(formGestion);   // vuelve a mostrar FormGestion actualizado
+            };
+
+            Action onCancel = () =>
+                _openChildForm(formGestion);   // vuelve a FormGestion sin cambios
+
+            var formABM = new FormAccesoAM_08YS(
+                _modo,
+                operacion,
+                _familiaBLL,
+                _rolBLL,
+                familiaAEditar,
+                rolAEditar,
+                onSave,
+                onCancel);
+
+            _openChildForm(formABM);           // reemplaza FormGestion por FormAM en el panel del MDI
+        }
+
+        #endregion
+
+        #region Sobrescrituras
+
         protected override CreateParams CreateParams
         {
             get
@@ -361,5 +384,7 @@ namespace GUI_08YS.Admin
                 return cp;
             }
         }
+
+        #endregion
     }
 }

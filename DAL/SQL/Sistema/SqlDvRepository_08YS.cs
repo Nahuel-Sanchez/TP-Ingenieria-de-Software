@@ -11,7 +11,13 @@ namespace DAL_08YS.SQL
 {
     public class SqlDvRepository_08YS : Connection_08YS , IDvRepository_08YS
     {
+        #region Constructor
+
         public SqlDvRepository_08YS(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public List<DataTable> GetTodasLasTablas()
         {
@@ -33,6 +39,10 @@ namespace DAL_08YS.SQL
             }).ToList();
         }
 
+        #endregion
+
+        #region Operaciones
+
         public void GuardarDVTabla(DigitoVerificador_08YS entrada)
             => ExecuteNonQuery("sp_UpsertDVTabla",
                 new[]
@@ -42,5 +52,7 @@ namespace DAL_08YS.SQL
                 Param("@DVV",   entrada.DVV)
                 },
                 storedProcedure: true);
+
+        #endregion
     }
 }

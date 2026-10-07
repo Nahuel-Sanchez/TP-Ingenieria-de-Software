@@ -11,6 +11,8 @@ namespace DAL_08YS
 {
     public class SqlDbFactory_08YS : IDbFactory_08YS
     {
+        #region Campos
+
         private const string NombreClaveConfig = "TP_Ing_Soft";
         private const string ConnectionStringDefault =
             @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TP_Ing_Soft;Integrated Security=True";
@@ -20,6 +22,10 @@ namespace DAL_08YS
         // TODAS las conexiones de la DAL pasan por acá (Connection_08YS recibe el
         // factory, y el factory siempre lee de esta propiedad).
         private static string _connectionStringOverride;
+
+        #endregion
+
+        #region Propiedades
 
         public static string ConnectionString
         {
@@ -39,6 +45,10 @@ namespace DAL_08YS
             set { _connectionStringOverride = value; }
         }
 
+        #endregion
+
+        #region Fábrica
+
         public IDbConnection CreateConnection()
             => new SqlConnection(ConnectionString);
 
@@ -53,6 +63,16 @@ namespace DAL_08YS
 
         public IDbDataParameter CreateTableValuedParameter(string name, DataTable value, string typeName)
             => new SqlParameter(name, SqlDbType.Structured) { TypeName = typeName, Value = value };
+
+        #endregion
+
+        #region Consultas
+
+        public string GetConnectionString() => ConnectionString;
+
+        #endregion
+
+        #region Métodos públicos
 
         public DataTable FillDataTable(IDbCommand command)
         {
@@ -70,6 +90,6 @@ namespace DAL_08YS
             return ds;
         }
 
-        public string GetConnectionString() => ConnectionString;
+        #endregion
     }
 }

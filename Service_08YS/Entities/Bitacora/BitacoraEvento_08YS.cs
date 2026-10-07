@@ -23,7 +23,8 @@ namespace Service_08YS.Entities.Bitacora
         Habitaciones,
         Huespedes,
         Pagos,
-        Configuracion
+        Configuracion,
+        CargosAdicionales
     }
 
     public enum Evento
@@ -66,17 +67,31 @@ namespace Service_08YS.Entities.Bitacora
         PisoEliminado,
         HuespedModificado,
         HuespedEliminado,
-        ReservaModificada
+        ReservaModificada,
+        // PN2 (se agregan al final: la bitácora guarda el número del enum)
+        HabitacionUpgradeRegistrado,
+        HuespedReubicado,
+        PedidoRoomServiceRegistrado,
+        PedidoRoomServiceEntregado,
+        ItemRoomServiceCreado,
+        ItemRoomServiceModificado,
+        CambioHabitacionReactivado   // ya no se genera (la bitácora de cambios es de solo lectura); se conserva por los registros guardados
     }
 
     public class BitacoraEvento_08YS
     {
+        #region Propiedades
+
         public string Username { get; set; }  // actor: quien ejecuta
         public string TargetUsername { get; set; }  // sujeto: sobre quien se ejecuta (nullable)
         public DateTime FechaHora { get; set; }
         public Modulo Modulo { get; set; }
         public Evento Evento { get; set; }
         public Criticidad Criticidad { get; set; }
+
+        #endregion
+
+        #region Constructor
 
         public BitacoraEvento_08YS(string username, DateTime fechaHora, Modulo modulo, Evento evento, Criticidad criticidad, string targetUsername = null)
         {
@@ -89,10 +104,14 @@ namespace Service_08YS.Entities.Bitacora
         }
 
         public BitacoraEvento_08YS() { }
+
+        #endregion
     }
 
     public class BitacoraFiltro_08YS
     {
+        #region Propiedades
+
         public string Username { get; set; } = null;
 
         public DateTime? FechaDesde { get; set; }
@@ -106,5 +125,7 @@ namespace Service_08YS.Entities.Bitacora
         public Criticidad? Criticidad { get; set; }
 
         public string TargetUsername { get; set; } = null;
+
+        #endregion
     }
 }

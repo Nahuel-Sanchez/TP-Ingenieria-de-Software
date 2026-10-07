@@ -16,6 +16,8 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormTiposHabitacion_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -23,6 +25,10 @@ namespace GUI_08YS.Recepcionista
             };
 
         private readonly TipoHabitacionBLL_68SA _tipoBLL = BLLFactory_08YS.CreateTipoHabitacionBLL();
+
+        #endregion
+
+        #region Constructor
 
         public FormTiposHabitacion_68SA()
         {
@@ -42,6 +48,10 @@ namespace GUI_08YS.Recepcionista
             // Igual que FormReservas_68SA: la primera carga va en Shown, con el handle creado, para que los íconos de la grilla se pinten
             Shown += (s, e) => CargarLista();
         }
+
+        #endregion
+
+        #region Idioma
 
         // ---------- Idioma ----------
 
@@ -83,6 +93,41 @@ namespace GUI_08YS.Recepcionista
             PonerEncabezado("TarifaNoche", t.GetTexto("Tipos_colTarifa"));
             PonerEncabezado("CantidadHabitaciones", t.GetTexto("Tipos_colHabitaciones"));
         }
+
+        #endregion
+
+        #region Carga de datos
+
+        // ---------- Carga ----------
+
+        private void CargarLista()
+        {
+            if (!TryConstruirFiltro(out var filtro)) return;
+
+            dgvTipos.DataSource = null;
+            dgvTipos.DataSource = _tipoBLL.GetAll(filtro);
+            AplicarColumnas();
+        }
+
+        #endregion
+
+        #region Eventos de controles
+
+        // ---------- Acciones ----------
+
+        private void DgvTipos_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (!(dgvTipos.Rows[e.RowIndex].DataBoundItem is TipoHabitacion_68SA tipo)) return;
+
+            string columna = dgvTipos.Columns[e.ColumnIndex].Name;
+            if (columna == "colEditar") AbrirEdicion(tipo);
+            else if (columna == "colEliminar") EliminarTipo(tipo);
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
 
         private void PonerEncabezado(string columna, string texto)
         {
@@ -153,17 +198,6 @@ namespace GUI_08YS.Recepcionista
             return true;
         }
 
-        // ---------- Carga ----------
-
-        private void CargarLista()
-        {
-            if (!TryConstruirFiltro(out var filtro)) return;
-
-            dgvTipos.DataSource = null;
-            dgvTipos.DataSource = _tipoBLL.GetAll(filtro);
-            AplicarColumnas();
-        }
-
         private void AplicarColumnas()
         {
             if (dgvTipos.Columns["Id"] != null) dgvTipos.Columns["Id"].Visible = false;
@@ -207,18 +241,6 @@ namespace GUI_08YS.Recepcionista
                 dgvTipos.Columns[columna].FillWeight = peso;
         }
 
-        // ---------- Acciones ----------
-
-        private void DgvTipos_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (!(dgvTipos.Rows[e.RowIndex].DataBoundItem is TipoHabitacion_68SA tipo)) return;
-
-            string columna = dgvTipos.Columns[e.ColumnIndex].Name;
-            if (columna == "colEditar") AbrirEdicion(tipo);
-            else if (columna == "colEliminar") EliminarTipo(tipo);
-        }
-
         private void AbrirEdicion(TipoHabitacion_68SA tipo)
         {
             using (var popup = new FormEditarTipoHabitacion_68SA(tipo))
@@ -260,5 +282,7 @@ namespace GUI_08YS.Recepcionista
 
             CargarLista();
         }
+
+        #endregion
     }
 }

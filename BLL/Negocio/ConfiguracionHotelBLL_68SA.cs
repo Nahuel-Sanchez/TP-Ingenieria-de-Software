@@ -13,8 +13,14 @@ namespace BLL_08YS.Negocio
 {
     public class ConfiguracionHotelBLL_68SA
     {
+        #region Campos
+
         private readonly IConfiguracionHotelRepository_68SA _repo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
+        #endregion
+
+        #region Constructor
 
         public ConfiguracionHotelBLL_68SA(IConfiguracionHotelRepository_68SA repo, BitacoraBLL_08YS bitacoraBll)
         {
@@ -22,7 +28,15 @@ namespace BLL_08YS.Negocio
             _bitacoraBll = bitacoraBll;
         }
 
+        #endregion
+
+        #region Consultas
+
         public ConfiguracionHotel_68SA GetConfiguracion() => _repo.GetConfiguracion();
+
+        #endregion
+
+        #region Operaciones
 
         public void Actualizar(ConfiguracionHotel_68SA configuracion)
         {
@@ -45,5 +59,7 @@ namespace BLL_08YS.Negocio
             DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.ConfiguracionHotelActualizada);
         }
+
+        #endregion
     }
 }

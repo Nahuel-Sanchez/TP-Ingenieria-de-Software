@@ -10,10 +10,16 @@ namespace BLL_08YS.Negocio
 {
     public class TipoHabitacionBLL_68SA
     {
+        #region Campos
+
         private const decimal TarifaMaxima = 99999999.99m; // decimal(10,2)
 
         private readonly ITipoHabitacionRepository_68SA _tipoRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
+
+        #endregion
+
+        #region Constructor
 
         public TipoHabitacionBLL_68SA(ITipoHabitacionRepository_68SA tipoRepo, BitacoraBLL_08YS bitacoraBll)
         {
@@ -21,12 +27,20 @@ namespace BLL_08YS.Negocio
             _bitacoraBll = bitacoraBll;
         }
 
+        #endregion
+
+        #region Consultas
+
         public List<TipoHabitacion_68SA> GetAll() => _tipoRepo.GetAll();
 
         public List<TipoHabitacion_68SA> GetAll(TipoHabitacionFiltro_68SA filtro) =>
             _tipoRepo.GetAll(filtro ?? new TipoHabitacionFiltro_68SA());
 
         public TipoHabitacion_68SA GetById(int tipoHabitacionId) => _tipoRepo.GetById(tipoHabitacionId);
+
+        #endregion
+
+        #region Operaciones
 
         public int Crear(TipoHabitacion_68SA tipo)
         {
@@ -71,6 +85,10 @@ namespace BLL_08YS.Negocio
             _bitacoraBll.RegistrarEvento(Evento.TipoHabitacionEliminado, targetUsername: tipoHabitacionId.ToString());
         }
 
+        #endregion
+
+        #region Validaciones
+
         private static void Validar(TipoHabitacion_68SA tipo)
         {
             if (tipo == null) throw new ArgumentNullException(nameof(tipo));
@@ -94,5 +112,7 @@ namespace BLL_08YS.Negocio
             if (tipo.TarifaNoche > TarifaMaxima)
                 throw new DatosInvalidosException_68SA("La tarifa por noche supera el máximo permitido.");
         }
+
+        #endregion
     }
 }

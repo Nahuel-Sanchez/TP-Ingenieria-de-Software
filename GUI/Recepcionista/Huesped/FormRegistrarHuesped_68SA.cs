@@ -11,8 +11,14 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormRegistrarHuesped_68SA : Form
     {
+        #region Campos
+
         private readonly HuespedBLL_68SA _huespedBLL = BLLFactory_08YS.CreateHuespedBLL();
         private readonly Huesped_68SA _huespedAEditar; // NUEVO: null = alta
+
+        #endregion
+
+        #region Propiedades
 
         /// <summary>
         /// Huésped que quedó dado de alta (o el ya existente, si el documento cargado
@@ -20,6 +26,10 @@ namespace GUI_08YS.Recepcionista
         /// En modo edición, es el huésped ya modificado.
         /// </summary>
         public Huesped_68SA HuespedCreado { get; private set; }
+
+        #endregion
+
+        #region Constructor
 
         /// <param name="documentoPrellenado">
         /// DNI que ya se tipeó en el form que abre este diálogo (por ej. FormCheckIn_68SA
@@ -49,6 +59,37 @@ namespace GUI_08YS.Recepcionista
                 CargarParaEdicion(huespedAEditar);
         }
 
+        #endregion
+
+        #region Idioma
+
+        private void TraducirPlaceholders()
+        {
+            var t = TraductorManager_08YS.Instance;
+            txtNombre.PlaceholderText = t.GetTexto("RegistrarHuesped_phNombre");
+            txtApellido.PlaceholderText = t.GetTexto("RegistrarHuesped_phApellido");
+            txtDocumento.PlaceholderText = t.GetTexto("RegistrarHuesped_lblNroDocumento");
+            txtNacionalidad.PlaceholderText = t.GetTexto("RegistrarHuesped_lblNacionalidad");
+            txtTelefono.PlaceholderText = t.GetTexto("RegistrarHuesped_phTelefono");
+            txtEmail.PlaceholderText = t.GetTexto("RegistrarHuesped_phEmail");
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
+        }
+
+        #endregion
+
+        #region Carga de datos
+
         private void CargarParaEdicion(Huesped_68SA huesped)
         {
             var t = TraductorManager_08YS.Instance;
@@ -65,6 +106,10 @@ namespace GUI_08YS.Recepcionista
             txtTelefono.Text = huesped.Telefono ?? string.Empty;
             txtEmail.Text = huesped.Email ?? string.Empty;
         }
+
+        #endregion
+
+        #region Eventos de controles
 
         private void BtnRegistrar_Click(object sender, EventArgs e)
         {
@@ -148,6 +193,10 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
         private bool ValidarCampos()
         {
             string tituloError = TraductorManager_08YS.Instance.GetTexto("Comun_msgDatosIncompletos");
@@ -201,27 +250,6 @@ namespace GUI_08YS.Recepcionista
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
 
-        private void TraducirPlaceholders()
-        {
-            var t = TraductorManager_08YS.Instance;
-            txtNombre.PlaceholderText = t.GetTexto("RegistrarHuesped_phNombre");
-            txtApellido.PlaceholderText = t.GetTexto("RegistrarHuesped_phApellido");
-            txtDocumento.PlaceholderText = t.GetTexto("RegistrarHuesped_lblNroDocumento");
-            txtNacionalidad.PlaceholderText = t.GetTexto("RegistrarHuesped_lblNacionalidad");
-            txtTelefono.PlaceholderText = t.GetTexto("RegistrarHuesped_phTelefono");
-            txtEmail.PlaceholderText = t.GetTexto("RegistrarHuesped_phEmail");
-        }
-
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
-
-                if (c.HasChildren)
-                    TraducirControles(c);
-            }
-        }
+        #endregion
     }
 }

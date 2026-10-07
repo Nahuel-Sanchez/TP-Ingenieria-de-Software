@@ -14,6 +14,8 @@ namespace GUI_08YS.Recepcionista
 {
     public partial class FormCheckOut_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -27,9 +29,14 @@ namespace GUI_08YS.Recepcionista
 
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
         private readonly PagoBLL_68SA _pagoBLL = BLLFactory_08YS.CreatePagoBLL();
+        private readonly CuentaEstadiaBLL_68SA _cuentaBLL = BLLFactory_08YS.CreateCuentaEstadiaBLL();
 
         private Reserva_68SA _reserva;
         private decimal _saldoPendiente;
+
+        #endregion
+
+        #region Constructor
 
         // Caso 1: sin reserva conocida
         public FormCheckOut_68SA(Action<Form> openChildForm, ModoHabitaciones modoOrigen,
@@ -48,6 +55,13 @@ namespace GUI_08YS.Recepcionista
             _fechaEgresoOrigen = fechaEgresoOrigen;
 
             InitializeComponent();
+            // El detalle de la cuenta se abre solo si se pide
+            lnkDetalleCuenta.LinkClicked += (s, e) =>
+            {
+                if (_reserva == null) return;
+                using (var detalle = new FormDetalleEstadia_68SA(_reserva.Id))
+                    detalle.ShowDialog(this);
+            };
 
             PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
 
@@ -69,17 +83,37 @@ namespace GUI_08YS.Recepcionista
                 flpContenido.Controls.Add(pnlAccionBuscar);
         }
 
-        private void BtnBuscarReserva_Click(object sender, EventArgs e)
+        #endregion
+
+        #region Idioma
+
+        public void UpdateIdioma()
         {
-            using (var popup = new FormBuscarReserva_68SA(EstadoReserva.EnCurso, TraductorManager_08YS.Instance.GetTexto("CheckOut_tituloBuscarReserva"), IconChar.DoorClosed))
+            // Los paneles de reserva/cuenta se agregan a flpContenido recién al buscar: se traducen siempre
+            TraducirControles(this);
+            TraducirControles(pnlAccionBuscar);
+            TraducirControles(pnlReserva);
+            TraducirControles(pnlCuenta);
+            OpcionEnum_68SA.Cargar(cmbMetodoPagoFinal, typeof(MetodoPago));
+            if (_reserva != null)
+                lblResComposicion.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_txtAdultosNinos"), _reserva.CantidadAdultos, _reserva.CantidadNinos);
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
             {
-                if (popup.ShowDialog(this) == DialogResult.OK)
-                {
-                    flpContenido.Controls.Remove(pnlAccionBuscar);
-                    CargarReserva(popup.ReservaSeleccionada);
-                }
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
             }
         }
+
+        #endregion
+
+        #region Carga de datos
 
         private void CargarReserva(Reserva_68SA reserva)
         {
@@ -96,11 +130,17 @@ namespace GUI_08YS.Recepcionista
             if (!flpContenido.Controls.Contains(pnlReserva))
                 flpContenido.Controls.Add(pnlReserva);
 
-            decimal totalPagado = _pagoBLL.GetTotalPagado(reserva.Id);
-            _saldoPendiente = Math.Max(0, reserva.MontoTotal - totalPagado);
+            // PN2: el saldo incluye los cargos adicionales (upgrades y servicio a la habitación)
+            var cuenta = _cuentaBLL.GetEstadoCuenta(reserva.Id);
+            _saldoPendiente = cuenta.Saldo;
 
-            lblMontoTotal.Text = $"${reserva.MontoTotal:N2}";
-            lblTotalPagado.Text = $"${totalPagado:N2}";
+            lblMontoTotal.Text = $"${cuenta.AlojamientoReservado:N2}";
+            lblRenovacion.Text = $"${cuenta.Renovacion:N2}";
+            lblRenovacion.ForeColor = cuenta.Renovacion > 0 ? System.Drawing.Color.Goldenrod : System.Drawing.Color.WhiteSmoke;
+            lblCargos.Text = $"${cuenta.TotalCargos:N2}";
+            MostrarAvisoCargos(cuenta);
+            lblTotalEstadia.Text = $"${cuenta.Total:N2}";
+            lblTotalPagado.Text = $"${cuenta.TotalPagado:N2}";
             lblSaldo.Text = $"${_saldoPendiente:N2}";
             lblSaldo.ForeColor = _saldoPendiente > 0
                 ? System.Drawing.Color.FromArgb(235, 90, 90)
@@ -124,13 +164,13 @@ namespace GUI_08YS.Recepcionista
                 nudMontoRecibidoFinal.Value = _saldoPendiente;
                 ActualizarVueltoFinal();
                 ActualizarVisibilidadVueltoFinal();
-                pnlCuenta.Height = 330;
+                pnlCuenta.Height = 414;
             }
             else
             {
                 lblEtiquetaVueltoFinal.Visible = false;
                 lblVueltoFinal.Visible = false;
-                pnlCuenta.Height = 150;
+                pnlCuenta.Height = 234;
             }
 
             if (!flpContenido.Controls.Contains(pnlCuenta))
@@ -141,6 +181,29 @@ namespace GUI_08YS.Recepcionista
         {
             decimal vuelto = nudMontoRecibidoFinal.Value - _saldoPendiente;
             lblVueltoFinal.Text = $"${Math.Max(0, vuelto):N2}";
+        }
+
+        private void ActualizarVisibilidadVueltoFinal()
+        {
+            bool esEfectivo = OpcionEnum_68SA.Seleccionado<MetodoPago>(cmbMetodoPagoFinal) == MetodoPago.Efectivo;
+            lblEtiquetaVueltoFinal.Visible = esEfectivo;
+            lblVueltoFinal.Visible = esEfectivo;
+        }
+
+        #endregion
+
+        #region Eventos de controles
+
+        private void BtnBuscarReserva_Click(object sender, EventArgs e)
+        {
+            using (var popup = new FormBuscarReserva_68SA(EstadoReserva.EnCurso, TraductorManager_08YS.Instance.GetTexto("CheckOut_tituloBuscarReserva"), IconChar.DoorClosed))
+            {
+                if (popup.ShowDialog(this) == DialogResult.OK)
+                {
+                    flpContenido.Controls.Remove(pnlAccionBuscar);
+                    CargarReserva(popup.ReservaSeleccionada);
+                }
+            }
         }
 
         private void BtnConfirmar_Click(object sender, EventArgs e)
@@ -182,42 +245,34 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        #endregion
+
+        #region Métodos auxiliares
+
+        /// <summary>
+        /// Al lado del total de cargos solo se avisa lo importante (pedidos de room service sin entregar);
+        /// el detalle completo de la cuenta se ve con "Ver detalle de la cuenta".
+        /// </summary>
+        private void MostrarAvisoCargos(EstadoCuentaReserva_68SA cuenta)
+        {
+            int pendientes = cuenta.Cargos.Count == 0 ? 0
+                : BLLFactory_08YS.CreateRoomServiceBLL().GetPorReserva(cuenta.ReservaId)
+                    .Count(p => p.Estado == EstadoPedidoRoomService.Pendiente);
+
+            lblDetalleCargos.Text = pendientes > 0
+                ? string.Format(TraductorManager_08YS.Instance.GetTexto("CheckOut_txtPedidosPendientes"), pendientes)
+                : string.Empty;
+            lblDetalleCargos.ForeColor = System.Drawing.Color.FromArgb(240, 180, 60);
+        }
+
         private void Volver()
         {
             _openChildForm(new FormControlHabitaciones_68SA(_openChildForm, _modoOrigen, _fechaIngresoOrigen, _fechaEgresoOrigen));
         }
 
-        private void ActualizarVisibilidadVueltoFinal()
-        {
-            bool esEfectivo = OpcionEnum_68SA.Seleccionado<MetodoPago>(cmbMetodoPagoFinal) == MetodoPago.Efectivo;
-            lblEtiquetaVueltoFinal.Visible = esEfectivo;
-            lblVueltoFinal.Visible = esEfectivo;
-        }
+        #endregion
 
-        public void UpdateIdioma()
-        {
-            // Los paneles de reserva/cuenta se agregan a flpContenido recién al buscar: se traducen siempre
-            TraducirControles(this);
-            TraducirControles(pnlAccionBuscar);
-            TraducirControles(pnlReserva);
-            TraducirControles(pnlCuenta);
-            OpcionEnum_68SA.Cargar(cmbMetodoPagoFinal, typeof(MetodoPago));
-            if (_reserva != null)
-                lblResComposicion.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("Comun_txtAdultosNinos"), _reserva.CantidadAdultos, _reserva.CantidadNinos);
-        }
-
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
-
-                if (c.HasChildren)
-                    TraducirControles(c);
-            }
-        }
-    
+        #region Sobrescrituras
 
         // Pinta el formulario completo en memoria y lo vuelca de una vez: sin parpadeo ni franjas
         // blancas mientras los controles se acomodan al abrir o redimensionar la ventana.
@@ -230,5 +285,7 @@ namespace GUI_08YS.Recepcionista
                 return cp;
             }
         }
+
+        #endregion
     }
 }

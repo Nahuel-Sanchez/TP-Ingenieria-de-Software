@@ -11,10 +11,16 @@ namespace GUI_08YS
 {
     public class MenuRenderer : ToolStripProfessionalRenderer
     {
+        #region Campos
+
         //Campos
         private Color primaryColor;
         private Color textColor;
         private int arrowThickness;
+
+        #endregion
+
+        #region Constructor
 
         //Constructor
         public MenuRenderer(bool isMainMenu, Color primaryColor, Color textColor)
@@ -38,6 +44,10 @@ namespace GUI_08YS
                     this.textColor = textColor;
             }
         }
+
+        #endregion
+
+        #region Sobrescrituras
 
         //Overrides
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
@@ -65,5 +75,6 @@ namespace GUI_08YS
             }
         }
 
+        #endregion
     }
 }

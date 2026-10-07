@@ -25,6 +25,7 @@ namespace GUI_08YS.Recepcionista
         CheckInDirecto,
         CheckIn,
         VerReserva,
+        VerEstadia,
         CheckOut,
         Servicio,
         CambioHabitacion,
@@ -35,24 +36,56 @@ namespace GUI_08YS.Recepcionista
 
     public partial class FormControlHabitaciones_68SA : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private readonly Action<Form> _openChildForm;
         private readonly ModoHabitaciones _modo;
         private readonly DateTime? _fechaIngreso;
         private readonly DateTime? _fechaEgreso;
+        // Nueva reserva: huéspedes elegidos en el paso anterior (0 = sin indicar)
+        private readonly int _adultos, _ninos;
 
         private readonly HabitacionBLL_68SA _habitacionBLL = BLLFactory_08YS.CreateHabitacionBLL();
         private readonly TipoHabitacionBLL_68SA _tipoBLL = BLLFactory_08YS.CreateTipoHabitacionBLL();
+        private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
+        private readonly List<TileEstadoHabitacion_68SA> _tiles = new List<TileEstadoHabitacion_68SA>();
 
         private int? _filtroTipoId;
         private EstadoHabitacion? _filtroEstado;
+        private bool _armando; // evita recargar mientras se arman los filtros
+
+        private FontAwesome.Sharp.IconButton _btnCambiarFechas;
+
+        // Acción del popup -> permiso requerido. Las acciones que no figuran acá no requieren un permiso propio.
+        private static readonly Dictionary<AccionHabitacion, Permisos> _mapaPermisosAcciones =
+            new Dictionary<AccionHabitacion, Permisos>
+            {
+                { AccionHabitacion.Reservar,             Permisos.RegistrarReserva        },
+                { AccionHabitacion.CheckInDirecto,       Permisos.RegistrarCheckIn        },
+                { AccionHabitacion.CheckIn,              Permisos.RegistrarCheckIn        },
+                { AccionHabitacion.CheckOut,             Permisos.RegistrarCheckOut       },
+                { AccionHabitacion.Renovar,              Permisos.ExtenderEstadia         },
+                { AccionHabitacion.Servicio,             Permisos.RegistrarRoomService    },
+                { AccionHabitacion.VerEstadia,           Permisos.VerReservas             },
+                { AccionHabitacion.MarcarDisponible,     Permisos.CambiarEstadoHabitacion },
+                { AccionHabitacion.PonerEnMantenimiento, Permisos.CambiarEstadoHabitacion },
+            };
+
+        #endregion
+
+        #region Constructor
 
         public FormControlHabitaciones_68SA(Action<Form> openChildForm, ModoHabitaciones modo,
-                                             DateTime? fechaIngreso = null, DateTime? fechaEgreso = null)
+                                             DateTime? fechaIngreso = null, DateTime? fechaEgreso = null,
+                                             int? tipoInicial = null, int adultos = 0, int ninos = 0)
         {
             _openChildForm = openChildForm;
             _modo = modo;
             _fechaIngreso = fechaIngreso;
             _fechaEgreso = fechaEgreso;
+            _adultos = Math.Max(0, adultos);
+            _ninos = Math.Max(0, ninos);
+            if (modo == ModoHabitaciones.Reserva) _filtroTipoId = tipoInicial;
 
             InitializeComponent();
 
@@ -60,74 +93,113 @@ namespace GUI_08YS.Recepcionista
             // y las tarjetas de cada piso pasan a la fila siguiente cuando no entran a lo ancho.
             flpHabitaciones.WrapContents = false;
             LayoutAdaptable_68SA.OcultarScrollHorizontal(flpHabitaciones);
+            LayoutAdaptable_68SA.HabilitarDobleBuffer(flpHabitaciones);
             flpHabitaciones.Layout += (s, e) => AjustarAnchoPisos();
 
-            Text = _modo == ModoHabitaciones.Reserva
-                ? $"{TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloReserva")} — {string.Format(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_txtRangoFechas"), fechaIngreso, fechaEgreso)}"
-                : TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloGestion");
+            // En modo reserva solo se listan las disponibles para el rango: los indicadores por estado no aplican
+            flpResumen.Visible = _modo == ModoHabitaciones.Gestion;
+            btnActualizar.Click += (s, e) => CargarHabitaciones();
+            if (_modo == ModoHabitaciones.Reserva) CrearBotonCambiarFechas();
 
-            pnlFilaEstado.Visible = _modo == ModoHabitaciones.Gestion;
-
+            AplicarTextos();
             CargarChipsTipo();
             if (_modo == ModoHabitaciones.Gestion)
-                CargarChipsEstado();
+                CrearIndicadores();
 
             CargarHabitaciones();
         }
 
-        #region filtros chip/radio buttons
+        #endregion
+
+        #region filtros: indicadores por estado y chips por tipo
+
+        /// <summary>Un indicador por estado con su cantidad; al hacer clic filtra por ese estado.</summary>
+        private void CrearIndicadores()
+        {
+            flpResumen.SuspendLayout();
+            foreach (var tile in _tiles) tile.Dispose();
+            flpResumen.Controls.Clear();
+            _tiles.Clear();
+
+            AgregarIndicador(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tileTodas"), null, Color.Goldenrod);
+            foreach (EstadoHabitacion estado in Enum.GetValues(typeof(EstadoHabitacion)))
+                AgregarIndicador(TextoEstado(estado), estado, EstiloEstadoHabitacion_68SA.Get(estado).Acento);
+
+            foreach (var tile in _tiles)
+                tile.Activo = Equals(tile.Valor, _filtroEstado);
+            flpResumen.ResumeLayout(true);
+        }
+
+        private void AgregarIndicador(string titulo, EstadoHabitacion? estado, Color acento)
+        {
+            var tile = new TileEstadoHabitacion_68SA { Titulo = titulo, Valor = estado, Acento = acento };
+            tile.Seleccionado += (s, e) =>
+            {
+                _filtroEstado = estado;
+                foreach (var otro in _tiles) otro.Activo = ReferenceEquals(otro, tile);
+                CargarHabitaciones();
+            };
+            _tiles.Add(tile);
+            flpResumen.Controls.Add(tile);
+        }
+
+        private void ActualizarIndicadores(List<Habitacion_68SA> habitaciones)
+        {
+            foreach (var tile in _tiles)
+                tile.Cantidad = tile.Valor is EstadoHabitacion estado
+                    ? habitaciones.Count(h => h.EstadoVisual == estado)
+                    : habitaciones.Count;
+        }
 
         private void CargarChipsTipo()
         {
-            flpChipsTipo.Controls.Clear();
-
-            var chipTodos = CrearChip(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_chipTodos"), null, () => _filtroTipoId = null);
-            chipTodos.Checked = true;
-            flpChipsTipo.Controls.Add(chipTodos);
-
-            foreach (var tipo in _tipoBLL.GetAll())
+            _armando = true;
+            try
             {
-                int id = tipo.Id;
-                flpChipsTipo.Controls.Add(CrearChip(tipo.Nombre, id, () => _filtroTipoId = id));
+                flpChipsTipo.Controls.Clear();
+
+                var chipTodos = CrearChip(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_chipTodos"), () => _filtroTipoId = null);
+                chipTodos.Checked = !_filtroTipoId.HasValue;
+                flpChipsTipo.Controls.Add(chipTodos);
+
+                foreach (var tipo in _tipoBLL.GetAll())
+                {
+                    int id = tipo.Id;
+                    var chip = CrearChip(tipo.Nombre, () => _filtroTipoId = id);
+                    chip.Checked = _filtroTipoId == id;
+                    flpChipsTipo.Controls.Add(chip);
+                }
+            }
+            finally
+            {
+                _armando = false;
             }
         }
 
-        private void CargarChipsEstado()
-        {
-            flpChipsEstado.Controls.Clear();
-
-            var chipTodos = CrearChip(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_chipTodos"), null, () => _filtroEstado = null);
-            chipTodos.Checked = true;
-            flpChipsEstado.Controls.Add(chipTodos);
-
-            foreach (EstadoHabitacion estado in Enum.GetValues(typeof(EstadoHabitacion)))
-            {
-                var valor = estado;
-                flpChipsEstado.Controls.Add(CrearChip(TextoEstado(valor), valor, () => _filtroEstado = valor));
-            }
-        }
-
-        private RadioButton CrearChip(string texto, object valor, Action alSeleccionar)
+        private RadioButton CrearChip(string texto, Action alSeleccionar)
         {
             var chip = new RadioButton
             {
                 Appearance = Appearance.Button,
                 AutoSize = true,
                 Text = texto,
-                // Tag = valor,  <-- eliminado, no se usaba
-                Padding = new Padding(10, 4, 10, 4),
-                Margin = new Padding(4, 6, 4, 6),
+                Padding = new Padding(12, 4, 12, 4),
+                Margin = new Padding(0, 9, 8, 6),
                 FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(15, 25, 55),
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Cursor = Cursors.Hand,
+                BackColor = Color.FromArgb(12, 22, 56),
                 ForeColor = Color.FromArgb(200, 200, 210)
             };
-            chip.FlatAppearance.BorderColor = Color.FromArgb(60, 75, 110);
+            chip.FlatAppearance.BorderColor = Color.FromArgb(45, 60, 100);
+            chip.FlatAppearance.CheckedBackColor = Color.Goldenrod;
+            chip.FlatAppearance.MouseOverBackColor = Color.FromArgb(18, 32, 76);
             chip.CheckedChanged += (s, e) =>
             {
-                chip.BackColor = chip.Checked ? Color.Goldenrod : Color.FromArgb(15, 25, 55);
+                chip.BackColor = chip.Checked ? Color.Goldenrod : Color.FromArgb(12, 22, 56);
                 chip.ForeColor = chip.Checked ? Color.FromArgb(10, 15, 35) : Color.FromArgb(200, 200, 210);
 
-                if (!chip.Checked) return;
+                if (!chip.Checked || _armando) return;
                 alSeleccionar();
                 CargarHabitaciones();
             };
@@ -139,24 +211,39 @@ namespace GUI_08YS.Recepcionista
 
         private void CargarHabitaciones()
         {
+            List<Habitacion_68SA> habitaciones = _modo == ModoHabitaciones.Gestion
+                ? _habitacionBLL.GetAll(_filtroTipoId)
+                : _habitacionBLL.GetDisponibles(_fechaIngreso.Value, _fechaEgreso.Value, _filtroTipoId,
+                                                 _adultos + _ninos > 0 ? _adultos + _ninos : (int?)null);
+
+            Dictionary<int, Reserva_68SA> ocupacion = new Dictionary<int, Reserva_68SA>();
+            if (_modo == ModoHabitaciones.Gestion)
+            {
+                ActualizarIndicadores(habitaciones);
+                if (_filtroEstado.HasValue)
+                    habitaciones = habitaciones.Where(h => h.EstadoVisual == _filtroEstado.Value).ToList();
+                ocupacion = ReservasDeHoy();
+            }
+
             flpHabitaciones.SuspendLayout();
+            foreach (Control anterior in flpHabitaciones.Controls.Cast<Control>().ToList())
+                anterior.Dispose();
             flpHabitaciones.Controls.Clear();
 
-            List<Habitacion_68SA> habitaciones = _modo == ModoHabitaciones.Gestion
-                ? _habitacionBLL.GetAll(_filtroTipoId, _filtroEstado)
-                : _habitacionBLL.GetDisponibles(_fechaIngreso.Value, _fechaEgreso.Value, _filtroTipoId);
+            if (habitaciones.Count == 0)
+                flpHabitaciones.Controls.Add(new Label
+                {
+                    AutoSize = true,
+                    Text = TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_txtSinHabitaciones"),
+                    ForeColor = Color.FromArgb(160, 165, 180),
+                    Font = new Font("Segoe UI", 10.5F),
+                    Margin = new Padding(4, 24, 4, 4)
+                });
 
             foreach (var grupoPiso in habitaciones.GroupBy(h => h.Piso.Numero).OrderBy(g => g.Key))
             {
-                var lblPiso = new Label
-                {
-                    Text = $"{TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_piso")} {grupoPiso.Key}",
-                    ForeColor = Color.FromArgb(160, 165, 180),
-                    Font = new Font(Font, FontStyle.Bold),
-                    AutoSize = true,
-                    Margin = new Padding(4, 16, 4, 4)
-                };
-                flpHabitaciones.Controls.Add(lblPiso);
+                var piso = grupoPiso.First().Piso;
+                flpHabitaciones.Controls.Add(CrearEncabezadoPiso(piso, grupoPiso.Count()));
 
                 var flpCardsPiso = new FlowLayoutPanel
                 {
@@ -164,14 +251,15 @@ namespace GUI_08YS.Recepcionista
                     WrapContents = true,
                     AutoSize = true,
                     AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    Margin = new Padding(0),
+                    Margin = new Padding(0, 0, 0, 6),
                     Tag = MarcaFilaPiso
                 };
 
                 foreach (var habitacion in grupoPiso.OrderBy(h => h.NroHabitacion))
                 {
-                    var card = new UC_HabitacionCard_68SA { Margin = new Padding(6) };
-                    card.Cargar(habitacion, forzarDisponible: _modo == ModoHabitaciones.Reserva);
+                    var card = new UC_HabitacionCard_68SA();
+                    ocupacion.TryGetValue(habitacion.Id, out var reservaActual);
+                    card.Cargar(habitacion, forzarDisponible: _modo == ModoHabitaciones.Reserva, reservaActual: reservaActual);
                     card.HabitacionSeleccionada += Card_HabitacionSeleccionada;
                     flpCardsPiso.Controls.Add(card);
                 }
@@ -183,7 +271,58 @@ namespace GUI_08YS.Recepcionista
             flpHabitaciones.ResumeLayout(true);
         }
 
-        private const string MarcaFilaPiso = "filaPiso";
+        /// <summary>Título de cada piso: "PISO 2 · Segundo piso" y la cantidad de habitaciones, con una línea debajo.</summary>
+        private Control CrearEncabezadoPiso(Piso_68SA piso, int cantidad)
+        {
+            var t = TraductorManager_08YS.Instance;
+            var encabezado = new Panel { Height = 40, Margin = new Padding(0, 14, 0, 4), Tag = MarcaFilaPiso, BackColor = flpHabitaciones.BackColor };
+
+            string nombre = string.IsNullOrWhiteSpace(piso.Nombre) ? "" : "  ·  " + piso.Nombre;
+            encabezado.Controls.Add(new Label
+            {
+                Dock = DockStyle.Fill,
+                Text = $"{t.GetTexto("ControlHabitaciones_piso")} {piso.Numero}{nombre}",
+                ForeColor = Color.WhiteSmoke,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleLeft,
+                Padding = new Padding(2, 0, 0, 0)
+            });
+            encabezado.Controls.Add(new Label
+            {
+                Dock = DockStyle.Right,
+                Width = 220,
+                Text = string.Format(t.GetTexto("ControlHabitaciones_txtCantidadPiso"), cantidad),
+                ForeColor = Color.FromArgb(160, 165, 180),
+                Font = new Font("Segoe UI", 9F),
+                TextAlign = ContentAlignment.MiddleRight
+            });
+            encabezado.Controls.Add(new Panel { Dock = DockStyle.Bottom, Height = 1, BackColor = Color.FromArgb(45, 60, 100) });
+            return encabezado;
+        }
+
+        /// <summary>
+        /// Quién está en cada habitación hoy (para mostrarlo en la tarjeta): la estadía en curso o, si todavía no
+        /// llegó, la reserva confirmada que ingresa hoy. Si falla la consulta, las tarjetas se muestran igual.
+        /// </summary>
+        private Dictionary<int, Reserva_68SA> ReservasDeHoy()
+        {
+            try
+            {
+                DateTime hoy = DateTime.Today;
+                return _reservaBLL.GetEnRangoVisible(hoy.AddDays(-1), hoy.AddDays(1))
+                    .Where(r => r.Estado == EstadoReserva.EnCurso
+                             || (r.Estado == EstadoReserva.Confirmada && r.FechaIngreso.Date <= hoy && r.FechaEgreso.Date > hoy))
+                    .GroupBy(r => r.Habitacion.Id)
+                    .ToDictionary(g => g.Key, g => g.OrderBy(r => r.Estado == EstadoReserva.EnCurso ? 0 : 1).First());
+            }
+            catch (Exception)
+            {
+                return new Dictionary<int, Reserva_68SA>();
+            }
+        }
+
+        // Marca (no texto) para que TraducirControles no la tome como clave de traducción
+        private static readonly object MarcaFilaPiso = new object();
         private bool _ajustandoPisos;
 
         /// <summary>
@@ -199,7 +338,7 @@ namespace GUI_08YS.Recepcionista
                 int ancho = Math.Max(200, flpHabitaciones.ClientSize.Width - flpHabitaciones.Padding.Horizontal - 4);
                 foreach (Control fila in flpHabitaciones.Controls)
                 {
-                    if (!(fila.Tag is string marca) || marca != MarcaFilaPiso) continue;
+                    if (!ReferenceEquals(fila.Tag, MarcaFilaPiso)) continue;
                     var tamano = new Size(ancho, 0);
                     if (fila.MaximumSize != tamano) fila.MaximumSize = tamano;
                     if (fila.MinimumSize != tamano) fila.MinimumSize = tamano;
@@ -215,7 +354,7 @@ namespace GUI_08YS.Recepcionista
         {
             if (_modo == ModoHabitaciones.Reserva)
             {
-                _openChildForm(new FormRegistrarReserva_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
+                _openChildForm(new FormRegistrarReserva_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso, _adultos, _ninos));
                 return;
             }
 
@@ -224,18 +363,88 @@ namespace GUI_08YS.Recepcionista
 
         #endregion
 
-        // Acción del popup -> permiso requerido. Las acciones que no figuran acá no requieren un permiso propio.
-        private static readonly Dictionary<AccionHabitacion, Permisos> _mapaPermisosAcciones =
-            new Dictionary<AccionHabitacion, Permisos>
+        #region Idioma
+
+        private void AplicarTextos()
+        {
+            var t = TraductorManager_08YS.Instance;
+            if (_modo == ModoHabitaciones.Reserva)
             {
-                { AccionHabitacion.Reservar,             Permisos.RegistrarReserva        },
-                { AccionHabitacion.CheckInDirecto,       Permisos.RegistrarCheckIn        },
-                { AccionHabitacion.CheckIn,              Permisos.RegistrarCheckIn        },
-                { AccionHabitacion.CheckOut,             Permisos.RegistrarCheckOut       },
-                { AccionHabitacion.Renovar,              Permisos.ExtenderEstadia         },
-                { AccionHabitacion.MarcarDisponible,     Permisos.CambiarEstadoHabitacion },
-                { AccionHabitacion.PonerEnMantenimiento, Permisos.CambiarEstadoHabitacion },
+                lblTitulo.Text = t.GetTexto("ControlHabitaciones_tituloReserva");
+                int noches = (_fechaEgreso.Value.Date - _fechaIngreso.Value.Date).Days;
+                lblSubtitulo.Text = string.Format(t.GetTexto("ControlHabitaciones_txtRangoFechas"), _fechaIngreso, _fechaEgreso)
+                                    + "  ·  " + string.Format(t.GetTexto("ControlHabitaciones_txtNoches"), noches)
+                                    + (_adultos + _ninos > 0 ? "  ·  " + string.Format(t.GetTexto("ControlHabitaciones_txtHuespedes"), _adultos + _ninos) : string.Empty);
+                if (_btnCambiarFechas != null) _btnCambiarFechas.Text = " " + t.GetTexto("ControlHabitaciones_btnCambiarFechas");
+                Text = $"{lblTitulo.Text} — {lblSubtitulo.Text}";
+            }
+            else
+            {
+                lblTitulo.Text = t.GetTexto("ControlHabitaciones_tituloGestion");
+                string hoy = DateTime.Today.ToString(t.GetTexto("ControlHabitaciones_formatoHoy"), OpcionEnum_68SA.CulturaActual());
+                lblSubtitulo.Text = hoy.Length > 0 ? char.ToUpper(hoy[0]) + hoy.Substring(1) : hoy;
+                Text = lblTitulo.Text;
+            }
+        }
+
+        public void UpdateIdioma()
+        {
+            TraducirControles(this);
+            AplicarTextos();
+
+            // Los chips, los indicadores y las tarjetas se generan en runtime (no pasan por el mecanismo de Tag),
+            // así que hay que reconstruirlos para que reflejen el idioma nuevo (se conservan los filtros elegidos).
+            CargarChipsTipo();
+            if (_modo == ModoHabitaciones.Gestion)
+                CrearIndicadores();
+            CargarHabitaciones();
+        }
+
+        private void TraducirControles(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
+                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
+
+                if (c.HasChildren)
+                    TraducirControles(c);
+            }
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        /// <summary>Nueva reserva: vuelve al paso de fechas y huéspedes con lo que se había elegido.</summary>
+        private void CrearBotonCambiarFechas()
+        {
+            _btnCambiarFechas = new FontAwesome.Sharp.IconButton
+            {
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                BackColor = btnActualizar.BackColor,
+                Cursor = Cursors.Hand,
+                FlatStyle = FlatStyle.Flat,
+                Font = btnActualizar.Font,
+                ForeColor = btnActualizar.ForeColor,
+                IconChar = FontAwesome.Sharp.IconChar.CalendarDays,
+                IconColor = btnActualizar.IconColor,
+                IconFont = FontAwesome.Sharp.IconFont.Auto,
+                IconSize = 22,
+                ImageAlign = ContentAlignment.MiddleLeft,
+                Name = "btnCambiarFechas",
+                Padding = new Padding(12, 0, 0, 0),
+                Size = new Size(210, btnActualizar.Height),
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                UseVisualStyleBackColor = false
             };
+            _btnCambiarFechas.FlatAppearance.BorderColor = btnActualizar.FlatAppearance.BorderColor;
+            _btnCambiarFechas.Location = new Point(btnActualizar.Left - _btnCambiarFechas.Width - 12, btnActualizar.Top);
+            _btnCambiarFechas.Click += (s, e) => _openChildForm(new FormDisponibilidad(_openChildForm, _fechaIngreso, _fechaEgreso,
+                                                                                     _adultos, _ninos, _filtroTipoId));
+            btnActualizar.Parent.Controls.Add(_btnCambiarFechas);
+            _btnCambiarFechas.BringToFront();
+        }
 
         private void MostrarPopupAcciones(Habitacion_68SA habitacion)
         {
@@ -252,6 +461,7 @@ namespace GUI_08YS.Recepcionista
                     acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accVerReserva"), IconChar.Eye, AccionHabitacion.VerReserva));
                     break;
                 case EstadoHabitacion.Ocupada:
+                    acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accVerEstadia"), IconChar.Eye, AccionHabitacion.VerEstadia));
                     acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accCheckOut"), IconChar.CalendarTimes, AccionHabitacion.CheckOut));
                     acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accServicio"), IconChar.Bell, AccionHabitacion.Servicio));
                     acciones.Add((TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_accCambioHabitacion"), IconChar.Retweet, AccionHabitacion.CambioHabitacion));
@@ -270,6 +480,11 @@ namespace GUI_08YS.Recepcionista
             acciones.RemoveAll(a => _mapaPermisosAcciones.TryGetValue(a.Accion, out var permiso)
                                     && !SessionManager_08YS.Instance.HasPermission(permiso));
 
+            // El cambio de habitación sirve con cualquiera de sus dos permisos (upgrade o reubicación)
+            if (!SessionManager_08YS.Instance.HasPermission(Permisos.RegistrarUpgradeHabitacion)
+                && !SessionManager_08YS.Instance.HasPermission(Permisos.ReubicarHuesped))
+                acciones.RemoveAll(a => a.Accion == AccionHabitacion.CambioHabitacion);
+
             using (var popup = new FormAccionesHabitacion_68SA(habitacion, acciones))
             {
                 if (popup.ShowDialog(this) == DialogResult.OK && popup.AccionSeleccionada.HasValue)
@@ -287,7 +502,7 @@ namespace GUI_08YS.Recepcionista
                     break;
 
                 case AccionHabitacion.Reservar:
-                    _openChildForm(new FormRegistrarReserva_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso));
+                    _openChildForm(new FormRegistrarReserva_68SA(_openChildForm, habitacion, _modo, _fechaIngreso, _fechaEgreso, _adultos, _ninos));
                     break;
 
                 case AccionHabitacion.CheckIn:
@@ -330,14 +545,36 @@ namespace GUI_08YS.Recepcionista
                     _openChildForm(new FormCheckOut_68SA(_openChildForm, reservaEnCurso, _modo, _fechaIngreso, _fechaEgreso));
                     break;
 
-                case AccionHabitacion.PonerEnMantenimiento:
-                    if (habitacion.EstadoVisual == EstadoHabitacion.Reservada || habitacion.EstadoVisual == EstadoHabitacion.Ocupada)
+                case AccionHabitacion.VerEstadia:
+                    var reservaDetalle = ObtenerReservaEnCurso(habitacion);
+                    if (reservaDetalle == null) break;
+                    using (var popupDetalle = new FormDetalleEstadia_68SA(reservaDetalle.Id))
+                        popupDetalle.ShowDialog(this);
+                    break;
+
+                case AccionHabitacion.Servicio:
+                    var reservaServicio = ObtenerReservaEnCurso(habitacion);
+                    if (reservaServicio == null) break;
+                    using (var popupServicio = new FormPedidoRoomService_68SA(reservaServicio))
+                        popupServicio.ShowDialog(this);
+                    break;
+
+                case AccionHabitacion.CambioHabitacion:
+                    var reservaCambio = ObtenerReservaEnCurso(habitacion);
+                    if (reservaCambio == null) break;
+                    using (var popupCambio = new FormCambioHabitacion_68SA(reservaCambio))
                     {
-                        var confirmacion = MessageBox.Show(
-                            TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_msgConfirmarMantenimiento"),
-                            TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloReservaActiva"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (confirmacion != DialogResult.Yes) break;
+                        if (popupCambio.ShowDialog(this) == DialogResult.OK)
+                            CargarHabitaciones();
                     }
+                    break;
+
+                case AccionHabitacion.PonerEnMantenimiento when habitacion.EstadoVisual == EstadoHabitacion.Ocupada
+                                                             || habitacion.EstadoVisual == EstadoHabitacion.Reservada:
+                    PonerEnMantenimientoConReserva(habitacion);
+                    break;
+
+                case AccionHabitacion.PonerEnMantenimiento:
                     _habitacionBLL.CambiarEstado(habitacion.Id, EstadoHabitacion.FueraDeServicio);
                     CargarHabitaciones();
                     break;
@@ -366,6 +603,65 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        private Reserva_68SA ObtenerReservaEnCurso(Habitacion_68SA habitacion)
+        {
+            var reserva = BLLFactory_08YS.CreateReservaBLL().GetEnCursoPorHabitacion(habitacion.Id);
+            if (reserva == null)
+                MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_msgSinReservaEnCurso"),
+                    TraductorManager_08YS.Instance.GetTexto("ControlHabitaciones_tituloSinReserva"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return reserva;
+        }
+
+        /// <summary>
+        /// PN2: una habitación no puede quedar fuera de servicio con un huésped adentro (Ocupada) ni con una reserva
+        /// que ingresa hoy (Reservada). Primero se reubica la estadía / la reserva (cambio administrativo, sin cargo)
+        /// y recién después la habitación pasa a mantenimiento.
+        /// </summary>
+        private void PonerEnMantenimientoConReserva(Habitacion_68SA habitacion)
+        {
+            var t = TraductorManager_08YS.Instance;
+            bool ocupada = habitacion.EstadoVisual == EstadoHabitacion.Ocupada;
+            Reserva_68SA reserva;
+            if (ocupada)
+                reserva = ObtenerReservaEnCurso(habitacion);
+            else
+            {
+                reserva = BLLFactory_08YS.CreateReservaBLL().GetConfirmadaHoyPorHabitacion(habitacion.Id);
+                if (reserva == null)
+                    MessageBox.Show(t.GetTexto("ControlHabitaciones_msgSinReservaHoy"),
+                        t.GetTexto("ControlHabitaciones_tituloSinReserva"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            if (reserva == null) return;
+
+            if (!BLLFactory_08YS.CreateCambioHabitacionBLL().PuedeRegistrar(MotivoCambioHabitacion.Administrativo))
+            {
+                MessageBox.Show(t.GetTexto("ControlHabitaciones_msgMantenimientoSinReubicar"),
+                    t.GetTexto("ControlHabitaciones_tituloReservaActiva"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var confirmacion = MessageBox.Show(
+                string.Format(t.GetTexto(ocupada ? "ControlHabitaciones_msgMantenimientoOcupada" : "ControlHabitaciones_msgMantenimientoReservada"),
+                    habitacion.NroHabitacion, $"{reserva.Titular.Nombre} {reserva.Titular.Apellido}"),
+                t.GetTexto("ControlHabitaciones_tituloReservaActiva"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (confirmacion != DialogResult.Yes) return;
+
+            string motivo = string.Format(t.GetTexto("ControlHabitaciones_txtMotivoMantenimiento"), habitacion.NroHabitacion);
+            using (var popup = new FormCambioHabitacion_68SA(reserva, MotivoCambioHabitacion.Administrativo, motivo))
+            {
+                if (popup.ShowDialog(this) != DialogResult.OK)
+                {
+                    CargarHabitaciones();
+                    return;
+                }
+            }
+
+            // La estadía / reserva ya está en otra habitación: esta pasa a mantenimiento
+            _habitacionBLL.CambiarEstado(habitacion.Id, EstadoHabitacion.FueraDeServicio);
+            CargarHabitaciones();
+        }
+
         private static string TextoEstado(EstadoHabitacion estado)
         {
             switch (estado)
@@ -379,30 +675,9 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        #endregion
 
-        public void UpdateIdioma()
-        {
-            TraducirControles(this);
-
-            // Los chips y las tarjetas se generan en runtime (no pasan por el mecanismo de Tag),
-            // así que hay que reconstruirlos para que reflejen el idioma nuevo.
-            CargarChipsTipo();
-            if (_modo == ModoHabitaciones.Gestion)
-                CargarChipsEstado();
-            CargarHabitaciones();
-        }
-
-        private void TraducirControles(Control contenedor)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && c.Tag is string tag && !string.IsNullOrWhiteSpace(tag))
-                    c.Text = TraductorManager_08YS.Instance.GetTexto(tag);
-
-                if (c.HasChildren)
-                    TraducirControles(c);
-            }
-        }
+        #region Sobrescrituras
 
         protected override CreateParams CreateParams
         {
@@ -413,5 +688,7 @@ namespace GUI_08YS.Recepcionista
                 return cp;
             }
         }
+
+        #endregion
     }
 }

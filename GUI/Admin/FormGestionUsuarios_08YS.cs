@@ -17,6 +17,8 @@ namespace GUI
 {
     public partial class FormGestionUsuarios_08YS : Form, IIdiomaObserver_08YS
     {
+        #region Campos
+
         private static readonly Dictionary<string, Permisos> _mapaPermisos =
             new Dictionary<string, Permisos>
             {
@@ -28,11 +30,18 @@ namespace GUI
 
         private UserBLL_08YS _bll = BLLFactory_08YS.CreateUserBLL();
         private RolBLL_08YS _bllRol = BLLFactory_08YS.CreateRolBLL();
+        private EstadoUI _estadoActual;
+
+        #endregion
+
+        #region Constructor
 
         public FormGestionUsuarios_08YS()
         {
             InitializeComponent();
         }
+
+        #endregion
 
         #region Idioma
         public void UpdateIdioma()
@@ -72,22 +81,6 @@ namespace GUI
             }
         }
         #endregion
-
-        private enum EstadoUI { Consulta, Insertando, Editando }
-        private EstadoUI _estadoActual;
-
-        private void FormGestionUsuarios_Load(object sender, EventArgs e)
-        {
-            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
-
-            cmbRol.ValueMember = "RolID";       // La propiedad ID del objeto Rol_08YS
-            cmbRol.DisplayMember = "Nombre";    // La propiedad con el texto a mostrar en el objeto Rol_08YS
-            cmbRol.DataSource = _bllRol.GetAllPlano(); // Trae los roles disponibles del sistema
-            CargarGrilla();
-           
-            CambiarEstado(EstadoUI.Consulta); // Inicia en modo lectura
-            UpdateIdioma();
-        }
 
         #region Manejo de Interfaz y Estados
 
@@ -425,28 +418,6 @@ namespace GUI
         }
         #endregion
 
-        private void EjecutarAlta()
-        {
-            // 1. Obtener datos de los campos
-            int dni = int.Parse(txtDNI.Text);
-            string nombre = txtNombres.Text.Trim();
-            string apellido = txtApellidos.Text.Trim();
-            string email = txtEmail.Text.Trim();
-            Rol_08YS rol = (Rol_08YS)cmbRol.SelectedItem;
-
-            // 2. Enviar a la BLL
-            _bll.CrearUsuario(dni,nombre,apellido,email,rol);
-        }
-        private void EjecutarModificacion()
-        {
-            string username = txtLogin.Text; // Usamos el login como ID
-            string email = txtEmail.Text;
-            Rol_08YS rol = (Rol_08YS)cmbRol.SelectedItem;
-
-            // Llamada a la BLL
-            _bll.ModificarUsuario(username, email, rol);
-        }
-
         #region Filtros
         private void rbTodos_CheckedChanged(object sender, EventArgs e)
         {
@@ -476,6 +447,51 @@ namespace GUI
 
         #endregion
 
+        #region Eventos de controles
+
+        private void FormGestionUsuarios_Load(object sender, EventArgs e)
+        {
+            PermissionFilter_08YS.Aplicar(this, _mapaPermisos);
+
+            cmbRol.ValueMember = "RolID";       // La propiedad ID del objeto Rol_08YS
+            cmbRol.DisplayMember = "Nombre";    // La propiedad con el texto a mostrar en el objeto Rol_08YS
+            cmbRol.DataSource = _bllRol.GetAllPlano(); // Trae los roles disponibles del sistema
+            CargarGrilla();
+           
+            CambiarEstado(EstadoUI.Consulta); // Inicia en modo lectura
+            UpdateIdioma();
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private void EjecutarAlta()
+        {
+            // 1. Obtener datos de los campos
+            int dni = int.Parse(txtDNI.Text);
+            string nombre = txtNombres.Text.Trim();
+            string apellido = txtApellidos.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            Rol_08YS rol = (Rol_08YS)cmbRol.SelectedItem;
+
+            // 2. Enviar a la BLL
+            _bll.CrearUsuario(dni,nombre,apellido,email,rol);
+        }
+        private void EjecutarModificacion()
+        {
+            string username = txtLogin.Text; // Usamos el login como ID
+            string email = txtEmail.Text;
+            Rol_08YS rol = (Rol_08YS)cmbRol.SelectedItem;
+
+            // Llamada a la BLL
+            _bll.ModificarUsuario(username, email, rol);
+        }
+
+        #endregion
+
+        #region Sobrescrituras
+
         protected override CreateParams CreateParams
         {
             get
@@ -485,5 +501,13 @@ namespace GUI
                 return cp;
             }
         }
+
+        #endregion
+
+        #region Tipos anidados
+
+        private enum EstadoUI { Consulta, Insertando, Editando }
+
+        #endregion
     }
 }

@@ -12,10 +12,20 @@ namespace DAL_08YS.SQL.Negocio
 {
     public class SqlTipoHabitacionRepository_68SA : Connection_08YS, ITipoHabitacionRepository_68SA
     {
+        #region Campos
+
         private const string BaseSelect =
             "SELECT TipoHabitacionID, Nombre, Descripcion, Capacidad, TarifaNoche FROM TiposHabitacion";
 
+        #endregion
+
+        #region Constructor
+
         public SqlTipoHabitacionRepository_68SA(IDbFactory_08YS factory) : base(factory) { }
+
+        #endregion
+
+        #region Consultas
 
         public List<TipoHabitacion_68SA> GetAll()
         {
@@ -74,6 +84,24 @@ namespace DAL_08YS.SQL.Negocio
             return TipoHabitacionMapper_08YS.FromDataTable(GetDataTable(query, parametros.ToArray()));
         }
 
+        public bool ExisteNombre(string nombre, int? excluirTipoId = null)
+        {
+            string query = "SELECT COUNT(1) FROM TiposHabitacion WHERE Nombre = @Nombre";
+            var parametros = new List<IDbDataParameter> { Param("@Nombre", nombre) };
+
+            if (excluirTipoId.HasValue)
+            {
+                query += " AND TipoHabitacionID <> @Excluir";
+                parametros.Add(Param("@Excluir", excluirTipoId.Value));
+            }
+
+            return ExecuteScalar<int>(query, parametros.ToArray()) > 0;
+        }
+
+        #endregion
+
+        #region Operaciones
+
         public int Crear(TipoHabitacion_68SA tipo)
         {
             return ExecuteScalar<int>(
@@ -114,18 +142,6 @@ namespace DAL_08YS.SQL.Negocio
                 new[] { Param("@Id", tipoHabitacionId) });
         }
 
-        public bool ExisteNombre(string nombre, int? excluirTipoId = null)
-        {
-            string query = "SELECT COUNT(1) FROM TiposHabitacion WHERE Nombre = @Nombre";
-            var parametros = new List<IDbDataParameter> { Param("@Nombre", nombre) };
-
-            if (excluirTipoId.HasValue)
-            {
-                query += " AND TipoHabitacionID <> @Excluir";
-                parametros.Add(Param("@Excluir", excluirTipoId.Value));
-            }
-
-            return ExecuteScalar<int>(query, parametros.ToArray()) > 0;
-        }
+        #endregion
     }
 }
