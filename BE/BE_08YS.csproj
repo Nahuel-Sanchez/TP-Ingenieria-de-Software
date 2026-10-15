@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfiguracionHotel_68SA.cs" />
-    <Compile Include="BitacoraCambioHabitacion_68SA.cs" />
+    <Compile Include="BitacoraReserva_68SA.cs" />
     <Compile Include="CambioHabitacion_68SA.cs" />
     <Compile Include="CargoAdicional_68SA.cs" />
     <Compile Include="Habitacion_68SA.cs" />

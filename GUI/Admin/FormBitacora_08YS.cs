@@ -2,6 +2,7 @@
 using FontAwesome.Sharp;
 using CustomControls;
 using Service_08YS;
+using GUI_08YS.UserControls;
 using Service_08YS.Entities.Bitacora;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,12 @@ namespace GUI
         public FormBitacora_08YS()
         {
             InitializeComponent();
+            Load += FormBitacora_Load;
+
+            // Grilla con el estilo del resto del sistema (las columnas se reparten el ancho disponible)
+            CrudEstilo_68SA.AplicarGrilla(dgvEventos, 38);
+            dgvEventos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvEventos.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
 
             ConfigurarBoton(btnLimpiar);
             ConfigurarBoton(btnFiltrar);

@@ -34,9 +34,11 @@
             this.lblGrupoAnalisis = new System.Windows.Forms.Label();
             this.btnDashboard = new FontAwesome.Sharp.IconButton();
             this.btnReportes = new FontAwesome.Sharp.IconButton();
+            this.btnBitacoraReservas = new FontAwesome.Sharp.IconButton();
             this.lblGrupoSistema = new System.Windows.Forms.Label();
             this.btnAdministrativo = new FontAwesome.Sharp.IconButton();
             this.btnPerfil = new FontAwesome.Sharp.IconButton();
+            this.btnMenuLateral = new FontAwesome.Sharp.IconButton();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panelLogo = new System.Windows.Forms.Panel();
@@ -89,7 +91,6 @@
             this.habitacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tiposDeHabitacionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bitacoraCambiosHabitacionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2.SuspendLayout();
             this.panelLateral.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -122,6 +123,7 @@
             // panelLateral
             // 
             this.panelLateral.Controls.Add(this.flowLayoutPanel1);
+            this.panelLateral.Controls.Add(this.btnMenuLateral);
             this.panelLateral.Controls.Add(this.panel3);
             this.panelLateral.Controls.Add(this.panelLogo);
             this.panelLateral.Controls.Add(this.pnlLineaLateral);
@@ -146,6 +148,7 @@
             this.flowLayoutPanel1.Controls.Add(this.lblGrupoAnalisis);
             this.flowLayoutPanel1.Controls.Add(this.btnDashboard);
             this.flowLayoutPanel1.Controls.Add(this.btnReportes);
+            this.flowLayoutPanel1.Controls.Add(this.btnBitacoraReservas);
             this.flowLayoutPanel1.Controls.Add(this.lblGrupoSistema);
             this.flowLayoutPanel1.Controls.Add(this.btnAdministrativo);
             this.flowLayoutPanel1.Controls.Add(this.btnPerfil);
@@ -429,6 +432,32 @@
             this.btnReportes.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(24, 38, 86);
             this.btnReportes.Name = "btnReportes";
             // 
+            // btnBitacoraReservas
+            // 
+            this.btnBitacoraReservas.Click += new System.EventHandler(this.btnBitacoraReservas_Click);
+            this.btnBitacoraReservas.BackColor = System.Drawing.Color.FromArgb(8, 13, 38);
+            this.btnBitacoraReservas.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBitacoraReservas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBitacoraReservas.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBitacoraReservas.ForeColor = System.Drawing.Color.FromArgb(205, 210, 225);
+            this.btnBitacoraReservas.IconChar = FontAwesome.Sharp.IconChar.ClockRotateLeft;
+            this.btnBitacoraReservas.IconColor = System.Drawing.Color.Goldenrod;
+            this.btnBitacoraReservas.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnBitacoraReservas.IconSize = 22;
+            this.btnBitacoraReservas.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnBitacoraReservas.Margin = new System.Windows.Forms.Padding(8, 1, 8, 1);
+            this.btnBitacoraReservas.Padding = new System.Windows.Forms.Padding(18, 0, 0, 0);
+            this.btnBitacoraReservas.Size = new System.Drawing.Size(263, 46);
+            this.btnBitacoraReservas.Tag = "MDI_btnBitacoraReservas";
+            this.btnBitacoraReservas.Text = "Bitácora de reservas";
+            this.btnBitacoraReservas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnBitacoraReservas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnBitacoraReservas.UseVisualStyleBackColor = false;
+            this.btnBitacoraReservas.FlatAppearance.BorderSize = 0;
+            this.btnBitacoraReservas.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(18, 30, 70);
+            this.btnBitacoraReservas.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(24, 38, 86);
+            this.btnBitacoraReservas.Name = "btnBitacoraReservas";
+            // 
             // lblGrupoSistema
             // 
             this.lblGrupoSistema.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -492,6 +521,24 @@
             this.btnPerfil.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(18, 30, 70);
             this.btnPerfil.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(24, 38, 86);
             this.btnPerfil.Name = "btnPerfil";
+            // 
+            // btnMenuLateral
+            // 
+            this.btnMenuLateral.BackColor = System.Drawing.Color.FromArgb(8, 13, 38);
+            this.btnMenuLateral.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnMenuLateral.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMenuLateral.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMenuLateral.IconChar = FontAwesome.Sharp.IconChar.Bars;
+            this.btnMenuLateral.IconColor = System.Drawing.Color.Goldenrod;
+            this.btnMenuLateral.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnMenuLateral.IconSize = 22;
+            this.btnMenuLateral.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnMenuLateral.Size = new System.Drawing.Size(279, 42);
+            this.btnMenuLateral.TabStop = false;
+            this.btnMenuLateral.UseVisualStyleBackColor = false;
+            this.btnMenuLateral.FlatAppearance.BorderSize = 0;
+            this.btnMenuLateral.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(18, 30, 70);
+            this.btnMenuLateral.Name = "btnMenuLateral";
             // 
             // panel3
             // 
@@ -1000,13 +1047,13 @@
             // 
             // HabitacionesDropdownMenu
             // 
-            this.HabitacionesDropdownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.habitacionesToolStripMenuItem, this.tiposDeHabitacionToolStripMenuItem, this.pisosToolStripMenuItem, this.bitacoraCambiosHabitacionToolStripMenuItem});
+            this.HabitacionesDropdownMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.habitacionesToolStripMenuItem, this.tiposDeHabitacionToolStripMenuItem, this.pisosToolStripMenuItem});
             this.HabitacionesDropdownMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.HabitacionesDropdownMenu.IsMainMenu = false;
             this.HabitacionesDropdownMenu.MenuItemHeight = 25;
             this.HabitacionesDropdownMenu.MenuItemTextColor = System.Drawing.Color.Empty;
             this.HabitacionesDropdownMenu.PrimaryColor = System.Drawing.Color.Empty;
-            this.HabitacionesDropdownMenu.Size = new System.Drawing.Size(241, 112);
+            this.HabitacionesDropdownMenu.Size = new System.Drawing.Size(241, 84);
             this.HabitacionesDropdownMenu.Name = "HabitacionesDropdownMenu";
             // 
             // habitacionesToolStripMenuItem
@@ -1032,14 +1079,6 @@
             this.pisosToolStripMenuItem.Tag = "MDI_menuPisos";
             this.pisosToolStripMenuItem.Text = "Pisos";
             this.pisosToolStripMenuItem.Name = "pisosToolStripMenuItem";
-            // 
-            // bitacoraCambiosHabitacionToolStripMenuItem
-            // 
-            this.bitacoraCambiosHabitacionToolStripMenuItem.Click += new System.EventHandler(this.bitacoraCambiosHabitacionToolStripMenuItem_Click);
-            this.bitacoraCambiosHabitacionToolStripMenuItem.Size = new System.Drawing.Size(240, 24);
-            this.bitacoraCambiosHabitacionToolStripMenuItem.Tag = "MDI_menuBitacoraCambiosHabitacion";
-            this.bitacoraCambiosHabitacionToolStripMenuItem.Text = "Bitácora de cambios";
-            this.bitacoraCambiosHabitacionToolStripMenuItem.Name = "bitacoraCambiosHabitacionToolStripMenuItem";
             // 
             // FormMDI_08YS
             // 
@@ -1098,9 +1137,11 @@
         private System.Windows.Forms.Label lblGrupoAnalisis;
         private FontAwesome.Sharp.IconButton btnDashboard;
         private FontAwesome.Sharp.IconButton btnReportes;
+        private FontAwesome.Sharp.IconButton btnBitacoraReservas;
         private System.Windows.Forms.Label lblGrupoSistema;
         private FontAwesome.Sharp.IconButton btnAdministrativo;
         private FontAwesome.Sharp.IconButton btnPerfil;
+        private FontAwesome.Sharp.IconButton btnMenuLateral;
         private System.Windows.Forms.Panel panel3;
         private FontAwesome.Sharp.IconButton btnCerrarSesion;
         private System.Windows.Forms.Panel panelLogo;
@@ -1153,6 +1194,5 @@
         private System.Windows.Forms.ToolStripMenuItem habitacionesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tiposDeHabitacionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pisosToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bitacoraCambiosHabitacionToolStripMenuItem;
     }
 }

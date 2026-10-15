@@ -66,6 +66,22 @@ namespace GUI_08YS.Recepcionista
             LayoutAdaptable_68SA.RepartirColumnas(pnlGrupoBotones,
                 new Control[] { btnLimpiarFiltros }, new Control[] { btnFiltrar });
             pnlGrupoCosto.Resize += (s, e) => AcomodarGrupoCosto();
+            LayoutAdaptable_68SA.SoloIconoSiNoEntra(btnLimpiarFiltros);
+            LayoutAdaptable_68SA.SoloIconoSiNoEntra(btnFiltrar);
+
+            // La grilla de reservas nunca queda más baja que AltoMinimoGrilla: si la pantalla no alcanza,
+            // la lista (tarjetas, grilla y filtros) se desplaza en vertical en lugar de aplastar la grilla
+            pnlLista.AutoScroll = true;
+            LayoutAdaptable_68SA.OcultarScrollHorizontal(pnlLista);
+            pnlLista.Resize += (s, e) => AsegurarAltoGrilla();
+            AsegurarAltoGrilla();
+
+            // Tarjetas de totales: el monto nunca queda debajo del ícono (se achica o el ícono se oculta)
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlTarjetaVigentes, lblMontoVigentes, iconVigentes);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlTarjetaPendientes, lblMontoPendientes, iconPendientes);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlTarjetaOcupadas, lblMontoOcupadas, iconOcupadas);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlTarjetaFinalizadas, lblMontoFinalizadas, iconFinalizadas);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlTarjetaCanceladas, lblMontoCanceladas, iconCanceladas);
 
             CargarCombosFiltro();
             cmbEstadoFiltro.SelectedIndex = 0;
@@ -483,6 +499,15 @@ namespace GUI_08YS.Recepcionista
             {
                 MessageBox.Show(ex.Message, TraductorManager_08YS.Instance.GetTexto("Comun_error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private const int AltoMinimoGrilla = 240;
+
+        private void AsegurarAltoGrilla()
+        {
+            int minimo = pnlLista.Padding.Vertical + pnlTarjetas.Height + pnlFiltrosWrapper.Height + AltoMinimoGrilla;
+            var tamano = pnlLista.ClientSize.Height < minimo ? new Size(0, minimo) : Size.Empty;
+            if (pnlLista.AutoScrollMinSize != tamano) pnlLista.AutoScrollMinSize = tamano;
         }
 
         private void ActualizarTarjetas(List<Reserva_68SA> reservas)

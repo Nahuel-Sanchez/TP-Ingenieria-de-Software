@@ -206,7 +206,7 @@ namespace DAL_08YS.SQL.Negocio
             idOutput,
             disponibleOutput
                 },
-                storedProcedure: true);
+                storedProcedure: true, operacionReserva: "Alta");
 
             bool disponible = Convert.ToBoolean(disponibleOutput.Value);
             return disponible ? Convert.ToInt32(idOutput.Value) : -1;
@@ -217,7 +217,7 @@ namespace DAL_08YS.SQL.Negocio
             var resultado = ParamOutput("@Resultado");
             ExecuteNonQuery("sp_RegistrarCheckIn",
                 new[] { Param("@ReservaID", reservaId), Param("@FechaHora", fechaHora), resultado },
-                storedProcedure: true);
+                storedProcedure: true, operacionReserva: "Check-in");
             return Convert.ToBoolean(resultado.Value);
         }
 
@@ -226,7 +226,7 @@ namespace DAL_08YS.SQL.Negocio
             var resultado = ParamOutput("@Resultado");
             ExecuteNonQuery("sp_RegistrarCheckOut",
                 new[] { Param("@ReservaID", reservaId), Param("@FechaHora", fechaHora), resultado },
-                storedProcedure: true);
+                storedProcedure: true, operacionReserva: "Check-out");
             return Convert.ToBoolean(resultado.Value);
         }
 
@@ -235,7 +235,7 @@ namespace DAL_08YS.SQL.Negocio
             var resultado = ParamOutput("@Resultado");
             ExecuteNonQuery("sp_CancelarReserva",
                 new[] { Param("@ReservaID", reservaId), resultado },
-                storedProcedure: true);
+                storedProcedure: true, operacionReserva: "Cancelación");
             return Convert.ToBoolean(resultado.Value);
         }
 
@@ -249,7 +249,7 @@ namespace DAL_08YS.SQL.Negocio
         public int ProcesarNoShows()
         {
             var salida = ParamOutput("@CantidadCanceladas");
-            ExecuteNonQuery("sp_ProcesarNoShows", new[] { salida }, storedProcedure: true);
+            ExecuteNonQuery("sp_ProcesarNoShows", new[] { salida }, storedProcedure: true, operacionReserva: "No-show");
             return Convert.ToInt32(salida.Value);
         }
 
@@ -258,7 +258,7 @@ namespace DAL_08YS.SQL.Negocio
             var disponibleOutput = ParamOutput("@Disponible");
             ExecuteNonQuery("sp_ExtenderEstadia",
                 new[] { Param("@ReservaID", reservaId), Param("@NuevaFechaEgreso", nuevaFechaEgreso.Date), disponibleOutput },
-                storedProcedure: true);
+                storedProcedure: true, operacionReserva: "Renovación");
             return Convert.ToBoolean(disponibleOutput.Value);
         }
 
@@ -275,7 +275,7 @@ namespace DAL_08YS.SQL.Negocio
             Param("@CantidadNinos", ninos),
             disponibleOutput
                 },
-                storedProcedure: true);
+                storedProcedure: true, operacionReserva: "Modificación");
             return Convert.ToBoolean(disponibleOutput.Value);
         }
 

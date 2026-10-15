@@ -52,6 +52,7 @@ namespace GUI_08YS.Recepcionista
             _motivoFijo = motivoFijo;
 
             InitializeComponent();
+            LayoutAdaptable_68SA.LimitarAPantalla(this);   // en pantallas chicas se achica y queda entera a la vista
             Traducir(this);
 
             ConfigurarGrilla();

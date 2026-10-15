@@ -77,7 +77,7 @@ namespace Service_08YS.Entities.Acceso
         RegistrarRoomService,
         GestionarItemsRoomService,
         ConfirmarEntregaRoomService,
-        VerBitacoraCambiosHabitacion,
+        VerBitacoraReservas,
         GenerarReporteServicios,        // reporte de servicios consumidos por huésped
         GenerarAnalisisDemanda          // análisis predictivo de ocupación y demanda (reporte inteligente)
     }

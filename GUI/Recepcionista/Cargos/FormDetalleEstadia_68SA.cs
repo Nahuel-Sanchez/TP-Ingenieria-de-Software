@@ -33,6 +33,7 @@ namespace GUI_08YS.Recepcionista
         {
             _reservaId = reservaId;
             InitializeComponent();
+            LayoutAdaptable_68SA.LimitarAPantalla(this);   // en pantallas chicas se achica y queda entera a la vista
             Traducir(this);
 
             CrudEstilo_68SA.AplicarGrilla(dgvMovimientos, 40);

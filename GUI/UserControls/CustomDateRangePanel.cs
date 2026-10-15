@@ -33,6 +33,7 @@ namespace CustomControls
         private CustomCalendarPanel _right;
         private LinkLabel _clearLink;
         private int _monthsVisible = 2;
+        private int _mesesMostrados = 2;   // con MonthsVisible = 2, si no entran los dos meses se muestra uno solo
         private bool _showClearButton = true;
 
         private Rectangle _prevArrowRect;
@@ -167,6 +168,7 @@ namespace CustomControls
                 int v = value <= 1 ? 1 : 2;
                 if (v == _monthsVisible) return;
                 _monthsVisible = v;
+                _mesesMostrados = v;
                 BuildPanels();
             }
         }
@@ -271,8 +273,10 @@ namespace CustomControls
         {
             SuspendLayout();
 
-            if (_left != null) { Controls.Remove(_left); _left.ViewMonthChanged -= Left_ViewMonthChanged; }
-            if (_right != null) { Controls.Remove(_right); }
+            // Al pasar de dos meses a uno (o al revés) se conserva el mes que se estaba viendo
+            DateTime? mesVisto = _left?.ViewDate;
+            if (_left != null) { Controls.Remove(_left); _left.ViewMonthChanged -= Left_ViewMonthChanged; _left.RangeSelector = null; _left.Dispose(); }
+            if (_right != null) { Controls.Remove(_right); _right.RangeSelector = null; _right.Dispose(); }
 
             _left = new CustomCalendarPanel
             {
@@ -284,7 +288,7 @@ namespace CustomControls
             Controls.Add(_left);
             _left.BringToFront();
 
-            if (_monthsVisible == 2)
+            if (_mesesMostrados == 2)
             {
                 _right = new CustomCalendarPanel
                 {
@@ -305,6 +309,11 @@ namespace CustomControls
 
             PushBoundsToChildren();
             ApplyStyleToChildren();
+            if (mesVisto.HasValue)
+            {
+                _left.SetDate(mesVisto.Value);
+                _right?.SetDate(_left.ViewDate.AddMonths(1));
+            }
             PositionPanels();
             ResumeLayout();
         }
@@ -322,7 +331,21 @@ namespace CustomControls
             int minCalendarsW = minLeft.Width + (_right != null ? gap + minRight.Width : 0);
             int minTotalW = ArrowGutterWidth * 2 + minCalendarsW;
             int minTotalH = Math.Max(minLeft.Height, minRight.Height) + clearH;
-            MinimumSize = new Size(minTotalW, minTotalH);
+
+            // Con dos meses pedidos, el mínimo es el de UN mes: si el espacio no alcanza para los dos,
+            // se muestra uno solo (con las flechas para navegar) en lugar de quedar cortado a la derecha.
+            if (_monthsVisible == 2 && IsHandleCreated)
+            {
+                int anchoDosMeses = ArrowGutterWidth * 2 + minLeft.Width * 2 + PanelGap;
+                int meses = Width >= anchoDosMeses ? 2 : 1;
+                if (meses != _mesesMostrados)
+                {
+                    _mesesMostrados = meses;
+                    BuildPanels();   // vuelve a llamar a PositionPanels con los paneles nuevos
+                    return;
+                }
+            }
+            MinimumSize = new Size(ArrowGutterWidth * 2 + minLeft.Width, minTotalH);
 
             int availW = Math.Max(Width, minTotalW);
             int availH = Math.Max(Height, minTotalH);

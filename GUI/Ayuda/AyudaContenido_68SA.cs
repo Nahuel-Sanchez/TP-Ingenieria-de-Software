@@ -23,6 +23,9 @@ namespace GUI_08YS.Ayuda
         [JsonProperty("nombre")] public string Nombre { get; set; }
         [JsonProperty("texto")] public string Texto { get; set; }
 
+        /// <summary>Permisos que muestran ese control en la pantalla (con uno alcanza). Vacío = lo ve cualquiera.</summary>
+        [JsonProperty("permisos")] public List<string> Permisos { get; set; } = new List<string>();
+
         #endregion
     }
 
@@ -36,6 +39,11 @@ namespace GUI_08YS.Ayuda
         [JsonProperty("titulo")] public string Titulo { get; set; }
         [JsonProperty("icono")] public string Icono { get; set; }
         [JsonProperty("pantallas")] public List<string> Pantallas { get; set; } = new List<string>();
+        /// <summary>
+        /// Permisos que dan acceso al tema (con uno alcanza). Vacío = tema general, o grupo que se ve
+        /// si el usuario puede ver al menos uno de sus temas.
+        /// </summary>
+        [JsonProperty("permisos")] public List<string> Permisos { get; set; } = new List<string>();
         [JsonProperty("resumen")] public string Resumen { get; set; }
         [JsonProperty("secciones")] public List<SeccionAyuda_68SA> Secciones { get; set; } = new List<SeccionAyuda_68SA>();
         [JsonProperty("pasos")] public List<string> Pasos { get; set; } = new List<string>();
@@ -49,6 +57,9 @@ namespace GUI_08YS.Ayuda
         [JsonIgnore] public string Numero { get; internal set; }
         [JsonIgnore] public int Nivel => PadreTema == null ? 0 : PadreTema.Nivel + 1;
 
+        /// <summary>Elementos de la pantalla que el usuario conectado puede ver (según sus permisos).</summary>
+        [JsonIgnore] public List<ElementoAyuda_68SA> ElementosVisibles => AyudaContenido_68SA.FiltrarElementos(Elementos);
+
         #endregion
 
         #region Métodos públicos
@@ -56,14 +67,14 @@ namespace GUI_08YS.Ayuda
         /// <summary>Elemento que explica el control con ese nombre (o null).</summary>
         public ElementoAyuda_68SA ElementoDe(string nombreControl)
             => string.IsNullOrEmpty(nombreControl) ? null
-             : Elementos.FirstOrDefault(e => e.Controles != null && e.Controles.Contains(nombreControl));
+             : ElementosVisibles.FirstOrDefault(e => e.Controles != null && e.Controles.Contains(nombreControl));
 
         /// <summary>Texto completo del tema (para el buscador).</summary>
         internal string TextoCompleto()
             => string.Join(" ", new[] { Titulo, Resumen }
                 .Concat(Secciones.SelectMany(s => new[] { s.Titulo }.Concat(s.Parrafos ?? new List<string>())))
                 .Concat(Pasos).Concat(Consejos)
-                .Concat(Elementos.SelectMany(e => new[] { e.Nombre, e.Texto }))
+                .Concat(ElementosVisibles.SelectMany(e => new[] { e.Nombre, e.Texto }))
                 .Where(x => !string.IsNullOrEmpty(x)));
 
         #endregion
@@ -72,13 +83,16 @@ namespace GUI_08YS.Ayuda
     /// <summary>
     /// Contenido de la ayuda en línea (archivo ayuda.json, junto al ejecutable), en el idioma activo.
     /// Arma el árbol de temas ("menú escalera") y permite buscar el tema de cada pantalla.
+    /// La ayuda depende de los permisos del usuario conectado: solo se incluyen los temas (y los elementos
+    /// de cada pantalla) a los que tiene acceso; el árbol, el buscador, F1 y el manual en PDF usan esta lista.
     /// </summary>
     public static class AyudaContenido_68SA
     {
         #region Campos
 
         private static Dictionary<string, Idioma> _archivo;
-        private static readonly Dictionary<string, List<TemaAyuda_68SA>> _armados = new Dictionary<string, List<TemaAyuda_68SA>>();
+        private static List<TemaAyuda_68SA> _armados;
+        private static string _firmaArmados;   // idioma + permisos del usuario con que se armó la lista
 
         #endregion
 
@@ -94,34 +108,56 @@ namespace GUI_08YS.Ayuda
             }
         }
 
-        /// <summary>Todos los temas en orden de índice (recorrido en profundidad del árbol).</summary>
+        /// <summary>
+        /// Temas visibles para el usuario conectado, en orden de índice (recorrido en profundidad del árbol).
+        /// Se vuelve a armar si cambia el idioma o el usuario (o sus permisos); la numeración es la del árbol visible.
+        /// </summary>
         public static List<TemaAyuda_68SA> Temas
         {
             get
             {
                 string idioma = IdiomaActual;
-                if (_armados.TryGetValue(idioma, out var listos)) return listos;
+                var permisos = PermisosUsuario();
+                string firma = idioma + "|" + string.Join(",", permisos.OrderBy(p => p, StringComparer.Ordinal));
+                if (_armados != null && firma == _firmaArmados) return _armados;
 
                 Cargar();
                 Idioma datos;
                 if (!_archivo.TryGetValue(idioma, out datos) && !_archivo.TryGetValue("es", out datos))
                     datos = new Idioma();
                 var temas = datos.Temas ?? new List<TemaAyuda_68SA>();
-                // Si falta un idioma se usa el español: se rearma el árbol desde cero (sin hijos duplicados)
-                foreach (var t in temas) { t.Hijos.Clear(); t.PadreTema = null; }
+
+                // Árbol completo (sin filtrar) para decidir qué se ve
                 var porId = temas.Where(t => !string.IsNullOrEmpty(t.Id)).GroupBy(t => t.Id).ToDictionary(g => g.Key, g => g.First());
+                var hijosDe = temas.ToDictionary(t => t, t => new List<TemaAyuda_68SA>());
+                var raices = new List<TemaAyuda_68SA>();
                 foreach (var tema in temas)
+                {
                     if (!string.IsNullOrEmpty(tema.Padre) && porId.TryGetValue(tema.Padre, out var padre) && !ReferenceEquals(padre, tema))
+                        hijosDe[padre].Add(tema);
+                    else
+                        raices.Add(tema);
+                }
+
+                var visibles = new HashSet<TemaAyuda_68SA>();
+                foreach (var raiz in raices)
+                    MarcarVisibles(raiz, true, hijosDe, permisos, visibles);
+
+                // Se rearma el árbol desde cero solo con los temas visibles (sin hijos duplicados ni de otro usuario)
+                foreach (var t in temas) { t.Hijos.Clear(); t.PadreTema = null; }
+                foreach (var tema in temas.Where(visibles.Contains))
+                    foreach (var hijo in hijosDe[tema].Where(visibles.Contains))
                     {
-                        tema.PadreTema = padre;
-                        padre.Hijos.Add(tema);
+                        hijo.PadreTema = tema;
+                        tema.Hijos.Add(hijo);
                     }
 
                 var ordenados = new List<TemaAyuda_68SA>();
                 int n = 0;
-                foreach (var raiz in temas.Where(t => t.PadreTema == null))
+                foreach (var raiz in raices.Where(visibles.Contains))
                     Numerar(raiz, (++n).ToString(), ordenados);
-                _armados[idioma] = ordenados;
+                _armados = ordenados;
+                _firmaArmados = firma;
                 return ordenados;
             }
         }
@@ -160,9 +196,54 @@ namespace GUI_08YS.Ayuda
             => string.IsNullOrEmpty(nombreFormulario) ? null
              : Temas.FirstOrDefault(t => t.Pantallas != null && t.Pantallas.Contains(nombreFormulario));
 
+        /// <summary>Elementos que el usuario conectado puede ver (los que no piden permiso, o con uno que tenga).</summary>
+        public static List<ElementoAyuda_68SA> FiltrarElementos(IEnumerable<ElementoAyuda_68SA> elementos)
+        {
+            var permisos = PermisosUsuario();
+            return (elementos ?? Enumerable.Empty<ElementoAyuda_68SA>()).Where(e => Permite(e.Permisos, permisos)).ToList();
+        }
+
         #endregion
 
         #region Métodos auxiliares
+
+        /// <summary>
+        /// Un tema se ve si el usuario tiene alguno de sus permisos (o no pide ninguno) y su grupo se ve.
+        /// Un grupo sin permisos propios se ve solo si se ve alguno de sus temas.
+        /// </summary>
+        private static bool MarcarVisibles(TemaAyuda_68SA tema, bool padreVisible, Dictionary<TemaAyuda_68SA, List<TemaAyuda_68SA>> hijosDe,
+                                           HashSet<string> permisos, HashSet<TemaAyuda_68SA> visibles)
+        {
+            bool propio = padreVisible && Permite(tema.Permisos, permisos);
+            bool algunHijo = false;
+            foreach (var hijo in hijosDe[tema])
+                algunHijo |= MarcarVisibles(hijo, propio, hijosDe, permisos, visibles);
+
+            bool esGrupo = (tema.Permisos == null || tema.Permisos.Count == 0) && hijosDe[tema].Count > 0;
+            bool visible = propio && (!esGrupo || algunHijo);
+            if (visible) visibles.Add(tema);
+            return visible;
+        }
+
+        private static bool Permite(IEnumerable<string> requeridos, HashSet<string> permisos)
+        {
+            var lista = (requeridos ?? Enumerable.Empty<string>()).Where(p => !string.IsNullOrWhiteSpace(p)).ToList();
+            return lista.Count == 0 || lista.Any(permisos.Contains);
+        }
+
+        /// <summary>Nombres de los permisos del usuario conectado (vacío si nadie inició sesión).</summary>
+        private static HashSet<string> PermisosUsuario()
+        {
+            try
+            {
+                var rol = SessionManager_08YS.Instance.Current?.Rol;
+                return rol == null ? new HashSet<string>() : new HashSet<string>(rol.GetPermisos().Select(p => p.Nombre));
+            }
+            catch (Exception)
+            {
+                return new HashSet<string>();
+            }
+        }
 
         private static void Numerar(TemaAyuda_68SA tema, string numero, List<TemaAyuda_68SA> salida)
         {

@@ -64,7 +64,21 @@ namespace GUI_08YS.Recepcionista
 
             calRangoReservas.MinDate = DateTime.Today;
             pasosReserva.PasoActual = 0;
+            // En pantallas angostas la barra de pasos cede lugar al título
+            pnlEncabezado.Resize += (s, e) => pasosReserva.Width = Math.Max(300, Math.Min(520, pnlEncabezado.Width * 40 / 100));
             flpDisponibilidad.Resize += (s, e) => AjustarAnchoFilas();
+
+            // En pantallas angostas el resumen de la derecha se angosta para que el calendario entre entero
+            tlpCuerpo.Resize += (s, e) =>
+            {
+                float ancho = tlpCuerpo.Width < 1100 ? 340 : 420;
+                if (tlpCuerpo.ColumnStyles[1].Width != ancho) tlpCuerpo.ColumnStyles[1].Width = ancho;
+            };
+            lblLlegadaValor.Anchor = lblSalidaValor.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblNochesDetalle.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            LayoutAdaptable_68SA.RepartirColumnas(pnlFechas, new Control[] { pnlLlegada }, new Control[] { pnlSalida });
+            LayoutAdaptable_68SA.EstirarAlAncho(pnlFechas, pnlNoches);
+            LayoutAdaptable_68SA.RepartirColumnas(pnlHuespedes, new Control[] { lblAdultos, nudAdultos }, new Control[] { lblNinos, nudNinos });
             LayoutAdaptable_68SA.OcultarScrollHorizontal(flpDisponibilidad);
             _demora.Tick += (s, e) => { _demora.Stop(); ConsultarDisponibilidad(); };
             Disposed += (s, e) => _demora.Dispose();

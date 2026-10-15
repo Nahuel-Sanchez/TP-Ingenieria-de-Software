@@ -48,6 +48,7 @@ namespace GUI_08YS.Recepcionista
             _reserva = reserva ?? throw new ArgumentNullException(nameof(reserva));
 
             InitializeComponent();
+            LayoutAdaptable_68SA.LimitarAPantalla(this);   // en pantallas chicas se achica y queda entera a la vista
             Traducir(this);
             txtBuscar.PlaceholderText = T("PedidoRS_phBuscar");
 

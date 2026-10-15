@@ -57,7 +57,7 @@ namespace BLL_08YS
             "Reservas", "Acompanantes", "Pagos", "ConfiguracionHotel",
             // PN2 (mismo orden que sp_GetAllTablesParaDV)
             "ItemsRoomService", "CargosAdicionales", "PedidosRoomService", "DetallePedidoRoomService",
-            "HistorialCambiosHabitacion", "Bitacora_CambiosHabitacion"
+            "HistorialCambiosHabitacion", "Bitacora_Reservas"
         };
 
         private readonly IDvRepository_08YS _repo;

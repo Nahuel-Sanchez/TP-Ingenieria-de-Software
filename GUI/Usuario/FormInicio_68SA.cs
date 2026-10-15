@@ -35,6 +35,9 @@ namespace GUI_08YS
         private static readonly Color TarjetaSobre = Color.FromArgb(20, 34, 80);
         private static readonly Color TextoSuave = Color.FromArgb(175, 182, 200);
         private const int Margen = 56;
+        private const int MargenVertical = 36;
+        private const int AltoAcceso = 104;
+        private const int AltoAccesoCompacto = 82;
         // Cada acceso a Properties.Resources crea un Bitmap nuevo: la foto se carga una sola vez
         private static readonly Image FotoFondo = Properties.Resources.ChatGPT_Image_19_may_2026__22_23_23;
 
@@ -43,6 +46,7 @@ namespace GUI_08YS
         private BE_08YS.Metricas.MovimientoHoy_68SA _hoy;
         private BE_08YS.Metricas.ResumenOcupacion_68SA _ocupacion;
         private bool _cargado;
+        private bool _acomodando;
 
         private readonly PanelImagen_68SA _fondo;
         private readonly Label _lblMarca, _lblSaludo, _lblFecha, _lblHoy, _lblAccesos;
@@ -73,7 +77,8 @@ namespace GUI_08YS
                 FocoX = 0.5f,
                 FocoY = 0.45f,
                 VeloArriba = Color.FromArgb(25, 5, 10, 40),
-                VeloAbajo = Color.FromArgb(235, 5, 10, 40)
+                VeloAbajo = Color.FromArgb(235, 5, 10, 40),
+                AutoScroll = true      // la barra aparece solo si el contenido no entra (ver Acomodar)
             };
             Controls.Add(_fondo);
 
@@ -141,7 +146,8 @@ namespace GUI_08YS
             tarjeta.Controls.Add(new IconPictureBox
             {
                 BackColor = Tarjeta, IconChar = icono, IconColor = color, IconSize = 26,
-                Location = new Point(194, 16), Size = new Size(28, 28)
+                Location = new Point(194, 16), Size = new Size(28, 28),
+                Anchor = AnchorStyles.Top | AnchorStyles.Right   // sigue al borde derecho si la tarjeta se angosta
             });
             var titulo = new Label { AutoSize = true, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = TextoSuave, Location = new Point(18, 14) };
             var valor = new Label { AutoSize = true, Font = new Font("Segoe UI", 20F, FontStyle.Bold), ForeColor = Color.WhiteSmoke, BackColor = Color.Transparent, Location = new Point(16, 32), Text = "-" };
@@ -248,46 +254,107 @@ namespace GUI_08YS
         /// <summary>
         /// El contenido se acomoda de arriba hacia abajo como un bloque centrado en el alto disponible
         /// (un poco más arriba del centro), pegado al margen izquierdo.
+        /// Las tarjetas se reparten en filas parejas según el ancho; si el alto no alcanza, los accesos
+        /// se compactan y, si aun así no entran, aparece la barra vertical (nunca quedan accesos fuera de la vista).
         /// </summary>
         private void Acomodar()
         {
-            int ancho = Math.Max(200, _fondo.ClientSize.Width - Margen * 2);
-
-            Size kpis = Size.Empty, accesos = Size.Empty;
-            if (_flpKpis.Visible) kpis = _flpKpis.GetPreferredSize(new Size(ancho, 0));
-            if (_flpAccesos.Visible)
+            if (_acomodando) return;
+            _acomodando = true;
+            Size cliente = _fondo.ClientSize;
+            _fondo.SuspendLayout();
+            try
             {
-                _flpAccesos.MaximumSize = new Size(ancho, 0);
-                accesos = _flpAccesos.GetPreferredSize(new Size(ancho, 0));
+                int ancho = Math.Max(200, _fondo.ClientSize.Width - Margen * 2);
+                RepartirFila(_flpKpis, ancho, 236, 190, null);
+
+                // Primero con los accesos de tamaño normal; si no entra, compactos
+                int alto = 0;
+                Size kpis = Size.Empty, accesos = Size.Empty;
+                foreach (int altoAcceso in new[] { AltoAcceso, AltoAccesoCompacto })
+                {
+                    bool compacto = altoAcceso < AltoAcceso;
+                    RepartirFila(_flpAccesos, ancho, 170, 150, altoAcceso);
+                    foreach (var boton in _flpAccesos.Controls.OfType<IconButton>())
+                    {
+                        boton.IconSize = compacto ? 24 : 30;
+                        boton.Padding = compacto ? new Padding(6, 8, 6, 6) : new Padding(6, 14, 6, 12);
+                    }
+
+                    kpis = _flpKpis.Visible ? _flpKpis.GetPreferredSize(new Size(ancho, 0)) : Size.Empty;
+                    if (_flpAccesos.Visible)
+                    {
+                        _flpAccesos.MaximumSize = new Size(ancho, 0);
+                        accesos = _flpAccesos.GetPreferredSize(new Size(ancho, 0));
+                    }
+                    alto = _lblMarca.Height + _lblSaludo.Height + _lblFecha.Height
+                         + (_flpKpis.Visible ? 26 + _lblHoy.Height + 8 + kpis.Height : 0)
+                         + (_flpAccesos.Visible ? 22 + _lblAccesos.Height + 8 + accesos.Height : 0);
+                    if (alto + MargenVertical * 2 <= _fondo.ClientSize.Height) break;
+                }
+
+                // Barra vertical solo si de verdad no entra
+                bool desborda = alto + MargenVertical * 2 > _fondo.ClientSize.Height;
+                var minimo = desborda ? new Size(0, alto + MargenVertical * 2) : Size.Empty;
+                if (_fondo.AutoScrollMinSize != minimo) _fondo.AutoScrollMinSize = minimo;
+
+                int y = desborda
+                    ? MargenVertical + _fondo.AutoScrollPosition.Y
+                    : Math.Max(MargenVertical, (_fondo.ClientSize.Height - alto) / 2 - 30);
+
+                _lblMarca.Location = new Point(Margen, y);
+                y += _lblMarca.Height;
+                _lblSaludo.Location = new Point(Margen - 4, y);
+                y += _lblSaludo.Height;
+                _lblFecha.Location = new Point(Margen, y);
+                y += _lblFecha.Height;
+
+                if (_flpKpis.Visible)
+                {
+                    y += 26;
+                    _lblHoy.Location = new Point(Margen, y);
+                    y += _lblHoy.Height + 8;
+                    _flpKpis.Bounds = new Rectangle(Margen, y, ancho, kpis.Height);
+                    y += kpis.Height;
+                }
+
+                if (_flpAccesos.Visible)
+                {
+                    y += 22;
+                    _lblAccesos.Location = new Point(Margen, y);
+                    y += _lblAccesos.Height + 8;
+                    _flpAccesos.Bounds = new Rectangle(Margen, y, ancho, accesos.Height);
+                }
             }
-
-            int alto = _lblMarca.Height + _lblSaludo.Height + _lblFecha.Height
-                     + (_flpKpis.Visible ? 26 + _lblHoy.Height + 8 + kpis.Height : 0)
-                     + (_flpAccesos.Visible ? 22 + _lblAccesos.Height + 8 + accesos.Height : 0);
-            int y = Math.Max(36, (_fondo.ClientSize.Height - alto) / 2 - 30);
-
-            _lblMarca.Location = new Point(Margen, y);
-            y += _lblMarca.Height;
-            _lblSaludo.Location = new Point(Margen - 4, y);
-            y += _lblSaludo.Height;
-            _lblFecha.Location = new Point(Margen, y);
-            y += _lblFecha.Height;
-
-            if (_flpKpis.Visible)
+            finally
             {
-                y += 26;
-                _lblHoy.Location = new Point(Margen, y);
-                y += _lblHoy.Height + 8;
-                _flpKpis.Bounds = new Rectangle(Margen, y, ancho, kpis.Height);
-                y += kpis.Height;
+                _fondo.ResumeLayout(false);
+                _fondo.PerformLayout();   // aplica ya la barra vertical (AutoScrollMinSize) para comparar el ancho útil
+                _acomodando = false;
             }
+            // Si al aparecer o desaparecer la barra vertical cambió el ancho útil, se reparte de nuevo
+            if (_fondo.ClientSize != cliente) Acomodar();
+            _fondo.Invalidate(true);
+        }
 
-            if (_flpAccesos.Visible)
+        /// <summary>
+        /// Reparte las tarjetas de una fila en filas parejas (8 accesos = 2 filas de 4, no 7 + 1)
+        /// con el ancho justo para que entren sin pasarse del ancho disponible.
+        /// </summary>
+        private static void RepartirFila(FlowLayoutPanel fila, int ancho, int anchoMaximo, int anchoMinimo, int? alto)
+        {
+            var hijos = fila.Controls.Cast<Control>().ToList();
+            if (hijos.Count == 0) return;
+            int separacion = hijos[0].Margin.Horizontal;
+            // El FlowLayoutPanel cuenta también el margen derecho de la última tarjeta de cada fila
+            int porFila = Math.Max(1, Math.Min(hijos.Count, ancho / (anchoMinimo + separacion)));
+            int filas = (hijos.Count + porFila - 1) / porFila;
+            porFila = (hijos.Count + filas - 1) / filas;
+            int anchoTarjeta = Math.Max(120, Math.Min(anchoMaximo, ancho / porFila - separacion));
+            foreach (var hijo in hijos)
             {
-                y += 22;
-                _lblAccesos.Location = new Point(Margen, y);
-                y += _lblAccesos.Height + 8;
-                _flpAccesos.Bounds = new Rectangle(Margen, y, ancho, accesos.Height);
+                if (hijo.Width != anchoTarjeta) hijo.Width = anchoTarjeta;
+                if (alto.HasValue && hijo.Height != alto.Value) hijo.Height = alto.Value;
             }
         }
 
@@ -313,6 +380,16 @@ namespace GUI_08YS
         {
             int hora = DateTime.Now.Hour;
             return T(hora >= 6 && hora < 12 ? "Inicio_buenosDias" : hora >= 12 && hora < 20 ? "Inicio_buenasTardes" : "Inicio_buenasNoches");
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
+                return cp;
+            }
         }
 
         #endregion

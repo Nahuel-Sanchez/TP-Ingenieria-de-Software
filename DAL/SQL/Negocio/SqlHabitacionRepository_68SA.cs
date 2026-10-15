@@ -196,7 +196,7 @@ namespace DAL_08YS.SQL.Negocio
           WHERE HabitacionID = @Id
             AND NOT EXISTS (SELECT 1 FROM Reservas WHERE HabitacionID = @Id)
             AND NOT EXISTS (SELECT 1 FROM HistorialCambiosHabitacion WHERE HabitacionAnteriorID = @Id OR HabitacionNuevaID = @Id)
-            AND NOT EXISTS (SELECT 1 FROM Bitacora_CambiosHabitacion WHERE HabitacionID = @Id OR HabitacionAnteriorID = @Id)",
+            AND NOT EXISTS (SELECT 1 FROM Bitacora_Reservas WHERE HabitacionID = @Id)",
                 new[] { Param("@Id", habitacionId) });
         }
 

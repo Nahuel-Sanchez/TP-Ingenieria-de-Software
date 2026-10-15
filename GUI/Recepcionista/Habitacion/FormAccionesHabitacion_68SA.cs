@@ -1,6 +1,8 @@
 ﻿using BE_08YS;
 using FontAwesome.Sharp;
 using Service_08YS;
+using GUI_08YS.UserControls;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -61,9 +63,31 @@ namespace GUI_08YS.Recepcionista
                 flpAcciones.Controls.Add(boton);
             }
 
-            int alturaAcciones = acciones.Count * 66;
-            flpAcciones.Height = alturaAcciones;
-            ClientSize = new Size(ClientSize.Width, flpAcciones.Top + alturaAcciones + 24);
+            AjustarAlContenido();
+        }
+
+        /// <summary>
+        /// Los botones ocupan todo el ancho del panel (nunca hay barra horizontal) y la ventana toma el alto
+        /// justo para mostrar todas las acciones. Solo si no entran en la pantalla se limita el alto y
+        /// aparece la barra vertical.
+        /// </summary>
+        private void AjustarAlContenido()
+        {
+            int altoAcciones = flpAcciones.Padding.Vertical;
+            foreach (Control boton in flpAcciones.Controls)
+                altoAcciones += boton.Height + boton.Margin.Vertical;
+
+            int fijo = flpAcciones.Top + 24 + Padding.Vertical;   // encabezado y datos de la habitación + margen inferior
+            int altoMaximo = Screen.FromPoint(Cursor.Position).WorkingArea.Height - 40;
+            int altoLista = Math.Max(66, Math.Min(altoAcciones, altoMaximo - fijo));
+
+            flpAcciones.Height = altoLista;
+            ClientSize = new Size(ClientSize.Width, fijo + altoLista);
+            flpAcciones.Width = pnlBorde.ClientSize.Width - flpAcciones.Left * 2;
+            flpAcciones.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+
+            // Con barra vertical o sin ella, los botones se ajustan al ancho visible
+            LayoutAdaptable_68SA.EstirarHijosAlAncho(flpAcciones);
         }
 
         #endregion

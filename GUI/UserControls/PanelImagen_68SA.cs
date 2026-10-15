@@ -58,6 +58,20 @@ namespace GUI_08YS.UserControls
 
         #region Sobrescrituras
 
+        // La imagen cubre siempre el área visible: al desplazarse se vuelve a pintar todo
+        // (si no, Windows copia el fondo ya pintado y la foto se "arrastra" con el contenido).
+        protected override void OnScroll(ScrollEventArgs se)
+        {
+            base.OnScroll(se);
+            Invalidate(true);
+        }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            if (AutoScroll) Invalidate(true);
+        }
+
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             var g = e.Graphics;

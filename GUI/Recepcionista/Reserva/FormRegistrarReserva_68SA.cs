@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Service_08YS.Entities.Acceso;
 using System.Collections.Generic;
+using System.Drawing;
 using GUI_08YS.UserControls;
 namespace GUI_08YS.Recepcionista
 {
@@ -70,6 +71,15 @@ namespace GUI_08YS.Recepcionista
                 new Control[] { lblEtiquetaMetodoPago, cmbMetodoPago, lblEtiquetaNumeroTarjeta, txtNumeroTarjeta },
                 new Control[] { lblEtiquetaMontoRecibido, nudMontoRecibido, lblMarcaTarjetaDetectada, lblVueltoEtiqueta, lblVuelto,
                                 lblEtiquetaTitularTarjeta, txtTitularTarjeta, lblEtiquetaCvv, txtCvv });
+            LayoutAdaptable_68SA.RepartirColumnas(pnlDetalles,
+                new Control[] { lblDetEtiquetaPiso, lblDetPiso }, new Control[] { lblDetEtiquetaCapacidad, lblDetCapacidad },
+                new Control[] { lblDetEtiquetaPrecio, lblDetPrecio });
+
+            // Tarjetas en dos columnas o apiladas según el ancho; barra vertical solo si no entran a lo alto
+            LayoutAdaptable_68SA.OcultarScrollHorizontal(pnlCuerpo);
+            pnlCuerpo.Layout += (s, e) => AcomodarTarjetas();
+            pnlIzquierda.Layout += (s, e) => AcomodarFilaDocumento();
+            pnlEncabezado.Resize += (s, e) => pasosReserva.Width = Math.Max(300, Math.Min(520, pnlEncabezado.Width * 40 / 100));
             pasosReserva.PasoActual = 2;
             txtDni.InnerTextBox.KeyDown += (s, e) =>
             {
@@ -150,6 +160,7 @@ namespace GUI_08YS.Recepcionista
                                          TraductorManager_08YS.Instance.GetTexto("Disponibilidad_paso3") };
             ActualizarSubtitulo();
             ActualizarAvisoConfirmar();
+            AcomodarFilaDocumento();   // el ancho de "Consultar" depende del idioma
         }
 
         private void TraducirPlaceholders()
@@ -395,6 +406,108 @@ namespace GUI_08YS.Recepcionista
         #endregion
 
         #region Métodos auxiliares
+
+        private const int SeparacionTarjetas = 16;
+        private const int AnchoDosColumnas = 1100;    // por debajo, las tarjetas van una debajo de la otra
+        private const int AltoMinimoResumen = 470;    // fechas, huéspedes, advertencia y total sin superponerse
+        private bool _acomodandoTarjetas;
+
+        /// <summary>
+        /// Ubica las cuatro tarjetas. Con espacio: titular y pago a la izquierda (58%), habitación y estadía
+        /// a la derecha. En pantallas angostas: una debajo de la otra en el orden en que se completan
+        /// (titular, habitación, estadía, pago). Si no entran a lo alto aparece solo la barra vertical.
+        /// </summary>
+        private void AcomodarTarjetas()
+        {
+            if (_acomodandoTarjetas) return;
+            _acomodandoTarjetas = true;
+            Size cliente = pnlCuerpo.ClientSize;
+            pnlCuerpo.SuspendLayout();
+            try
+            {
+                int ancho = pnlCuerpo.ClientSize.Width;
+                if (ancho <= 0) return;
+                int y0 = pnlCuerpo.AutoScrollPosition.Y + 10;   // negativo cuando el cuerpo está desplazado
+                int alto;
+
+                if (ancho >= AnchoDosColumnas)
+                {
+                    int izquierda = (ancho - SeparacionTarjetas) * 58 / 100;
+                    int derecha = ancho - SeparacionTarjetas - izquierda;
+                    int altoIzquierda = pnlIzquierda.Height + SeparacionTarjetas + pnlPago.Height;
+                    int altoDerecha = Math.Max(pnlDetalles.Height + SeparacionTarjetas + AltoMinimoResumen,
+                                               Math.Max(altoIzquierda, pnlCuerpo.ClientSize.Height - 16));
+
+                    pnlIzquierda.Bounds = new Rectangle(0, y0, izquierda, pnlIzquierda.Height);
+                    pnlPago.Bounds = new Rectangle(0, y0 + pnlIzquierda.Height + SeparacionTarjetas, izquierda, pnlPago.Height);
+                    int x = izquierda + SeparacionTarjetas;
+                    pnlDetalles.Bounds = new Rectangle(x, y0, derecha, pnlDetalles.Height);
+                    pnlResumen.Bounds = new Rectangle(x, y0 + pnlDetalles.Height + SeparacionTarjetas, derecha,
+                                                      altoDerecha - pnlDetalles.Height - SeparacionTarjetas);
+                    alto = 10 + Math.Max(altoIzquierda, altoDerecha) + 6;
+                }
+                else
+                {
+                    int y = y0;
+                    foreach (var (tarjeta, altoTarjeta) in new (Control, int)[]
+                    {
+                        (pnlIzquierda, pnlIzquierda.Height), (pnlDetalles, pnlDetalles.Height),
+                        (pnlResumen, AltoMinimoResumen), (pnlPago, pnlPago.Height)
+                    })
+                    {
+                        tarjeta.Bounds = new Rectangle(0, y, ancho, altoTarjeta);
+                        y += altoTarjeta + SeparacionTarjetas;
+                    }
+                    alto = y - y0 - SeparacionTarjetas + 16;
+                }
+
+                var minimo = alto > pnlCuerpo.ClientSize.Height ? new Size(0, alto) : Size.Empty;
+                if (pnlCuerpo.AutoScrollMinSize != minimo) pnlCuerpo.AutoScrollMinSize = minimo;
+            }
+            finally
+            {
+                pnlCuerpo.ResumeLayout(false);
+                _acomodandoTarjetas = false;
+            }
+            // Si apareció o desapareció la barra vertical cambió el ancho útil: se reparte de nuevo
+            if (pnlCuerpo.ClientSize != cliente) AcomodarTarjetas();
+        }
+
+        /// <summary>
+        /// Fila del documento: tipo, número, "Consultar" y "Huésped nuevo" se reparten el ancho de la tarjeta.
+        /// Si el número quedaría muy angosto, "Consultar" muestra solo la lupa (el texto queda en el tooltip).
+        /// </summary>
+        private void AcomodarFilaDocumento()
+        {
+            int x = 24, disponible = pnlIzquierda.ClientSize.Width - 48;
+            if (disponible <= 0) return;
+
+            string textoConsultar = TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_btnConsultarDocumento");
+            int anchoCombo = Math.Max(130, Math.Min(190, disponible * 28 / 100));
+            // Sin permiso para registrar huéspedes el botón está oculto: no se le reserva lugar
+            bool conNuevo = btnHuespedNuevo.Visible || !pnlIzquierda.Visible;
+            int anchoNuevo = conNuevo ? btnHuespedNuevo.Width + 8 : 0;
+            int anchoConTexto = TextRenderer.MeasureText(textoConsultar, btnConsultarDocumento.Font).Width + btnConsultarDocumento.IconSize + 44;
+            int anchoDni = disponible - anchoCombo - 14 - 12 - anchoConTexto - anchoNuevo;
+            bool conTexto = anchoDni >= 150;
+            int anchoConsultar = conTexto ? anchoConTexto : 50;
+            anchoDni = Math.Max(60, disponible - anchoCombo - 14 - 12 - anchoConsultar - anchoNuevo);
+
+            btnConsultarDocumento.Text = conTexto ? textoConsultar : string.Empty;
+            btnConsultarDocumento.Padding = conTexto ? new Padding(12, 0, 0, 0) : Padding.Empty;
+            btnConsultarDocumento.ImageAlign = conTexto ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter;
+            btnConsultarDocumento.TextImageRelation = conTexto ? TextImageRelation.ImageBeforeText : TextImageRelation.Overlay;
+            toolTip1.SetToolTip(btnConsultarDocumento, conTexto ? null : textoConsultar);
+
+            cmbTipoDocumento.Bounds = new Rectangle(x, cmbTipoDocumento.Top, anchoCombo, cmbTipoDocumento.Height);
+            x += anchoCombo + 14;
+            lblEtiquetaDni.Left = x;
+            txtDni.Bounds = new Rectangle(x, txtDni.Top, anchoDni, txtDni.Height);
+            x += anchoDni + 12;
+            btnConsultarDocumento.Bounds = new Rectangle(x, btnConsultarDocumento.Top, anchoConsultar, btnConsultarDocumento.Height);
+            x += anchoConsultar + 8;
+            btnHuespedNuevo.Left = x;
+        }
 
         private void RecalcularResumen()
         {

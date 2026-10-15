@@ -107,6 +107,17 @@ namespace GUI_08YS.Recepcionista
         {
             InitializeComponent();
 
+            // Tarjetas de indicadores: el valor nunca queda debajo del ícono (se achica o el ícono se oculta)
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardDisponibles, lblValorDisponibles, iconDisponibles);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardOcupadas, lblValorOcupadasDash, iconOcupadasDash);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardLimpieza, lblValorLimpieza, iconLimpieza);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardMantenimiento, lblValorMantenimiento, iconMantenimiento);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardTasaOcupacion, lblValorTasaOcupacion, iconTasaOcupacion);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardIngresos, lblValorIngresos, iconIngresos);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardTicketPromedio, lblValorTicketPromedio, iconTicketPromedio);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardAnuladas, lblValorAnuladas, iconAnuladas);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(pnlCardMontoAnulado, lblValorMontoAnulado, iconMontoAnulado);
+
             dtpDesdeGeneral.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
             dtpHastaGeneral.Value = DateTime.Today;
 
@@ -1215,6 +1226,7 @@ namespace GUI_08YS.Recepcionista
                 AutoSize = true
             };
             panel.Controls.Add(lblValor);
+            LayoutAdaptable_68SA.AjustarValorTarjeta(panel, lblValor, iconoKpi);
 
             return panel;
         }
@@ -1510,8 +1522,8 @@ namespace GUI_08YS.Recepcionista
                 T("Dashboard_btnVerPedidos"), SessionManager_08YS.Instance.HasPermission(Permisos.ConfirmarEntregaRoomService),
                 () => AbrirPantalla(Permisos.ConfirmarEntregaRoomService, () => new FormPedidosRoomService_68SA()));
             var tarjetaCambios = CrearTarjetaLista(T("Dashboard_tituloCambiosHabitacion"), out _listaCambios, out _,
-                T("Dashboard_btnVerBitacoraCambios"), SessionManager_08YS.Instance.HasPermission(Permisos.VerBitacoraCambiosHabitacion),
-                () => AbrirPantalla(Permisos.VerBitacoraCambiosHabitacion, () => new FormBitacoraCambiosHabitacion_68SA()));
+                T("Dashboard_btnVerBitacoraCambios"), SessionManager_08YS.Instance.HasPermission(Permisos.VerBitacoraReservas),
+                () => AbrirPantalla(Permisos.VerBitacoraReservas, () => new FormBitacoraReservas_68SA()));
             _flpServicios.Controls.Add(CrearFila(320, new Padding(3, 0, 3, 3), (tarjetaPendientes, 50F), (tarjetaCambios, 50F)));
 
             _flpServicios.ResumeLayout(true);
@@ -1747,6 +1759,7 @@ namespace GUI_08YS.Recepcionista
                     lblValor.Width = ancho;
                     lblDetalle.Width = ancho;
                 };
+                LayoutAdaptable_68SA.AjustarValorTarjeta(panel, lblValor, icono);
                 fila.Controls.Add(panel, i, 0);
                 etiquetas.Add((lblValor, lblDetalle));
             }

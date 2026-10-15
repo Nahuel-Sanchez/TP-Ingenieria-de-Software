@@ -40,6 +40,10 @@ namespace GUI_08YS.Reportes
         private readonly Label _lblPagina, _lblZoom;
         private readonly IconButton _btnAnterior, _btnSiguiente, _btnAlejar, _btnAcercar, _btnAjustar, _btnImprimir, _btnPdf;
 
+        private readonly FlowLayoutPanel _izquierda;
+        private readonly ToolTip _tips = new ToolTip();
+        private readonly Dictionary<IconButton, string> _textos = new Dictionary<IconButton, string>();
+
         private IReporteImprimible_68SA _reporte;
         private string _nombreArchivo = "Reporte";
 
@@ -66,7 +70,7 @@ namespace GUI_08YS.Reportes
             Controls.Add(_barra);
 
             // Izquierda: páginas y zoom
-            var izquierda = new FlowLayoutPanel
+            var izquierda = _izquierda = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 BackColor = FondoBarra,
@@ -111,6 +115,8 @@ namespace GUI_08YS.Reportes
             _lienzo.ZoomCambiado += (s, e) => ActualizarBarra();
 
             izquierda.Controls.AddRange(new Control[] { _btnAnterior, _lblPagina, _btnSiguiente, separador, _btnAlejar, _lblZoom, _btnAcercar, _btnAjustar });
+            _barra.Resize += (s, e) => AcomodarBarra();
+            Disposed += (s, e) => _tips.Dispose();
 
             UpdateIdioma();
             ActualizarBarra();
@@ -244,12 +250,12 @@ namespace GUI_08YS.Reportes
 
         public void UpdateIdioma()
         {
-            _btnImprimir.Text = " " + T("Reportes_btnImprimir");
-            _btnPdf.Text = " " + T("Reportes_btnPdf");
-            _btnAjustar.Text = " " + T("Reportes_btnAjustar");
-            // Cada botón toma el ancho de su texto (en cualquier idioma) más el ícono y los márgenes
-            foreach (var boton in new[] { _btnImprimir, _btnPdf, _btnAjustar })
-                boton.Width = TextRenderer.MeasureText(boton.Text, boton.Font).Width + boton.IconSize + 34;
+            _textos[_btnImprimir] = T("Reportes_btnImprimir");
+            _textos[_btnPdf] = T("Reportes_btnPdf");
+            _textos[_btnAjustar] = T("Reportes_btnAjustar");
+            foreach (var par in _textos)
+                _tips.SetToolTip(par.Key, par.Value);
+            AcomodarBarra();
             _lienzo.TextoVacio = T("Reportes_vistaVacia");
             _lienzo.TextoAyuda = T("Reportes_vistaVaciaAyuda");
             ActualizarBarra();
@@ -311,6 +317,45 @@ namespace GUI_08YS.Reportes
         #region Métodos auxiliares
 
         private static string T(string clave) => TraductorManager_08YS.Instance.GetTexto(clave);
+
+        /// <summary>
+        /// Cada botón toma el ancho de su texto (en cualquier idioma) más el ícono y los márgenes.
+        /// Si la barra es angosta y no entra todo, primero "Ajustar ancho" y después Imprimir / Guardar PDF
+        /// quedan solo con el ícono (el texto se ve en el tooltip): nunca se tapan entre sí.
+        /// </summary>
+        private void AcomodarBarra()
+        {
+            if (_izquierda == null || !_textos.ContainsKey(_btnAjustar)) return;
+            int disponible = _barra.ClientSize.Width - _barra.Padding.Horizontal;
+            int fijoIzquierda = _izquierda.Controls.Cast<Control>()
+                .Where(c => !ReferenceEquals(c, _btnAjustar))
+                .Sum(c => c.Width + c.Margin.Horizontal);
+            int separadorDerecha = 10;
+
+            int Ancho(IconButton boton, bool conTexto) =>
+                conTexto ? TextRenderer.MeasureText(" " + _textos[boton], boton.Font).Width + boton.IconSize + 34 : 40;
+
+            // 0 = todo con texto, 1 = "Ajustar" solo ícono, 2 = los tres solo ícono
+            int modo = 0;
+            for (; modo < 2; modo++)
+            {
+                int necesario = fijoIzquierda + Ancho(_btnAjustar, modo == 0) + _btnAjustar.Margin.Horizontal
+                              + Ancho(_btnImprimir, modo < 2) + separadorDerecha + Ancho(_btnPdf, modo < 2);
+                if (necesario <= disponible) break;
+            }
+
+            Poner(_btnAjustar, modo == 0);
+            Poner(_btnImprimir, modo < 2);
+            Poner(_btnPdf, modo < 2);
+
+            void Poner(IconButton boton, bool conTexto)
+            {
+                boton.Text = conTexto ? " " + _textos[boton] : string.Empty;
+                boton.TextImageRelation = conTexto ? TextImageRelation.ImageBeforeText : TextImageRelation.Overlay;
+                int ancho = Ancho(boton, conTexto);
+                if (boton.Width != ancho) boton.Width = ancho;
+            }
+        }
 
         #endregion
 

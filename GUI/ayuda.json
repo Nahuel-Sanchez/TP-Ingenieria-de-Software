@@ -7,6 +7,7 @@
     "titulo": "Primeros pasos",
     "icono": "Rocket",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Lo básico para empezar a trabajar con el sistema de gestión hotelera de Horizon Hotel & Resort: cómo ingresar, qué muestra la pantalla de inicio, cómo moverse por el menú y cómo pedir ayuda.",
     "secciones": [
      {
@@ -37,6 +38,7 @@
     "pantallas": [
      "FormLogin_08YS"
     ],
+    "permisos": [],
     "resumen": "Es la primera pantalla del sistema: ahí ingresás tu usuario y tu contraseña para abrir una sesión de trabajo. Solo puede acceder el personal autorizado del hotel.",
     "secciones": [
      {
@@ -127,6 +129,7 @@
     "pantallas": [
      "FormInicio_68SA"
     ],
+    "permisos": [],
     "resumen": "Es lo primero que ves al entrar y a lo que volvés con el botón Inicio: un saludo, la fecha, el movimiento del día en el hotel y accesos directos a tus tareas más frecuentes.",
     "secciones": [
      {
@@ -185,12 +188,13 @@
     "pantallas": [
      "FormMDI_08YS"
     ],
+    "permisos": [],
     "resumen": "Es la ventana principal del sistema: una barra superior con la sección actual, el reloj, el idioma y la ayuda, y un menú lateral desde el que se abren todas las pantallas.",
     "secciones": [
      {
       "titulo": "Cómo está organizada la ventana",
       "parrafos": [
-       "El menú lateral agrupa las opciones en OPERACIÓN (Recepción, Reservas, Huéspedes, Room service), HOTEL (Habitaciones, Configuración del hotel), ANÁLISIS (Dashboard, Reportes) y SISTEMA (Administrativo, Mi perfil). Arriba del menú está tu tarjeta de usuario con tus iniciales, tu nombre y tu rol; abajo, el botón Cerrar sesión.",
+       "El menú lateral agrupa las opciones en OPERACIÓN (Recepción, Reservas, Huéspedes, Room service), HOTEL (Habitaciones, Configuración del hotel), ANÁLISIS (Dashboard, Reportes, Bitácora de reservas) y SISTEMA (Administrativo, Mi perfil). Arriba del menú está tu tarjeta de usuario con tus iniciales, tu nombre y tu rol; abajo, el botón Cerrar sesión.",
        "La pantalla elegida se abre en el área central. El botón de la sección activa se marca con fondo y una barra dorada, y en la barra superior se lee \"Sección › Pantalla\".",
        "Los botones con submenú (Recepción, Room service, Habitaciones, Administrativo y Mi perfil) despliegan sus opciones al hacer clic."
       ]
@@ -232,7 +236,11 @@
        "btnHuespedes"
       ],
       "nombre": "Reservas y Huéspedes",
-      "texto": "Abren el listado y calendario de reservas, y el maestro de huéspedes."
+      "texto": "Abren el listado y calendario de reservas, y el maestro de huéspedes.",
+      "permisos": [
+       "VerHuespedes",
+       "VerReservas"
+      ]
      },
      {
       "controles": [
@@ -247,15 +255,16 @@
        "btnHotelConfig"
       ],
       "nombre": "Habitaciones y Configuración del hotel",
-      "texto": "Habitaciones despliega Habitaciones, Tipos de habitación, Pisos y Bitácora de cambios. Configuración del hotel abre los horarios de check-in/check-out y las horas de gracia."
+      "texto": "Habitaciones despliega Habitaciones, Tipos de habitación y Pisos. Configuración del hotel abre los horarios de check-in/check-out y las horas de gracia."
      },
      {
       "controles": [
        "btnDashboard",
-       "btnReportes"
+       "btnReportes",
+       "btnBitacoraReservas"
       ],
-      "nombre": "Dashboard y Reportes",
-      "texto": "Abren los indicadores del hotel y la generación de reportes."
+      "nombre": "Dashboard, Reportes y Bitácora de reservas",
+      "texto": "Abren los indicadores del hotel y la generación de reportes. Bitácora de reservas muestra cada alta y cada cambio de las reservas."
      },
      {
       "controles": [
@@ -324,6 +333,7 @@
     "titulo": "Cómo usar la ayuda",
     "icono": "CircleQuestion",
     "pantallas": [],
+    "permisos": [],
     "resumen": "La ayuda en línea está disponible en todas las pantallas, incluidas las ventanas emergentes y el ingreso al sistema: podés pedir la explicación de un elemento puntual o abrir el tema completo de la pantalla.",
     "secciones": [
      {
@@ -352,7 +362,8 @@
     "elementos": [],
     "consejos": [
      "Si un clic con \"¿Qué es esto?\" no muestra nada específico, probá sobre el control de al lado o abrí la ayuda completa de la pantalla.",
-     "La ayuda se muestra en el idioma activo del sistema."
+     "La ayuda se muestra en el idioma activo del sistema.",
+     "La ayuda, el buscador y el manual en PDF muestran solo las pantallas y opciones que tu usuario tiene habilitadas: dos usuarios con permisos distintos ven contenidos distintos."
     ],
     "relacionados": [
      "navegacion",
@@ -366,6 +377,7 @@
     "titulo": "Recepción",
     "icono": "PersonWalkingLuggage",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Las tareas diarias del mostrador: buscar disponibilidad y registrar reservas, controlar el estado de las habitaciones, hacer check-in y check-out, renovar estadías y cambiar a un huésped de habitación.",
     "secciones": [
      {
@@ -399,6 +411,9 @@
     "icono": "CalendarPlus",
     "pantallas": [
      "FormDisponibilidad"
+    ],
+    "permisos": [
+     "RegistrarReserva"
     ],
     "resumen": "Es el primer paso de una reserva nueva (paso 1 de 3): elegís las fechas de llegada y salida y cuántas personas se alojan. A la derecha ves enseguida cuántas habitaciones quedan libres de cada tipo, con la tarifa y el total estimado de la estadía.",
     "secciones": [
@@ -501,6 +516,9 @@
     "pantallas": [
      "FormRegistrarReserva_68SA"
     ],
+    "permisos": [
+     "RegistrarReserva"
+    ],
     "resumen": "En esta pantalla completás la reserva de la habitación elegida: el titular, las fechas, la cantidad de huéspedes y el pago de la estadía. Al confirmar, la reserva queda registrada y pagada.",
     "secciones": [
      {
@@ -559,7 +577,10 @@
        "btnHuespedNuevo"
       ],
       "nombre": "Registrar huésped nuevo",
-      "texto": "Abre el alta de huésped; al guardarlo queda seleccionado como titular. Solo aparece si tenés permiso para registrar huéspedes."
+      "texto": "Abre el alta de huésped; al guardarlo queda seleccionado como titular. Solo aparece si tenés permiso para registrar huéspedes.",
+      "permisos": [
+       "CrearHuesped"
+      ]
      },
      {
       "controles": [
@@ -668,6 +689,9 @@
      "FormControlHabitaciones_68SA",
      "FormAccionesHabitacion_68SA",
      "FormDetalleEstadia_68SA"
+    ],
+    "permisos": [
+     "VerControlHabitaciones"
     ],
     "resumen": "Es el tablero de la recepción: muestra todas las habitaciones agrupadas por piso con su estado actual y quién las ocupa, y desde cada tarjeta se abren las acciones posibles (reservar, check-in, check-out, room service, cambio de habitación, renovar, mantenimiento).",
     "secciones": [
@@ -805,6 +829,9 @@
     "pantallas": [
      "FormCheckIn_68SA"
     ],
+    "permisos": [
+     "RegistrarCheckIn"
+    ],
     "resumen": "Registra la llegada del huésped: busca la reserva pendiente del titular, carga a los acompañantes y deja la estadía en curso con la habitación ocupada.",
     "secciones": [
      {
@@ -869,7 +896,10 @@
        "btnConfirmar"
       ],
       "nombre": "Confirmar Check-in",
-      "texto": "Valida acompañantes y composición y registra el check-in. Solo se ve con el permiso para registrar check-in."
+      "texto": "Valida acompañantes y composición y registra el check-in. Solo se ve con el permiso para registrar check-in.",
+      "permisos": [
+       "RegistrarCheckIn"
+      ]
      },
      {
       "controles": [
@@ -899,6 +929,9 @@
     "icono": "DoorClosed",
     "pantallas": [
      "FormCheckOut_68SA"
+    ],
+    "permisos": [
+     "RegistrarCheckOut"
     ],
     "resumen": "Registra la salida del huésped: muestra la cuenta completa de la estadía, cobra el saldo pendiente (renovaciones, upgrades y room service) y finaliza la reserva.",
     "secciones": [
@@ -997,7 +1030,10 @@
        "btnConfirmar"
       ],
       "nombre": "Confirmar Check-out",
-      "texto": "Registra el pago del saldo (si hay) y el check-out. Se ve con el permiso de check-out y, si hay saldo, también el de cobrar."
+      "texto": "Registra el pago del saldo (si hay) y el check-out. Se ve con el permiso de check-out y, si hay saldo, también el de cobrar.",
+      "permisos": [
+       "RegistrarCheckOut"
+      ]
      },
      {
       "controles": [
@@ -1026,6 +1062,9 @@
     "icono": "ArrowRotateRight",
     "pantallas": [
      "FormRenovarEstadia_68SA"
+    ],
+    "permisos": [
+     "ExtenderEstadia"
     ],
     "resumen": "Extiende una estadía en curso cambiando la fecha de egreso. El costo de las noches agregadas no se cobra en el momento: queda como saldo y se cobra en el check-out.",
     "secciones": [
@@ -1087,7 +1126,10 @@
        "btnConfirmar"
       ],
       "nombre": "Confirmar",
-      "texto": "Registra la nueva fecha de egreso. Solo se ve con el permiso para renovar estadías."
+      "texto": "Registra la nueva fecha de egreso. Solo se ve con el permiso para renovar estadías.",
+      "permisos": [
+       "ExtenderEstadia"
+      ]
      },
      {
       "controles": [
@@ -1117,6 +1159,10 @@
      "FormCambioHabitacion_68SA",
      "FormBuscarReserva_68SA"
     ],
+    "permisos": [
+     "RegistrarUpgradeHabitacion",
+     "ReubicarHuesped"
+    ],
     "resumen": "Muda una reserva a otra habitación: como upgrade pedido por el huésped (con cargo a la cuenta) o como reubicación por decisión del hotel (sin cargo).",
     "secciones": [
      {
@@ -1131,7 +1177,7 @@
       "parrafos": [
        "Upgrade pedido por el huésped: solo con la estadía en curso y solo hacia habitaciones de tarifa mayor. El cargo es la diferencia de tarifa por noche multiplicada por las noches restantes, se suma a la cuenta y se cobra en el check-out. Desde ese momento la tarifa vigente es la nueva.",
        "Reubicación por el hotel: cualquier habitación libre con capacidad suficiente, sin cargo; el huésped mantiene su tarifa. El motivo es obligatorio (al menos 5 caracteres). También se puede reubicar una reserva pendiente que todavía no hizo check-in: se le asigna otra habitación para toda la estadía.",
-       "Con el huésped ya alojado, la mudanza es inmediata: la habitación nueva tiene que estar lista ahora y libre hasta el egreso, y la anterior queda en Limpieza (o fuera de servicio, si se está poniendo en mantenimiento). Todos los cambios quedan en la Bitácora de cambios de habitación."
+       "Con el huésped ya alojado, la mudanza es inmediata: la habitación nueva tiene que estar lista ahora y libre hasta el egreso, y la anterior queda en Limpieza (o fuera de servicio, si se está poniendo en mantenimiento). Todos los cambios quedan en la Bitácora de reservas."
       ]
      }
     ],
@@ -1248,6 +1294,9 @@
      "FormModificarReserva_68SA",
      "FormDocumentosReserva_68SA"
     ],
+    "permisos": [
+     "VerReservas"
+    ],
     "resumen": "Reúne todas las reservas del hotel en una lista con filtros y en un calendario por habitación. Desde acá podés crear, modificar, cancelar e imprimir reservas y ver su comprobante y factura.",
     "secciones": [
      {
@@ -1287,7 +1336,10 @@
        "btnCrearReserva"
       ],
       "nombre": "Crear Reserva",
-      "texto": "Abre la elección de fechas para registrar una reserva nueva. Requiere el permiso para registrar reservas."
+      "texto": "Abre la elección de fechas para registrar una reserva nueva. Requiere el permiso para registrar reservas.",
+      "permisos": [
+       "RegistrarReserva"
+      ]
      },
      {
       "controles": [
@@ -1418,6 +1470,9 @@
      "FormHuespedes_68SA",
      "FormRegistrarHuesped_68SA"
     ],
+    "permisos": [
+     "VerHuespedes"
+    ],
     "resumen": "Es el maestro de huéspedes: lista a las personas registradas con filtros, y permite darlas de alta, modificarlas, eliminarlas y exportar o importar el listado en XML.",
     "secciones": [
      {
@@ -1455,7 +1510,10 @@
        "btnNuevo"
       ],
       "nombre": "Nuevo huésped",
-      "texto": "Abre el alta de huésped. Requiere el permiso para registrar huéspedes."
+      "texto": "Abre el alta de huésped. Requiere el permiso para registrar huéspedes.",
+      "permisos": [
+       "CrearHuesped"
+      ]
      },
      {
       "controles": [
@@ -1507,7 +1565,10 @@
        "btnSerializar"
       ],
       "nombre": "Serializar",
-      "texto": "Guarda en un archivo XML los huéspedes que se ven en la grilla; elegís carpeta y nombre. Requiere su permiso."
+      "texto": "Guarda en un archivo XML los huéspedes que se ven en la grilla; elegís carpeta y nombre. Requiere su permiso.",
+      "permisos": [
+       "SerializarHuespedes"
+      ]
      },
      {
       "controles": [
@@ -1569,6 +1630,7 @@
     "titulo": "Room service",
     "icono": "BellConcierge",
     "pantallas": [],
+    "permisos": [],
     "resumen": "El servicio a la habitación: cargar pedidos a la cuenta de una estadía en curso, seguir y confirmar su entrega, y mantener la carta de productos con sus precios.",
     "secciones": [
      {
@@ -1598,6 +1660,9 @@
     "icono": "CirclePlus",
     "pantallas": [
      "FormPedidoRoomService_68SA"
+    ],
+    "permisos": [
+     "RegistrarRoomService"
     ],
     "resumen": "Carga un pedido de servicio a la habitación a la cuenta de una estadía en curso: elegís los ítems de la carta y sus cantidades, y el total se cobra en el check-out.",
     "secciones": [
@@ -1697,6 +1762,9 @@
     "pantallas": [
      "FormPedidosRoomService_68SA"
     ],
+    "permisos": [
+     "ConfirmarEntregaRoomService"
+    ],
     "resumen": "Es la pantalla del personal de servicio: muestra los pedidos pendientes con el tiempo que llevan esperando y permite confirmar su entrega. Se actualiza sola cada minuto.",
     "secciones": [
      {
@@ -1787,6 +1855,9 @@
      "FormCartaRoomService_68SA",
      "FormEditarItemRoomService_68SA"
     ],
+    "permisos": [
+     "GestionarItemsRoomService"
+    ],
     "resumen": "Administra los ítems que se ofrecen en el servicio a la habitación: nombre, descripción y precio. Los ítems no se eliminan: se dan de baja y dejan de ofrecerse.",
     "secciones": [
      {
@@ -1817,7 +1888,10 @@
        "btnNuevo"
       ],
       "nombre": "Nuevo ítem",
-      "texto": "Abre la ventana para agregar un ítem a la carta."
+      "texto": "Abre la ventana para agregar un ítem a la carta.",
+      "permisos": [
+       "GestionarItemsRoomService"
+      ]
      },
      {
       "controles": [
@@ -1901,12 +1975,13 @@
     "titulo": "Habitaciones y hotel",
     "icono": "Hotel",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Agrupa las pantallas para mantener la estructura física del hotel (pisos, tipos y habitaciones), consultar el historial de cambios de habitación y ajustar la configuración general.",
     "secciones": [
      {
       "titulo": "Qué contiene este grupo",
       "parrafos": [
-       "Desde el botón \"Habitaciones\" del menú lateral (grupo HOTEL) se abren las opciones Habitaciones, Tipos de Habitación, Pisos y Bitácora de cambios. El botón \"Configuración del hotel\" abre los horarios de check-in y check-out y la tolerancia de no-show.",
+       "Desde el botón \"Habitaciones\" del menú lateral (grupo HOTEL) se abren las opciones Habitaciones, Tipos de Habitación y Pisos. El botón \"Configuración del hotel\" abre los horarios de check-in y check-out y la tolerancia de no-show.",
        "Conviene cargar los datos en este orden: primero los pisos, después los tipos de habitación (con su capacidad y tarifa) y por último las habitaciones, que necesitan un piso y un tipo. Solo ves las opciones para las que tenés permiso."
       ]
      }
@@ -1930,6 +2005,9 @@
     "pantallas": [
      "FormHabitaciones_68SA",
      "FormEditarHabitacion_68SA"
+    ],
+    "permisos": [
+     "VerHabitaciones"
     ],
     "resumen": "Pantalla \"Administrar habitaciones\": lista todas las habitaciones del hotel con su piso, tipo, capacidad, tarifa y estado, y permite darlas de alta, modificarlas o eliminarlas.",
     "secciones": [
@@ -1968,7 +2046,10 @@
        "btnNueva"
       ],
       "nombre": "Botón Nueva habitación",
-      "texto": "Abre la ventana de alta. Solo aparece si tenés permiso para crear habitaciones."
+      "texto": "Abre la ventana de alta. Solo aparece si tenés permiso para crear habitaciones.",
+      "permisos": [
+       "CrearHabitacion"
+      ]
      },
      {
       "controles": [
@@ -2062,6 +2143,9 @@
      "FormTiposHabitacion_68SA",
      "FormEditarTipoHabitacion_68SA"
     ],
+    "permisos": [
+     "VerTiposHabitacion"
+    ],
     "resumen": "Administra las categorías de habitación (por ejemplo Simple, Doble o Suite) con su capacidad y su tarifa por noche, que heredan todas las habitaciones de ese tipo.",
     "secciones": [
      {
@@ -2093,7 +2177,10 @@
        "btnNuevo"
       ],
       "nombre": "Botón Nuevo tipo",
-      "texto": "Abre la ventana para crear un tipo de habitación. Solo aparece si tenés permiso para crear tipos."
+      "texto": "Abre la ventana para crear un tipo de habitación. Solo aparece si tenés permiso para crear tipos.",
+      "permisos": [
+       "CrearTipoHabitacion"
+      ]
      },
      {
       "controles": [
@@ -2194,6 +2281,9 @@
      "FormPisos_68SA",
      "FormEditarPiso_68SA"
     ],
+    "permisos": [
+     "VerPisos"
+    ],
     "resumen": "Administra los pisos del hotel (número y nombre) a los que se asignan las habitaciones.",
     "secciones": [
      {
@@ -2224,7 +2314,10 @@
        "btnNuevo"
       ],
       "nombre": "Botón Nuevo piso",
-      "texto": "Abre la ventana para crear un piso. Solo aparece si tenés permiso para crear pisos."
+      "texto": "Abre la ventana para crear un piso. Solo aparece si tenés permiso para crear pisos.",
+      "permisos": [
+       "CrearPiso"
+      ]
      },
      {
       "controles": [
@@ -2285,129 +2378,15 @@
     ]
    },
    {
-    "id": "bitacora_cambios",
-    "padre": "hotel",
-    "titulo": "Bitácora de cambios de habitación",
-    "icono": "ClockRotateLeft",
-    "pantallas": [
-     "FormBitacoraCambiosHabitacion_68SA"
-    ],
-    "resumen": "Muestra, para cada reserva, todas las habitaciones que tuvo asignadas: la original, los upgrades y las reubicaciones del hotel. Es una pantalla de solo consulta.",
-    "secciones": [
-     {
-      "titulo": "Qué registra",
-      "parrafos": [
-       "Cada vez que una reserva se crea o cambia de habitación, el sistema agrega un registro automáticamente. El registro activo (marcado con ✔ en la columna Act) es la habitación actual; los anteriores quedan en gris como historial. Ningún registro se borra ni se edita.",
-       "La columna Operación indica el motivo: Alta (habitación asignada al registrar la reserva), Upgrade (pedido por el huésped, con cargo), Reubicación del hotel (sin cargo) o Cambio en la base (modificación hecha fuera del sistema, en rojo)."
-      ]
-     },
-     {
-      "titulo": "Columnas de la grilla",
-      "parrafos": [
-       "Reserva, Huésped, Hab., Tipo, Tarifa, Hab. anterior, Operación, Cargo (monto cargado a la cuenta; \"—\" si no hubo), Fecha y hora, Usuario (quien registró el cambio, o \"Fuera del sistema\") y Act.",
-       "Al seleccionar una fila, el pie de la pantalla indica si esa habitación es la asignación actual o una anterior de la reserva."
-      ]
-     }
-    ],
-    "pasos": [
-     "Abrí Bitácora de cambios desde el botón \"Habitaciones\" del menú lateral.",
-     "Escribí el código de reserva o un nombre de huésped o número de habitación.",
-     "Si querés, elegí una fecha de inicio y una de fin.",
-     "Presioná \"Aplicar\" (o Enter en los campos de texto) para ver los registros.",
-     "Marcá \"Solo activos\" para ver únicamente la habitación actual de cada reserva.",
-     "Seleccioná una fila para leer su detalle en el pie; \"Limpiar\" quita todos los filtros."
-    ],
-    "elementos": [
-     {
-      "controles": [
-       "txtCodigo",
-       "pnlCampoCodigo"
-      ],
-      "nombre": "Código de reserva",
-      "texto": "Número de la reserva (solo admite dígitos). Debe ser mayor a cero."
-     },
-     {
-      "controles": [
-       "txtNombre",
-       "pnlCampoNombre"
-      ],
-      "nombre": "Nombre (huésped o habitación)",
-      "texto": "Busca por nombre o apellido del huésped o por número de habitación."
-     },
-     {
-      "controles": [
-       "dtpDesde",
-       "dtpHasta",
-       "pnlCampoDesde",
-       "pnlCampoHasta"
-      ],
-      "nombre": "Fecha inicio / Fecha fin",
-      "texto": "Limitan los registros por la fecha del cambio. La fecha inicial no puede ser posterior a la final."
-     },
-     {
-      "controles": [
-       "chkSoloActivos"
-      ],
-      "nombre": "Solo activos",
-      "texto": "Al marcarlo muestra solo el registro vigente de cada reserva (la habitación actual). Se aplica al instante."
-     },
-     {
-      "controles": [
-       "btnAplicar"
-      ],
-      "nombre": "Botón Aplicar",
-      "texto": "Vuelve a consultar la bitácora con los filtros elegidos."
-     },
-     {
-      "controles": [
-       "btnLimpiar"
-      ],
-      "nombre": "Botón Limpiar",
-      "texto": "Borra el código, el nombre, las fechas y \"Solo activos\", y muestra todos los registros."
-     },
-     {
-      "controles": [
-       "dgvBitacora",
-       "pnlGrilla"
-      ],
-      "nombre": "Grilla de la bitácora",
-      "texto": "Un renglón por cada habitación que tuvo cada reserva. El registro activo se destaca y lleva ✔ en Act; la operación se colorea (dorado Upgrade, azul Reubicación del hotel, rojo Cambio en la base)."
-     },
-     {
-      "controles": [
-       "lblSeleccion",
-       "pnlPie"
-      ],
-      "nombre": "Pie informativo",
-      "texto": "Muestra la cantidad de registros o, con una fila seleccionada, si la habitación es la asignación actual o una anterior."
-     },
-     {
-      "controles": [
-       "btnSalir"
-      ],
-      "nombre": "Botón Salir",
-      "texto": "Cierra la bitácora."
-     }
-    ],
-    "consejos": [
-     "Necesitás el permiso para ver la bitácora de cambios de habitación.",
-     "La bitácora es de solo lectura: para cambiar de habitación usá la pantalla Cambio de habitación.",
-     "Un registro \"Cambio en la base\" indica que alguien modificó la asignación directamente en la base de datos: conviene revisarlo con el administrador."
-    ],
-    "relacionados": [
-     "cambio_habitacion",
-     "reservas",
-     "habitaciones",
-     "reporte_servicios"
-    ]
-   },
-   {
     "id": "configuracion_hotel",
     "padre": "hotel",
     "titulo": "Configuración del hotel",
     "icono": "Gear",
     "pantallas": [
      "FormConfiguracionHotel_68SA"
+    ],
+    "permisos": [
+     "VerConfiguracionHotel"
     ],
     "resumen": "Define los horarios generales de check-in y check-out y la tolerancia de no-show, valores que se aplican a todo el hotel.",
     "secciones": [
@@ -2461,14 +2440,20 @@
        "btnGuardar"
       ],
       "nombre": "Botón Guardar",
-      "texto": "Pide confirmación y graba la configuración. Solo está habilitado si tenés permiso para modificarla y existe una configuración cargada."
+      "texto": "Pide confirmación y graba la configuración. Solo está habilitado si tenés permiso para modificarla y existe una configuración cargada.",
+      "permisos": [
+       "ModificarConfiguracionHotel"
+      ]
      },
      {
       "controles": [
        "btnDescartar"
       ],
       "nombre": "Botón Descartar cambios",
-      "texto": "Vuelve a mostrar los valores guardados, descartando lo que modificaste."
+      "texto": "Vuelve a mostrar los valores guardados, descartando lo que modificaste.",
+      "permisos": [
+       "ModificarConfiguracionHotel"
+      ]
      },
      {
       "controles": [
@@ -2495,6 +2480,7 @@
     "titulo": "Análisis",
     "icono": "ChartPie",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Agrupa las herramientas para seguir el negocio: el Dashboard con indicadores en pantalla y los Reportes imprimibles, incluido el análisis predictivo de ocupación y demanda.",
     "secciones": [
      {
@@ -2520,6 +2506,9 @@
     "icono": "ChartColumn",
     "pantallas": [
      "FormDashboard_68SA"
+    ],
+    "permisos": [
+     "VerDashboard"
     ],
     "resumen": "El \"Panel de Control\" reúne en cuatro pestañas (General, Ocupación, Huéspedes y Servicios) los indicadores del hotel: estado de las habitaciones, ingresos, movimiento del día, indicadores hoteleros (ADR, RevPAR), perfil de los huéspedes y consumos.",
     "secciones": [
@@ -2671,6 +2660,11 @@
     "pantallas": [
      "FormReportes_68SA"
     ],
+    "permisos": [
+     "GenerarReporteReservas",
+     "GenerarReporteServicios",
+     "GenerarAnalisisDemanda"
+    ],
     "resumen": "Pantalla para generar los reportes imprimibles del hotel: elegís el reporte en una pestaña, ajustás los filtros y ves la vista previa lista para imprimir o guardar en PDF.",
     "secciones": [
      {
@@ -2821,6 +2815,9 @@
     "titulo": "Reporte de reservas",
     "icono": "CalendarCheck",
     "pantallas": [],
+    "permisos": [
+     "GenerarReporteReservas"
+    ],
     "resumen": "Reporte impreso con las reservas cuya fecha de ingreso cae dentro del período elegido, con noches, facturación, cobros y saldo pendiente.",
     "secciones": [
      {
@@ -2869,6 +2866,9 @@
     "titulo": "Servicios consumidos por huésped",
     "icono": "BellConcierge",
     "pantallas": [],
+    "permisos": [
+     "GenerarReporteServicios"
+    ],
     "resumen": "Reporte impreso con el room service y los upgrades cargados a la cuenta de cada estadía, agrupados por huésped con su total acumulado y el estado de cada servicio.",
     "secciones": [
      {
@@ -2918,6 +2918,9 @@
     "titulo": "Análisis predictivo de ocupación y demanda",
     "icono": "ChartLine",
     "pantallas": [],
+    "permisos": [
+     "GenerarAnalisisDemanda"
+    ],
     "resumen": "Reporte inteligente que proyecta la ocupación de los próximos días a partir de la historia de reservas, estadías y consumos, detecta baja ocupación o saturación y sugiere precios, promociones y ofertas personalizadas.",
     "secciones": [
      {
@@ -2970,11 +2973,150 @@
     ]
    },
    {
+    "id": "bitacora_cambios",
+    "padre": "analisis",
+    "titulo": "Bitácora de cambios de reservas",
+    "icono": "ClockRotateLeft",
+    "pantallas": [
+     "FormBitacoraReservas_68SA"
+    ],
+    "permisos": [
+     "VerBitacoraReservas"
+    ],
+    "resumen": "Muestra la historia completa de cada reserva: cada vez que se crea o cambia cualquiera de sus datos, el sistema guarda una foto de la reserva con la operación, la fecha, la hora y el usuario. Es una pantalla de solo consulta.",
+    "secciones": [
+     {
+      "titulo": "Qué registra",
+      "parrafos": [
+       "Se registra automáticamente (desde la base de datos) cada alta y cada cambio de una reserva: modificación de fechas o huéspedes, cancelación, no-show, check-in, check-out, renovación de la estadía, upgrade y reubicación del hotel. También queda registrado un cambio hecho directamente en la base, con el usuario \"Fuera del sistema\".",
+       "Cada registro es una foto completa de la reserva (titular, habitación, fechas, check-in/check-out, estado, adultos, niños, tarifa y montos). El registro activo (✔ en la columna Act) es el estado actual; los anteriores quedan en gris como historia. Ningún registro se borra ni se edita.",
+       "Al empezar a usar la bitácora, cada reserva que ya existía recibió un registro \"Carga inicial\" con su estado de ese momento."
+      ]
+     },
+     {
+      "titulo": "Operación de cada registro",
+      "parrafos": [
+       "La columna \"Operación\" dice qué se hizo en cada registro (alta, modificación, cancelación, check-in, check-out, renovación, cambio de habitación...). Para ver exactamente qué datos cambiaron, elegí el registro: el panel de la derecha muestra el antes y el después con los campos modificados resaltados.",
+       "Al seleccionar un registro, el panel \"Detalle del registro\" muestra dato por dato el valor de antes y el de después; los datos que cambiaron se resaltan."
+      ]
+     }
+    ],
+    "pasos": [
+     "Abrí \"Bitácora de reservas\" desde la sección ANÁLISIS del menú lateral.",
+     "Escribí el código de reserva o un nombre de huésped o número de habitación, y si querés elegí una operación y un rango de fechas.",
+     "Presioná \"Aplicar\" (o Enter en los campos de texto) para ver los registros.",
+     "Marcá \"Solo activos\" para ver únicamente el estado actual de cada reserva.",
+     "Seleccioná un registro para ver en el panel derecho qué datos cambiaron; \"Limpiar\" quita todos los filtros."
+    ],
+    "elementos": [
+     {
+      "controles": [
+       "txtCodigo",
+       "pnlCampoCodigo"
+      ],
+      "nombre": "Código de reserva",
+      "texto": "Número de la reserva (solo admite dígitos). Debe ser mayor a cero."
+     },
+     {
+      "controles": [
+       "txtNombre",
+       "pnlCampoNombre"
+      ],
+      "nombre": "Nombre (huésped o habitación)",
+      "texto": "Busca por nombre o apellido del titular o por número o tipo de habitación."
+     },
+     {
+      "controles": [
+       "cmbOperacion",
+       "pnlCampoOperacion"
+      ],
+      "nombre": "Operación",
+      "texto": "Muestra solo los registros de una operación (por ejemplo, Cancelación o Check-in). \"Todas\" no filtra."
+     },
+     {
+      "controles": [
+       "dtpDesde",
+       "dtpHasta",
+       "pnlCampoDesde",
+       "pnlCampoHasta"
+      ],
+      "nombre": "Fecha inicio / Fecha fin",
+      "texto": "Limitan los registros por la fecha del cambio. La fecha inicial no puede ser posterior a la final."
+     },
+     {
+      "controles": [
+       "chkSoloActivos"
+      ],
+      "nombre": "Solo activos",
+      "texto": "Al marcarlo muestra solo el registro vigente de cada reserva (su estado actual). Se aplica al instante."
+     },
+     {
+      "controles": [
+       "btnAplicar"
+      ],
+      "nombre": "Botón Aplicar",
+      "texto": "Vuelve a consultar la bitácora con los filtros elegidos."
+     },
+     {
+      "controles": [
+       "btnLimpiar"
+      ],
+      "nombre": "Botón Limpiar",
+      "texto": "Borra todos los filtros y muestra todos los registros."
+     },
+     {
+      "controles": [
+       "dgvBitacora",
+       "pnlGrilla"
+      ],
+      "nombre": "Grilla de la bitácora",
+      "texto": "Un renglón por cada alta o cambio de cada reserva, del más nuevo al más viejo. La operación se colorea (verde alta y check-in, rojo cancelación y no-show, dorado upgrade y renovación, azul check-out y cambios de habitación, naranja modificación)."
+     },
+     {
+      "controles": [
+       "dgvDetalle",
+       "pnlDetalle",
+       "lblDetalleTitulo",
+       "lblDetalleSub"
+      ],
+      "nombre": "Detalle del registro",
+      "texto": "Dato por dato, el valor en el registro anterior de la reserva (Antes) y en el seleccionado (Después). Los datos que cambiaron se resaltan."
+     },
+     {
+      "controles": [
+       "lblSeleccion",
+       "pnlPie"
+      ],
+      "nombre": "Pie informativo",
+      "texto": "Muestra la cantidad de registros o, con uno seleccionado, si es el estado actual de la reserva o uno anterior."
+     },
+     {
+      "controles": [
+       "btnSalir"
+      ],
+      "nombre": "Botón Salir",
+      "texto": "Cierra la bitácora."
+     }
+    ],
+    "consejos": [
+     "Necesitás el permiso para ver la bitácora de reservas.",
+     "La bitácora es de solo lectura: los cambios se hacen desde Reservas, Check-In, Check-Out, Cambio de habitación o Renovar estadía, y quedan registrados solos.",
+     "Un registro con usuario \"Fuera del sistema\" indica que alguien modificó la reserva directamente en la base: revisalo con el administrador."
+    ],
+    "relacionados": [
+     "reservas",
+     "cambio_habitacion",
+     "registrar_reserva",
+     "bitacora"
+    ]
+   },
+   {
     "id": "administracion",
     "padre": null,
     "titulo": "Administración",
     "icono": "UserShield",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Agrupa las herramientas del sistema: usuarios, bitácora de auditoría, roles y familias de permisos, respaldos de la base de datos y resolución de inconsistencias.",
     "secciones": [
      {
@@ -3003,6 +3145,9 @@
     "icono": "UsersGear",
     "pantallas": [
      "FormGestionUsuarios_08YS"
+    ],
+    "permisos": [
+     "VerUsuarios"
     ],
     "resumen": "Permite consultar, crear y modificar los usuarios del sistema, asignarles un rol, activarlos o desactivarlos y desbloquear cuentas bloqueadas por intentos fallidos.",
     "secciones": [
@@ -3091,7 +3236,11 @@
        "btnModificar"
       ],
       "nombre": "Crear / Modificar",
-      "texto": "\"Crear\" limpia los campos y pasa a Modo Inserción; \"Modificar\" pasa a Modo edición con el usuario seleccionado. Cada uno requiere su permiso."
+      "texto": "\"Crear\" limpia los campos y pasa a Modo Inserción; \"Modificar\" pasa a Modo edición con el usuario seleccionado. Cada uno requiere su permiso.",
+      "permisos": [
+       "CrearUsuario",
+       "ModificarUsuario"
+      ]
      },
      {
       "controles": [
@@ -3106,14 +3255,20 @@
        "btnDesbloquear"
       ],
       "nombre": "Desbloquear",
-      "texto": "Habilitado solo si el usuario seleccionado está bloqueado. Pide confirmación, lo desbloquea y le restablece la contraseña inicial (DNI + apellido)."
+      "texto": "Habilitado solo si el usuario seleccionado está bloqueado. Pide confirmación, lo desbloquea y le restablece la contraseña inicial (DNI + apellido).",
+      "permisos": [
+       "DesbloquearUsuario"
+      ]
      },
      {
       "controles": [
        "btnActDes"
       ],
       "nombre": "Activar / Desactivar",
-      "texto": "Alterna el estado activo del usuario seleccionado previa confirmación. En rojo indica Desactivar y en verde Activar."
+      "texto": "Alterna el estado activo del usuario seleccionado previa confirmación. En rojo indica Desactivar y en verde Activar.",
+      "permisos": [
+       "DesActivarUsuario"
+      ]
      },
      {
       "controles": [
@@ -3143,6 +3298,9 @@
     "icono": "ClipboardList",
     "pantallas": [
      "FormBitacora_08YS"
+    ],
+    "permisos": [
+     "VerBitacora"
     ],
     "resumen": "La pantalla \"Auditoría de Eventos\" muestra todo lo que se registró en el sistema (ingresos, cambios de usuarios, permisos, reservas, pagos y más) y permite filtrarlo e imprimirlo.",
     "secciones": [
@@ -3174,14 +3332,14 @@
       "controles": [
        "txtUsername"
       ],
-      "nombre": "Username",
+      "nombre": "Usuario",
       "texto": "Usuario que realizó la acción. Podés escribir solo una parte del nombre."
      },
      {
       "controles": [
        "txtTargetUsername"
       ],
-      "nombre": "Target Username",
+      "nombre": "Usuario afectado",
       "texto": "Usuario sobre el que se realizó la acción (por ejemplo, el usuario desbloqueado o modificado). Admite una parte del nombre."
      },
      {
@@ -3263,6 +3421,10 @@
      "FormGestionAcceso_08YS",
      "FormAccesoAM_08YS"
     ],
+    "permisos": [
+     "VerRoles",
+     "VerFamilias"
+    ],
     "resumen": "Administra los permisos del sistema: las familias agrupan permisos (y otras familias) y los roles combinan familias y permisos para asignarse a los usuarios.",
     "secciones": [
      {
@@ -3310,14 +3472,24 @@
        "btnModificar"
       ],
       "nombre": "Crear / Modificar",
-      "texto": "Abren la ventana de alta o la de modificación del elemento seleccionado. Requieren el permiso de crear o modificar roles o familias, según la pantalla."
+      "texto": "Abren la ventana de alta o la de modificación del elemento seleccionado. Requieren el permiso de crear o modificar roles o familias, según la pantalla.",
+      "permisos": [
+       "CrearFamilias",
+       "CrearRoles",
+       "ModificarFamilias",
+       "ModificarRoles"
+      ]
      },
      {
       "controles": [
        "btnEliminar"
       ],
       "nombre": "Eliminar",
-      "texto": "En la gestión, elimina el rol o la familia seleccionada previa confirmación (no se puede si está en uso). En la ventana de alta y modificación, quita de Asignados el componente seleccionado."
+      "texto": "En la gestión, elimina el rol o la familia seleccionada previa confirmación (no se puede si está en uso). En la ventana de alta y modificación, quita de Asignados el componente seleccionado.",
+      "permisos": [
+       "EliminarFamilias",
+       "EliminarRoles"
+      ]
      },
      {
       "controles": [
@@ -3384,6 +3556,9 @@
     "pantallas": [
      "FormGestionRespaldos_08YS"
     ],
+    "permisos": [
+     "VerRespaldos"
+    ],
     "resumen": "Crea copias de seguridad de la base de datos del hotel y permite restaurar una anterior, con el listado de los respaldos guardados en la carpeta elegida.",
     "secciones": [
      {
@@ -3439,7 +3614,10 @@
        "btnRealizarBackUp"
       ],
       "nombre": "Crear respaldo",
-      "texto": "Genera la copia de seguridad en la carpeta elegida. Se habilita solo con una carpeta válida y el permiso para realizar respaldos."
+      "texto": "Genera la copia de seguridad en la carpeta elegida. Se habilita solo con una carpeta válida y el permiso para realizar respaldos.",
+      "permisos": [
+       "RealizarBackup"
+      ]
      },
      {
       "controles": [
@@ -3478,7 +3656,10 @@
        "btnRealizarRestore"
       ],
       "nombre": "Restaurar este respaldo",
-      "texto": "Pide confirmación (con \"No\" por defecto) y restaura la base desde el archivo elegido; luego reinicia la aplicación."
+      "texto": "Pide confirmación (con \"No\" por defecto) y restaura la base desde el archivo elegido; luego reinicia la aplicación.",
+      "permisos": [
+       "RealizarRestore"
+      ]
      },
      {
       "controles": [
@@ -3515,6 +3696,9 @@
     "icono": "TriangleExclamation",
     "pantallas": [
      "FormInconsistenciaDB_08YS"
+    ],
+    "permisos": [
+     "ManejarInconsistencias"
     ],
     "resumen": "Ventana que aparece al ingresar al sistema cuando se detectan modificaciones directas sobre la base de datos (hechas por fuera de la aplicación) y permite resolverlas.",
     "secciones": [
@@ -3588,6 +3772,7 @@
     "titulo": "Mi perfil",
     "icono": "CircleUser",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Agrupa las opciones de tu propia cuenta: cambiar la contraseña, volver a ingresar (ReLogin) y cerrar la sesión.",
     "secciones": [
      {
@@ -3615,6 +3800,7 @@
     "pantallas": [
      "FormCambiarContraseña_08YS"
     ],
+    "permisos": [],
     "resumen": "Permite reemplazar tu contraseña por una nueva. Es obligatorio hacerlo en el primer ingreso o después de que un administrador desbloquee tu cuenta.",
     "secciones": [
      {
@@ -3685,6 +3871,7 @@
     "titulo": "ReLogin y cierre de sesión",
     "icono": "RightFromBracket",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Explica cómo cerrar tu sesión de forma segura y qué hace la opción Relogin del menú Mi perfil.",
     "secciones": [
      {
@@ -3737,6 +3924,7 @@
     "titulo": "Getting started",
     "icono": "Rocket",
     "pantallas": [],
+    "permisos": [],
     "resumen": "The basics to start working with the Horizon Hotel & Resort management system: how to log in, what the home screen shows, how to move around the menu and how to get help.",
     "secciones": [
      {
@@ -3767,6 +3955,7 @@
     "pantallas": [
      "FormLogin_08YS"
     ],
+    "permisos": [],
     "resumen": "This is the first screen of the system: you enter your username and password to open a work session. Only authorized hotel staff can access it.",
     "secciones": [
      {
@@ -3857,6 +4046,7 @@
     "pantallas": [
      "FormInicio_68SA"
     ],
+    "permisos": [],
     "resumen": "It is the first thing you see after logging in and where the Home button takes you: a greeting, the date, the day's activity at the hotel and shortcuts to your most frequent tasks.",
     "secciones": [
      {
@@ -3915,12 +4105,13 @@
     "pantallas": [
      "FormMDI_08YS"
     ],
+    "permisos": [],
     "resumen": "This is the main window of the system: a top bar with the current section, the clock, the language and help, and a side menu from which every screen is opened.",
     "secciones": [
      {
       "titulo": "How the window is organized",
       "parrafos": [
-       "The side menu groups the options into OPERATIONS (Front Desk, Reservations, Guests, Room service), HOTEL (Rooms, Hotel settings), ANALYTICS (Dashboard, Reports) and SYSTEM (Administrative, My profile). Above the menu is your user card with your initials, name and role; at the bottom, the Log out button.",
+       "The side menu groups the options into OPERATIONS (Front Desk, Reservations, Guests, Room service), HOTEL (Rooms, Hotel settings), ANALYTICS (Dashboard, Reports, Reservation change log) and SYSTEM (Administrative, My profile). Above the menu is your user card with your initials, name and role; at the bottom, the Log out button.",
        "The chosen screen opens in the central area. The active section button is highlighted with a background and a golden bar, and the top bar reads \"Section › Screen\".",
        "The buttons with a submenu (Front Desk, Room service, Rooms, Administrative and My profile) open their options when clicked."
       ]
@@ -3962,7 +4153,11 @@
        "btnHuespedes"
       ],
       "nombre": "Reservations and Guests",
-      "texto": "Open the reservation list and calendar, and the guest master list."
+      "texto": "Open the reservation list and calendar, and the guest master list.",
+      "permisos": [
+       "VerHuespedes",
+       "VerReservas"
+      ]
      },
      {
       "controles": [
@@ -3977,15 +4172,16 @@
        "btnHotelConfig"
       ],
       "nombre": "Rooms and Hotel settings",
-      "texto": "Rooms opens Rooms, Room types, Floors and Room change log. Hotel settings opens the check-in/check-out times and the grace hours."
+      "texto": "Rooms opens Rooms, Room types and Floors. Hotel settings opens the check-in/check-out times and the grace hours."
      },
      {
       "controles": [
        "btnDashboard",
-       "btnReportes"
+       "btnReportes",
+       "btnBitacoraReservas"
       ],
-      "nombre": "Dashboard and Reports",
-      "texto": "Open the hotel indicators and report generation."
+      "nombre": "Dashboard and Reports and Reservation change log",
+      "texto": "Open the hotel indicators and report generation. Reservation change log shows every new reservation and every change to it."
      },
      {
       "controles": [
@@ -4054,6 +4250,7 @@
     "titulo": "How to use help",
     "icono": "CircleQuestion",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Online help is available on every screen, including pop-up windows and the login screen: you can ask for the explanation of a specific element or open the full topic of the screen.",
     "secciones": [
      {
@@ -4082,7 +4279,8 @@
     "elementos": [],
     "consejos": [
      "If a click with \"What's this?\" does not show anything specific, try the control next to it or open the full help for the screen.",
-     "Help is shown in the system's active language."
+     "Help is shown in the system's active language.",
+     "Help, search and the PDF manual show only the screens and options your user is allowed to use: two users with different permissions see different content."
     ],
     "relacionados": [
      "navegacion",
@@ -4096,6 +4294,7 @@
     "titulo": "Front Desk",
     "icono": "PersonWalkingLuggage",
     "pantallas": [],
+    "permisos": [],
     "resumen": "The daily front desk tasks: checking availability and registering bookings, monitoring room status, doing check-in and check-out, extending stays and moving a guest to another room.",
     "secciones": [
      {
@@ -4129,6 +4328,9 @@
     "icono": "CalendarPlus",
     "pantallas": [
      "FormDisponibilidad"
+    ],
+    "permisos": [
+     "RegistrarReserva"
     ],
     "resumen": "This is the first step of a new booking (step 1 of 3): you choose the arrival and departure dates and how many people are staying. On the right you immediately see how many rooms of each type are free, with the rate and the estimated total for the stay.",
     "secciones": [
@@ -4231,6 +4433,9 @@
     "pantallas": [
      "FormRegistrarReserva_68SA"
     ],
+    "permisos": [
+     "RegistrarReserva"
+    ],
     "resumen": "On this screen you complete the booking for the chosen room: the main guest, the dates, the number of guests and the payment for the stay. When you confirm, the booking is registered and paid.",
     "secciones": [
      {
@@ -4289,7 +4494,10 @@
        "btnHuespedNuevo"
       ],
       "nombre": "Register new guest",
-      "texto": "Opens the new guest form; once saved, the guest is selected as main guest. It only appears if you have permission to register guests."
+      "texto": "Opens the new guest form; once saved, the guest is selected as main guest. It only appears if you have permission to register guests.",
+      "permisos": [
+       "CrearHuesped"
+      ]
      },
      {
       "controles": [
@@ -4398,6 +4606,9 @@
      "FormControlHabitaciones_68SA",
      "FormAccionesHabitacion_68SA",
      "FormDetalleEstadia_68SA"
+    ],
+    "permisos": [
+     "VerControlHabitaciones"
     ],
     "resumen": "This is the front desk board: it shows every room grouped by floor with its current status and who is in it, and each card opens the available actions (book, check-in, check-out, room service, room change, extend, maintenance).",
     "secciones": [
@@ -4535,6 +4746,9 @@
     "pantallas": [
      "FormCheckIn_68SA"
     ],
+    "permisos": [
+     "RegistrarCheckIn"
+    ],
     "resumen": "Registers the guest's arrival: finds the main guest's pending booking, enters the companions and leaves the stay in progress with the room occupied.",
     "secciones": [
      {
@@ -4599,7 +4813,10 @@
        "btnConfirmar"
       ],
       "nombre": "Confirm Check-in",
-      "texto": "Validates companions and composition and registers the check-in. Only visible with the permission to register check-in."
+      "texto": "Validates companions and composition and registers the check-in. Only visible with the permission to register check-in.",
+      "permisos": [
+       "RegistrarCheckIn"
+      ]
      },
      {
       "controles": [
@@ -4629,6 +4846,9 @@
     "icono": "DoorClosed",
     "pantallas": [
      "FormCheckOut_68SA"
+    ],
+    "permisos": [
+     "RegistrarCheckOut"
     ],
     "resumen": "Registers the guest's departure: shows the full stay account, collects the balance due (extensions, upgrades and room service) and closes the booking.",
     "secciones": [
@@ -4727,7 +4947,10 @@
        "btnConfirmar"
       ],
       "nombre": "Confirm Check-out",
-      "texto": "Registers the balance payment (if any) and the check-out. Visible with the check-out permission and, if there is a balance, also the collect payments permission."
+      "texto": "Registers the balance payment (if any) and the check-out. Visible with the check-out permission and, if there is a balance, also the collect payments permission.",
+      "permisos": [
+       "RegistrarCheckOut"
+      ]
      },
      {
       "controles": [
@@ -4756,6 +4979,9 @@
     "icono": "ArrowRotateRight",
     "pantallas": [
      "FormRenovarEstadia_68SA"
+    ],
+    "permisos": [
+     "ExtenderEstadia"
     ],
     "resumen": "Extends a stay in progress by changing the check-out date. The cost of the added nights is not charged at that moment: it is added to the balance and collected at check-out.",
     "secciones": [
@@ -4817,7 +5043,10 @@
        "btnConfirmar"
       ],
       "nombre": "Confirm",
-      "texto": "Registers the new check-out date. Only visible with the permission to extend stays."
+      "texto": "Registers the new check-out date. Only visible with the permission to extend stays.",
+      "permisos": [
+       "ExtenderEstadia"
+      ]
      },
      {
       "controles": [
@@ -4847,6 +5076,10 @@
      "FormCambioHabitacion_68SA",
      "FormBuscarReserva_68SA"
     ],
+    "permisos": [
+     "RegistrarUpgradeHabitacion",
+     "ReubicarHuesped"
+    ],
     "resumen": "Moves a booking to another room: as an upgrade requested by the guest (charged to the bill) or as a relocation decided by the hotel (no charge).",
     "secciones": [
      {
@@ -4861,7 +5094,7 @@
       "parrafos": [
        "Upgrade requested by the guest: only with the stay in progress and only to rooms with a higher rate. The charge is the nightly rate difference multiplied by the remaining nights; it is added to the bill and collected at check-out. From then on the new rate is the current one.",
        "Relocation by the hotel: any free room with enough capacity, at no charge; the guest keeps their rate. The reason is required (at least 5 characters). A pending booking that has not checked in yet can also be relocated: it is assigned another room for the whole stay.",
-       "With the guest already staying, the move is immediate: the new room must be ready now and free until check-out, and the previous one goes to Cleaning (or out of service, if it is being put under maintenance). Every change is recorded in the Room change log."
+       "With the guest already staying, the move is immediate: the new room must be ready now and free until check-out, and the previous one goes to Cleaning (or out of service, if it is being put under maintenance). Every change is recorded in the Reservation change log."
       ]
      }
     ],
@@ -4978,6 +5211,9 @@
      "FormModificarReserva_68SA",
      "FormDocumentosReserva_68SA"
     ],
+    "permisos": [
+     "VerReservas"
+    ],
     "resumen": "Gathers every hotel booking in a filterable list and in a calendar by room. From here you can create, modify, cancel and print bookings and see their voucher and invoice.",
     "secciones": [
      {
@@ -5017,7 +5253,10 @@
        "btnCrearReserva"
       ],
       "nombre": "Create Reservation",
-      "texto": "Opens the date selection to register a new booking. Requires the permission to register bookings."
+      "texto": "Opens the date selection to register a new booking. Requires the permission to register bookings.",
+      "permisos": [
+       "RegistrarReserva"
+      ]
      },
      {
       "controles": [
@@ -5148,6 +5387,9 @@
      "FormHuespedes_68SA",
      "FormRegistrarHuesped_68SA"
     ],
+    "permisos": [
+     "VerHuespedes"
+    ],
     "resumen": "This is the guest master list: it lists registered people with filters, and lets you add, modify and delete them and export or import the list as XML.",
     "secciones": [
      {
@@ -5185,7 +5427,10 @@
        "btnNuevo"
       ],
       "nombre": "New guest",
-      "texto": "Opens the new guest form. Requires the permission to register guests."
+      "texto": "Opens the new guest form. Requires the permission to register guests.",
+      "permisos": [
+       "CrearHuesped"
+      ]
      },
      {
       "controles": [
@@ -5237,7 +5482,10 @@
        "btnSerializar"
       ],
       "nombre": "Serialize",
-      "texto": "Saves the guests shown in the grid to an XML file; you choose the folder and name. Requires its permission."
+      "texto": "Saves the guests shown in the grid to an XML file; you choose the folder and name. Requires its permission.",
+      "permisos": [
+       "SerializarHuespedes"
+      ]
      },
      {
       "controles": [
@@ -5299,6 +5547,7 @@
     "titulo": "Room service",
     "icono": "BellConcierge",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Room service: charging orders to the bill of a stay in progress, tracking and confirming their delivery, and keeping the menu of products and prices.",
     "secciones": [
      {
@@ -5328,6 +5577,9 @@
     "icono": "CirclePlus",
     "pantallas": [
      "FormPedidoRoomService_68SA"
+    ],
+    "permisos": [
+     "RegistrarRoomService"
     ],
     "resumen": "Charges a room service order to the bill of a stay in progress: you choose the menu items and quantities, and the total is collected at check-out.",
     "secciones": [
@@ -5427,6 +5679,9 @@
     "pantallas": [
      "FormPedidosRoomService_68SA"
     ],
+    "permisos": [
+     "ConfirmarEntregaRoomService"
+    ],
     "resumen": "This is the service staff screen: it shows pending orders with how long they have been waiting and lets you confirm their delivery. It refreshes itself every minute.",
     "secciones": [
      {
@@ -5517,6 +5772,9 @@
      "FormCartaRoomService_68SA",
      "FormEditarItemRoomService_68SA"
     ],
+    "permisos": [
+     "GestionarItemsRoomService"
+    ],
     "resumen": "Manages the items offered in room service: name, description and price. Items are not deleted: they are deactivated and are no longer offered.",
     "secciones": [
      {
@@ -5547,7 +5805,10 @@
        "btnNuevo"
       ],
       "nombre": "New item",
-      "texto": "Opens the window to add an item to the menu."
+      "texto": "Opens the window to add an item to the menu.",
+      "permisos": [
+       "GestionarItemsRoomService"
+      ]
      },
      {
       "controles": [
@@ -5631,12 +5892,13 @@
     "titulo": "Rooms and hotel",
     "icono": "Hotel",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Groups the screens used to maintain the hotel's physical structure (floors, room types and rooms), review the room change history and adjust the general settings.",
     "secciones": [
      {
       "titulo": "What this group contains",
       "parrafos": [
-       "The \"Rooms\" button in the side menu (HOTEL group) opens Rooms, Room Types, Floors and Room change log. The \"Hotel settings\" button opens the check-in and check-out times and the no-show grace period.",
+       "The \"Rooms\" button in the side menu (HOTEL group) opens Rooms, Room Types and Floors. The \"Hotel settings\" button opens the check-in and check-out times and the no-show grace period.",
        "Load the data in this order: floors first, then room types (with their capacity and rate) and finally the rooms, which need a floor and a type. You only see the options you have permission for."
       ]
      }
@@ -5660,6 +5922,9 @@
     "pantallas": [
      "FormHabitaciones_68SA",
      "FormEditarHabitacion_68SA"
+    ],
+    "permisos": [
+     "VerHabitaciones"
     ],
     "resumen": "\"Manage rooms\" screen: lists every room in the hotel with its floor, type, capacity, rate and status, and lets you create, edit or delete rooms.",
     "secciones": [
@@ -5698,7 +5963,10 @@
        "btnNueva"
       ],
       "nombre": "New room button",
-      "texto": "Opens the creation window. It only appears if you are allowed to create rooms."
+      "texto": "Opens the creation window. It only appears if you are allowed to create rooms.",
+      "permisos": [
+       "CrearHabitacion"
+      ]
      },
      {
       "controles": [
@@ -5792,6 +6060,9 @@
      "FormTiposHabitacion_68SA",
      "FormEditarTipoHabitacion_68SA"
     ],
+    "permisos": [
+     "VerTiposHabitacion"
+    ],
     "resumen": "Manages the room categories (for example Single, Double or Suite) with their capacity and rate per night, which every room of that type inherits.",
     "secciones": [
      {
@@ -5823,7 +6094,10 @@
        "btnNuevo"
       ],
       "nombre": "New type button",
-      "texto": "Opens the window to create a room type. It only appears if you are allowed to create types."
+      "texto": "Opens the window to create a room type. It only appears if you are allowed to create types.",
+      "permisos": [
+       "CrearTipoHabitacion"
+      ]
      },
      {
       "controles": [
@@ -5924,6 +6198,9 @@
      "FormPisos_68SA",
      "FormEditarPiso_68SA"
     ],
+    "permisos": [
+     "VerPisos"
+    ],
     "resumen": "Manages the hotel floors (number and name) to which rooms are assigned.",
     "secciones": [
      {
@@ -5954,7 +6231,10 @@
        "btnNuevo"
       ],
       "nombre": "New floor button",
-      "texto": "Opens the window to create a floor. It only appears if you are allowed to create floors."
+      "texto": "Opens the window to create a floor. It only appears if you are allowed to create floors.",
+      "permisos": [
+       "CrearPiso"
+      ]
      },
      {
       "controles": [
@@ -6015,129 +6295,15 @@
     ]
    },
    {
-    "id": "bitacora_cambios",
-    "padre": "hotel",
-    "titulo": "Room change log",
-    "icono": "ClockRotateLeft",
-    "pantallas": [
-     "FormBitacoraCambiosHabitacion_68SA"
-    ],
-    "resumen": "Shows, for each reservation, every room it had assigned: the original one, upgrades and hotel relocations. It is a read-only screen.",
-    "secciones": [
-     {
-      "titulo": "What it records",
-      "parrafos": [
-       "Every time a reservation is created or changes rooms, the system adds a record automatically. The active record (marked ✔ in the Act column) is the current room; previous ones are shown in grey as history. No record is ever deleted or edited.",
-       "The Operation column shows the reason: Created (room assigned when the reservation was registered), Upgrade (requested by the guest, with a charge), Hotel relocation (no charge) or Change in the database (change made outside the system, in red)."
-      ]
-     },
-     {
-      "titulo": "Grid columns",
-      "parrafos": [
-       "Reservation, Guest, Room, Type, Rate, Previous room, Operation, Charge (amount added to the bill; \"—\" if none), Date and time, User (who registered the change, or \"Outside the system\") and Act.",
-       "When you select a row, the footer tells you whether that room is the reservation's current assignment or a previous one."
-      ]
-     }
-    ],
-    "pasos": [
-     "Open Room change log from the \"Rooms\" button in the side menu.",
-     "Type the reservation code or a guest name or room number.",
-     "Optionally choose a start date and an end date.",
-     "Press \"Apply\" (or Enter in the text fields) to see the records.",
-     "Check \"Active only\" to see just the current room of each reservation.",
-     "Select a row to read its detail in the footer; \"Clear\" removes all filters."
-    ],
-    "elementos": [
-     {
-      "controles": [
-       "txtCodigo",
-       "pnlCampoCodigo"
-      ],
-      "nombre": "Reservation code",
-      "texto": "Reservation number (digits only). It must be greater than zero."
-     },
-     {
-      "controles": [
-       "txtNombre",
-       "pnlCampoNombre"
-      ],
-      "nombre": "Name (guest or room)",
-      "texto": "Searches by the guest's first or last name or by room number."
-     },
-     {
-      "controles": [
-       "dtpDesde",
-       "dtpHasta",
-       "pnlCampoDesde",
-       "pnlCampoHasta"
-      ],
-      "nombre": "Start date / End date",
-      "texto": "Limit the records by the date of the change. The start date cannot be later than the end date."
-     },
-     {
-      "controles": [
-       "chkSoloActivos"
-      ],
-      "nombre": "Active only",
-      "texto": "When checked, shows only the current record of each reservation (the current room). It is applied immediately."
-     },
-     {
-      "controles": [
-       "btnAplicar"
-      ],
-      "nombre": "Apply button",
-      "texto": "Queries the log again with the selected filters."
-     },
-     {
-      "controles": [
-       "btnLimpiar"
-      ],
-      "nombre": "Clear button",
-      "texto": "Clears the code, name, dates and \"Active only\", and shows every record."
-     },
-     {
-      "controles": [
-       "dgvBitacora",
-       "pnlGrilla"
-      ],
-      "nombre": "Log grid",
-      "texto": "One row for each room every reservation had. The active record is highlighted and has ✔ in Act; the operation is colored (gold Upgrade, blue Hotel relocation, red Change in the database)."
-     },
-     {
-      "controles": [
-       "lblSeleccion",
-       "pnlPie"
-      ],
-      "nombre": "Information footer",
-      "texto": "Shows the number of records or, with a row selected, whether the room is the current or a previous assignment."
-     },
-     {
-      "controles": [
-       "btnSalir"
-      ],
-      "nombre": "Exit button",
-      "texto": "Closes the log."
-     }
-    ],
-    "consejos": [
-     "You need the permission to view the room change log.",
-     "The log is read-only: to change rooms use the Room change screen.",
-     "A \"Change in the database\" record means someone modified the assignment directly in the database: review it with the administrator."
-    ],
-    "relacionados": [
-     "cambio_habitacion",
-     "reservas",
-     "habitaciones",
-     "reporte_servicios"
-    ]
-   },
-   {
     "id": "configuracion_hotel",
     "padre": "hotel",
     "titulo": "Hotel settings",
     "icono": "Gear",
     "pantallas": [
      "FormConfiguracionHotel_68SA"
+    ],
+    "permisos": [
+     "VerConfiguracionHotel"
     ],
     "resumen": "Defines the general check-in and check-out times and the no-show grace period, values that apply to the whole hotel.",
     "secciones": [
@@ -6191,14 +6357,20 @@
        "btnGuardar"
       ],
       "nombre": "Save button",
-      "texto": "Asks for confirmation and stores the settings. It is only enabled if you are allowed to modify them and a configuration exists."
+      "texto": "Asks for confirmation and stores the settings. It is only enabled if you are allowed to modify them and a configuration exists.",
+      "permisos": [
+       "ModificarConfiguracionHotel"
+      ]
      },
      {
       "controles": [
        "btnDescartar"
       ],
       "nombre": "Discard changes button",
-      "texto": "Shows the saved values again, discarding what you changed."
+      "texto": "Shows the saved values again, discarding what you changed.",
+      "permisos": [
+       "ModificarConfiguracionHotel"
+      ]
      },
      {
       "controles": [
@@ -6225,6 +6397,7 @@
     "titulo": "Analytics",
     "icono": "ChartPie",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Groups the tools to follow the business: the Dashboard with on-screen indicators and the printable Reports, including the predictive occupancy and demand analysis.",
     "secciones": [
      {
@@ -6250,6 +6423,9 @@
     "icono": "ChartColumn",
     "pantallas": [
      "FormDashboard_68SA"
+    ],
+    "permisos": [
+     "VerDashboard"
     ],
     "resumen": "The \"Dashboard\" gathers the hotel's indicators in four tabs (General, Occupancy, Guests and Services): room status, revenue, today's movement, guests and spending.",
     "secciones": [
@@ -6401,6 +6577,11 @@
     "pantallas": [
      "FormReportes_68SA"
     ],
+    "permisos": [
+     "GenerarReporteReservas",
+     "GenerarReporteServicios",
+     "GenerarAnalisisDemanda"
+    ],
     "resumen": "Screen to generate the hotel's printable reports: choose the report on a tab, set the filters and see the preview ready to print or save as PDF.",
     "secciones": [
      {
@@ -6551,6 +6732,9 @@
     "titulo": "Bookings report",
     "icono": "CalendarCheck",
     "pantallas": [],
+    "permisos": [
+     "GenerarReporteReservas"
+    ],
     "resumen": "Printed report with the bookings whose check-in date falls within the chosen period, with nights, billing, payments and outstanding balance.",
     "secciones": [
      {
@@ -6599,6 +6783,9 @@
     "titulo": "Services consumed per guest",
     "icono": "BellConcierge",
     "pantallas": [],
+    "permisos": [
+     "GenerarReporteServicios"
+    ],
     "resumen": "Printed report with the room service and upgrades charged to each stay, grouped by guest with their running total and the status of each service.",
     "secciones": [
      {
@@ -6648,6 +6835,9 @@
     "titulo": "Predictive occupancy & demand analysis",
     "icono": "ChartLine",
     "pantallas": [],
+    "permisos": [
+     "GenerarAnalisisDemanda"
+    ],
     "resumen": "Smart report that forecasts occupancy for the coming days from the history of bookings, stays and spending, detects low occupancy or saturation and suggests prices, promotions and personalized offers.",
     "secciones": [
      {
@@ -6700,11 +6890,150 @@
     ]
    },
    {
+    "id": "bitacora_cambios",
+    "padre": "analisis",
+    "titulo": "Reservation change log",
+    "icono": "ClockRotateLeft",
+    "pantallas": [
+     "FormBitacoraReservas_68SA"
+    ],
+    "permisos": [
+     "VerBitacoraReservas"
+    ],
+    "resumen": "Shows the full history of each reservation: every time it is created or any of its data changes, the system saves a snapshot of the reservation with the operation, date, time and user. It is a read-only screen.",
+    "secciones": [
+     {
+      "titulo": "What it records",
+      "parrafos": [
+       "Every new reservation and every change to it is recorded automatically (by the database): changes to dates or guests, cancellation, no-show, check-in, check-out, stay extension, upgrade and hotel relocation. A change made directly in the database is recorded too, with the user \"Outside the system\".",
+       "Each record is a full snapshot of the reservation (guest, room, dates, check-in/check-out, status, adults, children, rate and amounts). The active record (✔ in the Act column) is the current state; previous ones are shown in grey as history. No record is ever deleted or edited.",
+       "When the log started, every existing reservation received an \"Initial load\" record with its state at that moment."
+      ]
+     },
+     {
+      "titulo": "Operation of each record",
+      "parrafos": [
+       "The \"Operation\" column tells what was done in each record (new, modification, cancellation, check-in, check-out, extension, room change...). To see exactly which data changed, select the record: the panel on the right shows before and after, with the modified fields highlighted.",
+       "When you select a record, the \"Record detail\" panel shows each field's value before and after; the fields that changed are highlighted."
+      ]
+     }
+    ],
+    "pasos": [
+     "Open \"Reservation change log\" from the ANALYSIS section of the side menu.",
+     "Type the reservation code or a guest name or room number, and optionally choose an operation and a date range.",
+     "Press \"Apply\" (or Enter in the text fields) to see the records.",
+     "Check \"Active only\" to see just the current state of each reservation.",
+     "Select a record to see in the right panel which data changed; \"Clear\" removes all filters."
+    ],
+    "elementos": [
+     {
+      "controles": [
+       "txtCodigo",
+       "pnlCampoCodigo"
+      ],
+      "nombre": "Reservation code",
+      "texto": "Reservation number (digits only). It must be greater than zero."
+     },
+     {
+      "controles": [
+       "txtNombre",
+       "pnlCampoNombre"
+      ],
+      "nombre": "Name (guest or room)",
+      "texto": "Searches by the guest's first or last name or by room number or type."
+     },
+     {
+      "controles": [
+       "cmbOperacion",
+       "pnlCampoOperacion"
+      ],
+      "nombre": "Operation",
+      "texto": "Shows only the records of one operation (for example, Cancellation or Check-in). \"All\" does not filter."
+     },
+     {
+      "controles": [
+       "dtpDesde",
+       "dtpHasta",
+       "pnlCampoDesde",
+       "pnlCampoHasta"
+      ],
+      "nombre": "Start date / End date",
+      "texto": "Limit the records by the date of the change. The start date cannot be later than the end date."
+     },
+     {
+      "controles": [
+       "chkSoloActivos"
+      ],
+      "nombre": "Active only",
+      "texto": "When checked, shows only the current record of each reservation (its current state). It is applied immediately."
+     },
+     {
+      "controles": [
+       "btnAplicar"
+      ],
+      "nombre": "Apply button",
+      "texto": "Queries the log again with the selected filters."
+     },
+     {
+      "controles": [
+       "btnLimpiar"
+      ],
+      "nombre": "Clear button",
+      "texto": "Clears all filters and shows every record."
+     },
+     {
+      "controles": [
+       "dgvBitacora",
+       "pnlGrilla"
+      ],
+      "nombre": "Log grid",
+      "texto": "One row for every new reservation or change, newest first. The operation is colored (green new reservation and check-in, red cancellation and no-show, gold upgrade and extension, blue check-out and room changes, orange modification)."
+     },
+     {
+      "controles": [
+       "dgvDetalle",
+       "pnlDetalle",
+       "lblDetalleTitulo",
+       "lblDetalleSub"
+      ],
+      "nombre": "Record detail",
+      "texto": "Field by field, the value in the reservation's previous record (Before) and in the selected one (After). Changed fields are highlighted."
+     },
+     {
+      "controles": [
+       "lblSeleccion",
+       "pnlPie"
+      ],
+      "nombre": "Information footer",
+      "texto": "Shows the number of records or, with one selected, whether it is the current state of the reservation or a previous one."
+     },
+     {
+      "controles": [
+       "btnSalir"
+      ],
+      "nombre": "Exit button",
+      "texto": "Closes the log."
+     }
+    ],
+    "consejos": [
+     "You need the permission to view the reservation change log.",
+     "The log is read-only: changes are made from Reservations, Check-In, Check-Out, Room change or Extend stay, and are recorded automatically.",
+     "A record with user \"Outside the system\" means someone modified the reservation directly in the database: review it with the administrator."
+    ],
+    "relacionados": [
+     "reservas",
+     "cambio_habitacion",
+     "registrar_reserva",
+     "bitacora"
+    ]
+   },
+   {
     "id": "administracion",
     "padre": null,
     "titulo": "Administration",
     "icono": "UserShield",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Groups the system tools: users, audit log, permission roles and families, database backups and inconsistency resolution.",
     "secciones": [
      {
@@ -6733,6 +7062,9 @@
     "icono": "UsersGear",
     "pantallas": [
      "FormGestionUsuarios_08YS"
+    ],
+    "permisos": [
+     "VerUsuarios"
     ],
     "resumen": "Lets you view, create and modify system users, assign them a role, activate or deactivate them and unlock accounts locked by failed attempts.",
     "secciones": [
@@ -6821,7 +7153,11 @@
        "btnModificar"
       ],
       "nombre": "Create / Modify",
-      "texto": "\"Create\" clears the fields and switches to Insert Mode; \"Modify\" switches to Edit Mode with the selected user. Each requires its permission."
+      "texto": "\"Create\" clears the fields and switches to Insert Mode; \"Modify\" switches to Edit Mode with the selected user. Each requires its permission.",
+      "permisos": [
+       "CrearUsuario",
+       "ModificarUsuario"
+      ]
      },
      {
       "controles": [
@@ -6836,14 +7172,20 @@
        "btnDesbloquear"
       ],
       "nombre": "Unlock",
-      "texto": "Enabled only if the selected user is blocked. It asks for confirmation, unlocks the user and resets the initial password (ID number + surname)."
+      "texto": "Enabled only if the selected user is blocked. It asks for confirmation, unlocks the user and resets the initial password (ID number + surname).",
+      "permisos": [
+       "DesbloquearUsuario"
+      ]
      },
      {
       "controles": [
        "btnActDes"
       ],
       "nombre": "Activate / Deactivate",
-      "texto": "Toggles the selected user's active status after confirmation. Red means Deactivate and green means Activate."
+      "texto": "Toggles the selected user's active status after confirmation. Red means Deactivate and green means Activate.",
+      "permisos": [
+       "DesActivarUsuario"
+      ]
      },
      {
       "controles": [
@@ -6873,6 +7215,9 @@
     "icono": "ClipboardList",
     "pantallas": [
      "FormBitacora_08YS"
+    ],
+    "permisos": [
+     "VerBitacora"
     ],
     "resumen": "The \"Event Audit\" screen shows everything recorded in the system (logins, user changes, permissions, reservations, payments and more) and lets you filter and print it.",
     "secciones": [
@@ -6904,14 +7249,14 @@
       "controles": [
        "txtUsername"
       ],
-      "nombre": "Username",
+      "nombre": "User",
       "texto": "User who performed the action. You can type just part of the name."
      },
      {
       "controles": [
        "txtTargetUsername"
       ],
-      "nombre": "Target Username",
+      "nombre": "Affected user",
       "texto": "User the action was performed on (for example, the user unlocked or modified). Accepts part of the name."
      },
      {
@@ -6993,6 +7338,10 @@
      "FormGestionAcceso_08YS",
      "FormAccesoAM_08YS"
     ],
+    "permisos": [
+     "VerRoles",
+     "VerFamilias"
+    ],
     "resumen": "Manages the system permissions: families group permissions (and other families) and roles combine families and permissions to be assigned to users.",
     "secciones": [
      {
@@ -7040,14 +7389,24 @@
        "btnModificar"
       ],
       "nombre": "Create / Modify",
-      "texto": "Open the create window or the modify window for the selected item. They require the permission to create or modify roles or families, depending on the screen."
+      "texto": "Open the create window or the modify window for the selected item. They require the permission to create or modify roles or families, depending on the screen.",
+      "permisos": [
+       "CrearFamilias",
+       "CrearRoles",
+       "ModificarFamilias",
+       "ModificarRoles"
+      ]
      },
      {
       "controles": [
        "btnEliminar"
       ],
       "nombre": "Delete",
-      "texto": "On the management screen, deletes the selected role or family after confirmation (not possible if it is in use). In the create and modify window, removes the selected component from Assigned."
+      "texto": "On the management screen, deletes the selected role or family after confirmation (not possible if it is in use). In the create and modify window, removes the selected component from Assigned.",
+      "permisos": [
+       "EliminarFamilias",
+       "EliminarRoles"
+      ]
      },
      {
       "controles": [
@@ -7114,6 +7473,9 @@
     "pantallas": [
      "FormGestionRespaldos_08YS"
     ],
+    "permisos": [
+     "VerRespaldos"
+    ],
     "resumen": "Creates backups of the hotel database and lets you restore a previous one, with a list of the backups saved in the chosen folder.",
     "secciones": [
      {
@@ -7169,7 +7531,10 @@
        "btnRealizarBackUp"
       ],
       "nombre": "Create backup",
-      "texto": "Creates the backup in the chosen folder. It is enabled only with a valid folder and the permission to create backups."
+      "texto": "Creates the backup in the chosen folder. It is enabled only with a valid folder and the permission to create backups.",
+      "permisos": [
+       "RealizarBackup"
+      ]
      },
      {
       "controles": [
@@ -7208,7 +7573,10 @@
        "btnRealizarRestore"
       ],
       "nombre": "Restore this backup",
-      "texto": "Asks for confirmation (with \"No\" as default) and restores the database from the chosen file; then the application restarts."
+      "texto": "Asks for confirmation (with \"No\" as default) and restores the database from the chosen file; then the application restarts.",
+      "permisos": [
+       "RealizarRestore"
+      ]
      },
      {
       "controles": [
@@ -7245,6 +7613,9 @@
     "icono": "TriangleExclamation",
     "pantallas": [
      "FormInconsistenciaDB_08YS"
+    ],
+    "permisos": [
+     "ManejarInconsistencias"
     ],
     "resumen": "Window shown when logging in if direct modifications to the database (made outside the application) are detected, which lets you resolve them.",
     "secciones": [
@@ -7318,6 +7689,7 @@
     "titulo": "My profile",
     "icono": "CircleUser",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Groups the options for your own account: change your password, log in again (Relogin) and log out.",
     "secciones": [
      {
@@ -7345,6 +7717,7 @@
     "pantallas": [
      "FormCambiarContraseña_08YS"
     ],
+    "permisos": [],
     "resumen": "Lets you replace your password with a new one. It is mandatory on first login or after an administrator unlocks your account.",
     "secciones": [
      {
@@ -7415,6 +7788,7 @@
     "titulo": "Relogin and logout",
     "icono": "RightFromBracket",
     "pantallas": [],
+    "permisos": [],
     "resumen": "Explains how to log out safely and what the Relogin option in the My profile menu does.",
     "secciones": [
      {

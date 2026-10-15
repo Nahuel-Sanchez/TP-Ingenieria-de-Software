@@ -174,10 +174,11 @@ namespace GUI_08YS.Ayuda
                         lista.Add(Item(g, (i + 1) + ".", tema.Pasos[i], ancho));
                 }
 
-                if (tema.Elementos.Count > 0)
+                var elementos = tema.ElementosVisibles;   // solo los que el usuario ve según sus permisos
+                if (elementos.Count > 0)
                 {
                     lista.Add(Subtitulo(g, T("Ayuda_secElementos"), ancho));
-                    foreach (var el in tema.Elementos)
+                    foreach (var el in elementos)
                         lista.Add(Elemento(g, el, ancho));
                 }
 
@@ -327,6 +328,13 @@ namespace GUI_08YS.Ayuda
                 g.DrawString(T("Manual_titulo"), _fPortada, Brushes.White, new RectangleF(banda.Left, banda.Top + 64, banda.Width, 50), centro);
                 g.DrawString(T("Manual_subtitulo"), _fPortadaSub, claro, new RectangleF(banda.Left, banda.Top + 118, banda.Width, 30), centro);
             }
+            // El manual incluye solo lo que el usuario puede usar: la portada dice para quién se generó
+            var sesion = SessionManager_08YS.Instance.Current;
+            if (sesion != null)
+                using (var marca = new SolidBrush(ColorMarca))
+                using (var centro = new StringFormat { Alignment = StringAlignment.Center })
+                    g.DrawString(string.Format(T("Manual_edicionPara"), $"{sesion.Nombre} {sesion.Apellido}".Trim(), sesion.Rol?.Nombre ?? "-"),
+                        _fTexto, marca, new RectangleF(area.Left, banda.Bottom + 24, area.Width, 40), centro);
             using (var suave = new SolidBrush(ColorSuave))
             using (var centro = new StringFormat { Alignment = StringAlignment.Center })
                 g.DrawString(string.Format(T("Manual_generado"), _generado.ToString("dd/MM/yyyy HH:mm")), _fTexto, suave,

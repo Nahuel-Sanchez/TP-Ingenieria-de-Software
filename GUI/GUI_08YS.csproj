@@ -137,12 +137,6 @@
     <Compile Include="Recepcionista\Reserva\Documentos\FormDocumentosReserva_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Recepcionista\Cargos\FormBitacoraCambiosHabitacion_68SA.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Recepcionista\Cargos\FormBitacoraCambiosHabitacion_68SA.Designer.cs">
-      <DependentUpon>FormBitacoraCambiosHabitacion_68SA.cs</DependentUpon>
-    </Compile>
     <Compile Include="Recepcionista\Cargos\FormCambioHabitacion_68SA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -264,6 +258,12 @@
     </Compile>
     <Compile Include="Recepcionista\Habitacion\FormControlHabitaciones_68SA.Designer.cs">
       <DependentUpon>FormControlHabitaciones_68SA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Recepcionista\Reserva\FormBitacoraReservas_68SA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Recepcionista\Reserva\FormBitacoraReservas_68SA.Designer.cs">
+      <DependentUpon>FormBitacoraReservas_68SA.cs</DependentUpon>
     </Compile>
     <Compile Include="Recepcionista\Reserva\FormDisponibilidad.cs">
       <SubType>Form</SubType>

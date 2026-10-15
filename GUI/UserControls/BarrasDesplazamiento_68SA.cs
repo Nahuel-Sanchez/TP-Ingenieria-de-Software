@@ -24,10 +24,10 @@ namespace GUI_08YS.UserControls
         private const string TemaOscuro = "DarkMode_Explorer";
 
         // Clases de ventana que reciben el tema: contenedores con AutoScroll, grillas (sus barras son
-        // SCROLLBAR), textos multilínea y la lista desplegable de los combos nativos.
+        // SCROLLBAR), textos multilínea, árboles (el índice de la ayuda) y la lista desplegable de los combos nativos.
         // Los LISTBOX quedan afuera: el desplegable de IconComboBox es un ListBox dibujado a mano y con
         // el tema aplicado al crearse dejaba de mostrar el texto de las opciones.
-        private static readonly string[] ClasesConBarras = { ".Window.", ".SCROLLBAR.", ".EDIT." };
+        private static readonly string[] ClasesConBarras = { ".Window.", ".SCROLLBAR.", ".EDIT.", ".SysTreeView32." };
         private const string ListaDeCombo = "ComboLBox";
 
         // El delegado se guarda en un campo estático para que el recolector de basura no lo libere

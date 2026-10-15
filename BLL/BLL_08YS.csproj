@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Negocio\ConfiguracionHotelBLL_68SA.cs" />
-    <Compile Include="Negocio\Cargos\BitacoraCambioHabitacionBLL_68SA.cs" />
+    <Compile Include="Negocio\BitacoraReservaBLL_68SA.cs" />
     <Compile Include="Negocio\Cargos\CambioHabitacionBLL_68SA.cs" />
     <Compile Include="Negocio\Cargos\CatalogoRoomServiceBLL_68SA.cs" />
     <Compile Include="Negocio\Cargos\CuentaEstadiaBLL_68SA.cs" />

@@ -47,7 +47,7 @@
     <Compile Include="Interfaces_Repositories\Negocio\habitacion\IHabitacionRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\habitacion\IPisoRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\habitacion\ITipoHabitacionRepository_68SA.cs" />
-    <Compile Include="Interfaces_Repositories\Negocio\cargos\IBitacoraCambioHabitacionRepository_68SA.cs" />
+    <Compile Include="Interfaces_Repositories\Negocio\IBitacoraReservaRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\cargos\ICambioHabitacionRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\cargos\ICargoAdicionalRepository_68SA.cs" />
     <Compile Include="Interfaces_Repositories\Negocio\cargos\ICatalogoRoomServiceRepository_68SA.cs" />
@@ -66,7 +66,7 @@
     <Compile Include="Interfaces_Repositories\Sistema\Permisos\IPermisoRepository_08YS.cs" />
     <Compile Include="Interfaces_Repositories\Sistema\Permisos\IRolRepository_08YS.cs" />
     <Compile Include="SQL\Negocio\SqlConfiguracionHotelRepository_68SA.cs" />
-    <Compile Include="SQL\Negocio\SqlBitacoraCambioHabitacionRepository_68SA.cs" />
+    <Compile Include="SQL\Negocio\SqlBitacoraReservaRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlCambioHabitacionRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlCargoAdicionalRepository_68SA.cs" />
     <Compile Include="SQL\Negocio\SqlCatalogoRoomServiceRepository_68SA.cs" />

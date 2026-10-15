@@ -96,6 +96,11 @@ namespace GUI_08YS.Recepcionista
             LayoutAdaptable_68SA.HabilitarDobleBuffer(flpHabitaciones);
             flpHabitaciones.Layout += (s, e) => AjustarAnchoPisos();
 
+            // Indicadores por estado y chips por tipo comparten una franja: cada uno en una sola fila y, si no
+            // entran a lo ancho, una única barra horizontal desplaza ambos (nunca hay barra vertical). Así los
+            // filtros no le quitan alto a las habitaciones, que son lo principal de la pantalla.
+            ArmarFranjaFiltros();
+
             // En modo reserva solo se listan las disponibles para el rango: los indicadores por estado no aplican
             flpResumen.Visible = _modo == ModoHabitaciones.Gestion;
             btnActualizar.Click += (s, e) => CargarHabitaciones();
@@ -176,6 +181,74 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
+        private Panel _pnlFiltros;
+        private bool _acomodandoFiltros;
+        private const int AltoFilaTipo = 50;
+
+        /// <summary>Saca los indicadores y la fila de tipos de su Dock y los pone juntos en una franja desplazable.</summary>
+        private void ArmarFranjaFiltros()
+        {
+            SuspendLayout();
+            _pnlFiltros = new Panel { Name = "pnlFiltros", Dock = DockStyle.Top, AutoScroll = true, BackColor = pnlFilaTipo.BackColor, Height = AltoFilaTipo };
+            Controls.Remove(flpResumen);
+            Controls.Remove(pnlFilaTipo);
+            flpResumen.Dock = DockStyle.None;
+            flpResumen.WrapContents = false;
+            pnlFilaTipo.Dock = DockStyle.None;
+            flpChipsTipo.WrapContents = false;
+            flpChipsTipo.AutoScroll = false;
+            lblFiltroTipo.TextAlign = ContentAlignment.TopLeft;
+            lblFiltroTipo.Padding = new Padding(0, 15, 0, 0);
+            _pnlFiltros.Controls.Add(flpResumen);
+            _pnlFiltros.Controls.Add(pnlFilaTipo);
+            Controls.Add(_pnlFiltros);
+            Controls.SetChildIndex(_pnlFiltros, Controls.GetChildIndex(pnlEncabezado));   // debajo del encabezado
+            ResumeLayout(false);
+
+            _pnlFiltros.Resize += (s, e) => AcomodarFiltros();
+            flpResumen.SizeChanged += (s, e) => AcomodarFiltros();
+            flpChipsTipo.ControlAdded += (s, e) => AcomodarFiltros();
+            flpChipsTipo.ControlRemoved += (s, e) => AcomodarFiltros();
+        }
+
+        /// <summary>
+        /// Indicadores arriba y tipos abajo, a partir del borde izquierdo de la franja. Si alguno no entra a lo
+        /// ancho, la franja suma el alto de la barra horizontal para que la barra no tape nada ni aparezca la vertical.
+        /// </summary>
+        private void AcomodarFiltros()
+        {
+            if (_acomodandoFiltros || _pnlFiltros == null) return;
+            _acomodandoFiltros = true;
+            try
+            {
+                bool conResumen = _modo == ModoHabitaciones.Gestion;
+                Size resumen = conResumen ? flpResumen.GetPreferredSize(Size.Empty) : Size.Empty;
+                int anchoTipos = pnlFilaTipo.Padding.Horizontal + lblFiltroTipo.Width + flpChipsTipo.Padding.Horizontal;
+                foreach (Control chip in flpChipsTipo.Controls)
+                    anchoTipos += chip.Width + chip.Margin.Horizontal;
+
+                int contenido = Math.Max(resumen.Width, anchoTipos);
+                bool desborda = contenido > _pnlFiltros.Width;
+                int x = _pnlFiltros.AutoScrollPosition.X;
+                int y = 0;
+                if (conResumen)
+                {
+                    flpResumen.Location = new Point(x, 0);
+                    y = resumen.Height;
+                }
+                pnlFilaTipo.Bounds = new Rectangle(x, y, Math.Max(contenido, _pnlFiltros.Width), AltoFilaTipo);
+
+                var minimo = desborda ? new Size(contenido, 0) : Size.Empty;
+                if (_pnlFiltros.AutoScrollMinSize != minimo) _pnlFiltros.AutoScrollMinSize = minimo;
+                int alto = y + AltoFilaTipo + (desborda ? SystemInformation.HorizontalScrollBarHeight : 0);
+                if (_pnlFiltros.Height != alto) _pnlFiltros.Height = alto;
+            }
+            finally
+            {
+                _acomodandoFiltros = false;
+            }
+        }
+
         private RadioButton CrearChip(string texto, Action alSeleccionar)
         {
             var chip = new RadioButton
@@ -194,6 +267,7 @@ namespace GUI_08YS.Recepcionista
             chip.FlatAppearance.BorderColor = Color.FromArgb(45, 60, 100);
             chip.FlatAppearance.CheckedBackColor = Color.Goldenrod;
             chip.FlatAppearance.MouseOverBackColor = Color.FromArgb(18, 32, 76);
+            chip.SizeChanged += (s, e) => AcomodarFiltros();   // el ancho del chip depende del texto (idioma)
             chip.CheckedChanged += (s, e) =>
             {
                 chip.BackColor = chip.Checked ? Color.Goldenrod : Color.FromArgb(12, 22, 56);

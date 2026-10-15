@@ -19,8 +19,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tblContenido = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlColHuesped = new System.Windows.Forms.Panel();
+            this.pnlCuerpo = new System.Windows.Forms.Panel();
             this.pnlPago = new GUI_08YS.UserControls.RoundedPanel_68SA();
             this.lblSeccionPago = new System.Windows.Forms.Label();
             this.pnlLineaPago = new System.Windows.Forms.Panel();
@@ -41,7 +40,6 @@
             this.nudAnioVencimiento = new CustomControls.IconNumericUpDown();
             this.lblEtiquetaCvv = new System.Windows.Forms.Label();
             this.txtCvv = new CustomControls.IconPlaceholderTextBox();
-            this.pnlSeparadorCol = new System.Windows.Forms.Panel();
             this.pnlIzquierda = new GUI_08YS.UserControls.RoundedPanel_68SA();
             this.lblSeccionHuesped = new System.Windows.Forms.Label();
             this.pnlLineaHuesped1 = new System.Windows.Forms.Panel();
@@ -63,7 +61,6 @@
             this.txtTelefono = new CustomControls.IconPlaceholderTextBox();
             this.lblEtiquetaEmail = new System.Windows.Forms.Label();
             this.txtEmail = new CustomControls.IconPlaceholderTextBox();
-            this.pnlColReserva = new System.Windows.Forms.Panel();
             this.pnlResumen = new GUI_08YS.UserControls.RoundedPanel_68SA();
             this.pnlLineaResumen1 = new System.Windows.Forms.Panel();
             this.lblSeccionResumen = new System.Windows.Forms.Label();
@@ -84,7 +81,6 @@
             this.pnlLineaResumen3 = new System.Windows.Forms.Panel();
             this.lblResMontoTotal = new System.Windows.Forms.Label();
             this.lblResEtiquetaMontoTotal = new System.Windows.Forms.Label();
-            this.pnlSeparadorDer = new System.Windows.Forms.Panel();
             this.pnlDetalles = new GUI_08YS.UserControls.RoundedPanel_68SA();
             this.lblResEtiquetaHabitacion = new System.Windows.Forms.Label();
             this.lblResHabitacion = new System.Windows.Forms.Label();
@@ -110,20 +106,16 @@
             this.lblEncabezado = new System.Windows.Forms.Label();
             this.pasosReserva = new GUI_08YS.UserControls.PasosReserva_68SA();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tblContenido.SuspendLayout();
-            this.pnlColHuesped.SuspendLayout();
+            this.pnlCuerpo.SuspendLayout();
             this.pnlPago.SuspendLayout();
             this.pnlLineaPago.SuspendLayout();
-            this.pnlSeparadorCol.SuspendLayout();
             this.pnlIzquierda.SuspendLayout();
             this.pnlLineaHuesped1.SuspendLayout();
-            this.pnlColReserva.SuspendLayout();
             this.pnlResumen.SuspendLayout();
             this.pnlLineaResumen1.SuspendLayout();
             this.pnlLineaResumen2.SuspendLayout();
             this.pnlTotal.SuspendLayout();
             this.pnlLineaResumen3.SuspendLayout();
-            this.pnlSeparadorDer.SuspendLayout();
             this.pnlDetalles.SuspendLayout();
             this.pnlLineaDetalles.SuspendLayout();
             this.pnlBotones.SuspendLayout();
@@ -131,32 +123,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.iconEncabezado)).BeginInit();
             this.SuspendLayout();
             // 
-            // tblContenido
+            // pnlCuerpo
             // 
-            this.tblContenido.Controls.Add(this.pnlColHuesped, 0, 0);
-            this.tblContenido.Controls.Add(this.pnlColReserva, 1, 0);
-            this.tblContenido.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58F));
-            this.tblContenido.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42F));
-            this.tblContenido.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblContenido.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
-            this.tblContenido.ColumnCount = 2;
-            this.tblContenido.RowCount = 1;
-            this.tblContenido.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tblContenido.Padding = new System.Windows.Forms.Padding(0, 10, 0, 6);
-            this.tblContenido.Size = new System.Drawing.Size(1464, 752);
-            this.tblContenido.Name = "tblContenido";
-            // 
-            // pnlColHuesped
-            // 
-            this.pnlColHuesped.Controls.Add(this.pnlPago);
-            this.pnlColHuesped.Controls.Add(this.pnlSeparadorCol);
-            this.pnlColHuesped.Controls.Add(this.pnlIzquierda);
-            this.pnlColHuesped.AutoScroll = true;
-            this.pnlColHuesped.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
-            this.pnlColHuesped.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlColHuesped.Margin = new System.Windows.Forms.Padding(0, 0, 16, 0);
-            this.pnlColHuesped.Size = new System.Drawing.Size(836, 736);
-            this.pnlColHuesped.Name = "pnlColHuesped";
+            this.pnlCuerpo.Controls.Add(this.pnlPago);
+            this.pnlCuerpo.Controls.Add(this.pnlIzquierda);
+            this.pnlCuerpo.Controls.Add(this.pnlResumen);
+            this.pnlCuerpo.Controls.Add(this.pnlDetalles);
+            this.pnlCuerpo.AutoScroll = true;
+            this.pnlCuerpo.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
+            this.pnlCuerpo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlCuerpo.Size = new System.Drawing.Size(1464, 752);
+            this.pnlCuerpo.Name = "pnlCuerpo";
             // 
             // pnlPago
             // 
@@ -181,7 +158,7 @@
             this.pnlPago.Controls.Add(this.txtCvv);
             this.pnlPago.BackColor = System.Drawing.Color.FromArgb(10, 18, 50);
             this.pnlPago.CornerRadius = 14;
-            this.pnlPago.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlPago.Location = new System.Drawing.Point(0, 426);
             this.pnlPago.Size = new System.Drawing.Size(836, 300);
             this.pnlPago.Name = "pnlPago";
             // 
@@ -466,13 +443,6 @@
             this.txtCvv.Visible = false;
             this.txtCvv.Name = "txtCvv";
             // 
-            // pnlSeparadorCol
-            // 
-            this.pnlSeparadorCol.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
-            this.pnlSeparadorCol.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlSeparadorCol.Size = new System.Drawing.Size(836, 16);
-            this.pnlSeparadorCol.Name = "pnlSeparadorCol";
-            // 
             // pnlIzquierda
             // 
             this.pnlIzquierda.Controls.Add(this.lblSeccionHuesped);
@@ -497,7 +467,7 @@
             this.pnlIzquierda.Controls.Add(this.txtEmail);
             this.pnlIzquierda.BackColor = System.Drawing.Color.FromArgb(10, 18, 50);
             this.pnlIzquierda.CornerRadius = 14;
-            this.pnlIzquierda.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlIzquierda.Location = new System.Drawing.Point(0, 10);
             this.pnlIzquierda.Size = new System.Drawing.Size(836, 400);
             this.pnlIzquierda.Name = "pnlIzquierda";
             // 
@@ -582,7 +552,6 @@
             this.txtDni.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtDni.Size = new System.Drawing.Size(338, 46);
             this.txtDni.Location = new System.Drawing.Point(228, 88);
-            this.txtDni.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right));
             this.txtDni.Name = "txtDni";
             // 
             // btnConsultarDocumento
@@ -605,7 +574,6 @@
             this.btnConsultarDocumento.UseVisualStyleBackColor = false;
             this.btnConsultarDocumento.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnConsultarDocumento.FlatAppearance.BorderColor = System.Drawing.Color.Goldenrod;
-            this.btnConsultarDocumento.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
             this.btnConsultarDocumento.Location = new System.Drawing.Point(578, 88);
             this.btnConsultarDocumento.FlatAppearance.BorderSize = 0;
             this.btnConsultarDocumento.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gold;
@@ -614,7 +582,6 @@
             // btnHuespedNuevo
             // 
             this.btnHuespedNuevo.Click += new System.EventHandler(this.BtnHuespedNuevo_Click);
-            this.btnHuespedNuevo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
             this.btnHuespedNuevo.BackColor = System.Drawing.Color.FromArgb(5, 15, 45);
             this.btnHuespedNuevo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnHuespedNuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -828,17 +795,6 @@
             this.txtEmail.TabStop = false;
             this.txtEmail.Name = "txtEmail";
             // 
-            // pnlColReserva
-            // 
-            this.pnlColReserva.Controls.Add(this.pnlResumen);
-            this.pnlColReserva.Controls.Add(this.pnlSeparadorDer);
-            this.pnlColReserva.Controls.Add(this.pnlDetalles);
-            this.pnlColReserva.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
-            this.pnlColReserva.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlColReserva.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlColReserva.Size = new System.Drawing.Size(612, 736);
-            this.pnlColReserva.Name = "pnlColReserva";
-            // 
             // pnlResumen
             // 
             this.pnlResumen.Controls.Add(this.pnlLineaResumen1);
@@ -859,7 +815,7 @@
             this.pnlResumen.Controls.Add(this.pnlTotal);
             this.pnlResumen.BackColor = System.Drawing.Color.FromArgb(10, 18, 50);
             this.pnlResumen.CornerRadius = 14;
-            this.pnlResumen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlResumen.Location = new System.Drawing.Point(852, 226);
             this.pnlResumen.Size = new System.Drawing.Size(612, 520);
             this.pnlResumen.Name = "pnlResumen";
             // 
@@ -1093,13 +1049,6 @@
             this.lblResEtiquetaMontoTotal.Text = "TOTAL A COBRAR";
             this.lblResEtiquetaMontoTotal.Name = "lblResEtiquetaMontoTotal";
             // 
-            // pnlSeparadorDer
-            // 
-            this.pnlSeparadorDer.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
-            this.pnlSeparadorDer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlSeparadorDer.Size = new System.Drawing.Size(612, 16);
-            this.pnlSeparadorDer.Name = "pnlSeparadorDer";
-            // 
             // pnlDetalles
             // 
             this.pnlDetalles.Controls.Add(this.lblResEtiquetaHabitacion);
@@ -1118,7 +1067,7 @@
             this.pnlDetalles.Controls.Add(this.lblDetEtiquetaDescripcion);
             this.pnlDetalles.BackColor = System.Drawing.Color.FromArgb(10, 18, 50);
             this.pnlDetalles.CornerRadius = 14;
-            this.pnlDetalles.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlDetalles.Location = new System.Drawing.Point(852, 10);
             this.pnlDetalles.Size = new System.Drawing.Size(612, 200);
             this.pnlDetalles.Name = "pnlDetalles";
             // 
@@ -1402,7 +1351,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding = new System.Windows.Forms.Padding(28, 18, 28, 16);
             this.Text = "Registrar Reserva";
-            this.Controls.Add(this.tblContenido);
+            this.Controls.Add(this.pnlCuerpo);
             this.Controls.Add(this.pnlBotones);
             this.Controls.Add(this.pnlEncabezado);
             this.Name = "FormRegistrarReserva_68SA";
@@ -1412,7 +1361,6 @@
             this.pnlLineaDetalles.ResumeLayout(false);
             this.pnlDetalles.ResumeLayout(false);
             this.pnlDetalles.PerformLayout();
-            this.pnlSeparadorDer.ResumeLayout(false);
             this.pnlLineaResumen3.ResumeLayout(false);
             this.pnlTotal.ResumeLayout(false);
             this.pnlTotal.PerformLayout();
@@ -1420,25 +1368,20 @@
             this.pnlLineaResumen1.ResumeLayout(false);
             this.pnlResumen.ResumeLayout(false);
             this.pnlResumen.PerformLayout();
-            this.pnlColReserva.ResumeLayout(false);
             this.pnlLineaHuesped1.ResumeLayout(false);
             this.pnlIzquierda.ResumeLayout(false);
             this.pnlIzquierda.PerformLayout();
-            this.pnlSeparadorCol.ResumeLayout(false);
             this.pnlLineaPago.ResumeLayout(false);
             this.pnlPago.ResumeLayout(false);
             this.pnlPago.PerformLayout();
-            this.pnlColHuesped.ResumeLayout(false);
-            this.tblContenido.ResumeLayout(false);
-            this.tblContenido.PerformLayout();
+            this.pnlCuerpo.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tblContenido;
-        private System.Windows.Forms.Panel pnlColHuesped;
+        private System.Windows.Forms.Panel pnlCuerpo;
         private GUI_08YS.UserControls.RoundedPanel_68SA pnlPago;
         private System.Windows.Forms.Label lblSeccionPago;
         private System.Windows.Forms.Panel pnlLineaPago;
@@ -1459,7 +1402,6 @@
         private CustomControls.IconNumericUpDown nudAnioVencimiento;
         private System.Windows.Forms.Label lblEtiquetaCvv;
         private CustomControls.IconPlaceholderTextBox txtCvv;
-        private System.Windows.Forms.Panel pnlSeparadorCol;
         private GUI_08YS.UserControls.RoundedPanel_68SA pnlIzquierda;
         private System.Windows.Forms.Label lblSeccionHuesped;
         private System.Windows.Forms.Panel pnlLineaHuesped1;
@@ -1481,7 +1423,6 @@
         private CustomControls.IconPlaceholderTextBox txtTelefono;
         private System.Windows.Forms.Label lblEtiquetaEmail;
         private CustomControls.IconPlaceholderTextBox txtEmail;
-        private System.Windows.Forms.Panel pnlColReserva;
         private GUI_08YS.UserControls.RoundedPanel_68SA pnlResumen;
         private System.Windows.Forms.Panel pnlLineaResumen1;
         private System.Windows.Forms.Label lblSeccionResumen;
@@ -1502,7 +1443,6 @@
         private System.Windows.Forms.Panel pnlLineaResumen3;
         private System.Windows.Forms.Label lblResMontoTotal;
         private System.Windows.Forms.Label lblResEtiquetaMontoTotal;
-        private System.Windows.Forms.Panel pnlSeparadorDer;
         private GUI_08YS.UserControls.RoundedPanel_68SA pnlDetalles;
         private System.Windows.Forms.Label lblResEtiquetaHabitacion;
         private System.Windows.Forms.Label lblResHabitacion;

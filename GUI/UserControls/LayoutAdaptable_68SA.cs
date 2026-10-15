@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -182,6 +184,141 @@ namespace GUI_08YS.UserControls
             contenido.Resize += (s, e) => Ajustar();
             contenido.ControlAdded += (s, e) => Ajustar();
             Ajustar();
+        }
+
+        /// <summary>
+        /// Tarjeta de indicador (título, valor grande e ícono a la derecha): el valor nunca queda debajo
+        /// del ícono. Si el número no entra al lado del ícono, la letra se achica de a medio punto hasta
+        /// <paramref name="tamanoMinimo"/>; si ni así entra, se oculta el ícono y el valor usa todo el ancho.
+        /// Se recalcula al cambiar el tamaño de la tarjeta o el texto del valor.
+        /// </summary>
+        public static void AjustarValorTarjeta(Control tarjeta, Label valor, Control icono, float tamanoMinimo = 10f)
+        {
+            Font original = valor.Font;
+            var fuentes = new Dictionary<float, Font>();
+            bool ajustando = false;
+
+            Font FuenteDe(float tamano)
+            {
+                if (tamano >= original.Size) return original;
+                if (!fuentes.TryGetValue(tamano, out Font fuente))
+                    fuentes[tamano] = fuente = new Font(original.FontFamily, tamano, original.Style);
+                return fuente;
+            }
+
+            int AnchoTexto(float tamano) => TextRenderer.MeasureText(valor.Text ?? "", FuenteDe(tamano)).Width;
+
+            void Ajustar()
+            {
+                if (ajustando || tarjeta.IsDisposed || tarjeta.ClientSize.Width <= 0) return;
+                ajustando = true;
+                try
+                {
+                    int bordeTarjeta = tarjeta.ClientSize.Width - 10;
+                    // El ícono solo molesta si está a la misma altura que el valor
+                    int altoValor = TextRenderer.MeasureText("0", original).Height;
+                    bool mismaAltura = icono != null && valor.Top < icono.Bottom && icono.Top < valor.Top + altoValor;
+                    int bordeIcono = mismaAltura ? icono.Left - 6 : bordeTarjeta;
+
+                    float tamano = original.Size;
+                    while (valor.Left + AnchoTexto(tamano) > bordeIcono && tamano - 0.5f >= tamanoMinimo)
+                        tamano -= 0.5f;
+
+                    bool conIcono = valor.Left + AnchoTexto(tamano) <= bordeIcono;
+                    if (!conIcono)
+                    {
+                        // Ni con la letra más chica entra al lado del ícono: el valor usa todo el ancho
+                        tamano = original.Size;
+                        while (valor.Left + AnchoTexto(tamano) > bordeTarjeta && tamano - 0.5f >= tamanoMinimo)
+                            tamano -= 0.5f;
+                    }
+
+                    Font fuente = FuenteDe(tamano);
+                    if (!ReferenceEquals(valor.Font, fuente)) valor.Font = fuente;
+                    if (icono != null && icono.Visible != conIcono) icono.Visible = conIcono;
+                    if (!valor.AutoSize)
+                        valor.Width = Math.Max(20, (conIcono ? bordeIcono : bordeTarjeta) - valor.Left);
+                }
+                finally
+                {
+                    ajustando = false;
+                }
+            }
+
+            // Resize se dispara después de acomodar los anclajes y de los Resize que ubican el ícono
+            tarjeta.Resize += (s, e) => Ajustar();
+            valor.TextChanged += (s, e) => Ajustar();
+            tarjeta.Disposed += (s, e) =>
+            {
+                foreach (var fuente in fuentes.Values) fuente.Dispose();
+                fuentes.Clear();
+            };
+            Ajustar();
+        }
+
+        /// <summary>
+        /// Ventana emergente que nunca es más grande que el área de trabajo de la pantalla (sin la barra de
+        /// tareas): si no entra, se achica (su contenido se acomoda con Dock) y se centra sobre la ventana
+        /// que la abrió, siempre entera a la vista.
+        /// </summary>
+        public static void LimitarAPantalla(Form ventana, int margen = 16)
+        {
+            ventana.Load += (s, e) =>
+            {
+                Control referencia = (Control)ventana.Owner ?? ventana;
+                Rectangle area = Screen.FromControl(referencia).WorkingArea;
+                int ancho = Math.Min(ventana.Width, area.Width - margen * 2);
+                int alto = Math.Min(ventana.Height, area.Height - margen * 2);
+                if (ancho == ventana.Width && alto == ventana.Height) return;
+
+                Rectangle sobre = ventana.Owner != null ? ventana.Owner.Bounds : area;
+                int x = sobre.Left + (sobre.Width - ancho) / 2;
+                int y = sobre.Top + (sobre.Height - alto) / 2;
+                x = Math.Max(area.Left, Math.Min(x, area.Right - ancho));
+                y = Math.Max(area.Top, Math.Min(y, area.Bottom - alto));
+                ventana.StartPosition = FormStartPosition.Manual;
+                ventana.Bounds = new Rectangle(x, y, ancho, alto);
+            };
+        }
+
+        /// <summary>
+        /// Botón con ícono y texto que, si el texto no entra en el ancho que le toca, muestra solo el ícono
+        /// (el texto queda en un tooltip). Sigue los cambios de texto (idioma) y de tamaño.
+        /// </summary>
+        public static void SoloIconoSiNoEntra(FontAwesome.Sharp.IconButton boton)
+        {
+            string completo = boton.Text;
+            var relacion = boton.TextImageRelation;
+            var alineacion = boton.ImageAlign;
+            var relleno = boton.Padding;
+            var tips = new ToolTip();
+            bool aplicando = false;
+
+            void Aplicar()
+            {
+                if (aplicando) return;
+                aplicando = true;
+                try
+                {
+                    string texto = (completo ?? string.Empty).Trim();
+                    bool entra = texto.Length == 0 ||
+                                 TextRenderer.MeasureText(texto, boton.Font).Width + boton.IconSize + relleno.Horizontal + 24 <= boton.Width;
+                    boton.Text = entra ? completo : string.Empty;
+                    boton.TextImageRelation = entra ? relacion : TextImageRelation.Overlay;
+                    boton.ImageAlign = entra ? alineacion : ContentAlignment.MiddleCenter;
+                    boton.Padding = entra ? relleno : Padding.Empty;
+                    tips.SetToolTip(boton, entra ? null : texto);
+                }
+                finally
+                {
+                    aplicando = false;
+                }
+            }
+
+            boton.TextChanged += (s, e) => { if (!aplicando) { completo = boton.Text; Aplicar(); } };
+            boton.Resize += (s, e) => Aplicar();
+            boton.Disposed += (s, e) => tips.Dispose();
+            Aplicar();
         }
 
         #endregion

@@ -94,7 +94,6 @@ namespace GUI_08YS
                 (habitacionesToolStripMenuItem,               IconChar.Bed),
                 (tiposDeHabitacionToolStripMenuItem,          IconChar.Tags),
                 (pisosToolStripMenuItem,                      IconChar.Building),
-                (bitacoraCambiosHabitacionToolStripMenuItem,  IconChar.ClockRotateLeft),
                 (ayudaPantallaToolStripMenuItem,              IconChar.CircleQuestion),
                 (queEsEstoToolStripMenuItem,                  IconChar.ArrowPointer),
                 (indiceAyudaToolStripMenuItem,                IconChar.Sitemap),
@@ -148,6 +147,11 @@ namespace GUI_08YS
 
             // Los botones ocupan todo el ancho disponible (sin barra horizontal aunque aparezca la vertical)
             flowLayoutPanel1.Layout += (s, e) => AjustarAnchoBotones();
+            // Al aparecer la barra vertical cambia el ancho útil: se vuelve a acomodar (y nunca hay barra horizontal)
+            flowLayoutPanel1.ClientSizeChanged += (s, e) => flowLayoutPanel1.PerformLayout();
+            LayoutAdaptable_68SA.OcultarScrollHorizontal(flowLayoutPanel1);
+            btnMenuLateral.Click += (s, e) => AlternarMenuLateral();
+            Disposed += (s, e) => _tipsMenu.Dispose();
             Resize += (s, e) => button2.IconChar = WindowState == FormWindowState.Maximized ? IconChar.WindowRestore : IconChar.WindowMaximize;
         }
 
@@ -163,12 +167,143 @@ namespace GUI_08YS
                     EngancharSeccion(sub, boton);
         }
 
+        private bool _ajustandoMenu;
+        private bool _menuRetraido;
+        private int _anchoLateralDiseno;          // ancho del panel lateral desplegado (el del diseñador, ya escalado)
+        private int _izquierdaAvatar = -1;        // posición del avatar con el menú desplegado
+        private readonly ToolTip _tipsMenu = new ToolTip();
+
+        private const int AltoBotonMenu = 46;
+        private const int AltoBotonMenuMinimo = 34;
+        private const int AltoSegundaLinea = 20;  // lo que crece un botón cuyo texto ocupa dos renglones
+        private const int AnchoMenuRetraido = 64;
+
+        /// <summary>
+        /// Acomoda el panel lateral al espacio disponible:
+        /// - los botones ocupan todo el ancho, sin barra horizontal;
+        /// - si el texto de un botón no entra en un renglón (por ejemplo "Configuración del hotel"),
+        ///   el botón se hace más alto y el texto pasa a dos renglones;
+        /// - en pantallas bajas los botones se compactan para que entren todos sin barra vertical
+        ///   (la barra aparece solo si ni compactados entran).
+        /// </summary>
         private void AjustarAnchoBotones()
         {
-            int ancho = flowLayoutPanel1.ClientSize.Width - 16;
-            if (ancho <= 0) return;
-            foreach (Control c in flowLayoutPanel1.Controls)
-                if (c.Width != ancho) c.Width = ancho;
+            if (_ajustandoMenu || !flowLayoutPanel1.IsHandleCreated) return;
+            _ajustandoMenu = true;
+            flowLayoutPanel1.SuspendLayout();
+            try
+            {
+                int ancho = flowLayoutPanel1.ClientSize.Width - 16;
+                if (ancho <= 0) return;
+                foreach (Control c in flowLayoutPanel1.Controls)
+                    if (c.Width != ancho) c.Width = ancho;
+
+                var botones = flowLayoutPanel1.Controls.OfType<IconButton>().Where(b => b.Visible).ToList();
+                var grupos = flowLayoutPanel1.Controls.OfType<Label>().Where(l => l.Visible).ToList();
+                if (!flowLayoutPanel1.Visible || botones.Count == 0) return;
+
+                // Botones cuyo texto no entra en un renglón: se parte en dos, con la misma sangría en ambos
+                var dosRenglones = new HashSet<IconButton>();
+                if (!_menuRetraido)
+                    foreach (var b in botones)
+                    {
+                        string texto = b.Tag is string clave ? TraductorManager_08YS.Instance.GetTexto(clave) : b.Text.Trim();
+                        int anchoTexto = ancho - b.Padding.Horizontal - b.IconSize - 14;
+                        string partido = PartirEnDosRenglones(texto, anchoTexto);
+                        if (partido.Contains("\n")) dosRenglones.Add(b);
+                        if (b.Text != partido) b.Text = partido;
+                    }
+                int extra = dosRenglones.Count * AltoSegundaLinea;
+
+                // Alto: normal (46) si entra; si no, lo justo hasta un mínimo de 34
+                int disponible = flowLayoutPanel1.ClientSize.Height - flowLayoutPanel1.Padding.Vertical - extra;
+                int altoGrupoNormal = _menuRetraido ? 10 + 4 : 24 + 12;
+                bool compacto = botones.Count * (AltoBotonMenu + 2) + grupos.Count * altoGrupoNormal > disponible;
+                int altoGrupo = _menuRetraido ? 10 : compacto ? 18 : 24;
+                var margenGrupo = _menuRetraido || compacto ? new Padding(8, 4, 8, 0) : new Padding(8, 10, 8, 2);
+                int altoBoton = AltoBotonMenu;
+                if (compacto)
+                {
+                    int resto = disponible - grupos.Count * (altoGrupo + margenGrupo.Vertical);
+                    altoBoton = Math.Max(AltoBotonMenuMinimo, Math.Min(AltoBotonMenu, resto / botones.Count - 2));
+                }
+                foreach (var b in botones)
+                {
+                    int alto = altoBoton + (dosRenglones.Contains(b) ? AltoSegundaLinea : 0);
+                    if (b.Height != alto) b.Height = alto;
+                }
+                foreach (var g in grupos)
+                {
+                    if (g.Height != altoGrupo) g.Height = altoGrupo;
+                    if (g.Margin != margenGrupo) g.Margin = margenGrupo;
+                }
+            }
+            finally
+            {
+                flowLayoutPanel1.ResumeLayout(false);
+                _ajustandoMenu = false;
+            }
+        }
+
+        /// <summary>
+        /// Texto del botón con la separación del ícono ("  "). Si no entra en el ancho, se corta en la última
+        /// palabra que entra y el segundo renglón lleva la misma separación (así ambos quedan alineados).
+        /// </summary>
+        private static string PartirEnDosRenglones(string texto, int ancho)
+        {
+            texto = (texto ?? string.Empty).Trim();
+            const string sangria = "  ";
+            if (TextRenderer.MeasureText(sangria + texto, FuenteNavegacionActiva).Width <= ancho) return sangria + texto;
+
+            var palabras = texto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            int cuantas = 1;
+            while (cuantas < palabras.Length - 1 &&
+                   TextRenderer.MeasureText(sangria + string.Join(" ", palabras.Take(cuantas + 1)), FuenteNavegacionActiva).Width <= ancho)
+                cuantas++;
+            if (palabras.Length < 2) return sangria + texto;
+            return sangria + string.Join(" ", palabras.Take(cuantas)) + "\n" + sangria + string.Join(" ", palabras.Skip(cuantas));
+        }
+
+        /// <summary>
+        /// Menú lateral desplegado (ícono y texto) o retraído (solo íconos, con el nombre en un tooltip).
+        /// Se alterna con el botón de las tres rayas de arriba del menú; deja más lugar a la pantalla abierta.
+        /// </summary>
+        private void AplicarModoMenu()
+        {
+            if (_anchoLateralDiseno == 0) _anchoLateralDiseno = panelLateral.Width;
+            if (_izquierdaAvatar < 0) _izquierdaAvatar = picAvatar.Left;
+            bool r = _menuRetraido;
+
+            SuspendLayout();
+            foreach (var boton in flowLayoutPanel1.Controls.OfType<IconButton>().Concat(new[] { btnCerrarSesion }))
+            {
+                string texto = boton.Tag is string clave ? TraductorManager_08YS.Instance.GetTexto(clave) : boton.Text.Trim();
+                boton.Text = r ? string.Empty : "  " + texto;
+                boton.TextImageRelation = r ? TextImageRelation.Overlay : TextImageRelation.ImageBeforeText;
+                if (!ReferenceEquals(boton, btnCerrarSesion))
+                {
+                    boton.ImageAlign = r ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+                    boton.Padding = r ? Padding.Empty : new Padding(18, 0, 0, 0);
+                }
+                _tipsMenu.SetToolTip(boton, r ? texto : null);
+            }
+            foreach (var grupo in flowLayoutPanel1.Controls.OfType<Label>())
+                grupo.Text = r || !(grupo.Tag is string clave) ? string.Empty : TraductorManager_08YS.Instance.GetTexto(clave);
+
+            lblNombreApellido.Visible = lblRolSistema.Visible = !r;
+            picAvatar.Left = r ? (AnchoMenuRetraido - picAvatar.Width) / 2 : _izquierdaAvatar;
+            panel3.Padding = r ? new Padding(8, 10, 8, 12) : new Padding(12, 10, 12, 12);
+            panelLateral.Width = r ? AnchoMenuRetraido : _anchoLateralDiseno;
+
+            _tipsMenu.SetToolTip(btnMenuLateral, TraductorManager_08YS.Instance.GetTexto(r ? "MDI_tipExpandirMenu" : "MDI_tipRetraerMenu"));
+            ResumeLayout(true);
+            flowLayoutPanel1.PerformLayout();
+        }
+
+        private void AlternarMenuLateral()
+        {
+            _menuRetraido = !_menuRetraido;
+            AplicarModoMenu();
         }
 
         /// <summary>Marca el botón de la sección actual y muestra "Sección › Pantalla" en la barra superior.</summary>
@@ -193,7 +328,9 @@ namespace GUI_08YS
         private void ActualizarTextoSeccion()
         {
             if (_botonActivo == null) { lblSeccion.Text = string.Empty; return; }
-            lblSeccion.Text = _itemActivo == null ? _botonActivo.Text.Trim() : $"{_botonActivo.Text.Trim()}  ›  {_itemActivo.Text}";
+            // Con el menú retraído el botón no tiene texto: el nombre se toma de su clave de traducción
+            string seccion = _botonActivo.Tag is string clave ? TraductorManager_08YS.Instance.GetTexto(clave) : _botonActivo.Text.Trim();
+            lblSeccion.Text = _itemActivo == null ? seccion : $"{seccion}  ›  {_itemActivo.Text}";
         }
 
         // Barra dorada a la izquierda del botón activo
@@ -329,6 +466,7 @@ namespace GUI_08YS
                 { nameof(btnHuespedes),   Permisos.VerHuespedes          },
                 { nameof(btnDashboard),   Permisos.VerDashboard          },
                 { nameof(btnHotelConfig), Permisos.VerConfiguracionHotel },
+                { nameof(btnBitacoraReservas), Permisos.VerBitacoraReservas },
             };
 
         // Items del menu desplegable de recepción
@@ -357,7 +495,6 @@ namespace GUI_08YS
                 { nameof(habitacionesToolStripMenuItem),      Permisos.VerHabitaciones    },
                 { nameof(tiposDeHabitacionToolStripMenuItem), Permisos.VerTiposHabitacion },
                 { nameof(pisosToolStripMenuItem),             Permisos.VerPisos           },
-                { nameof(bitacoraCambiosHabitacionToolStripMenuItem), Permisos.VerBitacoraCambiosHabitacion },
             };
 
         private void AplicarPermisos()
@@ -388,8 +525,7 @@ namespace GUI_08YS
                                || sesion.HasPermission(Permisos.GestionarItemsRoomService) },
                 { btnHabitaciones, sesion.HasPermission(Permisos.VerHabitaciones)
                                 || sesion.HasPermission(Permisos.VerTiposHabitacion)
-                                || sesion.HasPermission(Permisos.VerPisos)
-                                || sesion.HasPermission(Permisos.VerBitacoraCambiosHabitacion) },
+                                || sesion.HasPermission(Permisos.VerPisos) },
                 { btnReportes, PuedeVerReportes() },
             };
             // Botones que abren directamente una pantalla de negocio
@@ -414,7 +550,7 @@ namespace GUI_08YS
             bool Alguno(params IconButton[] botones) => botones.Any(b => visibles.TryGetValue(b, out bool v) && v);
             lblGrupoOperacion.Visible = Alguno(btnRecepcion, btnReservas, btnHuespedes, btnRoomService);
             lblGrupoHotel.Visible     = Alguno(btnHabitaciones, btnHotelConfig);
-            lblGrupoAnalisis.Visible  = Alguno(btnDashboard, btnReportes);
+            lblGrupoAnalisis.Visible  = Alguno(btnDashboard, btnReportes, btnBitacoraReservas);
             lblGrupoSistema.Visible   = Alguno(btnAdministrativo, btnPerfil);
         }
 
@@ -462,6 +598,7 @@ namespace GUI_08YS
         {
             // 1. Traduce los controles nativos y paneles del formulario (los botones del panel lateral, labels, etc.)
             TraducirControles(this);
+            AplicarModoMenu();   // con el menú retraído los botones quedan solo con el ícono
 
             // 2. TRADUCCIÓN EXPLÍCITA DE MENÚS FLOTANTES COMPOSITE
             // Como no están en Controls, los enviamos individualmente a procesar
@@ -598,6 +735,9 @@ namespace GUI_08YS
             AyudaDropDownMenu.IsMainMenu = true;
 
             AjustarAPantalla();
+            // En pantallas angostas el menú lateral arranca retraído (solo íconos) para dejarle lugar a las pantallas
+            _menuRetraido = Screen.FromControl(this).WorkingArea.Width < 1360;
+            AplicarModoMenu();
             MostrarInicio();   // lo primero que se ve al entrar es la pantalla de inicio
         }
 
@@ -886,10 +1026,11 @@ namespace GUI_08YS
             OpenChildForm(new FormCartaRoomService_68SA());
         }
 
-        private void bitacoraCambiosHabitacionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnBitacoraReservas_Click(object sender, EventArgs e)
         {
-            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerBitacoraCambiosHabitacion);
-            OpenChildForm(new FormBitacoraCambiosHabitacion_68SA());
+            SessionManager_08YS.Instance.ValidatePermission(Permisos.VerBitacoraReservas);
+            OpenChildForm(new FormBitacoraReservas_68SA());
+            MarcarSeccion(btnBitacoraReservas);
         }
 
         /// <summary>Pide la estadía en curso (por documento del titular) y la devuelve completa.</summary>

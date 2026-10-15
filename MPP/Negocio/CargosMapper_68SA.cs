@@ -143,36 +143,6 @@ namespace MPP_08YS
         }
     }
 
-    public static class BitacoraCambioHabitacionMapper_68SA
-    {
-        public static List<BitacoraCambioHabitacion_68SA> FromDataTable(DataTable dt) => Fila_68SA.Lista(dt, FromDataRow);
-
-        public static BitacoraCambioHabitacion_68SA FromDataRow(DataRow row)
-        {
-            return new BitacoraCambioHabitacion_68SA
-            {
-                Id = Convert.ToInt32(row["BitacoraID"]),
-                ReservaId = Convert.ToInt32(row["ReservaID"]),
-                Huesped = Fila_68SA.NombreCompleto(row, "NombreTitular", "ApellidoTitular"),
-                EstadoReserva = (EstadoReserva)Convert.ToInt32(row["EstadoReserva"]),
-                HabitacionId = Convert.ToInt32(row["HabitacionID"]),
-                NroHabitacion = row["NroHabitacion"].ToString(),
-                TipoHabitacion = row["TipoHabitacion"].ToString(),
-                TarifaNoche = Convert.ToDecimal(row["TarifaNoche"]),
-                HabitacionAnteriorId = Fila_68SA.Entero(row, "HabitacionAnteriorID"),
-                NroHabitacionAnterior = Fila_68SA.Texto(row, "NroHabitacionAnterior"),
-                CambioId = Fila_68SA.Entero(row, "CambioID"),
-                MontoCargo = Convert.ToDecimal(row["MontoCargo"]),
-                Operacion = row["Operacion"].ToString(),
-                Fecha = Convert.ToDateTime(row["Fecha"]),
-                Hora = (TimeSpan)row["Hora"],
-                UsuarioDB = row["UsuarioDB"].ToString(),
-                UsuarioApp = Fila_68SA.Texto(row, "UsuarioApp"),
-                Act = Convert.ToBoolean(row["Act"])
-            };
-        }
-    }
-
     /// <summary>Renglones del reporte de servicios consumidos (sp_ReporteServiciosConsumidos).</summary>
     public static class ServicioConsumidoMapper_68SA
     {

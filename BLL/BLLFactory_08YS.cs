@@ -18,6 +18,13 @@ namespace BLL_08YS
 {
     public static class BLLFactory_08YS
     {
+        // La bitácora de reservas (trigger de la base) registra qué usuario del sistema hizo cada cambio:
+        // la DAL lo informa en cada operación con el usuario de la sesión actual.
+        static BLLFactory_08YS()
+        {
+            Connection_08YS.UsuarioActual = () => SessionManager_08YS.Instance.Current?.Username;
+        }
+
         #region sistema
 
         public static UserBLL_08YS CreateUserBLL()
@@ -174,11 +181,11 @@ namespace BLL_08YS
             return new CuentaEstadiaBLL_68SA(cargoRepo, pagoRepo, reservaRepo);
         }
 
-        public static BitacoraCambioHabitacionBLL_68SA CreateBitacoraCambioHabitacionBLL()
+        public static BitacoraReservaBLL_68SA CreateBitacoraReservaBLL()
         {
             var factory = new SqlDbFactory_08YS();
-            IBitacoraCambioHabitacionRepository_68SA repo = new SqlBitacoraCambioHabitacionRepository_68SA(factory);
-            return new BitacoraCambioHabitacionBLL_68SA(repo);
+            IBitacoraReservaRepository_68SA repo = new SqlBitacoraReservaRepository_68SA(factory);
+            return new BitacoraReservaBLL_68SA(repo);
         }
 
         public static ReporteServiciosBLL_68SA CreateReporteServiciosBLL()
