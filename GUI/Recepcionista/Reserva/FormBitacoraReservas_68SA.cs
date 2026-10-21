@@ -17,7 +17,9 @@ namespace GUI_08YS.Recepcionista
     /// (modificación, cancelación, no-show, check-in, check-out, renovación, upgrade o reubicación) deja una
     /// foto completa de la reserva. Filtros por código, nombre, operación y rango de fechas; Aplicar / Limpiar / Salir.
     /// A la derecha se ve, campo por campo, qué cambió en el registro elegido respecto del anterior.
-    /// Es de solo lectura: los registros los genera el trigger de Reservas y no se borran ni se editan.
+    /// "Ver historial" muestra todos los registros de la reserva elegida y "Restaurar como activo" (rollback,
+    /// solo Administrador y Supervisor) vuelve a poner como estado actual un registro anterior.
+    /// Los registros los genera el trigger de Reservas y no se borran ni se editan: el rollback deja uno nuevo.
     /// </summary>
     public partial class FormBitacoraReservas_68SA : Form, IIdiomaObserver_08YS
     {
@@ -25,9 +27,11 @@ namespace GUI_08YS.Recepcionista
 
         private static readonly Color ColorCambio = Color.FromArgb(40, 52, 30);
         private static readonly Color ColorAzul = Color.FromArgb(100, 170, 255);
+        private static readonly Color ColorRollback = Color.FromArgb(190, 140, 255);
 
         private readonly BitacoraReservaBLL_68SA _bitacoraBLL = BLLFactory_08YS.CreateBitacoraReservaBLL();
         private List<BitacoraReserva_68SA> _registros = new List<BitacoraReserva_68SA>();
+        private bool _sinAplicar;   // mientras se cargan filtros por código, los controles no vuelven a consultar
 
         #endregion
 
@@ -50,8 +54,15 @@ namespace GUI_08YS.Recepcionista
             btnAplicar.Click += (s, e) => Aplicar();
             btnLimpiar.Click += (s, e) => Limpiar();
             btnSalir.Click += (s, e) => Close();
-            chkSoloActivos.CheckedChanged += (s, e) => Aplicar();
-            cmbOperacion.SelectedIndexChanged += (s, e) => { if (Visible) Aplicar(); };
+            btnHistorial.Click += (s, e) => VerHistorial();
+            btnRollback.Click += (s, e) => Rollback();
+            chkSoloActivos.CheckedChanged += (s, e) => { if (!_sinAplicar) Aplicar(); };
+            cmbOperacion.SelectedIndexChanged += (s, e) => { if (Visible && !_sinAplicar) Aplicar(); };
+
+            // Rollback: solo Administrador y Supervisor (permiso RollbackBitacoraReservas)
+            btnRollback.Visible = _bitacoraBLL.PuedeHacerRollback();
+            LayoutAdaptable_68SA.SoloIconoSiNoEntra(btnHistorial);
+            LayoutAdaptable_68SA.SoloIconoSiNoEntra(btnRollback);
             foreach (var txt in new[] { txtCodigo, txtNombre })
                 txt.InnerTextBox.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; Aplicar(); } };
             // El código de reserva es numérico
@@ -120,6 +131,77 @@ namespace GUI_08YS.Recepcionista
             Mostrar();
         }
 
+        /// <summary>Historial de cambios de la reserva elegida: todos sus registros, sin los demás filtros.</summary>
+        private void VerHistorial(int? reservaId = null, Func<BitacoraReserva_68SA, bool> seleccionar = null)
+        {
+            int id = reservaId ?? RegistroSeleccionado()?.Reserva.ReservaId ?? 0;
+            if (id <= 0) return;
+
+            _sinAplicar = true;
+            try
+            {
+                txtCodigo.Text = id.ToString();
+                txtNombre.Text = string.Empty;
+                dtpDesde.Value = null;
+                dtpHasta.Value = null;
+                cmbOperacion.SelectedIndex = 0;
+                chkSoloActivos.Checked = false;
+            }
+            finally
+            {
+                _sinAplicar = false;
+            }
+
+            try
+            {
+                _registros = _bitacoraBLL.GetHistorial(id);
+            }
+            catch (Exception ex) when (EsErrorDeNegocio(ex))
+            {
+                Aviso(this, Describir(ex));
+                return;
+            }
+            Mostrar();
+            if (seleccionar != null) Seleccionar(seleccionar);
+        }
+
+        /// <summary>
+        /// Rollback: el registro anterior elegido vuelve a ser el estado ACTIVO de la reserva. La base restaura la reserva
+        /// con esa foto y la bitácora suma un registro "Rollback"; el que estaba activo queda como historia.
+        /// </summary>
+        private void Rollback()
+        {
+            var registro = RegistroSeleccionado();
+            if (registro == null || registro.Act) return;
+
+            string pregunta = string.Format(T("BitacoraRes_msgConfirmarRollback"),
+                registro.Reserva.ReservaId.ToString("000000"), registro.FechaHora.ToString("dd/MM/yyyy HH:mm"),
+                OpcionEnum_68SA.Texto(registro.Operacion));
+            if (!Confirmar(this, pregunta, T("BitacoraRes_tituloRollback"))) return;
+
+            try
+            {
+                _bitacoraBLL.Rollback(registro);
+            }
+            catch (RollbackReservaException_68SA ex)
+            {
+                Aviso(this, T("BitacoraRes_excRollback" + ex.Motivo), T("BitacoraRes_tituloRollback"));
+                // La reserva pudo cambiar mientras tanto: se vuelve a mostrar su historial actualizado
+                VerHistorial(registro.Reserva.ReservaId);
+                return;
+            }
+            catch (Exception ex) when (EsErrorDeNegocio(ex))
+            {
+                Aviso(this, Describir(ex), T("BitacoraRes_tituloRollback"));
+                return;
+            }
+
+            Info(this, string.Format(T("BitacoraRes_msgRollbackOk"), registro.FechaHora.ToString("dd/MM/yyyy HH:mm"),
+                     registro.Reserva.ReservaId.ToString("000000")), T("BitacoraRes_tituloRollback"));
+            // Se muestra el historial de la reserva con el registro nuevo (el activo) seleccionado
+            VerHistorial(registro.Reserva.ReservaId, r => r.Act);
+        }
+
         private void Limpiar()
         {
             txtCodigo.Text = string.Empty;
@@ -186,6 +268,20 @@ namespace GUI_08YS.Recepcionista
             ActualizarSeleccion();
         }
 
+        private void Seleccionar(Func<BitacoraReserva_68SA, bool> criterio)
+        {
+            foreach (DataGridViewRow fila in dgvBitacora.Rows)
+            {
+                var registro = RegistroDeFila(fila.Index);
+                if (registro == null || !criterio(registro)) continue;
+                dgvBitacora.ClearSelection();
+                fila.Selected = true;
+                dgvBitacora.CurrentCell = fila.Cells[nameof(FilaBitacora_68SA.Reserva)];
+                break;
+            }
+            ActualizarSeleccion();
+        }
+
         private void AplicarColumnas()
         {
             var col = dgvBitacora.Columns;
@@ -247,6 +343,8 @@ namespace GUI_08YS.Recepcionista
                     return ColorAzul;
                 case OperacionBitacoraReserva.Modificacion:
                     return ColorAviso;
+                case OperacionBitacoraReserva.Rollback:
+                    return ColorRollback;
                 default:
                     return TextoSuave;
             }
@@ -274,6 +372,8 @@ namespace GUI_08YS.Recepcionista
             else
                 lblSeleccion.Text = string.Format(T(registro.Act ? "BitacoraRes_txtVigente" : "BitacoraRes_txtAnterior"),
                     registro.Reserva.ReservaId.ToString("000000"), _registros.Count);
+            btnHistorial.Enabled = registro != null;
+            btnRollback.Enabled = registro != null && !registro.Act;
             MostrarDetalle(registro);
         }
 
@@ -303,6 +403,14 @@ namespace GUI_08YS.Recepcionista
                 registro.FechaHora.ToString("dd/MM/yyyy HH:mm"), TextoUsuario(registro));
             if (registro.CambioId.HasValue)
                 sub += Environment.NewLine + string.Format(T("BitacoraRes_txtCambioHabitacion"), registro.CambioId.Value);
+            if (registro.RollbackDeId.HasValue)
+            {
+                var restaurado = _registros.FirstOrDefault(r => r.Id == registro.RollbackDeId.Value);
+                sub += Environment.NewLine + (restaurado == null
+                    ? string.Format(T("BitacoraRes_txtRollbackDeId"), registro.RollbackDeId.Value)
+                    : string.Format(T("BitacoraRes_txtRollbackDe"), restaurado.FechaHora.ToString("dd/MM/yyyy HH:mm"),
+                                    OpcionEnum_68SA.Texto(restaurado.Operacion)));
+            }
             lblDetalleSub.Text = sub;
 
             var cambiados = new HashSet<CampoReserva>(registro.CamposModificados());

@@ -2983,7 +2983,7 @@
     "permisos": [
      "VerBitacoraReservas"
     ],
-    "resumen": "Muestra la historia completa de cada reserva: cada vez que se crea o cambia cualquiera de sus datos, el sistema guarda una foto de la reserva con la operación, la fecha, la hora y el usuario. Es una pantalla de solo consulta.",
+    "resumen": "Muestra la historia completa de cada reserva: cada vez que se crea o cambia cualquiera de sus datos, el sistema guarda una foto de la reserva con la operación, la fecha, la hora y el usuario. Desde acá se ve el historial de una reserva y, con el permiso de rollback, se puede volver a poner como activo un registro anterior.",
     "secciones": [
      {
       "titulo": "Qué registra",
@@ -2999,6 +2999,14 @@
        "La columna \"Operación\" dice qué se hizo en cada registro (alta, modificación, cancelación, check-in, check-out, renovación, cambio de habitación...). Para ver exactamente qué datos cambiaron, elegí el registro: el panel de la derecha muestra el antes y el después con los campos modificados resaltados.",
        "Al seleccionar un registro, el panel \"Detalle del registro\" muestra dato por dato el valor de antes y el de después; los datos que cambiaron se resaltan."
       ]
+     },
+     {
+      "titulo": "Rollback: recuperar un registro anterior como activo",
+      "parrafos": [
+       "Si un cambio se hizo por error, el Administrador o un Supervisor puede elegir un registro anterior (sin ✔ en Act) y presionar \"Restaurar como activo\". La reserva vuelve a tener exactamente los datos de ese registro.",
+       "El rollback no borra ni edita la historia: la bitácora suma un registro nuevo con la operación \"Rollback\", que pasa a ser el activo, y el que estaba activo queda como historia. En el detalle del registro se indica qué registro se restauró.",
+       "No se puede restaurar si la habitación de ese registro está tomada por otra reserva en esas fechas o está fuera de servicio, ni si el registro es igual al estado actual. Los cargos adicionales y los pagos no se modifican; si la reserva estaba en curso, el estado de las habitaciones se acomoda solo (la que se deja queda en limpieza y la restaurada, ocupada)."
+      ]
      }
     ],
     "pasos": [
@@ -3006,7 +3014,9 @@
      "Escribí el código de reserva o un nombre de huésped o número de habitación, y si querés elegí una operación y un rango de fechas.",
      "Presioná \"Aplicar\" (o Enter en los campos de texto) para ver los registros.",
      "Marcá \"Solo activos\" para ver únicamente el estado actual de cada reserva.",
-     "Seleccioná un registro para ver en el panel derecho qué datos cambiaron; \"Limpiar\" quita todos los filtros."
+     "Seleccioná un registro para ver en el panel derecho qué datos cambiaron; \"Limpiar\" quita todos los filtros.",
+     "Para ver el historial completo de una reserva, seleccioná uno de sus registros y presioná \"Ver historial\".",
+     "Para recuperar un registro anterior (rollback), seleccionalo, presioná \"Restaurar como activo\" y confirmá. El historial de la reserva se vuelve a mostrar con el registro nuevo seleccionado."
     ],
     "elementos": [
      {
@@ -3070,7 +3080,7 @@
        "pnlGrilla"
       ],
       "nombre": "Grilla de la bitácora",
-      "texto": "Un renglón por cada alta o cambio de cada reserva, del más nuevo al más viejo. La operación se colorea (verde alta y check-in, rojo cancelación y no-show, dorado upgrade y renovación, azul check-out y cambios de habitación, naranja modificación)."
+      "texto": "Un renglón por cada alta o cambio de cada reserva, del más nuevo al más viejo. La operación se colorea (verde alta y check-in, rojo cancelación y no-show, dorado upgrade y renovación, azul check-out y cambios de habitación, naranja modificación). El rollback se muestra en violeta."
      },
      {
       "controles": [
@@ -3092,6 +3102,23 @@
      },
      {
       "controles": [
+       "btnHistorial"
+      ],
+      "nombre": "Botón Ver historial",
+      "texto": "Muestra todos los registros de la reserva seleccionada (su historial de cambios), quitando los demás filtros."
+     },
+     {
+      "controles": [
+       "btnRollback"
+      ],
+      "nombre": "Botón Restaurar como activo",
+      "texto": "Rollback: vuelve a poner como estado actual de la reserva el registro anterior seleccionado. Pide confirmación y deja en la bitácora un registro nuevo \"Rollback\". Solo lo ven el Administrador y los Supervisores (permiso de rollback).",
+      "permisos": [
+       "RollbackBitacoraReservas"
+      ]
+     },
+     {
+      "controles": [
        "btnSalir"
       ],
       "nombre": "Botón Salir",
@@ -3100,7 +3127,7 @@
     ],
     "consejos": [
      "Necesitás el permiso para ver la bitácora de reservas.",
-     "La bitácora es de solo lectura: los cambios se hacen desde Reservas, Check-In, Check-Out, Cambio de habitación o Renovar estadía, y quedan registrados solos.",
+     "Los registros no se borran ni se editan: los cambios se hacen desde Reservas, Check-In, Check-Out, Cambio de habitación o Renovar estadía, y quedan registrados solos. El rollback tampoco pisa la historia: agrega un registro nuevo.",
      "Un registro con usuario \"Fuera del sistema\" indica que alguien modificó la reserva directamente en la base: revisalo con el administrador."
     ],
     "relacionados": [
@@ -6900,7 +6927,7 @@
     "permisos": [
      "VerBitacoraReservas"
     ],
-    "resumen": "Shows the full history of each reservation: every time it is created or any of its data changes, the system saves a snapshot of the reservation with the operation, date, time and user. It is a read-only screen.",
+    "resumen": "Shows the full history of each reservation: every time it is created or any of its data changes, the system saves a snapshot of the reservation with the operation, date, time and user. From here you can see a reservation's history and, with the rollback permission, make a previous record active again.",
     "secciones": [
      {
       "titulo": "What it records",
@@ -6916,6 +6943,14 @@
        "The \"Operation\" column tells what was done in each record (new, modification, cancellation, check-in, check-out, extension, room change...). To see exactly which data changed, select the record: the panel on the right shows before and after, with the modified fields highlighted.",
        "When you select a record, the \"Record detail\" panel shows each field's value before and after; the fields that changed are highlighted."
       ]
+     },
+     {
+      "titulo": "Rollback: restore a previous record as active",
+      "parrafos": [
+       "If a change was made by mistake, the Administrator or a Supervisor can select a previous record (without ✔ in Act) and press \"Restore as active\". The reservation gets exactly the data of that record back.",
+       "The rollback does not delete or edit the history: the log adds a new record with the operation \"Rollback\", which becomes the active one, and the one that was active stays as history. The record detail shows which record was restored.",
+       "It cannot be restored if the room of that record is taken by another reservation on those dates or is out of service, or if the record is the same as the current state. Additional charges and payments are not changed; if the reservation was in progress, the room states are adjusted automatically (the room left is set to cleaning and the restored one to occupied)."
+      ]
      }
     ],
     "pasos": [
@@ -6923,7 +6958,9 @@
      "Type the reservation code or a guest name or room number, and optionally choose an operation and a date range.",
      "Press \"Apply\" (or Enter in the text fields) to see the records.",
      "Check \"Active only\" to see just the current state of each reservation.",
-     "Select a record to see in the right panel which data changed; \"Clear\" removes all filters."
+     "Select a record to see in the right panel which data changed; \"Clear\" removes all filters.",
+     "To see the full history of a reservation, select one of its records and press \"View history\".",
+     "To recover a previous record (rollback), select it, press \"Restore as active\" and confirm. The reservation history is shown again with the new record selected."
     ],
     "elementos": [
      {
@@ -6987,7 +7024,7 @@
        "pnlGrilla"
       ],
       "nombre": "Log grid",
-      "texto": "One row for every new reservation or change, newest first. The operation is colored (green new reservation and check-in, red cancellation and no-show, gold upgrade and extension, blue check-out and room changes, orange modification)."
+      "texto": "One row for every new reservation or change, newest first. The operation is colored (green new reservation and check-in, red cancellation and no-show, gold upgrade and extension, blue check-out and room changes, orange modification). Rollback is shown in purple."
      },
      {
       "controles": [
@@ -7009,6 +7046,23 @@
      },
      {
       "controles": [
+       "btnHistorial"
+      ],
+      "nombre": "View history button",
+      "texto": "Shows every record of the selected reservation (its change history), removing the other filters."
+     },
+     {
+      "controles": [
+       "btnRollback"
+      ],
+      "nombre": "Restore as active button",
+      "texto": "Rollback: makes the selected previous record the current state of the reservation again. It asks for confirmation and adds a new \"Rollback\" record to the log. Only the Administrator and Supervisors see it (rollback permission).",
+      "permisos": [
+       "RollbackBitacoraReservas"
+      ]
+     },
+     {
+      "controles": [
        "btnSalir"
       ],
       "nombre": "Exit button",
@@ -7017,7 +7071,7 @@
     ],
     "consejos": [
      "You need the permission to view the reservation change log.",
-     "The log is read-only: changes are made from Reservations, Check-In, Check-Out, Room change or Extend stay, and are recorded automatically.",
+     "Records are never deleted or edited: changes are made from Reservations, Check-In, Check-Out, Room change or Extend stay, and are recorded automatically. A rollback does not overwrite the history either: it adds a new record.",
      "A record with user \"Outside the system\" means someone modified the reservation directly in the database: review it with the administrator."
     ],
     "relacionados": [

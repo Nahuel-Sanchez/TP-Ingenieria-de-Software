@@ -15,7 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GUI
+namespace GUI_08YS.Admin
 {
     public partial class FormBitacora_08YS : Form,IIdiomaObserver_08YS
     {

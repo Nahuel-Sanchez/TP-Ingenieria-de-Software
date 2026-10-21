@@ -422,31 +422,3 @@ namespace GUI_08YS
         #endregion
     }
 }
-
-namespace GUI
-{
-    /// <summary>Las pantallas del espacio de nombres GUI (bitácora, usuarios) usan el mismo cuadro de mensaje.</summary>
-    internal static class MessageBox
-    {
-        #region Métodos públicos
-
-        public static DialogResult Show(string text) => GUI_08YS.MessageBox.Show(text);
-        public static DialogResult Show(string text, string caption) => GUI_08YS.MessageBox.Show(text, caption);
-        public static DialogResult Show(string text, string caption, MessageBoxButtons buttons)
-            => GUI_08YS.MessageBox.Show(text, caption, buttons);
-        public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
-            => GUI_08YS.MessageBox.Show(text, caption, buttons, icon);
-        public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
-            => GUI_08YS.MessageBox.Show(text, caption, buttons, icon, defaultButton);
-        public static DialogResult Show(IWin32Window owner, string text) => GUI_08YS.MessageBox.Show(owner, text);
-        public static DialogResult Show(IWin32Window owner, string text, string caption) => GUI_08YS.MessageBox.Show(owner, text, caption);
-        public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons)
-            => GUI_08YS.MessageBox.Show(owner, text, caption, buttons);
-        public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
-            => GUI_08YS.MessageBox.Show(owner, text, caption, buttons, icon);
-        public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
-            => GUI_08YS.MessageBox.Show(owner, text, caption, buttons, icon, defaultButton);
-
-        #endregion
-    }
-}

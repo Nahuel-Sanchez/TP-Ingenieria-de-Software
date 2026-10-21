@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BE_08YS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -351,6 +352,44 @@ namespace BLL_08YS.Negocio
         public ItemRoomServiceDuplicadoException_68SA() : base("Ya existe un ítem de la carta con ese nombre.") { }
         public ItemRoomServiceDuplicadoException_68SA(string message) : base(message) { }
         public ItemRoomServiceDuplicadoException_68SA(string message, Exception innerException) : base(message, innerException) { }
+
+        #endregion
+    }
+    #endregion
+
+    #region Bitácora de cambios de reservas
+    /// <summary>No se pudo restaurar el registro de la bitácora: el motivo dice por qué (para traducirlo en pantalla).</summary>
+    public class RollbackReservaException_68SA : Exception
+    {
+        #region Propiedades
+
+        public ResultadoRollbackReserva Motivo { get; }
+
+        #endregion
+
+        #region Constructor
+
+        public RollbackReservaException_68SA(ResultadoRollbackReserva motivo) : base(Texto(motivo))
+        {
+            Motivo = motivo;
+        }
+
+        #endregion
+
+        #region Métodos auxiliares
+
+        private static string Texto(ResultadoRollbackReserva motivo)
+        {
+            switch (motivo)
+            {
+                case ResultadoRollbackReserva.RegistroNoEncontrado: return "No se encontró el registro de la bitácora.";
+                case ResultadoRollbackReserva.YaEsActivo: return "El registro elegido ya es el estado actual de la reserva.";
+                case ResultadoRollbackReserva.SinCambios: return "El registro elegido es igual al estado actual de la reserva: no hay nada que restaurar.";
+                case ResultadoRollbackReserva.HabitacionNoDisponible: return "La habitación de ese registro está tomada por otra reserva en esas fechas.";
+                case ResultadoRollbackReserva.HabitacionFueraDeServicio: return "La habitación de ese registro está fuera de servicio.";
+                default: return "No se pudo restaurar el registro de la bitácora.";
+            }
+        }
 
         #endregion
     }

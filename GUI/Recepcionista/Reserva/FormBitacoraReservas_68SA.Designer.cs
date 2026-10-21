@@ -27,6 +27,8 @@
             this.pnlSeparadorDetalle = new System.Windows.Forms.Panel();
             this.pnlPie = new System.Windows.Forms.Panel();
             this.lblSeleccion = new System.Windows.Forms.Label();
+            this.btnHistorial = new FontAwesome.Sharp.IconButton();
+            this.btnRollback = new FontAwesome.Sharp.IconButton();
             this.btnSalir = new FontAwesome.Sharp.IconButton();
             this.pnlFiltros = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlCampoCodigo = new System.Windows.Forms.Panel();
@@ -107,7 +109,7 @@
             this.lblDetalleSub.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblDetalleSub.ForeColor = System.Drawing.Color.FromArgb(160, 165, 180);
             this.lblDetalleSub.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDetalleSub.Size = new System.Drawing.Size(388, 46);
+            this.lblDetalleSub.Size = new System.Drawing.Size(388, 62);
             this.lblDetalleSub.Text = "";
             this.lblDetalleSub.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.lblDetalleSub.UseMnemonic = false;
@@ -134,6 +136,8 @@
             // pnlPie
             // 
             this.pnlPie.Controls.Add(this.lblSeleccion);
+            this.pnlPie.Controls.Add(this.btnHistorial);
+            this.pnlPie.Controls.Add(this.btnRollback);
             this.pnlPie.Controls.Add(this.btnSalir);
             this.pnlPie.BackColor = System.Drawing.Color.FromArgb(10, 18, 50);
             this.pnlPie.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -149,8 +153,54 @@
             this.lblSeleccion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblSeleccion.Tag = "BitacoraRes_lblSeleccion";
             this.lblSeleccion.UseMnemonic = false;
-            this.lblSeleccion.Text = "Los registros los genera el sistema: la bitácora es de solo lectura.";
+            this.lblSeleccion.Text = "Los registros los genera el sistema y no se borran ni se editan.";
             this.lblSeleccion.Name = "lblSeleccion";
+            // 
+            // btnHistorial
+            // 
+            this.btnHistorial.BackColor = System.Drawing.Color.FromArgb(5, 15, 45);
+            this.btnHistorial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHistorial.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHistorial.ForeColor = System.Drawing.Color.Goldenrod;
+            this.btnHistorial.IconChar = FontAwesome.Sharp.IconChar.ListUl;
+            this.btnHistorial.IconColor = System.Drawing.Color.Gold;
+            this.btnHistorial.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnHistorial.IconSize = 22;
+            this.btnHistorial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHistorial.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnHistorial.Size = new System.Drawing.Size(170, 64);
+            this.btnHistorial.Tag = "BitacoraRes_btnHistorial";
+            this.btnHistorial.Text = "Ver historial";
+            this.btnHistorial.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnHistorial.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHistorial.UseVisualStyleBackColor = false;
+            this.btnHistorial.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHistorial.FlatAppearance.BorderColor = System.Drawing.Color.Goldenrod;
+            this.btnHistorial.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnHistorial.Name = "btnHistorial";
+            // 
+            // btnRollback
+            // 
+            this.btnRollback.BackColor = System.Drawing.Color.Goldenrod;
+            this.btnRollback.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRollback.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRollback.ForeColor = System.Drawing.Color.FromArgb(10, 15, 35);
+            this.btnRollback.IconChar = FontAwesome.Sharp.IconChar.ClockRotateLeft;
+            this.btnRollback.IconColor = System.Drawing.Color.FromArgb(10, 15, 35);
+            this.btnRollback.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnRollback.IconSize = 22;
+            this.btnRollback.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRollback.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnRollback.Size = new System.Drawing.Size(220, 64);
+            this.btnRollback.Tag = "BitacoraRes_btnRollback";
+            this.btnRollback.Text = "Restaurar como activo";
+            this.btnRollback.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnRollback.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnRollback.UseVisualStyleBackColor = false;
+            this.btnRollback.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRollback.FlatAppearance.BorderColor = System.Drawing.Color.Goldenrod;
+            this.btnRollback.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnRollback.Name = "btnRollback";
             // 
             // btnSalir
             // 
@@ -530,6 +580,8 @@
         private System.Windows.Forms.Panel pnlSeparadorDetalle;
         private System.Windows.Forms.Panel pnlPie;
         private System.Windows.Forms.Label lblSeleccion;
+        private FontAwesome.Sharp.IconButton btnHistorial;
+        private FontAwesome.Sharp.IconButton btnRollback;
         private FontAwesome.Sharp.IconButton btnSalir;
         private System.Windows.Forms.FlowLayoutPanel pnlFiltros;
         private System.Windows.Forms.Panel pnlCampoCodigo;

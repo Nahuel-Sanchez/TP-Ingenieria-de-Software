@@ -79,7 +79,8 @@ namespace Service_08YS.Entities.Acceso
         ConfirmarEntregaRoomService,
         VerBitacoraReservas,
         GenerarReporteServicios,        // reporte de servicios consumidos por huésped
-        GenerarAnalisisDemanda          // análisis predictivo de ocupación y demanda (reporte inteligente)
+        GenerarAnalisisDemanda,         // análisis predictivo de ocupación y demanda (reporte inteligente)
+        RollbackBitacoraReservas        // restaurar un registro histórico de la bitácora de reservas (Administrador y Supervisor)
     }
 
     public class Permiso_08YS : AccessComponent_08YS

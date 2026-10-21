@@ -27,8 +27,6 @@ namespace BLL_08YS.Negocio
 
         #endregion
 
-        #region Constructor
-
         public CambioHabitacionBLL_68SA(ICambioHabitacionRepository_68SA cambioRepo, IReservaRepository_68SA reservaRepo,
                                         IHabitacionRepository_68SA habitacionRepo, BitacoraBLL_08YS bitacoraBll,
                                         IEnumerable<IPoliticaCambioHabitacion_68SA> politicas)
@@ -39,8 +37,6 @@ namespace BLL_08YS.Negocio
             _bitacoraBll = bitacoraBll;
             _politicas = politicas.ToDictionary(p => p.Motivo);
         }
-
-        #endregion
 
         #region Consultas
 
@@ -69,8 +65,6 @@ namespace BLL_08YS.Negocio
         public List<CambioHabitacion_68SA> GetHistorial(int reservaId) => _cambioRepo.GetByReserva(reservaId);
 
         #endregion
-
-        #region Operaciones
 
         public ResultadoRegistroCambio_68SA Registrar(SolicitudCambioHabitacion_68SA solicitud)
         {
@@ -104,8 +98,6 @@ namespace BLL_08YS.Negocio
             _bitacoraBll.RegistrarEvento(politica.EventoBitacora, targetUsername: reserva.Id.ToString());
             return resultado;
         }
-
-        #endregion
 
         #region Métodos públicos
 

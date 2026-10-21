@@ -1,7 +1,6 @@
 ﻿using BLL_08YS;
 using BLL_08YS.Negocio;
 using FontAwesome.Sharp;
-using GUI;
 using GUI_08YS.Admin;
 using GUI_08YS.Ayuda;
 using GUI_08YS.Recepcionista;

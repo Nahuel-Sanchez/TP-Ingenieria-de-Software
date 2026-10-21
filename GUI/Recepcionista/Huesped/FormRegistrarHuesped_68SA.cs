@@ -88,36 +88,13 @@ namespace GUI_08YS.Recepcionista
 
         #endregion
 
-        #region Carga de datos
-
-        private void CargarParaEdicion(Huesped_68SA huesped)
-        {
-            var t = TraductorManager_08YS.Instance;
-            Text = t.GetTexto("Huespedes_tituloEditar");
-            lblTitulo.Text = Text;
-            btnRegistrar.Text = t.GetTexto("Crud_btnGuardar");
-
-            txtNombre.Text = huesped.Nombre;
-            txtApellido.Text = huesped.Apellido;
-            cmbTipoDocumento.SelectedItem = huesped.TipoDocumento;
-            txtDocumento.Text = huesped.Documento;
-            txtNacionalidad.Text = huesped.Nacionalidad ?? string.Empty;
-            dtpFechaNacimiento.Value = huesped.FechaNacimiento;
-            txtTelefono.Text = huesped.Telefono ?? string.Empty;
-            txtEmail.Text = huesped.Email ?? string.Empty;
-        }
-
-        #endregion
-
-        #region Eventos de controles
-
         private void BtnRegistrar_Click(object sender, EventArgs e)
         {
             if (!ValidarCampos()) return;
 
             string documento = txtDocumento.RealText.Trim();
             var tipoDocumento = OpcionEnum_68SA.Seleccionado<TipoDocumento>(cmbTipoDocumento).Value;
-            string nacionalidad = txtNacionalidad.RealText.Trim(); // CAMBIO: obligatoria (Huespedes.Nacionalidad es NOT NULL)
+            string nacionalidad = txtNacionalidad.RealText.Trim();
 
             try
             {
@@ -193,7 +170,22 @@ namespace GUI_08YS.Recepcionista
             }
         }
 
-        #endregion
+        private void CargarParaEdicion(Huesped_68SA huesped)
+        {
+            var t = TraductorManager_08YS.Instance;
+            Text = t.GetTexto("Huespedes_tituloEditar");
+            lblTitulo.Text = Text;
+            btnRegistrar.Text = t.GetTexto("Crud_btnGuardar");
+
+            txtNombre.Text = huesped.Nombre;
+            txtApellido.Text = huesped.Apellido;
+            cmbTipoDocumento.SelectedItem = huesped.TipoDocumento;
+            txtDocumento.Text = huesped.Documento;
+            txtNacionalidad.Text = huesped.Nacionalidad ?? string.Empty;
+            dtpFechaNacimiento.Value = huesped.FechaNacimiento;
+            txtTelefono.Text = huesped.Telefono ?? string.Empty;
+            txtEmail.Text = huesped.Email ?? string.Empty;
+        }
 
         #region Métodos auxiliares
 

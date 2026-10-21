@@ -24,6 +24,7 @@ namespace MPP_08YS
                 UsuarioDB = row["UsuarioDB"].ToString(),
                 UsuarioApp = Fila_68SA.Texto(row, "UsuarioApp"),
                 Act = Convert.ToBoolean(row["Act"]),
+                RollbackDeId = Fila_68SA.Entero(row, "RollbackDeID"),
                 Reserva = Foto(row, ""),
                 Anterior = row["Ant_BitacoraID"] == DBNull.Value ? null : Foto(row, "Ant_")
             };

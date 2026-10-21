@@ -80,7 +80,8 @@ namespace Service_08YS.Entities.Bitacora
                 { Evento.PedidoRoomServiceEntregado,        new EventoMetadata_08YS(   Modulo.CargosAdicionales, Criticidad.Bajo  )      },
                 { Evento.ItemRoomServiceCreado,             new EventoMetadata_08YS(   Modulo.CargosAdicionales, Criticidad.Medio )      },
                 { Evento.ItemRoomServiceModificado,         new EventoMetadata_08YS(   Modulo.CargosAdicionales, Criticidad.Medio )      },
-                { Evento.CambioHabitacionReactivado,        new EventoMetadata_08YS(   Modulo.Habitaciones,      Criticidad.Critico )    }
+                { Evento.CambioHabitacionReactivado,        new EventoMetadata_08YS(   Modulo.Habitaciones,      Criticidad.Critico )    },
+                { Evento.ReservaRollbackAplicado,           new EventoMetadata_08YS(   Modulo.Reservas,          Criticidad.Critico )    }
             };
 
         #endregion

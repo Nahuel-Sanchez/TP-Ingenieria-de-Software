@@ -163,8 +163,6 @@ namespace BLL_08YS
 
         #endregion
 
-        #region Idioma
-
         public void CambiarIdiomaUsuario(string nuevoIdioma)
         {
             if (SessionManager_08YS.Instance.Current == null) return;
@@ -173,15 +171,7 @@ namespace BLL_08YS
             SessionManager_08YS.Instance.Current.Idioma = nuevoIdioma;
         }
 
-        #endregion
-
-        #region Consultas
-
         public List<User_08YS> GetAll() => _userRepository.GetAll();
-
-        #endregion
-
-        #region Operaciones
 
         public void CambiarContraseña(string passwordActual, string passwordNueva)
         {
@@ -218,10 +208,6 @@ namespace BLL_08YS
             SessionManager_08YS.Instance.CerrarSesion();
         }
 
-        #endregion
-
-        #region Métodos públicos
-
         public void UserLockOut(string username)
         {
             var user = _userRepository.GetByUsername(username) ?? throw new UserNotFoundException_08YS();
@@ -233,6 +219,5 @@ namespace BLL_08YS
             throw new UserBloqueadoException_08YS();
         }
 
-        #endregion
     }
 }

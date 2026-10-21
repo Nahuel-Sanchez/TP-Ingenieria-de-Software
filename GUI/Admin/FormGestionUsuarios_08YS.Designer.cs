@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace GUI
+namespace GUI_08YS.Admin
 {
     partial class FormGestionUsuarios_08YS
     {

@@ -75,7 +75,8 @@ namespace Service_08YS.Entities.Bitacora
         PedidoRoomServiceEntregado,
         ItemRoomServiceCreado,
         ItemRoomServiceModificado,
-        CambioHabitacionReactivado   // ya no se genera (la bitácora de cambios es de solo lectura); se conserva por los registros guardados
+        CambioHabitacionReactivado,  // ya no se genera (reemplazado por el rollback de la bitácora de reservas); se conserva por los registros guardados
+        ReservaRollbackAplicado      // un registro histórico de la bitácora de reservas se restauró como activo
     }
 
     public class BitacoraEvento_08YS

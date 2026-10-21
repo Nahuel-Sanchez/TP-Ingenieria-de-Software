@@ -17,7 +17,19 @@ namespace BE_08YS
         Renovacion,
         Upgrade,
         CambioAdministrativo,
-        CambioHabitacion
+        CambioHabitacion,
+        Rollback                // un registro histórico se volvió a poner como activo
+    }
+
+    /// <summary>Resultado de sp_RollbackReserva (recuperar un registro histórico como activo).</summary>
+    public enum ResultadoRollbackReserva
+    {
+        Ok,
+        RegistroNoEncontrado,
+        YaEsActivo,
+        SinCambios,
+        HabitacionNoDisponible,
+        HabitacionFueraDeServicio
     }
 
     /// <summary>
@@ -44,6 +56,7 @@ namespace BE_08YS
                 { OperacionBitacoraReserva.Upgrade,              "Upgrade" },
                 { OperacionBitacoraReserva.CambioAdministrativo, "Cambio administrativo" },
                 { OperacionBitacoraReserva.CambioHabitacion,     "Cambio de habitación" },
+                { OperacionBitacoraReserva.Rollback,             "Rollback" },
             };
 
         #endregion
@@ -58,6 +71,7 @@ namespace BE_08YS
         public string UsuarioDB { get; set; }       // login de SQL Server (no se muestra: en Windows incluye el nombre de la PC)
         public string UsuarioApp { get; set; }      // usuario del sistema (null = cambio hecho fuera del sistema)
         public bool Act { get; set; }
+        public int? RollbackDeId { get; set; }      // en un rollback: el registro histórico que se restauró
 
         /// <summary>Datos de la reserva en este registro.</summary>
         public FotoReserva_68SA Reserva { get; set; } = new FotoReserva_68SA();

@@ -185,7 +185,7 @@ namespace BLL_08YS
         {
             var factory = new SqlDbFactory_08YS();
             IBitacoraReservaRepository_68SA repo = new SqlBitacoraReservaRepository_68SA(factory);
-            return new BitacoraReservaBLL_68SA(repo);
+            return new BitacoraReservaBLL_68SA(repo, CreateBitacoraBLL());
         }
 
         public static ReporteServiciosBLL_68SA CreateReporteServiciosBLL()

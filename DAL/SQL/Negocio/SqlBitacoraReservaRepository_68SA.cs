@@ -1,6 +1,7 @@
 ﻿using BE_08YS;
 using DAL_08YS.Interfaces_Repositories.Negocio;
 using MPP_08YS;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -15,6 +16,7 @@ namespace DAL_08YS.SQL.Negocio
         private const string Historia = @"
             ;WITH Historia AS (
                 SELECT b.BitacoraID, b.ReservaID, b.Operacion, b.CambioID, b.Fecha, b.Hora, b.UsuarioDB, b.UsuarioApp, b.Act,
+                       b.RollbackDeID,
                        b.HuespedTitularID, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular,
                        b.HabitacionID, h.NroHabitacion, t.Nombre AS TipoHabitacion,
                        b.FechaIngreso, b.FechaEgreso, b.CheckIn, b.CheckOut, b.Estado,
@@ -101,6 +103,14 @@ namespace DAL_08YS.SQL.Negocio
                 + " ORDER BY BitacoraID DESC";
 
             return BitacoraReservaMapper_68SA.FromDataTable(GetDataTable(query, parametros.ToArray()));
+        }
+
+        public ResultadoRollbackReserva Rollback(int bitacoraId)
+        {
+            var resultado = ParamOutput("@Resultado");
+            ExecuteNonQuery("sp_RollbackReserva", new[] { Param("@BitacoraID", bitacoraId), resultado },
+                storedProcedure: true, operacionReserva: "Rollback");
+            return (ResultadoRollbackReserva)Convert.ToInt32(resultado.Value);
         }
 
         #endregion

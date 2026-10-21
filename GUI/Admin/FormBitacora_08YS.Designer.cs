@@ -1,4 +1,4 @@
-﻿namespace GUI
+﻿namespace GUI_08YS.Admin
 {
     partial class FormBitacora_08YS
     {
