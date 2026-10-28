@@ -10,7 +10,7 @@ namespace GUI_08YS.Recepcionista
 {
     /// <summary>
     /// Factura de la reserva en hoja A4: encabezado con la marca, datos del cliente y de la estadía,
-    /// detalle de conceptos (alojamiento y renovaciones), totales, pagos registrados y sello de estado.
+    /// detalle de conceptos (alojamiento y renovaciones), totales, facturas registradas y sello de estado.
     /// </summary>
     public class FacturaReserva_68SA : DocumentoReserva_68SA
     {
@@ -247,35 +247,35 @@ namespace GUI_08YS.Recepcionista
 
                 DibujarSello(g, new PointF(x + 150, bandaTotal.Y + 14), fSello);
 
-                // ---------- Pagos ----------
+                // ---------- Facturas (pagos registrados) ----------
                 y += 34;
                 Escribir(g, T("Factura_pagosRegistrados").ToUpper(), fEtiqueta, Marca, new RectangleF(x, y, ancho, 14));
                 y += 20;
-                float[] colPagos = { 200, ancho - 200 - 160, 160 };
+                float[] colFacturas = { 200, ancho - 200 - 160, 160 };
                 Rellenar(g, new RectangleF(x, y, ancho, 26), FondoCaja, 4);
-                Escribir(g, T("Factura_colFecha").ToUpper(), fEtiqueta, TextoSuave, new RectangleF(x + 12, y, colPagos[0] - 24, 26), StringAlignment.Near, StringAlignment.Center);
-                Escribir(g, T("Factura_colMedio").ToUpper(), fEtiqueta, TextoSuave, new RectangleF(x + colPagos[0] + 12, y, colPagos[1] - 24, 26), StringAlignment.Near, StringAlignment.Center);
-                Escribir(g, T("Factura_colImporte").ToUpper(), fEtiqueta, TextoSuave, new RectangleF(x + colPagos[0] + colPagos[1], y, colPagos[2] - 12, 26), StringAlignment.Far, StringAlignment.Center);
+                Escribir(g, T("Factura_colFecha").ToUpper(), fEtiqueta, TextoSuave, new RectangleF(x + 12, y, colFacturas[0] - 24, 26), StringAlignment.Near, StringAlignment.Center);
+                Escribir(g, T("Factura_colMedio").ToUpper(), fEtiqueta, TextoSuave, new RectangleF(x + colFacturas[0] + 12, y, colFacturas[1] - 24, 26), StringAlignment.Near, StringAlignment.Center);
+                Escribir(g, T("Factura_colImporte").ToUpper(), fEtiqueta, TextoSuave, new RectangleF(x + colFacturas[0] + colFacturas[1], y, colFacturas[2] - 12, 26), StringAlignment.Far, StringAlignment.Center);
                 y += 26;
 
-                float limitePagos = AltoA4 - Margen - 110;
-                if (Datos.Pagos.Count == 0)
+                float limiteFacturas = AltoA4 - Margen - 110;
+                if (Datos.Facturas.Count == 0)
                 {
                     Escribir(g, T("Factura_sinPagos"), fChico, TextoSuave, new RectangleF(x + 12, y, ancho - 24, 24), StringAlignment.Near, StringAlignment.Center);
                     y += 24;
                 }
-                for (int i = 0; i < Datos.Pagos.Count; i++)
+                for (int i = 0; i < Datos.Facturas.Count; i++)
                 {
-                    if (y + 24 > limitePagos)
+                    if (y + 24 > limiteFacturas)
                     {
-                        Escribir(g, string.Format(T("Factura_masPagos"), Datos.Pagos.Count - i), fChico, TextoSuave,
+                        Escribir(g, string.Format(T("Factura_masPagos"), Datos.Facturas.Count - i), fChico, TextoSuave,
                             new RectangleF(x + 12, y, ancho - 24, 20), StringAlignment.Near, StringAlignment.Center);
                         break;
                     }
-                    var pago = Datos.Pagos[i];
-                    Escribir(g, pago.FechaPago.ToString("dd/MM/yyyy HH:mm"), fTexto, Texto, new RectangleF(x + 12, y, colPagos[0] - 24, 24), StringAlignment.Near, StringAlignment.Center);
-                    Escribir(g, OpcionEnum_68SA.Texto(pago.MetodoPago), fTexto, Texto, new RectangleF(x + colPagos[0] + 12, y, colPagos[1] - 24, 24), StringAlignment.Near, StringAlignment.Center);
-                    Escribir(g, Moneda(pago.Monto), fNegrita, Texto, new RectangleF(x + colPagos[0] + colPagos[1], y, colPagos[2] - 12, 24), StringAlignment.Far, StringAlignment.Center);
+                    var factura = Datos.Facturas[i];
+                    Escribir(g, factura.FechaEmision.ToString("dd/MM/yyyy HH:mm"), fTexto, Texto, new RectangleF(x + 12, y, colFacturas[0] - 24, 24), StringAlignment.Near, StringAlignment.Center);
+                    Escribir(g, OpcionEnum_68SA.Texto(factura.MetodoPago), fTexto, Texto, new RectangleF(x + colFacturas[0] + 12, y, colFacturas[1] - 24, 24), StringAlignment.Near, StringAlignment.Center);
+                    Escribir(g, Moneda(factura.Monto), fNegrita, Texto, new RectangleF(x + colFacturas[0] + colFacturas[1], y, colFacturas[2] - 12, 24), StringAlignment.Far, StringAlignment.Center);
                     Linea(g, x, y + 24, x + ancho, y + 24, Borde);
                     y += 24;
                 }

@@ -56,8 +56,7 @@ namespace DAL_08YS.SQL.Negocio
 
         #region Operaciones
 
-        public ResultadoRegistroCambio_68SA Registrar(SolicitudCambioHabitacion_68SA solicitud, string descripcionCargo,
-                                                      int? usuarioDni, string usuarioApp)
+        public ResultadoRegistroCambio_68SA Registrar(SolicitudCambioHabitacion_68SA solicitud, int? usuarioDni, string usuarioApp)
         {
             var cambioOutput = ParamOutput("@CambioID");
             var montoOutput = ParamOutputDecimal("@Monto");
@@ -70,7 +69,6 @@ namespace DAL_08YS.SQL.Negocio
                     Param("@HabitacionNuevaID", solicitud.HabitacionNuevaId),
                     Param("@Motivo", (int)solicitud.Motivo),
                     Param("@Observacion", string.IsNullOrWhiteSpace(solicitud.Observacion) ? (object)DBNull.Value : solicitud.Observacion),
-                    Param("@DescripcionCargo", (object)descripcionCargo ?? DBNull.Value),
                     Param("@UsuarioDNI", (object)usuarioDni ?? DBNull.Value),
                     Param("@UsuarioApp", (object)usuarioApp ?? DBNull.Value),
                     cambioOutput,

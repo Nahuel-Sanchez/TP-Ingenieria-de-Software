@@ -1770,7 +1770,7 @@
      {
       "titulo": "Cómo está organizada la pantalla",
       "parrafos": [
-       "Arriba, los filtros Pendientes, Entregados hoy y Todos, el campo de habitación y los botones Filtrar, Limpiar y Actualizar. Debajo, un resumen con la cantidad de pendientes, cuánto espera el más antiguo y la hora de la última actualización.",
+       "Arriba, los filtros Pendientes, Entregados hoy y Todos, los campos de habitación, huésped y monto (desde y hasta) y los botones Filtrar, Limpiar y Actualizar. Debajo, un resumen con la cantidad de pendientes, cuánto espera el más antiguo y la hora de la última actualización.",
        "La grilla muestra pedido, habitación, huésped, detalle de ítems, hora del pedido, espera, estado y monto. La espera se ve en amarillo y pasa a rojo a partir de los 30 minutos; los entregados se ven en verde con la hora de entrega."
       ]
      },
@@ -1785,7 +1785,7 @@
     "pasos": [
      "Abrí Room service › Pedidos de room service (o el acceso rápido Pedidos pendientes).",
      "Dejá el filtro en Pendientes para ver lo que falta entregar, empezando por los que están en rojo.",
-     "Si querés, escribí un número de habitación y presioná Filtrar (o Enter).",
+     "Si querés, escribí una habitación, un huésped o un rango de montos y presioná Filtrar (o Enter). Los filtros se combinan con el estado elegido.",
      "Al entregar un pedido, hacé clic en el ícono de doble tilde de su fila y confirmá."
     ],
     "elementos": [
@@ -1808,11 +1808,26 @@
      },
      {
       "controles": [
+       "txtHuesped"
+      ],
+      "nombre": "Huésped",
+      "texto": "Muestra los pedidos cuyo titular de la reserva coincide con lo escrito: parte del nombre, del apellido o del documento. Enter aplica el filtro."
+     },
+     {
+      "controles": [
+       "txtMontoDesde",
+       "txtMontoHasta"
+      ],
+      "nombre": "Monto desde y hasta",
+      "texto": "Muestra los pedidos cuyo monto está entre los dos valores (incluidos). Se puede completar uno solo. Se escriben como número (por ejemplo 15000), con decimales como se ven en la grilla y con o sin $."
+     },
+     {
+      "controles": [
        "btnFiltrar",
        "btnLimpiar"
       ],
       "nombre": "Filtrar y Limpiar",
-      "texto": "Filtrar aplica la habitación; Limpiar la borra y vuelve a Pendientes."
+      "texto": "Filtrar aplica la habitación, el huésped y los montos; Limpiar los borra y vuelve a Pendientes."
      },
      {
       "controles": [
@@ -3334,7 +3349,7 @@
      {
       "titulo": "Qué muestra",
       "parrafos": [
-       "Cada evento tiene el Username de quien lo realizó, el Target Username (el usuario afectado, si corresponde), la FechaHora, el Módulo (Usuarios, Login, Perfiles, Reservas, Habitaciones, Huéspedes, Pagos, Configuración o Cargos adicionales), el Evento y la Criticidad.",
+       "Cada evento tiene el Username de quien lo realizó, el Target Username (el usuario afectado, si corresponde), la FechaHora, el Módulo (Usuarios, Login, Perfiles, Reservas, Habitaciones, Huéspedes, Facturas, Configuración o Cargos adicionales), el Evento y la Criticidad.",
        "La criticidad se colorea: Crítico en rojo, Alto en naranja, Medio en amarillo y Bajo en verde. Al abrir la pantalla se cargan todos los eventos."
       ]
      },
@@ -5714,7 +5729,7 @@
      {
       "titulo": "How the screen is organized",
       "parrafos": [
-       "At the top, the Pending, Delivered today and All filters, the room field and the Filter, Clear and Refresh buttons. Below, a summary with the number of pending orders, how long the oldest has waited and the time of the last refresh.",
+       "At the top, the Pending, Delivered today and All filters, the room, guest and amount (from and to) fields and the Filter, Clear and Refresh buttons. Below, a summary with the number of pending orders, how long the oldest has waited and the time of the last refresh.",
        "The grid shows order, room, guest, item details, order time, waiting time, status and amount. Waiting time is shown in yellow and turns red from 30 minutes; delivered orders are shown in green with the delivery time."
       ]
      },
@@ -5729,7 +5744,7 @@
     "pasos": [
      "Open Room service › Room service orders (or the Pending orders quick access).",
      "Keep the filter on Pending to see what still needs delivering, starting with the ones in red.",
-     "If you want, type a room number and press Filter (or Enter).",
+     "If you want, type a room, a guest or an amount range and press Filter (or Enter). The filters combine with the chosen status.",
      "When you deliver an order, click the double check icon on its row and confirm."
     ],
     "elementos": [
@@ -5752,11 +5767,26 @@
      },
      {
       "controles": [
+       "txtHuesped"
+      ],
+      "nombre": "Guest",
+      "texto": "Shows the orders whose booking holder matches what you type: part of the first name, last name or ID document. Enter applies the filter."
+     },
+     {
+      "controles": [
+       "txtMontoDesde",
+       "txtMontoHasta"
+      ],
+      "nombre": "Amount from and to",
+      "texto": "Shows the orders whose amount is between both values (inclusive). You can fill in just one. Type them as a number (for example 15000), with decimals as shown in the grid and with or without $."
+     },
+     {
+      "controles": [
        "btnFiltrar",
        "btnLimpiar"
       ],
       "nombre": "Filter and Clear",
-      "texto": "Filter applies the room; Clear removes it and goes back to Pending."
+      "texto": "Filter applies the room, guest and amounts; Clear removes them and goes back to Pending."
      },
      {
       "controles": [
@@ -7278,7 +7308,7 @@
      {
       "titulo": "What it shows",
       "parrafos": [
-       "Each event has the Username of who performed it, the Target Username (the affected user, if any), the DateTime, the Module (Users, Login, Profiles, Reservations, Rooms, Guests, Payments, Configuration or Additional charges), the Event and the Criticality.",
+       "Each event has the Username of who performed it, the Target Username (the affected user, if any), the DateTime, the Module (Users, Login, Profiles, Reservations, Rooms, Guests, Invoices, Configuration or Additional charges), the Event and the Criticality.",
        "Criticality is colored: Critical in red, High in orange, Medium in yellow and Low in green. All events are loaded when the screen opens."
       ]
      },

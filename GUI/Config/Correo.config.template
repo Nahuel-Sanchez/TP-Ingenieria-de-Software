@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- MODELO. Copiar como Correo.config (misma carpeta) y completar usuario y clave de aplicacion
+     de la casilla de envio. Correo.config no se sube al repositorio. -->
+<appSettings>
+	<add key="Correo.Host" value="smtp.gmail.com" />
+	<add key="Correo.Puerto" value="587" />
+	<add key="Correo.UsarSsl" value="true" />
+	<add key="Correo.Usuario" value="casilla@gmail.com" />
+	<add key="Correo.Clave" value="CLAVE_DE_APLICACION_DE_16_CARACTERES" />
+	<add key="Correo.Remitente" value="casilla@gmail.com" />
+	<add key="Correo.NombreRemitente" value="Horizon Hotel &amp; Resort" />
+</appSettings>

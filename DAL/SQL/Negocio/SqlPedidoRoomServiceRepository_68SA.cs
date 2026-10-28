@@ -71,6 +71,22 @@ namespace DAL_08YS.SQL.Negocio
                 where.Add("p.FechaHoraEntrega >= @EntregadosDesde");
                 parametros.Add(Param("@EntregadosDesde", filtro.EntregadosDesde.Value.Date));
             }
+            if (!string.IsNullOrWhiteSpace(filtro.Huesped))
+            {
+                // "Pérez", "Juan Pérez", "Pérez Juan" o el documento del titular
+                where.Add("(hu.Nombre + ' ' + hu.Apellido LIKE @Huesped OR hu.Apellido + ' ' + hu.Nombre LIKE @Huesped OR hu.Documento LIKE @Huesped)");
+                parametros.Add(Param("@Huesped", $"%{filtro.Huesped.Trim()}%"));
+            }
+            if (filtro.MontoDesde.HasValue)
+            {
+                where.Add("c.Monto >= @MontoDesde");
+                parametros.Add(Param("@MontoDesde", filtro.MontoDesde.Value));
+            }
+            if (filtro.MontoHasta.HasValue)
+            {
+                where.Add("c.Monto <= @MontoHasta");
+                parametros.Add(Param("@MontoHasta", filtro.MontoHasta.Value));
+            }
 
             // Pendientes primero (el más antiguo arriba: es el que hay que llevar antes); después, lo último entregado
             string query = Select
@@ -97,8 +113,7 @@ namespace DAL_08YS.SQL.Negocio
 
         #region Operaciones
 
-        public ResultadoPedidoRoomService Registrar(SolicitudPedidoRoomService_68SA solicitud, string descripcion,
-                                                    int? usuarioDni, out int pedidoId)
+        public ResultadoPedidoRoomService Registrar(SolicitudPedidoRoomService_68SA solicitud, int? usuarioDni, out int pedidoId)
         {
             var items = new DataTable();
             items.Columns.Add("ItemID", typeof(int));
@@ -114,7 +129,6 @@ namespace DAL_08YS.SQL.Negocio
                 {
                     Param("@ReservaID", solicitud.ReservaId),
                     ParamTVP("@Items", items, "dbo.ItemCantidadList"),
-                    Param("@Descripcion", descripcion),
                     Param("@UsuarioDNI", (object)usuarioDni ?? DBNull.Value),
                     pedidoOutput,
                     resultadoOutput

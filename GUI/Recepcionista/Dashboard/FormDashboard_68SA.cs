@@ -576,10 +576,10 @@ namespace GUI_08YS.Recepcionista
                 flpGeneral.Controls.Add(_filaIndicadores);
                 flpGeneral.Controls.SetChildIndex(_filaIndicadores, flpGeneral.Controls.GetChildIndex(pnlCardsIngresos) + 1);
 
-                var tarjetaPagos = CrearTarjetaDonut(T("Dashboard_tituloMediosPago"), new Size(600, AltoMinimoTarjetaDonut),
+                var tarjetaMediosPago = CrearTarjetaDonut(T("Dashboard_tituloMediosPago"), new Size(600, AltoMinimoTarjetaDonut),
                     out _donutMediosPago, out _leyendaMediosPago);
                 var tarjetaDias = CrearTarjetaGrafico(T("Dashboard_tituloLlegadasDiaSemana"), out _graficoDiaSemana, out _);
-                _filaGeneral2 = CrearFila(AltoMinimoTarjetaDonut, new Padding(3, 0, 3, 3), (tarjetaPagos, 44F), (tarjetaDias, 56F));
+                _filaGeneral2 = CrearFila(AltoMinimoTarjetaDonut, new Padding(3, 0, 3, 3), (tarjetaMediosPago, 44F), (tarjetaDias, 56F));
                 flpGeneral.Controls.Add(_filaGeneral2);
             }
             finally
@@ -613,7 +613,7 @@ namespace GUI_08YS.Recepcionista
                 { MetodoPago.Transferencia, ColorUpgrade }
             };
             var segmentos = new List<SegmentoDonut_68SA>();
-            foreach (var item in _metricasBLL.GetPagosPorMetodo(desde, hasta))
+            foreach (var item in _metricasBLL.GetFacturacionPorMetodo(desde, hasta))
             {
                 bool conocido = int.TryParse(item.Etiqueta, out int numero) && Enum.IsDefined(typeof(MetodoPago), numero);
                 var metodo = conocido ? (MetodoPago)numero : MetodoPago.Efectivo;

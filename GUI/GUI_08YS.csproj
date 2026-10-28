@@ -460,8 +460,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\AppIcon.ico" />
-    <Content Include="script.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <!-- Scripts de base de datos del instalador (los usa InstaladorBD_08YS si se ejecuta sin instalar) -->
+    <Content Include="..\Instalador\Database\Deploy_TP_Ing_Soft_v1.sql">
+      <Link>Database\Deploy_TP_Ing_Soft_v1.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Instalador\Database\Update_TP_Ing_Soft_v2.sql">
+      <Link>Database\Update_TP_Ing_Soft_v2.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -476,6 +482,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\App.config" />
+    <!-- Datos de la casilla de correo: fuera de App.config y fuera del repositorio (.gitignore).
+         Se copia a la salida como Correo.config, que App.config lee con <appSettings file="..."> -->
+    <None Include="Config\Correo.config" Condition="Exists('Config\Correo.config')">
+      <Link>Correo.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\Correo.config.template" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE_08YS.csproj">

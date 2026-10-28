@@ -25,6 +25,9 @@
             this.rbEntregados = new System.Windows.Forms.RadioButton();
             this.rbTodos = new System.Windows.Forms.RadioButton();
             this.txtHabitacion = new CustomControls.IconPlaceholderTextBox();
+            this.txtHuesped = new CustomControls.IconPlaceholderTextBox();
+            this.txtMontoDesde = new CustomControls.IconPlaceholderTextBox();
+            this.txtMontoHasta = new CustomControls.IconPlaceholderTextBox();
             this.btnFiltrar = new FontAwesome.Sharp.IconButton();
             this.btnLimpiar = new FontAwesome.Sharp.IconButton();
             this.pnlEncabezado = new System.Windows.Forms.Panel();
@@ -59,6 +62,9 @@
             this.pnlFiltros.Controls.Add(this.rbEntregados);
             this.pnlFiltros.Controls.Add(this.rbTodos);
             this.pnlFiltros.Controls.Add(this.txtHabitacion);
+            this.pnlFiltros.Controls.Add(this.txtHuesped);
+            this.pnlFiltros.Controls.Add(this.txtMontoDesde);
+            this.pnlFiltros.Controls.Add(this.txtMontoHasta);
             this.pnlFiltros.Controls.Add(this.btnFiltrar);
             this.pnlFiltros.Controls.Add(this.btnLimpiar);
             this.pnlFiltros.BackColor = System.Drawing.Color.FromArgb(5, 10, 40);
@@ -139,6 +145,69 @@
             this.txtHabitacion.Size = new System.Drawing.Size(170, 49);
             this.txtHabitacion.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
             this.txtHabitacion.Name = "txtHabitacion";
+            // 
+            // txtHuesped
+            // 
+            this.txtHuesped.BackColor = System.Drawing.Color.FromArgb(5, 15, 45);
+            this.txtHuesped.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtHuesped.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtHuesped.BorderWidth = 2;
+            this.txtHuesped.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtHuesped.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtHuesped.IconChar = FontAwesome.Sharp.IconChar.User;
+            this.txtHuesped.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtHuesped.IconColorRight = System.Drawing.Color.DimGray;
+            this.txtHuesped.IconPadding = 4;
+            this.txtHuesped.IconSize = 20;
+            this.txtHuesped.MaxLength = 60;
+            this.txtHuesped.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtHuesped.PlaceholderText = "Huésped";
+            this.txtHuesped.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtHuesped.Size = new System.Drawing.Size(220, 49);
+            this.txtHuesped.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
+            this.txtHuesped.Name = "txtHuesped";
+            // 
+            // txtMontoDesde
+            // 
+            this.txtMontoDesde.BackColor = System.Drawing.Color.FromArgb(5, 15, 45);
+            this.txtMontoDesde.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtMontoDesde.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtMontoDesde.BorderWidth = 2;
+            this.txtMontoDesde.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMontoDesde.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtMontoDesde.IconChar = FontAwesome.Sharp.IconChar.DollarSign;
+            this.txtMontoDesde.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtMontoDesde.IconColorRight = System.Drawing.Color.DimGray;
+            this.txtMontoDesde.IconPadding = 4;
+            this.txtMontoDesde.IconSize = 20;
+            this.txtMontoDesde.MaxLength = 12;
+            this.txtMontoDesde.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtMontoDesde.PlaceholderText = "Monto desde";
+            this.txtMontoDesde.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtMontoDesde.Size = new System.Drawing.Size(150, 49);
+            this.txtMontoDesde.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
+            this.txtMontoDesde.Name = "txtMontoDesde";
+            // 
+            // txtMontoHasta
+            // 
+            this.txtMontoHasta.BackColor = System.Drawing.Color.FromArgb(5, 15, 45);
+            this.txtMontoHasta.BorderColor = System.Drawing.Color.Goldenrod;
+            this.txtMontoHasta.BorderFocusColor = System.Drawing.Color.Goldenrod;
+            this.txtMontoHasta.BorderWidth = 2;
+            this.txtMontoHasta.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMontoHasta.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtMontoHasta.IconChar = FontAwesome.Sharp.IconChar.DollarSign;
+            this.txtMontoHasta.IconColor = System.Drawing.Color.Goldenrod;
+            this.txtMontoHasta.IconColorRight = System.Drawing.Color.DimGray;
+            this.txtMontoHasta.IconPadding = 4;
+            this.txtMontoHasta.IconSize = 20;
+            this.txtMontoHasta.MaxLength = 12;
+            this.txtMontoHasta.PlaceholderColor = System.Drawing.Color.LightGray;
+            this.txtMontoHasta.PlaceholderText = "Monto hasta";
+            this.txtMontoHasta.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtMontoHasta.Size = new System.Drawing.Size(150, 49);
+            this.txtMontoHasta.Margin = new System.Windows.Forms.Padding(0, 0, 12, 8);
+            this.txtMontoHasta.Name = "txtMontoHasta";
             // 
             // btnFiltrar
             // 
@@ -271,6 +340,9 @@
         private System.Windows.Forms.RadioButton rbEntregados;
         private System.Windows.Forms.RadioButton rbTodos;
         private CustomControls.IconPlaceholderTextBox txtHabitacion;
+        private CustomControls.IconPlaceholderTextBox txtHuesped;
+        private CustomControls.IconPlaceholderTextBox txtMontoDesde;
+        private CustomControls.IconPlaceholderTextBox txtMontoHasta;
         private FontAwesome.Sharp.IconButton btnFiltrar;
         private FontAwesome.Sharp.IconButton btnLimpiar;
         private System.Windows.Forms.Panel pnlEncabezado;

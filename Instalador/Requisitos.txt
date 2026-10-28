@@ -1,0 +1,25 @@
+﻿REQUISITOS PARA INSTALAR HORIZON HOTEL & RESORT
+
+Equipo
+  - Windows 10 u 11 de 64 bits.
+  - Microsoft .NET Framework 4.8 (viene con Windows 10 1903 o posterior).
+  - Permisos de administrador para instalar.
+
+Base de datos
+  - SQL Server 2016 SP1 o superior: Express, Developer, Standard o LocalDB.
+  - La herramienta sqlcmd (se instala con SQL Server o con las
+    "Herramientas de línea de comandos de SQL Server").
+  - El usuario de Windows que instala debe poder crear bases en la instancia
+    (en SQL Server Express el administrador del equipo normalmente puede).
+  - Con LocalDB la base pertenece al usuario de Windows: instale y use el
+    sistema con el mismo usuario.
+
+Qué hace cada opción
+  INSTALAR    Instalación desde cero del sistema base (versión 1.0.0):
+              usuarios, perfiles, bitácora de eventos, backup y restore,
+              dígitos verificadores e idioma. Crea la base TP_Ing_Soft.
+  REINSTALAR  Actualiza una instalación existente a la versión 2.0.0 en la
+              misma carpeta y la misma base, sin perder datos. Antes de
+              actualizar ofrece hacer una copia de seguridad.
+
+La desinstalación no borra la base de datos.

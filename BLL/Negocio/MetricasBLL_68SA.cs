@@ -48,7 +48,7 @@ namespace BLL_08YS.Negocio
         public List<CambioHabitacionItem_68SA> GetCambiosHabitacion(DateTime? desde, DateTime? hasta, int cantidad = 8) => _repo.GetCambiosHabitacion(desde, hasta, cantidad);
 
         public IndicadoresPeriodo_68SA GetIndicadoresPeriodo(DateTime? desde, DateTime? hasta) => _repo.GetIndicadoresPeriodo(desde, hasta);
-        public List<ValorEtiqueta_68SA> GetPagosPorMetodo(DateTime? desde, DateTime? hasta) => _repo.GetPagosPorMetodo(desde, hasta);
+        public List<ValorEtiqueta_68SA> GetFacturacionPorMetodo(DateTime? desde, DateTime? hasta) => _repo.GetFacturacionPorMetodo(desde, hasta);
         /// <summary>Llegadas según el día de la semana del ingreso (0 = lunes ... 6 = domingo).</summary>
         public int[] GetLlegadasPorDiaSemana(DateTime? desde, DateTime? hasta) => _repo.GetLlegadasPorDiaSemana(desde, hasta);
         /// <summary>Por día desde hoy: Valor = llegadas previstas, Valor2 = salidas previstas.</summary>

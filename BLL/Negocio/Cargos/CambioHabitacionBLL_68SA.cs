@@ -1,7 +1,6 @@
 ﻿using BE_08YS;
 using DAL_08YS.Interfaces_Repositories.Negocio;
 using DAL_08YS.Interfaces_Repositories.Negocio.cargos;
-using DAL_08YS.Interfaces_Repositories.Negocio.habitacion;
 using Service_08YS;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,8 @@ namespace BLL_08YS.Negocio
     /// Cambio de habitación de una reserva: upgrade pedido por el huésped (con cargo, solo con la estadía en curso)
     /// o reubicación por motivos del hotel (sin cargo; también antes del check-in). Las reglas de cada motivo
     /// viven en su política.
-    /// La base vuelve a validar todo dentro de una transacción (sp_RegistrarCambioHabitacion).
+    /// Al registrar, la BLL valida lo que depende solo de la solicitud (permiso y datos del motivo) y
+    /// sp_RegistrarCambioHabitacion valida el estado de la base y registra en una sola llamada y una sola transacción.
     /// </summary>
     public class CambioHabitacionBLL_68SA
     {
@@ -21,19 +21,16 @@ namespace BLL_08YS.Negocio
 
         private readonly ICambioHabitacionRepository_68SA _cambioRepo;
         private readonly IReservaRepository_68SA _reservaRepo;
-        private readonly IHabitacionRepository_68SA _habitacionRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly Dictionary<MotivoCambioHabitacion, IPoliticaCambioHabitacion_68SA> _politicas;
 
         #endregion
 
         public CambioHabitacionBLL_68SA(ICambioHabitacionRepository_68SA cambioRepo, IReservaRepository_68SA reservaRepo,
-                                        IHabitacionRepository_68SA habitacionRepo, BitacoraBLL_08YS bitacoraBll,
-                                        IEnumerable<IPoliticaCambioHabitacion_68SA> politicas)
+                                        BitacoraBLL_08YS bitacoraBll, IEnumerable<IPoliticaCambioHabitacion_68SA> politicas)
         {
             _cambioRepo = cambioRepo;
             _reservaRepo = reservaRepo;
-            _habitacionRepo = habitacionRepo;
             _bitacoraBll = bitacoraBll;
             _politicas = politicas.ToDictionary(p => p.Motivo);
         }
@@ -66,6 +63,12 @@ namespace BLL_08YS.Negocio
 
         #endregion
 
+        /// <summary>
+        /// Registra el cambio en una sola ida a la base. Lo que depende de la solicitud (permiso y datos del motivo)
+        /// se valida acá; lo que depende del estado de la base (estado de la reserva, habitación libre hasta el egreso,
+        /// capacidad, tarifa mayor y noches restantes del upgrade) lo valida el SP en la misma transacción del alta,
+        /// con los datos del momento. El SP también calcula el cargo y arma su descripción.
+        /// </summary>
         public ResultadoRegistroCambio_68SA Registrar(SolicitudCambioHabitacion_68SA solicitud)
         {
             if (solicitud == null) throw new ArgumentNullException(nameof(solicitud));
@@ -74,28 +77,12 @@ namespace BLL_08YS.Negocio
             SessionManager_08YS.Instance.ValidatePermission(politica.PermisoRequerido);
             politica.ValidarSolicitud(solicitud);
 
-            Reserva_68SA reserva = ObtenerReservaModificable(solicitud.ReservaId, politica);
-            if (reserva.Habitacion.Id == solicitud.HabitacionNuevaId)
-                throw new MismaHabitacionException_68SA();
-
-            Habitacion_68SA nueva = _habitacionRepo.GetById(solicitud.HabitacionNuevaId)
-                                    ?? throw new HabitacionNoEncontradaException_68SA();
-
-            int huespedes = reserva.CantidadAdultos + reserva.CantidadNinos;
-            if (huespedes > nueva.Tipo.Capacidad)
-                throw new CapacidadExcedidaException_68SA(
-                    $"La habitación {nueva.NroHabitacion} admite {nueva.Tipo.Capacidad} huésped/es y la estadía tiene {huespedes}.");
-
-            // Valida (tarifa / noches) y arma el texto del cargo antes de ir a la base
-            var cotizacion = Cotizar(reserva, nueva, solicitud.Motivo);
-            string descripcionCargo = politica.DescribirCargo(nueva, cotizacion);
-
             var usuario = SessionManager_08YS.Instance.Current;
-            var resultado = _cambioRepo.Registrar(solicitud, descripcionCargo, usuario?.DNI, usuario?.Username);
-            LanzarSiFallo(resultado.Resultado);
+            var resultado = _cambioRepo.Registrar(solicitud, usuario?.DNI, usuario?.Username);
+            LanzarSiFallo(resultado.Resultado, politica);
 
             DVManager_08YS.Recalcular();
-            _bitacoraBll.RegistrarEvento(politica.EventoBitacora, targetUsername: reserva.Id.ToString());
+            _bitacoraBll.RegistrarEvento(politica.EventoBitacora, targetUsername: solicitud.ReservaId.ToString());
             return resultado;
         }
 
@@ -140,13 +127,16 @@ namespace BLL_08YS.Negocio
             return reserva;
         }
 
-        // La base revalida con datos frescos (otro recepcionista pudo ocupar la habitación mientras tanto)
-        private static void LanzarSiFallo(ResultadoCambioHabitacion resultado)
+        // Traduce el resultado del SP a la excepción de negocio que muestra la pantalla
+        private static void LanzarSiFallo(ResultadoCambioHabitacion resultado, IPoliticaCambioHabitacion_68SA politica)
         {
             switch (resultado)
             {
                 case ResultadoCambioHabitacion.Ok: return;
-                case ResultadoCambioHabitacion.ReservaNoEnCurso: throw new EstadoReservaInvalidoException_68SA("La reserva ya no admite este cambio de habitación.");
+                case ResultadoCambioHabitacion.ReservaNoEnCurso:
+                    throw new EstadoReservaInvalidoException_68SA(politica.AdmiteReservaConfirmada
+                        ? "Solo se puede reubicar una reserva Confirmada o una estadía En Curso."
+                        : "El upgrade solo se puede registrar con la estadía En Curso.");
                 case ResultadoCambioHabitacion.HabitacionNoDisponible: throw new HabitacionNoDisponibleException_68SA("La habitación elegida dejó de estar libre hasta el egreso.");
                 case ResultadoCambioHabitacion.MismaHabitacion: throw new MismaHabitacionException_68SA();
                 case ResultadoCambioHabitacion.SinNochesRestantes: throw new SinNochesRestantesException_68SA();

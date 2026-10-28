@@ -10,16 +10,28 @@ using System.Threading.Tasks;
 namespace DAL_08YS.Instalador
 {
     /// <summary>
-    /// Crea la base de datos en silencio en el primer arranque, a partir del
-    /// script.sql que queda al lado del .exe.
-    /// se invoca una sola vez desde BLLInstalador_08YS.AsegurarBaseDatos().
+    /// Respaldo para cuando la aplicación se ejecuta sin haber pasado por el instalador
+    /// (por ejemplo desde Visual Studio en una máquina nueva): si la base no existe en la
+    /// instancia configurada, la crea con los mismos scripts que usa el instalador, que
+    /// quedan en la carpeta "Database" junto al .exe:
+    ///   1. Deploy_TP_Ing_Soft_v1.sql  (sistema: usuarios, perfiles, bitácora, DV, backup, idioma)
+    ///   2. Update_TP_Ing_Soft_v2.sql  (negocio de la versión actual)
+    /// Cada script corre en una transacción y ante cualquier error se detiene (no se ignoran
+    /// lotes): la base queda creada completa o el error llega a Program.cs y se informa.
+    /// Se invoca una sola vez desde BLLInstalador_08YS.AsegurarBaseDatos().
     /// </summary>
     public static class InstaladorBD_08YS
     {
         #region Campos
 
         public const string NombreBaseDatos = "TP_Ing_Soft";
-        private const string NombreArchivoScript = "script.sql";
+        private const string CarpetaScripts = "Database";
+
+        private static readonly string[] Scripts =
+        {
+            "Deploy_TP_Ing_Soft_v1.sql",
+            "Update_TP_Ing_Soft_v2.sql"
+        };
 
         #endregion
 
@@ -45,54 +57,23 @@ namespace DAL_08YS.Instalador
 
         public static void InstalarBaseDatos(string instancia)
         {
-            string rutaScript = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, NombreArchivoScript);
+            string carpeta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, CarpetaScripts);
 
-            if (!File.Exists(rutaScript))
-                throw new FileNotFoundException(
-                    $"No se encontró '{NombreArchivoScript}' junto al ejecutable. " +
-                    "Verificá que el Setup Project lo incluya en Application Folder.",
-                    rutaScript);
-
-            string script = File.ReadAllText(rutaScript);
-
-            // SqlCommand no entiende el separador "GO": hay que partir el script
-            // en lotes y ejecutar cada uno por separado, sobre la misma conexión
-            // (el propio script hace "USE [TP_Ing_Soft]" a mitad de camino, y esa
-            // conexión mantiene ese contexto para los lotes siguientes).
-            string[] lotes = Regex.Split(script, @"^\s*GO\s*$",
-                RegexOptions.Multiline | RegexOptions.IgnoreCase);
+            foreach (string nombre in Scripts)
+            {
+                string ruta = Path.Combine(carpeta, nombre);
+                if (!File.Exists(ruta))
+                    throw new FileNotFoundException(
+                        $"No se encontró el script '{nombre}' en la carpeta '{CarpetaScripts}' junto al ejecutable. " +
+                        "Instale el sistema con el instalador de Horizon Hotel & Resort.",
+                        ruta);
+            }
 
             using (var conn = new SqlConnection(ArmarConnectionStringMaster(instancia)))
             {
                 conn.Open();
-                foreach (string lote in lotes)
-                {
-                    if (string.IsNullOrWhiteSpace(lote)) continue;
-
-                    try
-                    {
-                        using (var cmd = new SqlCommand(lote, conn) { CommandTimeout = 120 })
-                            cmd.ExecuteNonQuery();
-                    }
-                    catch (SqlException ex)
-                    {
-                        // Lotes de configuración (ALTER DATABASE ... QUERY_STORE, ACCELERATED_DATABASE_RECOVERY,
-                        // etc.) pueden no ser soportados según la edición/versión de SQL Server instalada
-                        // (por ejemplo LocalDB 2019 vs. SQL Server 2022). No son críticos para el
-                        // funcionamiento de la app: si fallan, se ignoran y se sigue con el resto del script
-                        // para no perder la creación de tablas y datos. Se deja rastro en un log para poder
-                        // diagnosticar si algo importante (una tabla) llegara a fallar.
-                        try
-                        {
-                            string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "instalador_db.log");
-                            File.AppendAllText(logPath,
-                                $"[{DateTime.Now}] Lote ignorado por error: {ex.Message}{Environment.NewLine}");
-                        }
-                        catch { /* si ni siquiera se puede loguear, no bloqueamos la instalación por esto */ }
-
-                        continue;
-                    }
-                }
+                foreach (string nombre in Scripts)
+                    EjecutarScript(conn, Path.Combine(carpeta, nombre));
             }
         }
 
@@ -112,6 +93,50 @@ namespace DAL_08YS.Instalador
 
         #region Métodos auxiliares
 
+        /// <summary>
+        /// Ejecuta un script del instalador lote por lote sobre la misma conexión (el script
+        /// cambia de base con USE y abre una transacción que abarca varios lotes).
+        /// Las directivas de sqlcmd (líneas que empiezan con ":") no las entiende SqlCommand y se quitan.
+        /// Si un lote falla, la excepción se propaga: con XACT_ABORT ON el servidor ya deshizo la transacción.
+        /// </summary>
+        private static void EjecutarScript(SqlConnection conn, string ruta)
+        {
+            string script = File.ReadAllText(ruta);
+            script = Regex.Replace(script, @"^\s*:.*$", string.Empty, RegexOptions.Multiline);
+
+            // SqlCommand no entiende el separador "GO": hay que partir el script en lotes
+            string[] lotes = Regex.Split(script, @"^\s*GO\s*$",
+                RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
+            foreach (string lote in lotes)
+            {
+                if (string.IsNullOrWhiteSpace(lote)) continue;
+
+                try
+                {
+                    using (var cmd = new SqlCommand(lote, conn) { CommandTimeout = 300 })
+                        cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    RegistrarError(Path.GetFileName(ruta), ex);
+                    throw new InvalidOperationException(
+                        $"Falló el script {Path.GetFileName(ruta)}: {ex.Message}", ex);
+                }
+            }
+        }
+
+        private static void RegistrarError(string script, SqlException ex)
+        {
+            try
+            {
+                string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "instalador_db.log");
+                File.AppendAllText(logPath,
+                    $"[{DateTime.Now}] {script}: {ex.Message}{Environment.NewLine}");
+            }
+            catch { /* sin permisos de escritura en la carpeta: el error igual llega al usuario */ }
+        }
+
         private static string ArmarConnectionStringMaster(string instancia)
             => new SqlConnectionStringBuilder(SqlDbFactory_08YS.ConnectionString)
             {
@@ -122,4 +147,3 @@ namespace DAL_08YS.Instalador
         #endregion
     }
 }
-

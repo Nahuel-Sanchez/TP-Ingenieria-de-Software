@@ -15,7 +15,7 @@ namespace GUI_08YS.Recepcionista
 {
     /// <summary>
     /// Detalle de una estadía (PN2): datos de la reserva y todos los movimientos de su cuenta
-    /// (alojamiento, renovación, upgrades, reubicaciones, pedidos de room service y pagos) con los totales.
+    /// (alojamiento, renovación, upgrades, reubicaciones, pedidos de room service y facturas) con los totales.
     /// Se abre a pedido desde el check-out ("Ver detalle de la cuenta") y desde Control de habitaciones.
     /// </summary>
     public partial class FormDetalleEstadia_68SA : Form
@@ -108,12 +108,12 @@ namespace GUI_08YS.Recepcionista
                     ? (fila.Importe.Value < 0 ? "−" + Moneda(-fila.Importe.Value) : Moneda(fila.Importe.Value))
                     : T("CambioHab_txtSinCargo");
                 e.FormattingApplied = true;
-                e.CellStyle.ForeColor = fila.Tipo == TipoMovimiento.Pago ? ColorExito
+                e.CellStyle.ForeColor = fila.Tipo == TipoMovimiento.Factura ? ColorExito
                                       : fila.Importe.HasValue ? Color.WhiteSmoke : TextoSuave;
             }
             else if (columna == nameof(FilaMovimiento_68SA.Concepto))
             {
-                e.CellStyle.ForeColor = fila.Tipo == TipoMovimiento.Pago ? ColorExito
+                e.CellStyle.ForeColor = fila.Tipo == TipoMovimiento.Factura ? ColorExito
                                       : fila.Tipo == TipoMovimiento.Upgrade || fila.Tipo == TipoMovimiento.Renovacion ? Color.Goldenrod
                                       : Color.WhiteSmoke;
             }
@@ -134,7 +134,7 @@ namespace GUI_08YS.Recepcionista
             var sesion = SessionManager_08YS.Instance;
             bool veePedidos = sesion.HasPermission(Permisos.RegistrarRoomService) || sesion.HasPermission(Permisos.ConfirmarEntregaRoomService);
             var pedidos = veePedidos ? roomServiceBLL.GetPorReserva(_reservaId) : new List<PedidoRoomService_68SA>();
-            var pagos = BLLFactory_08YS.CreatePagoBLL().GetByReserva(_reservaId);
+            var facturas = BLLFactory_08YS.CreateFacturaBLL().GetByReserva(_reservaId);
 
             // Alojamiento tal como se reservó (en la primera habitación si después hubo cambios)
             decimal tarifa = reserva.TarifaNoche;
@@ -214,15 +214,15 @@ namespace GUI_08YS.Recepcionista
                 }
             }
 
-            foreach (var pago in pagos)
+            foreach (var factura in facturas)
             {
                 filas.Add(new FilaMovimiento_68SA
                 {
-                    Fecha = pago.FechaPago,
-                    Concepto = string.Format(T("DetalleEst_movPago"), OpcionEnum_68SA.Texto(pago.MetodoPago)),
+                    Fecha = factura.FechaEmision,
+                    Concepto = string.Format(T("DetalleEst_movPago"), OpcionEnum_68SA.Texto(factura.MetodoPago)),
                     Detalle = T("DetalleEst_detPago"),
-                    Importe = -pago.Monto,
-                    Tipo = TipoMovimiento.Pago,
+                    Importe = -factura.Monto,
+                    Tipo = TipoMovimiento.Factura,
                     Orden = 3
                 });
             }
@@ -265,7 +265,7 @@ namespace GUI_08YS.Recepcionista
 
         #region Tipos anidados
 
-        private enum TipoMovimiento { Alojamiento, Renovacion, Upgrade, Reubicacion, RoomService, Pago }
+        private enum TipoMovimiento { Alojamiento, Renovacion, Upgrade, Reubicacion, RoomService, Factura }
 
         private sealed class FilaMovimiento_68SA
         {

@@ -83,6 +83,11 @@ namespace BE_08YS
         public DateTime? FechaHasta { get; set; }
         /// <summary>Solo los entregados desde esta fecha (por hora de entrega).</summary>
         public DateTime? EntregadosDesde { get; set; }
+        /// <summary>Titular de la reserva: parte del nombre, del apellido o del documento.</summary>
+        public string Huesped { get; set; }
+        /// <summary>Monto del pedido (inclusive en los dos extremos).</summary>
+        public decimal? MontoDesde { get; set; }
+        public decimal? MontoHasta { get; set; }
 
         #endregion
     }

@@ -35,6 +35,7 @@ namespace Service_08YS
 
     /// <summary>
     /// Envío de mails por SMTP. La cuenta se configura en el App.config de la aplicación (sección appSettings):
+    /// (en Correo.config, que App.config incluye con el atributo file de appSettings)
     /// Correo.Host, Correo.Puerto, Correo.UsarSsl, Correo.Usuario, Correo.Clave, Correo.Remitente, Correo.NombreRemitente.
     /// El envío se hace en un hilo aparte para no congelar la pantalla mientras se conecta con el servidor.
     /// </summary>
@@ -96,7 +97,7 @@ namespace Service_08YS
         public void Enviar(string destinatario, string asunto, string cuerpoHtml, IEnumerable<AdjuntoCorreo_68SA> adjuntos)
         {
             if (!EstaConfigurado)
-                throw new InvalidOperationException("El envío de correo no está configurado (App.config, claves Correo.*).");
+                throw new InvalidOperationException("El envío de correo no está configurado (Correo.config junto al ejecutable, claves Correo.*).");
             if (!EsDireccionValida(destinatario))
                 throw new ArgumentException($"La dirección de correo \"{destinatario}\" no es válida.", nameof(destinatario));
 

@@ -26,7 +26,7 @@ namespace GUI_08YS.Recepcionista
 
         public Reserva_68SA Reserva { get; set; }
         public Huesped_68SA Titular { get; set; }
-        public List<Pago_68SA> Pagos { get; set; } = new List<Pago_68SA>();
+        public List<Factura_68SA> Facturas { get; set; } = new List<Factura_68SA>();
         // PN2: upgrades y servicio a la habitación cargados a la cuenta, y los cambios de habitación de la estadía
         public List<CargoAdicional_68SA> Cargos { get; set; } = new List<CargoAdicional_68SA>();
         public List<CambioHabitacion_68SA> Cambios { get; set; } = new List<CambioHabitacion_68SA>();
@@ -35,7 +35,7 @@ namespace GUI_08YS.Recepcionista
         public DateTime FechaEmision { get; set; } = DateTime.Now;
         public string EmitidoPor { get; set; }
 
-        public decimal TotalPagado => Pagos.Sum(p => p.Monto);
+        public decimal TotalPagado => Facturas.Sum(p => p.Monto);
         public decimal TotalCargos => Cargos.Sum(c => c.Monto);
         /// <summary>Alojamiento + cargos adicionales (lo que se factura por la estadía).</summary>
         public decimal Total => Reserva.MontoTotal + TotalCargos;
@@ -53,7 +53,7 @@ namespace GUI_08YS.Recepcionista
         public static DatosDocumentoReserva_68SA Cargar(int reservaId, Huesped_68SA titularCompleto = null)
         {
             var reserva = BLLFactory_08YS.CreateReservaBLL().GetById(reservaId);
-            var pagos = BLLFactory_08YS.CreatePagoBLL().GetByReserva(reservaId) ?? new List<Pago_68SA>();
+            var facturas = BLLFactory_08YS.CreateFacturaBLL().GetByReserva(reservaId) ?? new List<Factura_68SA>();
 
             Huesped_68SA titular = titularCompleto;
             if (titular == null && reserva.Titular != null)
@@ -67,7 +67,7 @@ namespace GUI_08YS.Recepcionista
             {
                 Reserva = reserva,
                 Titular = titular ?? reserva.Titular,
-                Pagos = pagos.OrderBy(p => p.FechaPago).ToList(),
+                Facturas = facturas.OrderBy(p => p.FechaEmision).ToList(),
                 Cargos = BLLFactory_08YS.CreateCuentaEstadiaBLL().GetCargos(reservaId),
                 Cambios = BLLFactory_08YS.CreateCambioHabitacionBLL().GetHistorial(reservaId),
                 EmitidoPor = UsuarioActual()

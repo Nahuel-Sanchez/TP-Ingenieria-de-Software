@@ -31,7 +31,7 @@ namespace GUI_08YS.Recepcionista
 
         private readonly HuespedBLL_68SA _huespedBLL = BLLFactory_08YS.CreateHuespedBLL();
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
-        private readonly PagoBLL_68SA _pagoBLL = BLLFactory_08YS.CreatePagoBLL();
+        private readonly FacturaBLL_68SA _facturaBLL = BLLFactory_08YS.CreateFacturaBLL();
 
         private Huesped_68SA _huespedSeleccionado;
 
@@ -300,7 +300,7 @@ namespace GUI_08YS.Recepcionista
 
         private void BtnConfirmar_Click(object sender, EventArgs e)
         {
-            // Se valida el cobro antes de crear la reserva: si no, quedaría una reserva sin su pago
+            // Se valida el cobro antes de crear la reserva: si no, quedaría una reserva sin su factura
             SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarReserva);
             SessionManager_08YS.Instance.ValidatePermission(Permisos.Cobrar);
 
@@ -377,7 +377,7 @@ namespace GUI_08YS.Recepcionista
                 // Se registra lo que se cobra (el total), no lo que entregó el huésped: el vuelto no es un ingreso
                 decimal montoACobrar = _montoTotal;
 
-                _pagoBLL.Registrar(new Pago_68SA
+                _facturaBLL.Registrar(new Factura_68SA
                 {
                     ReservaId = reservaId,
                     Monto = montoACobrar,
@@ -557,7 +557,7 @@ namespace GUI_08YS.Recepcionista
             }
             catch (Exception)
             {
-                // La reserva y el pago ya quedaron registrados: si no se pudo armar el comprobante, se avisa como antes
+                // La reserva y la factura ya quedaron registradas: si no se pudo armar el comprobante, se avisa como antes
                 MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgReservaConfirmada"), reservaId, _habitacion.NroHabitacion),
                     TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloReservaConfirmada"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

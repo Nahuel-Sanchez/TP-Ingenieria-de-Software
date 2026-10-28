@@ -34,7 +34,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
 
         // Indicadores ampliados del dashboard
         IndicadoresPeriodo_68SA GetIndicadoresPeriodo(DateTime? desde, DateTime? hasta);
-        List<ValorEtiqueta_68SA> GetPagosPorMetodo(DateTime? desde, DateTime? hasta);
+        List<ValorEtiqueta_68SA> GetFacturacionPorMetodo(DateTime? desde, DateTime? hasta);
         int[] GetLlegadasPorDiaSemana(DateTime? desde, DateTime? hasta);
         List<PuntoSerie_68SA> GetMovimientoProximosDias(int dias);
         List<OcupacionDia_68SA> GetOcupacionMensual(int meses);

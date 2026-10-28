@@ -38,7 +38,7 @@ namespace GUI_08YS.Recepcionista
         private readonly Action<Form> _openChildForm;
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
         private readonly HabitacionBLL_68SA _habitacionBLL = BLLFactory_08YS.CreateHabitacionBLL();
-        private readonly PagoBLL_68SA _pagoBLL = BLLFactory_08YS.CreatePagoBLL();
+        private readonly FacturaBLL_68SA _facturaBLL = BLLFactory_08YS.CreateFacturaBLL();
 
         // Primer día visible del calendario: < y > lo corren un día, << y >> una semana o un mes completo
         private DateTime _fechaBaseCalendario = InicioAlineado(DateTime.Today, ModoCalendarioReservas.Semana);

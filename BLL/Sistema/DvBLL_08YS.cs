@@ -54,7 +54,7 @@ namespace BLL_08YS
             "Users", "Roles", "Familias", "Permisos",
             "FamiliaPermiso", "FamiliaIntegrada", "RolFamilia", "RolPermiso",
             "Pisos", "TiposHabitacion", "Habitaciones", "Huespedes",
-            "Reservas", "Acompanantes", "Pagos", "ConfiguracionHotel",
+            "Reservas", "Acompanantes", "Facturas", "ConfiguracionHotel",
             // PN2 (mismo orden que sp_GetAllTablesParaDV)
             "ItemsRoomService", "CargosAdicionales", "PedidosRoomService", "DetallePedidoRoomService",
             "HistorialCambiosHabitacion", "Bitacora_Reservas"

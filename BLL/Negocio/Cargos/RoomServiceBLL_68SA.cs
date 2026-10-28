@@ -19,11 +19,9 @@ namespace BLL_08YS.Negocio
         #region Campos
 
         public const int MaximoPorItem = 20;
-        private const int LargoDescripcion = 200;
 
         private readonly IPedidoRoomServiceRepository_68SA _pedidoRepo;
         private readonly ICatalogoRoomServiceRepository_68SA _catalogoRepo;
-        private readonly IReservaRepository_68SA _reservaRepo;
         private readonly BitacoraBLL_08YS _bitacoraBll;
 
         #endregion
@@ -31,11 +29,10 @@ namespace BLL_08YS.Negocio
         #region Constructor
 
         public RoomServiceBLL_68SA(IPedidoRoomServiceRepository_68SA pedidoRepo, ICatalogoRoomServiceRepository_68SA catalogoRepo,
-                                   IReservaRepository_68SA reservaRepo, BitacoraBLL_08YS bitacoraBll)
+                                   BitacoraBLL_08YS bitacoraBll)
         {
             _pedidoRepo = pedidoRepo;
             _catalogoRepo = catalogoRepo;
-            _reservaRepo = reservaRepo;
             _bitacoraBll = bitacoraBll;
         }
 
@@ -55,6 +52,10 @@ namespace BLL_08YS.Negocio
             ValidarPuedeVerPedidos();
             if (filtro?.FechaDesde != null && filtro.FechaHasta != null && filtro.FechaDesde.Value.Date > filtro.FechaHasta.Value.Date)
                 throw new RangoFechasInvalidoException_68SA("La fecha desde no puede ser posterior a la fecha hasta.");
+            if (filtro?.MontoDesde < 0 || filtro?.MontoHasta < 0)
+                throw new DatosInvalidosException_68SA("El monto no puede ser negativo.");
+            if (filtro?.MontoDesde != null && filtro.MontoHasta != null && filtro.MontoDesde.Value > filtro.MontoHasta.Value)
+                throw new DatosInvalidosException_68SA("El monto desde no puede ser mayor que el monto hasta.");
             return _pedidoRepo.GetPedidos(filtro);
         }
 
@@ -70,34 +71,20 @@ namespace BLL_08YS.Negocio
 
         #region Operaciones
 
-        /// <summary>Registra el pedido y su cargo. Devuelve el número de pedido.</summary>
+        /// <summary>
+        /// Registra el pedido y su cargo. Devuelve el número de pedido.
+        /// Lo que depende solo de la solicitud (permiso, ítems y cantidades) se valida acá, sin ir a la base.
+        /// Lo que depende del estado de la base (estadía En Curso, ítems activos en la carta) lo valida
+        /// sp_RegistrarPedidoRoomService en la misma transacción en la que registra, con los datos del momento:
+        /// una sola ida a la base y sin carrera entre la validación y el alta.
+        /// </summary>
         public int RegistrarPedido(SolicitudPedidoRoomService_68SA solicitud)
         {
             SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarRoomService);
-            if (solicitud == null || solicitud.CantidadesPorItem.Count == 0)
-                throw new PedidoRoomServiceInvalidoException_68SA("Agregá al menos un ítem al pedido.");
-            if (solicitud.CantidadesPorItem.Values.Any(c => c <= 0 || c > MaximoPorItem))
-                throw new PedidoRoomServiceInvalidoException_68SA($"La cantidad de cada ítem debe estar entre 1 y {MaximoPorItem}.");
+            ValidarSolicitud(solicitud);
 
-            var reserva = _reservaRepo.GetById(solicitud.ReservaId) ?? throw new ReservaNoEncontradaException_68SA();
-            if (reserva.Estado != EstadoReserva.EnCurso)
-                throw new EstadoReservaInvalidoException_68SA("Solo se puede cargar servicio a la habitación a una estadía En Curso.");
-
-            var carta = GetCarta().ToDictionary(i => i.Id);
-            if (solicitud.CantidadesPorItem.Keys.Any(id => !carta.ContainsKey(id)))
-                throw new PedidoRoomServiceInvalidoException_68SA();
-
-            string descripcion = ArmarDescripcion(solicitud, carta);
-            var resultado = _pedidoRepo.Registrar(solicitud, descripcion, SessionManager_08YS.Instance.Current?.DNI, out int pedidoId);
-
-            switch (resultado)
-            {
-                case ResultadoPedidoRoomService.Ok: break;
-                case ResultadoPedidoRoomService.ReservaNoEnCurso:
-                    throw new EstadoReservaInvalidoException_68SA("La estadía ya no está En Curso.");
-                default:
-                    throw new PedidoRoomServiceInvalidoException_68SA();
-            }
+            var resultado = _pedidoRepo.Registrar(solicitud, SessionManager_08YS.Instance.Current?.DNI, out int pedidoId);
+            LanzarSiFallo(resultado);
 
             DVManager_08YS.Recalcular();
             _bitacoraBll.RegistrarEvento(Evento.PedidoRoomServiceRegistrado, targetUsername: solicitud.ReservaId.ToString());
@@ -120,25 +107,32 @@ namespace BLL_08YS.Negocio
 
         #region Validaciones
 
+        private static void ValidarSolicitud(SolicitudPedidoRoomService_68SA solicitud)
+        {
+            if (solicitud == null || solicitud.CantidadesPorItem.Count == 0)
+                throw new PedidoRoomServiceInvalidoException_68SA("Agregá al menos un ítem al pedido.");
+            if (solicitud.CantidadesPorItem.Values.Any(c => c <= 0 || c > MaximoPorItem))
+                throw new PedidoRoomServiceInvalidoException_68SA($"La cantidad de cada ítem debe estar entre 1 y {MaximoPorItem}.");
+        }
+
+        // Traduce el resultado del SP a la excepción de negocio que muestra la pantalla
+        private static void LanzarSiFallo(ResultadoPedidoRoomService resultado)
+        {
+            switch (resultado)
+            {
+                case ResultadoPedidoRoomService.Ok: return;
+                case ResultadoPedidoRoomService.ReservaNoEnCurso:
+                    throw new EstadoReservaInvalidoException_68SA("La estadía ya no está En Curso.");
+                default:
+                    throw new PedidoRoomServiceInvalidoException_68SA();
+            }
+        }
+
         private static void ValidarPuedeVerPedidos()
         {
             var sesion = SessionManager_08YS.Instance;
             if (!sesion.HasPermission(Permisos.ConfirmarEntregaRoomService) && !sesion.HasPermission(Permisos.RegistrarRoomService))
                 sesion.ValidatePermission(Permisos.ConfirmarEntregaRoomService); // lanza el UnauthorizedAccessException estándar
-        }
-
-        #endregion
-
-        #region Métodos auxiliares
-
-        // "Room service: 2 x Club sándwich, 1 x Agua mineral 500 ml" (entra en los 200 caracteres del cargo)
-        private static string ArmarDescripcion(SolicitudPedidoRoomService_68SA solicitud, IDictionary<int, ItemRoomService_68SA> carta)
-        {
-            var renglones = solicitud.CantidadesPorItem
-                .OrderBy(r => carta[r.Key].Nombre)
-                .Select(r => $"{r.Value} x {carta[r.Key].Nombre}");
-            string texto = "Room service: " + string.Join(", ", renglones);
-            return texto.Length <= LargoDescripcion ? texto : texto.Substring(0, LargoDescripcion - 1) + "…";
         }
 
         #endregion

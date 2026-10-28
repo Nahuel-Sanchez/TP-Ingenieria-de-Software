@@ -20,9 +20,11 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio.cargos
 
         #region Operaciones
 
-        /// <summary>Registra el cambio en una transacción (sp_RegistrarCambioHabitacion) y devuelve su código de resultado.</summary>
-        ResultadoRegistroCambio_68SA Registrar(SolicitudCambioHabitacion_68SA solicitud, string descripcionCargo,
-                                               int? usuarioDni, string usuarioApp);
+        /// <summary>
+        /// Valida y registra el cambio en una sola transacción (sp_RegistrarCambioHabitacion): calcula el cargo del upgrade
+        /// y arma su descripción. Devuelve el código de resultado, el cambio y el monto.
+        /// </summary>
+        ResultadoRegistroCambio_68SA Registrar(SolicitudCambioHabitacion_68SA solicitud, int? usuarioDni, string usuarioApp);
 
         #endregion
     }

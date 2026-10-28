@@ -48,7 +48,7 @@
     <Compile Include="Sistema\BitacoraMapper_08YS.cs" />
     <Compile Include="Negocio\HabitacionMapper_68SA.cs" />
     <Compile Include="Negocio\HuespedMapper_68SA.cs" />
-    <Compile Include="Negocio\PagoMapper_68SA.cs" />
+    <Compile Include="Negocio\FacturaMapper_68SA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Negocio\ReservaMapper_68SA.cs" />
     <Compile Include="Negocio\BitacoraReservaMapper_68SA.cs" />

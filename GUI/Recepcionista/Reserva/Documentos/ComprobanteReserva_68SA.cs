@@ -185,7 +185,7 @@ namespace GUI_08YS.Recepcionista
                 // ---------- Pago ----------
                 Escribir(g, T("Documento_pago").ToUpper(), fSeccion, Marca, new RectangleF(cx, yy, ancho, 16));
                 yy += 20;
-                string medios = string.Join(", ", Datos.Pagos.Select(p => OpcionEnum_68SA_Texto(p.MetodoPago)).Distinct());
+                string medios = string.Join(", ", Datos.Facturas.Select(p => OpcionEnum_68SA_Texto(p.MetodoPago)).Distinct());
                 yy = FilaDato(g, cx, yy, ancho, T("Documento_totalEstadia"), Moneda(Datos.Total), fTexto, fValor);
                 yy = FilaDato(g, cx, yy, ancho,
                     string.IsNullOrEmpty(medios) ? T("Documento_pagado") : $"{T("Documento_pagado")} ({medios})",

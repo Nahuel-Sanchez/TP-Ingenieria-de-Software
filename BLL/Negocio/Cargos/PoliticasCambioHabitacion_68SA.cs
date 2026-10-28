@@ -35,11 +35,11 @@ namespace BLL_08YS.Negocio
 
         #region Métodos públicos
 
-        /// <summary>Calcula el cargo; lanza la excepción de negocio si el cambio no corresponde.</summary>
+        /// <summary>
+        /// Vista previa del cargo (misma fórmula que sp_RegistrarCambioHabitacion, que lo recalcula al registrar);
+        /// lanza la excepción de negocio si el cambio no corresponde.
+        /// </summary>
         CotizacionCambioHabitacion_68SA Cotizar(decimal tarifaVigente, decimal tarifaNueva, int nochesRestantes);
-
-        /// <summary>Texto del cargo que queda en la cuenta del huésped; null si el cambio no se cobra.</summary>
-        string DescribirCargo(Habitacion_68SA habitacionNueva, CotizacionCambioHabitacion_68SA cotizacion);
 
         #endregion
     }
@@ -87,14 +87,6 @@ namespace BLL_08YS.Negocio
                 NochesRestantes = nochesRestantes,
                 Monto = (tarifaNueva - tarifaVigente) * nochesRestantes
             };
-        }
-
-        public string DescribirCargo(Habitacion_68SA habitacionNueva, CotizacionCambioHabitacion_68SA cotizacion)
-        {
-            string noches = cotizacion.NochesRestantes == 1 ? "1 noche" : $"{cotizacion.NochesRestantes} noches";
-            string texto = $"Upgrade a hab. {habitacionNueva.NroHabitacion} ({habitacionNueva.Tipo?.Nombre}): "
-                         + $"{noches} x ${cotizacion.DiferenciaPorNoche:N2} de diferencia";
-            return texto.Length <= 200 ? texto : texto.Substring(0, 199) + "…";
         }
 
         #endregion
@@ -150,8 +142,6 @@ namespace BLL_08YS.Negocio
                 Monto = 0m
             };
         }
-
-        public string DescribirCargo(Habitacion_68SA habitacionNueva, CotizacionCambioHabitacion_68SA cotizacion) => null;
 
         #endregion
     }

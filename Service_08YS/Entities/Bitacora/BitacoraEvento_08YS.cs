@@ -22,7 +22,7 @@ namespace Service_08YS.Entities.Bitacora
         Reservas,
         Habitaciones,
         Huespedes,
-        Pagos,
+        Facturas,
         Configuracion,
         CargosAdicionales
     }
@@ -54,7 +54,7 @@ namespace Service_08YS.Entities.Bitacora
         HabitacionPuestaEnMantenimiento,
         HabitacionEstadoCambiado,
         HuespedRegistrado,
-        PagoRegistrado,
+        FacturaRegistrada,
         ConfiguracionHotelActualizada,
         HabitacionCreada,
         HabitacionModificada,

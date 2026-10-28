@@ -52,7 +52,7 @@
     <Compile Include="Metricas\ResumenHuespedes_68SA.cs" />
     <Compile Include="Metricas\ResumenIngresos_68SA.cs" />
     <Compile Include="Metricas\ResumenOcupacion_68SA.cs" />
-    <Compile Include="Pago_68SA.cs" />
+    <Compile Include="Factura_68SA.cs" />
     <Compile Include="Piso_68SA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reserva_68SA.cs" />

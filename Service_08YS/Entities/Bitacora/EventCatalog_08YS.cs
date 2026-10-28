@@ -59,7 +59,7 @@ namespace Service_08YS.Entities.Bitacora
                 { Evento.HabitacionPuestaEnMantenimiento,   new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Alto   )         },
                 { Evento.HabitacionEstadoCambiado,          new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Bajo   )         },
                 { Evento.HuespedRegistrado,                 new EventoMetadata_08YS(   Modulo.Huespedes,      Criticidad.Bajo   )         },
-                { Evento.PagoRegistrado,                    new EventoMetadata_08YS(   Modulo.Pagos,          Criticidad.Alto   )         },
+                { Evento.FacturaRegistrada,                    new EventoMetadata_08YS(   Modulo.Facturas,          Criticidad.Alto   )         },
                 { Evento.ConfiguracionHotelActualizada,     new EventoMetadata_08YS(   Modulo.Configuracion,  Criticidad.Alto   )         },
                 { Evento.HabitacionCreada,                  new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Medio  )         },
                 { Evento.HabitacionModificada,              new EventoMetadata_08YS(   Modulo.Habitaciones,   Criticidad.Medio  )         },

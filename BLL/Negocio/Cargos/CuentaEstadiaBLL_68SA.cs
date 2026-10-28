@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace BLL_08YS.Negocio
 {
     /// <summary>
-    /// Cuenta de la estadía: alojamiento (reservado + renovaciones) + cargos adicionales (upgrades y room service) - pagos.
+    /// Cuenta de la estadía: alojamiento (reservado + renovaciones) + cargos adicionales (upgrades y room service) - facturas.
     /// El check-out, el detalle de la estadía, la factura y el comprobante toman el saldo de acá:
     /// la regla está en un solo lugar.
     /// </summary>
@@ -15,18 +15,18 @@ namespace BLL_08YS.Negocio
         #region Campos
 
         private readonly ICargoAdicionalRepository_68SA _cargoRepo;
-        private readonly IPagoRepository_68SA _pagoRepo;
+        private readonly IFacturaRepository_68SA _facturaRepo;
         private readonly IReservaRepository_68SA _reservaRepo;
 
         #endregion
 
         #region Constructor
 
-        public CuentaEstadiaBLL_68SA(ICargoAdicionalRepository_68SA cargoRepo, IPagoRepository_68SA pagoRepo,
+        public CuentaEstadiaBLL_68SA(ICargoAdicionalRepository_68SA cargoRepo, IFacturaRepository_68SA facturaRepo,
                                      IReservaRepository_68SA reservaRepo)
         {
             _cargoRepo = cargoRepo;
-            _pagoRepo = pagoRepo;
+            _facturaRepo = facturaRepo;
             _reservaRepo = reservaRepo;
         }
 
@@ -53,7 +53,7 @@ namespace BLL_08YS.Negocio
                 Alojamiento = cancelada ? 0 : reserva.MontoTotal,
                 AlojamientoReservado = cancelada ? 0 : reserva.MontoOriginal,
                 Cargos = _cargoRepo.GetByReserva(reserva.Id),
-                TotalPagado = _pagoRepo.GetTotalPagado(reserva.Id)
+                TotalPagado = _facturaRepo.GetTotalPagado(reserva.Id)
             };
         }
 

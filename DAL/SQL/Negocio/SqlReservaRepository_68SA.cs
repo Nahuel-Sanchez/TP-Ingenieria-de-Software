@@ -33,7 +33,7 @@ namespace DAL_08YS.SQL.Negocio
         // (evita una query por fila)
         private const string ListadoSelect =
             "SELECT " + BaseColumnas + ", ISNULL(pg.MontoPagado, 0) AS MontoPagado, ISNULL(cg.MontoCargos, 0) AS MontoCargos" + BaseFrom + @"
-             LEFT JOIN (SELECT ReservaID, SUM(Monto) AS MontoPagado FROM Pagos GROUP BY ReservaID) pg
+             LEFT JOIN (SELECT ReservaID, SUM(Monto) AS MontoPagado FROM Facturas GROUP BY ReservaID) pg
              ON pg.ReservaID = r.ReservaID
              LEFT JOIN (SELECT ReservaID, SUM(Monto) AS MontoCargos FROM CargosAdicionales GROUP BY ReservaID) cg
              ON cg.ReservaID = r.ReservaID";

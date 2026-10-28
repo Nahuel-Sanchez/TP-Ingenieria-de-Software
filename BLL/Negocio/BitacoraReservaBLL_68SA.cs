@@ -64,7 +64,7 @@ namespace BLL_08YS.Negocio
         /// <summary>
         /// Recupera un registro histórico como ACTIVO: la reserva vuelve a tener los datos de esa foto y la
         /// bitácora suma un registro "Rollback" (el que estaba activo queda como historia).
-        /// Los cargos adicionales y los pagos no se modifican.
+        /// Los cargos adicionales y las facturas no se modifican.
         /// </summary>
         public void Rollback(BitacoraReserva_68SA registro)
         {

@@ -28,7 +28,7 @@ namespace GUI_08YS.Recepcionista
         private readonly DateTime? _fechaEgresoOrigen;
 
         private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
-        private readonly PagoBLL_68SA _pagoBLL = BLLFactory_08YS.CreatePagoBLL();
+        private readonly FacturaBLL_68SA _facturaBLL = BLLFactory_08YS.CreateFacturaBLL();
         private readonly CuentaEstadiaBLL_68SA _cuentaBLL = BLLFactory_08YS.CreateCuentaEstadiaBLL();
 
         private Reserva_68SA _reserva;
@@ -226,7 +226,7 @@ namespace GUI_08YS.Recepcionista
             {
                 if (_saldoPendiente > 0)
                 {
-                    _pagoBLL.Registrar(new Pago_68SA
+                    _facturaBLL.Registrar(new Factura_68SA
                     {
                         ReservaId = _reserva.Id,
                         Monto = _saldoPendiente, // el vuelto entregado no es un ingreso

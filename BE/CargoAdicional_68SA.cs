@@ -32,7 +32,7 @@ namespace BE_08YS
     }
 
     /// <summary>
-    /// Cuenta de una estadía: alojamiento + cargos adicionales - pagos.
+    /// Cuenta de una estadía: alojamiento + cargos adicionales - facturas.
     /// Es la única fuente del saldo que se cobra en el check-out y del total que muestra la factura.
     /// </summary>
     public class EstadoCuentaReserva_68SA

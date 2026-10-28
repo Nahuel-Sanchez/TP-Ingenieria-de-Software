@@ -8,6 +8,7 @@ using Service_08YS.Entities.Acceso;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -53,9 +54,10 @@ namespace GUI_08YS.Recepcionista
             rbTodos.CheckedChanged += (s, e) => { if (rbTodos.Checked) CambiarFiltro(null, false); };
 
             btnFiltrar.Click += (s, e) => Cargar();
-            btnLimpiar.Click += (s, e) => { txtHabitacion.Text = string.Empty; rbPendientes.Checked = true; Cargar(); };
+            btnLimpiar.Click += (s, e) => LimpiarFiltros();
             btnActualizar.Click += (s, e) => Cargar();
-            txtHabitacion.InnerTextBox.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; Cargar(); } };
+            foreach (var caja in new[] { txtHabitacion, txtHuesped, txtMontoDesde, txtMontoHasta })
+                caja.InnerTextBox.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; Cargar(); } };
 
             // La pantalla queda en el panel del menú aunque se abra otra: el refresco automático
             // corre solo mientras esté puesta (sin consultas a la base en segundo plano)
@@ -252,6 +254,9 @@ namespace GUI_08YS.Recepcionista
         {
             Traducir(this);
             txtHabitacion.PlaceholderText = T("PedidosRS_phHabitacion");
+            txtHuesped.PlaceholderText = T("PedidosRS_phHuesped");
+            txtMontoDesde.PlaceholderText = T("PedidosRS_phMontoDesde");
+            txtMontoHasta.PlaceholderText = T("PedidosRS_phMontoHasta");
         }
 
         #endregion
@@ -260,12 +265,27 @@ namespace GUI_08YS.Recepcionista
 
         private void Cargar(bool silencioso = false)
         {
+            // Montos: vacío = sin límite; si no se pueden leer, no se consulta (en el refresco automático, sin avisar)
+            if (!LeerMonto(txtMontoDesde, out decimal? montoDesde) || !LeerMonto(txtMontoHasta, out decimal? montoHasta))
+            {
+                if (!silencioso) Aviso(this, T("PedidosRS_msgMontoInvalido"));
+                return;
+            }
+            if (montoDesde.HasValue && montoHasta.HasValue && montoDesde.Value > montoHasta.Value)
+            {
+                if (!silencioso) Aviso(this, T("PedidosRS_msgRangoMontos"));
+                return;
+            }
+
             try
             {
                 _pedidos = _roomServiceBLL.GetPedidos(new PedidoRoomServiceFiltro_68SA
                 {
                     Estado = _filtroEstado,
                     NroHabitacion = string.IsNullOrWhiteSpace(txtHabitacion.RealText) ? null : txtHabitacion.RealText.Trim(),
+                    Huesped = string.IsNullOrWhiteSpace(txtHuesped.RealText) ? null : txtHuesped.RealText.Trim(),
+                    MontoDesde = montoDesde,
+                    MontoHasta = montoHasta,
                     // "Entregados hoy": por la hora de entrega (un pedido de anoche entregado hoy también cuenta)
                     EntregadosDesde = _soloHoy ? DateTime.Today : (DateTime?)null
                 });
@@ -285,6 +305,26 @@ namespace GUI_08YS.Recepcionista
         #endregion
 
         #region Métodos auxiliares
+
+        private void LimpiarFiltros()
+        {
+            foreach (var caja in new[] { txtHabitacion, txtHuesped, txtMontoDesde, txtMontoHasta })
+                caja.Text = string.Empty;
+            if (rbPendientes.Checked) Cargar();
+            else rbPendientes.Checked = true;   // el cambio de chip ya vuelve a cargar
+        }
+
+        /// <summary>Lee un monto escrito con el formato regional ("1.500,50"), con o sin "$". Vacío = sin límite.</summary>
+        private static bool LeerMonto(CustomControls.IconPlaceholderTextBox caja, out decimal? monto)
+        {
+            monto = null;
+            string texto = (caja.RealText ?? string.Empty).Replace("$", string.Empty).Trim();
+            if (texto.Length == 0) return true;
+            if (!decimal.TryParse(texto, NumberStyles.Number, CultureInfo.CurrentCulture, out decimal valor) || valor < 0)
+                return false;
+            monto = valor;
+            return true;
+        }
 
         private void CambiarFiltro(EstadoPedidoRoomService? estado, bool soloHoy)
         {

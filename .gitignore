@@ -361,3 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# ---- Horizon Hotel & Resort ----
+# Datos de la casilla de correo (usuario y clave): nunca al repositorio. Modelo: GUI/Config/Correo.config.template
+GUI/Config/Correo.config
+Correo.config
+# Salida del instalador (Inno Setup) y logs
+Instalador/Salida/
+*.iss~
+instalador_db.log
+# Backups de la base
+*.bak

@@ -75,15 +75,15 @@ namespace DAL_08YS
             return lista;
         }
 
-        /// <summary>Cobros por día (tabla Pagos) en el período; sin fechas, toda la historia.</summary>
+        /// <summary>Cobros por día (tabla Facturas) en el período; sin fechas, toda la historia.</summary>
         public List<PuntoSerie_68SA> GetIngresosPorDia(DateTime? desde, DateTime? hasta)
         {
             var parametros = ParametrosPeriodo(desde, hasta);
             string query = $@"
-                SELECT CAST(FechaPago AS DATE) AS Fecha, SUM(Monto) AS Valor
-                FROM Pagos
-                WHERE {FiltroPeriodo("FechaPago", desde, hasta)}
-                GROUP BY CAST(FechaPago AS DATE)
+                SELECT CAST(FechaEmision AS DATE) AS Fecha, SUM(Monto) AS Valor
+                FROM Facturas
+                WHERE {FiltroPeriodo("FechaEmision", desde, hasta)}
+                GROUP BY CAST(FechaEmision AS DATE)
                 ORDER BY Fecha";
             return Serie(GetDataTable(query, parametros));
         }
@@ -343,12 +343,12 @@ namespace DAL_08YS
         }
 
         /// <summary>Cobros del período por medio de pago: Etiqueta = número del enum MetodoPago.</summary>
-        public List<ValorEtiqueta_68SA> GetPagosPorMetodo(DateTime? desde, DateTime? hasta)
+        public List<ValorEtiqueta_68SA> GetFacturacionPorMetodo(DateTime? desde, DateTime? hasta)
         {
             string query = $@"
                 SELECT CAST(MetodoPago AS NVARCHAR(10)) AS Etiqueta, COUNT(*) AS Cantidad, SUM(Monto) AS Valor
-                FROM Pagos
-                WHERE {FiltroPeriodo("FechaPago", desde, hasta)}
+                FROM Facturas
+                WHERE {FiltroPeriodo("FechaEmision", desde, hasta)}
                 GROUP BY MetodoPago
                 ORDER BY MetodoPago";
             return ValoresEtiqueta(GetDataTable(query, ParametrosPeriodo(desde, hasta)));
@@ -647,28 +647,28 @@ namespace DAL_08YS
         public ResumenIngresos_68SA GetResumenIngresos(DateTime? desde, DateTime? hasta)
         {
             var parametros = new List<IDbDataParameter>();
-            string filtroPagos = "1=1";
+            string filtroFacturas = "1=1";
             string filtroReservas = "1=1";
 
             if (desde.HasValue)
             {
-                filtroPagos += " AND FechaPago >= @Desde";
+                filtroFacturas += " AND FechaEmision >= @Desde";
                 filtroReservas += " AND r.FechaIngreso >= @Desde";
                 parametros.Add(Param("@Desde", desde.Value.Date));
             }
             if (hasta.HasValue)
             {
                 DateTime hastaInclusive = hasta.Value.Date.AddDays(1).AddTicks(-1);
-                filtroPagos += " AND FechaPago <= @HastaInclusive";
+                filtroFacturas += " AND FechaEmision <= @HastaInclusive";
                 filtroReservas += " AND r.FechaIngreso <= @Hasta";
                 parametros.Add(Param("@HastaInclusive", hastaInclusive));
                 parametros.Add(Param("@Hasta", hasta.Value.Date));
             }
 
             string query = $@"
-                ;WITH PagosAgg AS (
-                    SELECT ISNULL(SUM(Monto), 0) AS IngresosPeriodo, COUNT(DISTINCT ReservaID) AS CantidadPagos
-                    FROM Pagos WHERE {filtroPagos}
+                ;WITH FacturasAgg AS (
+                    SELECT ISNULL(SUM(Monto), 0) AS IngresosPeriodo, COUNT(DISTINCT ReservaID) AS CantidadFacturas
+                    FROM Facturas WHERE {filtroFacturas}
                 ),
                 ReservasAgg AS (
                     SELECT
@@ -680,7 +680,7 @@ namespace DAL_08YS
                 ),
                 AnuladasAgg AS (
                     SELECT ISNULL(SUM(p.Monto), 0) AS MontoAnulado
-                    FROM Pagos p
+                    FROM Facturas p
                     INNER JOIN Reservas r ON r.ReservaID = p.ReservaID
                     WHERE r.Estado = 3 AND {filtroReservas}
                 ),
@@ -692,23 +692,23 @@ namespace DAL_08YS
                     INNER JOIN Reservas r ON r.ReservaID = c.ReservaID
                     WHERE r.Estado <> 3 AND {filtroReservas}
                 )
-                SELECT pa.IngresosPeriodo, pa.CantidadPagos,
+                SELECT pa.IngresosPeriodo, pa.CantidadFacturas,
                        ra.TotalReservasPeriodo, ra.ReservasAnuladas, ra.MontoOrigenReserva, ra.MontoOrigenRenovacion,
                        aa.MontoAnulado, ca.MontoOrigenRoomService, ca.MontoOrigenUpgrade
-                FROM PagosAgg pa CROSS JOIN ReservasAgg ra CROSS JOIN AnuladasAgg aa CROSS JOIN CargosAgg ca";
+                FROM FacturasAgg pa CROSS JOIN ReservasAgg ra CROSS JOIN AnuladasAgg aa CROSS JOIN CargosAgg ca";
 
             DataTable dt = GetDataTable(query, parametros.ToArray());
             var row = dt.Rows[0];
 
             decimal ingresos = Convert.ToDecimal(row["IngresosPeriodo"]);
-            int cantidadPagos = Convert.ToInt32(row["CantidadPagos"]);
+            int cantidadFacturas = Convert.ToInt32(row["CantidadFacturas"]);
             int totalReservasPeriodo = Convert.ToInt32(row["TotalReservasPeriodo"]);
             int reservasAnuladas = Convert.ToInt32(row["ReservasAnuladas"]);
 
             var resumen = new ResumenIngresos_68SA
             {
                 IngresosPeriodo = ingresos,
-                TicketPromedio = cantidadPagos > 0 ? Math.Round(ingresos / cantidadPagos, 2) : 0,
+                TicketPromedio = cantidadFacturas > 0 ? Math.Round(ingresos / cantidadFacturas, 2) : 0,
                 PorcentajeReservasAnuladas = totalReservasPeriodo > 0
                     ? Math.Round((decimal)reservasAnuladas / totalReservasPeriodo * 100, 2) : 0,
                 MontoAnuladoPeriodo = Convert.ToDecimal(row["MontoAnulado"])
@@ -725,13 +725,13 @@ namespace DAL_08YS
         public ResumenHuespedes_68SA GetResumenHuespedes(DateTime? desde, DateTime? hasta)
         {
             string filtroReservas = "1=1";
-            string filtroPagos = "1=1";
+            string filtroFacturas = "1=1";
             string condicionRecurrente = "0";
 
             if (desde.HasValue)
             {
                 filtroReservas += " AND r.FechaIngreso >= @Desde";
-                filtroPagos += " AND FechaPago >= @Desde";
+                filtroFacturas += " AND FechaEmision >= @Desde";
                 condicionRecurrente = @"CASE WHEN EXISTS (
                 SELECT 1 FROM Reservas r2
                 WHERE r2.HuespedTitularID = hu.HuespedID AND r2.FechaIngreso < @Desde
@@ -740,7 +740,7 @@ namespace DAL_08YS
             if (hasta.HasValue)
             {
                 filtroReservas += " AND r.FechaIngreso <= @Hasta";
-                filtroPagos += " AND FechaPago <= @HastaInclusive";
+                filtroFacturas += " AND FechaEmision <= @HastaInclusive";
             }
 
             // Cada llamada a GetDataTable necesita SUS PROPIAS instancias de parámetro — no se puede
@@ -769,7 +769,7 @@ namespace DAL_08YS
                 ),
                 IngresosAgg AS (
                     SELECT ISNULL(SUM(Monto), 0) AS IngresosPeriodo
-                    FROM Pagos WHERE {filtroPagos}
+                    FROM Facturas WHERE {filtroFacturas}
                 )
                 SELECT
                     (SELECT COUNT(*) FROM HuespedesPeriodo) AS Total,

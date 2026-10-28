@@ -115,11 +115,11 @@ namespace BLL_08YS
             return new ReservaBLL_68SA(reservaRepo, CreateHuespedBLL(), CreateBitacoraBLL());
         }
 
-        public static PagoBLL_68SA CreatePagoBLL()
+        public static FacturaBLL_68SA CreateFacturaBLL()
         {
             var factory = new SqlDbFactory_08YS();
-            IPagoRepository_68SA pagoRepo = new SqlPagoRepository_68SA(factory);
-            return new PagoBLL_68SA(pagoRepo, CreateBitacoraBLL());
+            IFacturaRepository_68SA facturaRepo = new SqlFacturaRepository_68SA(factory);
+            return new FacturaBLL_68SA(facturaRepo, CreateBitacoraBLL());
         }
 
         public static ConfiguracionHotelBLL_68SA CreateConfiguracionHotelBLL()
@@ -145,7 +145,6 @@ namespace BLL_08YS
             var factory = new SqlDbFactory_08YS();
             ICambioHabitacionRepository_68SA cambioRepo = new SqlCambioHabitacionRepository_68SA(factory);
             IReservaRepository_68SA reservaRepo = new SqlReservaRepository_68SA(factory);
-            IHabitacionRepository_68SA habitacionRepo = new SqlHabitacionRepository_68SA(factory);
 
             // Una política por motivo: agregar un motivo nuevo es sumar una clase a esta lista
             var politicas = new IPoliticaCambioHabitacion_68SA[]
@@ -153,7 +152,7 @@ namespace BLL_08YS
                 new PoliticaUpgrade_68SA(),
                 new PoliticaReubicacionAdministrativa_68SA()
             };
-            return new CambioHabitacionBLL_68SA(cambioRepo, reservaRepo, habitacionRepo, CreateBitacoraBLL(), politicas);
+            return new CambioHabitacionBLL_68SA(cambioRepo, reservaRepo, CreateBitacoraBLL(), politicas);
         }
 
         public static RoomServiceBLL_68SA CreateRoomServiceBLL()
@@ -161,8 +160,7 @@ namespace BLL_08YS
             var factory = new SqlDbFactory_08YS();
             IPedidoRoomServiceRepository_68SA pedidoRepo = new SqlPedidoRoomServiceRepository_68SA(factory);
             ICatalogoRoomServiceRepository_68SA catalogoRepo = new SqlCatalogoRoomServiceRepository_68SA(factory);
-            IReservaRepository_68SA reservaRepo = new SqlReservaRepository_68SA(factory);
-            return new RoomServiceBLL_68SA(pedidoRepo, catalogoRepo, reservaRepo, CreateBitacoraBLL());
+            return new RoomServiceBLL_68SA(pedidoRepo, catalogoRepo, CreateBitacoraBLL());
         }
 
         public static CatalogoRoomServiceBLL_68SA CreateCatalogoRoomServiceBLL()
@@ -176,9 +174,9 @@ namespace BLL_08YS
         {
             var factory = new SqlDbFactory_08YS();
             ICargoAdicionalRepository_68SA cargoRepo = new SqlCargoAdicionalRepository_68SA(factory);
-            IPagoRepository_68SA pagoRepo = new SqlPagoRepository_68SA(factory);
+            IFacturaRepository_68SA facturaRepo = new SqlFacturaRepository_68SA(factory);
             IReservaRepository_68SA reservaRepo = new SqlReservaRepository_68SA(factory);
-            return new CuentaEstadiaBLL_68SA(cargoRepo, pagoRepo, reservaRepo);
+            return new CuentaEstadiaBLL_68SA(cargoRepo, facturaRepo, reservaRepo);
         }
 
         public static BitacoraReservaBLL_68SA CreateBitacoraReservaBLL()

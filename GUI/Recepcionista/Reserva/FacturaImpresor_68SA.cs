@@ -18,7 +18,7 @@ namespace GUI_08YS.Recepcionista
 
         #region Constructor
 
-        public FacturaImpresor_68SA(Reserva_68SA reserva, List<Pago_68SA> pagos)
+        public FacturaImpresor_68SA(Reserva_68SA reserva, List<Factura_68SA> facturas)
         {
             _reserva = reserva;
         }
