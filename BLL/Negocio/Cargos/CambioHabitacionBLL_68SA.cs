@@ -14,23 +14,24 @@ namespace BLL_08YS.Negocio
     /// viven en su política.
     /// Al registrar, la BLL valida lo que depende solo de la solicitud (permiso y datos del motivo) y
     /// sp_RegistrarCambioHabitacion valida el estado de la base y registra en una sola llamada y una sola transacción.
+    /// Solo usa su propio repositorio: la reserva la pide a ReservaBLL_68SA (que es la dueña del repositorio de reservas).
     /// </summary>
     public class CambioHabitacionBLL_68SA
     {
         #region Campos
 
         private readonly ICambioHabitacionRepository_68SA _cambioRepo;
-        private readonly IReservaRepository_68SA _reservaRepo;
+        private readonly ReservaBLL_68SA _reservaBll;
         private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly Dictionary<MotivoCambioHabitacion, IPoliticaCambioHabitacion_68SA> _politicas;
 
         #endregion
 
-        public CambioHabitacionBLL_68SA(ICambioHabitacionRepository_68SA cambioRepo, IReservaRepository_68SA reservaRepo,
+        public CambioHabitacionBLL_68SA(ICambioHabitacionRepository_68SA cambioRepo, ReservaBLL_68SA reservaBll,
                                         BitacoraBLL_08YS bitacoraBll, IEnumerable<IPoliticaCambioHabitacion_68SA> politicas)
         {
             _cambioRepo = cambioRepo;
-            _reservaRepo = reservaRepo;
+            _reservaBll = reservaBll;
             _bitacoraBll = bitacoraBll;
             _politicas = politicas.ToDictionary(p => p.Motivo);
         }
@@ -47,8 +48,6 @@ namespace BLL_08YS.Negocio
             DateTime desde = reserva.FechaIngreso.Date > hoy.Date ? reserva.FechaIngreso.Date : hoy.Date;
             return CalcularNochesRestantes(reserva.FechaEgreso, desde);
         }
-
-        public decimal GetTarifaVigente(int reservaId) => _cambioRepo.GetTarifaVigente(reservaId);
 
         /// <summary>Habitaciones a las que se puede mudar al huésped según el motivo.</summary>
         public List<Habitacion_68SA> GetOpciones(int reservaId, MotivoCambioHabitacion motivo)
@@ -103,7 +102,7 @@ namespace BLL_08YS.Negocio
             if (habitacionNueva?.Tipo == null) throw new HabitacionNoEncontradaException_68SA();
 
             int noches = CalcularNochesRestantes(reserva, DateTime.Today);
-            return Politica(motivo).Cotizar(GetTarifaVigente(reserva.Id), habitacionNueva.Tipo.TarifaNoche, noches);
+            return Politica(motivo).Cotizar(_reservaBll.GetTarifaVigente(reserva.Id), habitacionNueva.Tipo.TarifaNoche, noches);
         }
 
         #endregion
@@ -119,7 +118,8 @@ namespace BLL_08YS.Negocio
 
         private Reserva_68SA ObtenerReservaModificable(int reservaId, IPoliticaCambioHabitacion_68SA politica)
         {
-            var reserva = _reservaRepo.GetById(reservaId) ?? throw new ReservaNoEncontradaException_68SA();
+            // ReservaBLL_68SA.GetById ya lanza ReservaNoEncontradaException_68SA si no existe
+            var reserva = _reservaBll.GetById(reservaId);
             if (!AdmiteEstado(politica.Motivo, reserva.Estado))
                 throw new EstadoReservaInvalidoException_68SA(politica.AdmiteReservaConfirmada
                     ? "Solo se puede reubicar una reserva Confirmada o una estadía En Curso."

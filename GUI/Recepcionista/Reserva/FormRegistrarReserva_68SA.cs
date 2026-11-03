@@ -237,7 +237,7 @@ namespace GUI_08YS.Recepcionista
 
         private void ActualizarMarcaDetectada()
         {
-            string marca = TarjetaValidador_68SA.DetectarMarca(txtNumeroTarjeta.RealText);
+            string marca = FacturaBLL_68SA.DetectarMarcaTarjeta(txtNumeroTarjeta.RealText);
             if (marca == "Desconocida")
                 marca = TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_txtMarcaDesconocida");
             lblMarcaTarjetaDetectada.Text = string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_txtMarcaDetectada"), marca);
@@ -330,7 +330,7 @@ namespace GUI_08YS.Recepcionista
             }
             else // Tarjeta
             {
-                if (!TarjetaValidador_68SA.EsNumeroValido(txtNumeroTarjeta.RealText))
+                if (!FacturaBLL_68SA.EsNumeroTarjetaValido(txtNumeroTarjeta.RealText))
                 {
                     MessageBox.Show(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgTarjetaNumeroInvalido"),
                         TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloTarjetaInvalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -342,18 +342,18 @@ namespace GUI_08YS.Recepcionista
                         TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloTarjetaInvalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                if (!TarjetaValidador_68SA.EsVencimientoValido((int)nudMesVencimiento.Value, (int)nudAnioVencimiento.Value, out string errorVencimiento))
+                if (!FacturaBLL_68SA.EsVencimientoValido((int)nudMesVencimiento.Value, (int)nudAnioVencimiento.Value, out string errorVencimiento))
                 {
                     string clave = errorVencimiento == "vencExpirado" ? "RegistrarReserva_msgTarjetaVencida" : "RegistrarReserva_msgTarjetaVencimientoInvalido";
                     MessageBox.Show(TraductorManager_08YS.Instance.GetTexto(clave),
                         TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloTarjetaInvalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                string marcaDetectada = TarjetaValidador_68SA.DetectarMarca(txtNumeroTarjeta.RealText);
-                if (!TarjetaValidador_68SA.EsCvvValido(txtCvv.RealText, marcaDetectada))
+                string marcaDetectada = FacturaBLL_68SA.DetectarMarcaTarjeta(txtNumeroTarjeta.RealText);
+                if (!FacturaBLL_68SA.EsCvvValido(txtCvv.RealText, marcaDetectada))
                 {
                     MessageBox.Show(string.Format(TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_msgTarjetaCvvInvalido"),
-                            TarjetaValidador_68SA.LongitudCvvEsperada(marcaDetectada)),
+                            FacturaBLL_68SA.LongitudCvvEsperada(marcaDetectada)),
                         TraductorManager_08YS.Instance.GetTexto("RegistrarReserva_tituloTarjetaInvalida"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }

@@ -8,7 +8,12 @@ namespace BE_08YS
         /// <summary>Lo pide el huésped: solo a una categoría superior y se cobra la diferencia.</summary>
         Upgrade = 0,
         /// <summary>Lo decide el hotel (mantenimiento, problema físico, etc.): a cualquier habitación libre, sin cargo.</summary>
-        Administrativo = 1
+        Administrativo = 1,
+        /// <summary>
+        /// Registro inicial del historial de habitaciones de la reserva: la habitación con la que se reservó.
+        /// No es un cambio; lo agrega sp_RegistrarCambioHabitacion antes del primer cambio de la reserva.
+        /// </summary>
+        AsignacionInicial = 2
     }
 
     /// <summary>Pedido de cambio que arma la pantalla y valida la BLL.</summary>
@@ -43,7 +48,11 @@ namespace BE_08YS
         #endregion
     }
 
-    /// <summary>Cambio de habitación registrado (tabla HistorialCambiosHabitacion).</summary>
+    /// <summary>
+    /// Cambio de habitación registrado. HistorialCambiosHabitacion guarda, por reserva, en qué habitación está
+    /// desde cada momento (una sola relación con Habitaciones); la habitación y la tarifa anteriores de un
+    /// cambio son las del registro previo de la misma reserva.
+    /// </summary>
     public class CambioHabitacion_68SA
     {
         #region Propiedades

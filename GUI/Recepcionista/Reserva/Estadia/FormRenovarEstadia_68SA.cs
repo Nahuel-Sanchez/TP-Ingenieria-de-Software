@@ -32,7 +32,7 @@ namespace GUI_08YS.Recepcionista
         public FormRenovarEstadia_68SA(Reserva_68SA reserva, Habitacion_68SA habitacion)
         {
             _reserva = reserva;
-            _tarifaVigente = BLLFactory_08YS.CreateCambioHabitacionBLL().GetTarifaVigente(reserva.Id);
+            _tarifaVigente = _reservaBLL.GetTarifaVigente(reserva.Id);
             InitializeComponent();
 
             PermissionFilter_08YS.Aplicar(this, _mapaPermisos);

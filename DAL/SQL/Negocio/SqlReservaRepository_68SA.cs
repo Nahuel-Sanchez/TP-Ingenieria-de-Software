@@ -182,6 +182,12 @@ namespace DAL_08YS.SQL.Negocio
             return dt.Rows.Count > 0 ? ReservaMapper_68SA.FromDataRow(dt.Rows[0]) : null;
         }
 
+        public decimal GetTarifaVigente(int reservaId)
+        {
+            return ExecuteScalar<decimal>("SELECT dbo.fn_TarifaVigenteReserva(@ReservaID)",
+                new[] { Param("@ReservaID", reservaId) });
+        }
+
         #endregion
 
         #region Operaciones

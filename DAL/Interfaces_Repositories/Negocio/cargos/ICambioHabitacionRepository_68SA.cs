@@ -8,9 +8,6 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio.cargos
     {
         #region Consultas
 
-        /// <summary>Tarifa del último upgrade o, si no hubo, la tarifa con la que se reservó (dbo.fn_TarifaVigenteReserva).</summary>
-        decimal GetTarifaVigente(int reservaId);
-
         /// <summary>Habitaciones libres hasta el egreso y con capacidad suficiente; con soloUpgrade, además de tarifa mayor.</summary>
         List<Habitacion_68SA> GetHabitacionesParaCambio(int reservaId, bool soloUpgrade);
 

@@ -20,6 +20,10 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio
         List<Huesped_68SA> GetAcompanantes(int reservaId);
         Reserva_68SA GetEnCursoPorHabitacion(int habitacionId);
 
+        /// <summary>Tarifa por noche que paga hoy la reserva: la de su último cambio de habitación o, si no hubo,
+        /// la de la habitación con la que se reservó (dbo.fn_TarifaVigenteReserva).</summary>
+        decimal GetTarifaVigente(int reservaId);
+
         #endregion
 
         #region Operaciones

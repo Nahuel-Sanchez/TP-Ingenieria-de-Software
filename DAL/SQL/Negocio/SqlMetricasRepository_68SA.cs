@@ -195,7 +195,7 @@ namespace DAL_08YS
             string query = $@"
                 SELECT t.Nombre AS Etiqueta, COUNT(*) AS Cantidad, ISNULL(SUM(c.Monto), 0) AS Valor
                 FROM HistorialCambiosHabitacion hc
-                INNER JOIN Habitaciones h     ON h.HabitacionID = hc.HabitacionNuevaID
+                INNER JOIN Habitaciones h     ON h.HabitacionID = hc.HabitacionID
                 INNER JOIN TiposHabitacion t  ON t.TipoHabitacionID = h.TipoHabitacionID
                 LEFT  JOIN CargosAdicionales c ON c.CargoID = hc.CargoID
                 WHERE hc.Motivo = 0 AND {FiltroPeriodo("hc.FechaCambio", desde, hasta)}
@@ -254,16 +254,22 @@ namespace DAL_08YS
         public List<CambioHabitacionItem_68SA> GetCambiosHabitacion(DateTime? desde, DateTime? hasta, int cantidad)
         {
             var parametros = new List<IDbDataParameter>(ParametrosPeriodo(desde, hasta)) { Param("@Top", Math.Max(1, cantidad)) };
+            // La habitación anterior de cada cambio es la del registro previo del historial de la reserva
             string query = $@"
+                ;WITH hc AS (
+                    SELECT h.CambioID, h.ReservaID, h.Motivo, h.CargoID, h.HabitacionID, h.FechaCambio,
+                           LAG(h.HabitacionID) OVER (PARTITION BY h.ReservaID ORDER BY h.FechaCambio, h.CambioID) AS HabitacionAnteriorID
+                    FROM HistorialCambiosHabitacion h
+                )
                 SELECT TOP (@Top) hc.FechaCambio, hc.ReservaID, hc.Motivo,
                        ha.NroHabitacion AS Anterior, hn.NroHabitacion AS Nueva, t.Nombre AS TipoNuevo,
                        ISNULL(c.Monto, 0) AS Monto
-                FROM HistorialCambiosHabitacion hc
+                FROM hc
                 INNER JOIN Habitaciones ha     ON ha.HabitacionID = hc.HabitacionAnteriorID
-                INNER JOIN Habitaciones hn     ON hn.HabitacionID = hc.HabitacionNuevaID
+                INNER JOIN Habitaciones hn     ON hn.HabitacionID = hc.HabitacionID
                 INNER JOIN TiposHabitacion t   ON t.TipoHabitacionID = hn.TipoHabitacionID
                 LEFT  JOIN CargosAdicionales c ON c.CargoID = hc.CargoID
-                WHERE {FiltroPeriodo("hc.FechaCambio", desde, hasta)}
+                WHERE hc.Motivo <> 2 AND {FiltroPeriodo("hc.FechaCambio", desde, hasta)}
                 ORDER BY hc.FechaCambio DESC, hc.CambioID DESC";
 
             var lista = new List<CambioHabitacionItem_68SA>();

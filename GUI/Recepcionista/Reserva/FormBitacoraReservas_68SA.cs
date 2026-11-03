@@ -14,7 +14,7 @@ namespace GUI_08YS.Recepcionista
 {
     /// <summary>
     /// Bitácora de cambios de reservas (patrón de la cátedra): cada alta y cada cambio de una reserva
-    /// (modificación, cancelación, no-show, check-in, check-out, renovación, upgrade o reubicación) deja una
+    /// (modificación, cancelación, no-show, check-in, check-out, renovación o cambio de habitación) deja una
     /// foto completa de la reserva. Filtros por código, nombre, operación y rango de fechas; Aplicar / Limpiar / Salir.
     /// A la derecha se ve, campo por campo, qué cambió en el registro elegido respecto del anterior.
     /// "Ver historial" muestra todos los registros de la reserva elegida y "Restaurar como activo" (rollback,
@@ -334,10 +334,10 @@ namespace GUI_08YS.Recepcionista
                 case OperacionBitacoraReserva.Cancelacion:
                 case OperacionBitacoraReserva.NoShow:
                     return ColorError;
-                case OperacionBitacoraReserva.Upgrade:
+                case OperacionBitacoraReserva.CambioHabitacionHuesped:
                 case OperacionBitacoraReserva.Renovacion:
                     return Color.Goldenrod;
-                case OperacionBitacoraReserva.CambioAdministrativo:
+                case OperacionBitacoraReserva.CambioHabitacionAdministrativo:
                 case OperacionBitacoraReserva.CambioHabitacion:
                 case OperacionBitacoraReserva.CheckOut:
                     return ColorAzul;

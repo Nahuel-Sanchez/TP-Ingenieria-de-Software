@@ -25,17 +25,17 @@ namespace BLL_08YS
         #region Campos
 
         private readonly IUserRepository_08YS _userRepository;
-        private readonly IRolRepository_08YS _rolRepo;
+        private readonly RolBLL_08YS _rolBll;   // el rol se pide a RolBLL_08YS, dueña del repositorio de roles
         private readonly BitacoraBLL_08YS _bitacoraBll;
 
         #endregion
 
         #region Constructor
 
-        public UserBLL_08YS(IUserRepository_08YS userRepository, IRolRepository_08YS rolRepo, BitacoraBLL_08YS bitacoraBll)
+        public UserBLL_08YS(IUserRepository_08YS userRepository, RolBLL_08YS rolBll, BitacoraBLL_08YS bitacoraBll)
         {
             this._userRepository = userRepository;
-            _rolRepo = rolRepo;
+            _rolBll = rolBll;
             _bitacoraBll = bitacoraBll;
         }
 
@@ -61,7 +61,7 @@ namespace BLL_08YS
 
         public User_08YS Login(User_08YS user, out bool passwordDefault)
         {
-            user.Rol = _rolRepo.GetById(user.Rol.RolID);
+            user.Rol = _rolBll.GetById(user.Rol.RolID);
             SessionManager_08YS.Instance.SetCurrentUser(user);
 
             _bitacoraBll.RegistrarEvento(Evento.LoginExitoso);
@@ -83,7 +83,7 @@ namespace BLL_08YS
         }
 
         public bool ManejaInconsistencias(User_08YS user) =>
-            _rolRepo.GetById(user.Rol.RolID).GetPermisos().Any(p => p.Nombre == Permisos.ManejarInconsistencias.ToString() );
+            _rolBll.GetById(user.Rol.RolID).GetPermisos().Any(p => p.Nombre == Permisos.ManejarInconsistencias.ToString() );
 
         #endregion
 

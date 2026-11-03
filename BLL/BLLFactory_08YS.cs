@@ -31,9 +31,8 @@ namespace BLL_08YS
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
             IUserRepository_08YS repo = new SqlUserRepository_08YS(factory);
-            IRolRepository_08YS rolRepo = new SqlRolRepository_08YS(factory);
             BitacoraBLL_08YS bitacoraBll = CreateBitacoraBLL();
-            return new UserBLL_08YS(repo, rolRepo, bitacoraBll);
+            return new UserBLL_08YS(repo, CreateRolBLL(), bitacoraBll);
         }
 
         public static BitacoraBLL_08YS CreateBitacoraBLL()
@@ -46,9 +45,10 @@ namespace BLL_08YS
         public static FamiliaBLL_08YS CreateFamiliaBLL()
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
+            // RolBLL se pasa como Func (se crea recién cuando FamiliaBLL la necesita): RolBLL también usa FamiliaBLL
             return new FamiliaBLL_08YS(
                        new SqlFamiliaRepository_08YS(factory),
-                       new SqlRolRepository_08YS(factory),
+                       CreateRolBLL,
                        new SqlPermisoRepository_08YS(factory),
                        CreateBitacoraBLL()
                    );
@@ -58,10 +58,9 @@ namespace BLL_08YS
         {
             IDbFactory_08YS factory = new SqlDbFactory_08YS();
             IRolRepository_08YS rolRepo = new SqlRolRepository_08YS(factory);
-            IFamiliaRepository_08YS familiaRepo = new SqlFamiliaRepository_08YS(factory);
             IPermisoRepository_08YS permisoRepo = new SqlPermisoRepository_08YS(factory);
             BitacoraBLL_08YS bitacoraBll = CreateBitacoraBLL();
-            return new RolBLL_08YS(rolRepo, familiaRepo, permisoRepo, bitacoraBll);
+            return new RolBLL_08YS(rolRepo, CreateFamiliaBLL(), permisoRepo, bitacoraBll);
         }
 
         public static DvBLL_08YS CreateDvBLL()
@@ -144,7 +143,6 @@ namespace BLL_08YS
         {
             var factory = new SqlDbFactory_08YS();
             ICambioHabitacionRepository_68SA cambioRepo = new SqlCambioHabitacionRepository_68SA(factory);
-            IReservaRepository_68SA reservaRepo = new SqlReservaRepository_68SA(factory);
 
             // Una política por motivo: agregar un motivo nuevo es sumar una clase a esta lista
             var politicas = new IPoliticaCambioHabitacion_68SA[]
@@ -152,15 +150,16 @@ namespace BLL_08YS
                 new PoliticaUpgrade_68SA(),
                 new PoliticaReubicacionAdministrativa_68SA()
             };
-            return new CambioHabitacionBLL_68SA(cambioRepo, reservaRepo, CreateBitacoraBLL(), politicas);
+            // Cada BLL usa solo su repositorio: la reserva se pide a ReservaBLL
+            return new CambioHabitacionBLL_68SA(cambioRepo, CreateReservaBLL(), CreateBitacoraBLL(), politicas);
         }
 
         public static RoomServiceBLL_68SA CreateRoomServiceBLL()
         {
             var factory = new SqlDbFactory_08YS();
             IPedidoRoomServiceRepository_68SA pedidoRepo = new SqlPedidoRoomServiceRepository_68SA(factory);
-            ICatalogoRoomServiceRepository_68SA catalogoRepo = new SqlCatalogoRoomServiceRepository_68SA(factory);
-            return new RoomServiceBLL_68SA(pedidoRepo, catalogoRepo, CreateBitacoraBLL());
+            // La carta se pide a CatalogoRoomServiceBLL (dueña del repositorio del catálogo)
+            return new RoomServiceBLL_68SA(pedidoRepo, CreateCatalogoRoomServiceBLL(), CreateBitacoraBLL());
         }
 
         public static CatalogoRoomServiceBLL_68SA CreateCatalogoRoomServiceBLL()
@@ -174,9 +173,8 @@ namespace BLL_08YS
         {
             var factory = new SqlDbFactory_08YS();
             ICargoAdicionalRepository_68SA cargoRepo = new SqlCargoAdicionalRepository_68SA(factory);
-            IFacturaRepository_68SA facturaRepo = new SqlFacturaRepository_68SA(factory);
-            IReservaRepository_68SA reservaRepo = new SqlReservaRepository_68SA(factory);
-            return new CuentaEstadiaBLL_68SA(cargoRepo, facturaRepo, reservaRepo);
+            // La reserva y lo pagado se piden a ReservaBLL y FacturaBLL (dueñas de esos repositorios)
+            return new CuentaEstadiaBLL_68SA(cargoRepo, CreateFacturaBLL(), CreateReservaBLL());
         }
 
         public static BitacoraReservaBLL_68SA CreateBitacoraReservaBLL()

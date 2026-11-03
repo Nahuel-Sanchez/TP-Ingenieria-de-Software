@@ -69,6 +69,12 @@ namespace BLL_08YS.Negocio
             return _reservaRepo.GetEnCursoPorHabitacion(habitacionId);
         }
 
+        /// <summary>Tarifa por noche que paga hoy la reserva (si hubo un cambio de habitación, la de la habitación nueva).</summary>
+        public decimal GetTarifaVigente(int reservaId)
+        {
+            return _reservaRepo.GetTarifaVigente(reservaId);
+        }
+
         #endregion
 
         #region Operaciones

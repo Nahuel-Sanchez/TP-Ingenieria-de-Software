@@ -22,6 +22,7 @@ namespace GUI_08YS.Recepcionista
         #region Campos
 
         private readonly CambioHabitacionBLL_68SA _cambioBLL = BLLFactory_08YS.CreateCambioHabitacionBLL();
+        private readonly ReservaBLL_68SA _reservaBLL = BLLFactory_08YS.CreateReservaBLL();
         private readonly Reserva_68SA _reserva;
         private readonly MotivoCambioHabitacion? _motivoFijo;
 
@@ -81,7 +82,7 @@ namespace GUI_08YS.Recepcionista
 
         private void CargarEstadia()
         {
-            _tarifaVigente = _cambioBLL.GetTarifaVigente(_reserva.Id);
+            _tarifaVigente = _reservaBLL.GetTarifaVigente(_reserva.Id);
             _nochesRestantes = CambioHabitacionBLL_68SA.CalcularNochesRestantes(_reserva, DateTime.Today);
 
             string tipo = _reserva.Habitacion.Tipo?.Nombre;

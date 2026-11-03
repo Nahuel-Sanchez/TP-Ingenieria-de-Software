@@ -17,12 +17,6 @@ namespace DAL_08YS.SQL.Negocio
 
         #region Consultas
 
-        public decimal GetTarifaVigente(int reservaId)
-        {
-            return ExecuteScalar<decimal>("SELECT dbo.fn_TarifaVigenteReserva(@ReservaID)",
-                new[] { Param("@ReservaID", reservaId) });
-        }
-
         public List<Habitacion_68SA> GetHabitacionesParaCambio(int reservaId, bool soloUpgrade)
         {
             DataTable dt = GetDataTable("sp_GetHabitacionesParaCambio",
@@ -35,17 +29,28 @@ namespace DAL_08YS.SQL.Negocio
 
         public List<CambioHabitacion_68SA> GetByReserva(int reservaId)
         {
+            // Historial de habitaciones de la reserva: cada registro dice en qué habitación está desde ese
+            // momento y qué tarifa paga. La habitación y la tarifa anteriores de un cambio son las del registro
+            // previo (LAG); el registro inicial (Motivo 2, la habitación con la que se reservó) no es un cambio.
             DataTable dt = GetDataTable(@"
+                ;WITH hc AS (
+                    SELECT h.CambioID, h.ReservaID, h.Motivo, h.Observacion, h.CargoID, h.HabitacionID, h.TarifaNoche,
+                           h.NochesRestantes, h.FechaCambio,
+                           LAG(h.HabitacionID) OVER (PARTITION BY h.ReservaID ORDER BY h.FechaCambio, h.CambioID) AS HabitacionAnteriorID,
+                           LAG(h.TarifaNoche)  OVER (PARTITION BY h.ReservaID ORDER BY h.FechaCambio, h.CambioID) AS TarifaAnterior
+                    FROM HistorialCambiosHabitacion h
+                    WHERE h.ReservaID = @ReservaID
+                )
                 SELECT hc.CambioID, hc.ReservaID, hc.Motivo, hc.Observacion, hc.CargoID,
                        hc.HabitacionAnteriorID, ha.NroHabitacion AS NroHabitacionAnterior,
-                       hc.HabitacionNuevaID, hn.NroHabitacion AS NroHabitacionNueva,
-                       hc.TarifaAnterior, hc.TarifaNueva, hc.NochesRestantes, hc.FechaCambio,
+                       hc.HabitacionID AS HabitacionNuevaID, hn.NroHabitacion AS NroHabitacionNueva,
+                       hc.TarifaAnterior, hc.TarifaNoche AS TarifaNueva, hc.NochesRestantes, hc.FechaCambio,
                        ISNULL(c.Monto, 0) AS Monto
-                FROM HistorialCambiosHabitacion hc
+                FROM hc
                 INNER JOIN Habitaciones ha ON ha.HabitacionID = hc.HabitacionAnteriorID
-                INNER JOIN Habitaciones hn ON hn.HabitacionID = hc.HabitacionNuevaID
+                INNER JOIN Habitaciones hn ON hn.HabitacionID = hc.HabitacionID
                 LEFT  JOIN CargosAdicionales c ON c.CargoID = hc.CargoID
-                WHERE hc.ReservaID = @ReservaID
+                WHERE hc.Motivo <> 2
                 ORDER BY hc.FechaCambio, hc.CambioID",
                 new[] { Param("@ReservaID", reservaId) });
 

@@ -19,16 +19,16 @@ namespace BLL_08YS
 
         private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly IRolRepository_08YS _rolRepo;
-        private readonly IFamiliaRepository_08YS _familiaRepo;
+        private readonly FamiliaBLL_08YS _familiaBll;   // las familias se piden a FamiliaBLL_08YS, dueña del repositorio de familias
 
         #endregion
 
         #region Constructor
 
-        public RolBLL_08YS(IRolRepository_08YS rolRepo, IFamiliaRepository_08YS familiaRepo, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
+        public RolBLL_08YS(IRolRepository_08YS rolRepo, FamiliaBLL_08YS familiaBll, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
         {
             _rolRepo = rolRepo;
-            _familiaRepo = familiaRepo;
+            _familiaBll = familiaBll;
             _bitacoraBll = bitacoraBll;
         }
 
@@ -40,10 +40,15 @@ namespace BLL_08YS
 
         public List<Rol_08YS> GetAllPlano() => _rolRepo.GetAllPlano();
 
+        /// <summary>Roles armados con las familias ya cargadas (las comparte quien llama, por ejemplo FamiliaBLL_08YS).</summary>
+        public List<Rol_08YS> GetAll(Dictionary<int, Familia_08YS> familiasCompartidas) => _rolRepo.GetAll(familiasCompartidas);
+
+        public Rol_08YS GetById(int rolId) => _rolRepo.GetById(rolId);
+
         public List<AccessComponent_08YS> GetComponentesDisponibles()
         {
             var permisos = _permisoRepo.GetAll().Cast<AccessComponent_08YS>();
-            var familias = _familiaRepo.GetAllRoots().Cast<AccessComponent_08YS>();
+            var familias = _familiaBll.GetAll().Cast<AccessComponent_08YS>();
             return permisos.Concat(familias).ToList();
         }
 

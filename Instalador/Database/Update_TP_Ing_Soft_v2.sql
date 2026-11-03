@@ -120,7 +120,7 @@ BEGIN
     	[UsuarioRegistroDNI] [int] NULL,
     	[FechaRegistro] [datetime] NOT NULL,
     	[MontoOriginal] [decimal](10, 2) NOT NULL,
-    	[Operacion] [nvarchar](30) NOT NULL,
+    	[Operacion] [nvarchar](40) NOT NULL,
     	[CambioID] [int] NULL,
     	[Fecha] [date] NOT NULL,
     	[Hora] [time](0) NOT NULL,
@@ -222,13 +222,11 @@ BEGIN
     CREATE TABLE [dbo].[HistorialCambiosHabitacion](
     	[CambioID] [int] IDENTITY(1,1) NOT NULL,
     	[ReservaID] [int] NOT NULL,
+    	[HabitacionID] [int] NOT NULL,
     	[Motivo] [int] NOT NULL,
     	[Observacion] [nvarchar](200) NULL,
     	[CargoID] [int] NULL,
-    	[HabitacionAnteriorID] [int] NOT NULL,
-    	[HabitacionNuevaID] [int] NOT NULL,
-    	[TarifaAnterior] [decimal](10, 2) NOT NULL,
-    	[TarifaNueva] [decimal](10, 2) NOT NULL,
+    	[TarifaNoche] [decimal](10, 2) NOT NULL,
     	[NochesRestantes] [int] NOT NULL,
     	[FechaCambio] [datetime] NOT NULL,
      CONSTRAINT [PK_HistorialCambiosHabitacion] PRIMARY KEY CLUSTERED 
@@ -392,9 +390,10 @@ BEGIN
     EXEC(N'CREATE NONCLUSTERED INDEX [IX_HistorialCambiosHabitacion_Reserva] ON [dbo].[HistorialCambiosHabitacion]
     (
     	[ReservaID] ASC,
-    	[Motivo] ASC
+    	[FechaCambio] ASC,
+    	[CambioID] ASC
     )
-    INCLUDE([TarifaNueva]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]');
+    INCLUDE([HabitacionID],[Motivo],[TarifaNoche]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]');
 END
 GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
@@ -404,6 +403,16 @@ BEGIN
     	[CargoID] ASC
     )
     WHERE ([CargoID] IS NOT NULL)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]');
+END
+GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'CREATE UNIQUE NONCLUSTERED INDEX [UX_HistorialCambiosHabitacion_Inicial] ON [dbo].[HistorialCambiosHabitacion]
+    (
+    	[ReservaID] ASC
+    )
+    WHERE ([Motivo]=(2))
     WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]');
 END
 GO
@@ -457,11 +466,6 @@ GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'CargosAdicionales')
 BEGIN
     EXEC(N'ALTER TABLE [dbo].[CargosAdicionales] ADD  CONSTRAINT [DF_CargosAdicionales_FechaHora]  DEFAULT (getdate()) FOR [FechaHora]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] ADD  CONSTRAINT [DF_HistorialCambiosHabitacion_Fecha]  DEFAULT (getdate()) FOR [FechaCambio]');
 END
 GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'ItemsRoomService')
@@ -611,50 +615,6 @@ BEGIN
     EXEC(N'ALTER TABLE [dbo].[Habitaciones] CHECK CONSTRAINT [FK_Habitaciones_TiposHabitacion]');
 END
 GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [FK_HistorialCambiosHabitacion_Cargos] FOREIGN KEY([CargoID])
-    REFERENCES [dbo].[CargosAdicionales] ([CargoID])');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] CHECK CONSTRAINT [FK_HistorialCambiosHabitacion_Cargos]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [FK_HistorialCambiosHabitacion_HabAnterior] FOREIGN KEY([HabitacionAnteriorID])
-    REFERENCES [dbo].[Habitaciones] ([HabitacionID])');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] CHECK CONSTRAINT [FK_HistorialCambiosHabitacion_HabAnterior]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [FK_HistorialCambiosHabitacion_HabNueva] FOREIGN KEY([HabitacionNuevaID])
-    REFERENCES [dbo].[Habitaciones] ([HabitacionID])');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] CHECK CONSTRAINT [FK_HistorialCambiosHabitacion_HabNueva]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [FK_HistorialCambiosHabitacion_Reservas] FOREIGN KEY([ReservaID])
-    REFERENCES [dbo].[Reservas] ([ReservaID])');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] CHECK CONSTRAINT [FK_HistorialCambiosHabitacion_Reservas]');
-END
-GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'PedidosRoomService')
 BEGIN
     EXEC(N'ALTER TABLE [dbo].[PedidosRoomService]  WITH CHECK ADD  CONSTRAINT [FK_PedidosRoomService_Cargos] FOREIGN KEY([CargoID])
@@ -701,7 +661,7 @@ END
 GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'Bitacora_Reservas')
 BEGIN
-    EXEC(N'ALTER TABLE [dbo].[Bitacora_Reservas]  WITH CHECK ADD  CONSTRAINT [CK_BitacoraReservas_Operacion] CHECK  (([Operacion]=N''Rollback'' OR [Operacion]=N''Cambio de habitación'' OR [Operacion]=N''Cambio administrativo'' OR [Operacion]=N''Upgrade'' OR [Operacion]=N''Renovación'' OR [Operacion]=N''Check-out'' OR [Operacion]=N''Check-in'' OR [Operacion]=N''No-show'' OR [Operacion]=N''Cancelación'' OR [Operacion]=N''Modificación'' OR [Operacion]=N''Alta'' OR [Operacion]=N''Carga inicial''))');
+    EXEC(N'ALTER TABLE [dbo].[Bitacora_Reservas]  WITH CHECK ADD  CONSTRAINT [CK_BitacoraReservas_Operacion] CHECK  (([Operacion]=N''Rollback'' OR [Operacion]=N''Cambio de habitación'' OR [Operacion]=N''Cambio de habitación administrativo'' OR [Operacion]=N''Cambio de habitación por huésped'' OR [Operacion]=N''Renovación'' OR [Operacion]=N''Check-out'' OR [Operacion]=N''Check-in'' OR [Operacion]=N''No-show'' OR [Operacion]=N''Cancelación'' OR [Operacion]=N''Modificación'' OR [Operacion]=N''Alta'' OR [Operacion]=N''Carga inicial''))');
 END
 GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'Bitacora_Reservas')
@@ -747,46 +707,6 @@ GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'DetallePedidoRoomService')
 BEGIN
     EXEC(N'ALTER TABLE [dbo].[DetallePedidoRoomService] CHECK CONSTRAINT [CK_DetallePedidoRoomService_Precio]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Distintas] CHECK  (([HabitacionAnteriorID]<>[HabitacionNuevaID]))');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] CHECK CONSTRAINT [CK_HistorialCambiosHabitacion_Distintas]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Motivo] CHECK  (([Motivo]=(1) OR [Motivo]=(0)))');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] CHECK CONSTRAINT [CK_HistorialCambiosHabitacion_Motivo]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Noches] CHECK  (([NochesRestantes]>=(0)))');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] CHECK CONSTRAINT [CK_HistorialCambiosHabitacion_Noches]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Reglas] CHECK  (([Motivo]=(0) AND [CargoID] IS NOT NULL AND [TarifaNueva]>[TarifaAnterior] AND [NochesRestantes]>(0) OR [Motivo]=(1) AND [CargoID] IS NULL))');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] CHECK CONSTRAINT [CK_HistorialCambiosHabitacion_Reglas]');
 END
 GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'ItemsRoomService')
@@ -869,25 +789,185 @@ BEGIN
     EXEC(N'ALTER TABLE [dbo].[Reservas] CHECK CONSTRAINT [CK_Reservas_Tarifa]');
 END
 GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion] ADD  CONSTRAINT [DF_HistorialCambiosHabitacion_Fecha]  DEFAULT (getdate()) FOR [FechaCambio]');
+END
+GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [FK_HistorialCambiosHabitacion_Reservas] FOREIGN KEY([ReservaID])
+    REFERENCES [dbo].[Reservas] ([ReservaID])');
+END
+GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [FK_HistorialCambiosHabitacion_Habitaciones] FOREIGN KEY([HabitacionID])
+    REFERENCES [dbo].[Habitaciones] ([HabitacionID])');
+END
+GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [FK_HistorialCambiosHabitacion_Cargos] FOREIGN KEY([CargoID])
+    REFERENCES [dbo].[CargosAdicionales] ([CargoID])');
+END
+GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Motivo] CHECK  (([Motivo]=(0) OR [Motivo]=(1) OR [Motivo]=(2)))');
+END
+GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Noches] CHECK  (([NochesRestantes]>=(0)))');
+END
+GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Tarifa] CHECK  (([TarifaNoche]>(0)))');
+END
+GO
+IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'HistorialCambiosHabitacion')
+BEGIN
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Reglas] CHECK  (([Motivo]=(0) AND [CargoID] IS NOT NULL AND [NochesRestantes]>(0) OR ([Motivo]=(1) OR [Motivo]=(2)) AND [CargoID] IS NULL))');
+END
+GO
+
+/* ----------------------------------------------------------------------------
+   3b. HISTORIAL DE HABITACIONES: una base que ya tenía el diseño anterior (dos FK a Habitaciones) se convierte
+   ---------------------------------------------------------------------------- */
+IF COL_LENGTH(N'dbo.HistorialCambiosHabitacion', N'HabitacionAnteriorID') IS NOT NULL
+BEGIN
+    PRINT N'Historial de cambios de habitación: se pasa al diseño de una sola relación con Habitaciones.';
+
+    -- 1. Restricciones e índice del diseño anterior (las dos FK a Habitaciones y las reglas entre las dos columnas)
+    IF OBJECT_ID(N'dbo.CK_HistorialCambiosHabitacion_Distintas', N'C') IS NOT NULL
+        ALTER TABLE dbo.HistorialCambiosHabitacion DROP CONSTRAINT CK_HistorialCambiosHabitacion_Distintas;
+    IF OBJECT_ID(N'dbo.CK_HistorialCambiosHabitacion_Reglas', N'C') IS NOT NULL
+        ALTER TABLE dbo.HistorialCambiosHabitacion DROP CONSTRAINT CK_HistorialCambiosHabitacion_Reglas;
+    IF OBJECT_ID(N'dbo.CK_HistorialCambiosHabitacion_Motivo', N'C') IS NOT NULL
+        ALTER TABLE dbo.HistorialCambiosHabitacion DROP CONSTRAINT CK_HistorialCambiosHabitacion_Motivo;
+    IF OBJECT_ID(N'dbo.FK_HistorialCambiosHabitacion_HabAnterior', N'F') IS NOT NULL
+        ALTER TABLE dbo.HistorialCambiosHabitacion DROP CONSTRAINT FK_HistorialCambiosHabitacion_HabAnterior;
+    IF OBJECT_ID(N'dbo.FK_HistorialCambiosHabitacion_HabNueva', N'F') IS NOT NULL
+        ALTER TABLE dbo.HistorialCambiosHabitacion DROP CONSTRAINT FK_HistorialCambiosHabitacion_HabNueva;
+    IF EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_HistorialCambiosHabitacion_Reserva'
+                                           AND object_id = OBJECT_ID(N'dbo.HistorialCambiosHabitacion'))
+        DROP INDEX IX_HistorialCambiosHabitacion_Reserva ON dbo.HistorialCambiosHabitacion;
+
+    -- 2. Columnas nuevas: la habitación que ocupa la reserva desde el cambio y la tarifa que paga desde ahí
+    EXEC(N'ALTER TABLE dbo.HistorialCambiosHabitacion ADD HabitacionID INT NULL, TarifaNoche DECIMAL(10,2) NULL;');
+    EXEC(N'UPDATE dbo.HistorialCambiosHabitacion
+           SET HabitacionID = HabitacionNuevaID,
+               TarifaNoche  = CASE WHEN Motivo = 0 THEN TarifaNueva ELSE TarifaAnterior END;');
+
+    -- 3. Registro inicial de cada reserva que ya tenía cambios: la habitación y la tarifa con las que se
+    --    reservó (las "anteriores" de su primer cambio), con la fecha de registro de la reserva
+    EXEC(N'INSERT INTO dbo.HistorialCambiosHabitacion
+               (ReservaID, Motivo, Observacion, CargoID, HabitacionAnteriorID, HabitacionNuevaID, TarifaAnterior,
+                TarifaNueva, NochesRestantes, FechaCambio, HabitacionID, TarifaNoche)
+           SELECT p.ReservaID, 2, NULL, NULL, p.HabitacionAnteriorID, p.HabitacionAnteriorID, p.TarifaAnterior,
+                  p.TarifaAnterior, DATEDIFF(DAY, r.FechaIngreso, r.FechaEgreso), r.FechaRegistro,
+                  p.HabitacionAnteriorID, p.TarifaAnterior
+           FROM (SELECT h.ReservaID, h.HabitacionAnteriorID, h.TarifaAnterior,
+                        ROW_NUMBER() OVER (PARTITION BY h.ReservaID ORDER BY h.FechaCambio, h.CambioID) AS Orden
+                 FROM dbo.HistorialCambiosHabitacion h) p
+           INNER JOIN dbo.Reservas r ON r.ReservaID = p.ReservaID
+           WHERE p.Orden = 1;');
+
+    -- 4. Fuera las dos columnas de habitación y las dos de tarifa
+    EXEC(N'ALTER TABLE dbo.HistorialCambiosHabitacion ALTER COLUMN HabitacionID INT NOT NULL;');
+    EXEC(N'ALTER TABLE dbo.HistorialCambiosHabitacion ALTER COLUMN TarifaNoche DECIMAL(10,2) NOT NULL;');
+    EXEC(N'ALTER TABLE dbo.HistorialCambiosHabitacion DROP COLUMN HabitacionAnteriorID, HabitacionNuevaID, TarifaAnterior, TarifaNueva;');
+
+    -- 5. Una sola FK a Habitaciones, reglas e índices del diseño nuevo
+    EXEC(N'CREATE NONCLUSTERED INDEX [IX_HistorialCambiosHabitacion_Reserva] ON [dbo].[HistorialCambiosHabitacion]
+(
+	[ReservaID] ASC,
+	[FechaCambio] ASC,
+	[CambioID] ASC
+)
+INCLUDE([HabitacionID],[Motivo],[TarifaNoche]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]');
+    EXEC(N'CREATE UNIQUE NONCLUSTERED INDEX [UX_HistorialCambiosHabitacion_Inicial] ON [dbo].[HistorialCambiosHabitacion]
+(
+	[ReservaID] ASC
+)
+WHERE ([Motivo]=(2))
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]');
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [FK_HistorialCambiosHabitacion_Habitaciones] FOREIGN KEY([HabitacionID])
+REFERENCES [dbo].[Habitaciones] ([HabitacionID])');
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Motivo] CHECK  (([Motivo]=(0) OR [Motivo]=(1) OR [Motivo]=(2)))');
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Tarifa] CHECK  (([TarifaNoche]>(0)))');
+    EXEC(N'ALTER TABLE [dbo].[HistorialCambiosHabitacion]  WITH CHECK ADD  CONSTRAINT [CK_HistorialCambiosHabitacion_Reglas] CHECK  (([Motivo]=(0) AND [CargoID] IS NOT NULL AND [NochesRestantes]>(0) OR ([Motivo]=(1) OR [Motivo]=(2)) AND [CargoID] IS NULL))');
+END
+GO
+
+/* ----------------------------------------------------------------------------
+   3c. USUARIOS: Users.RolID pasa a ser clave foránea a Roles. La versión 1 no la
+       tenía: que el rol del usuario existiera solo lo controlaba la aplicación
+       (y el SP que elimina un rol en uso). Se agrega si todavía no existe y si no
+       hay usuarios apuntando a un rol inexistente; si los hay, avisa y no la crea.
+---------------------------------------------------------------------------- */
+IF OBJECT_ID(N'dbo.FK_Users_Roles', N'F') IS NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM dbo.Users u WHERE NOT EXISTS (SELECT 1 FROM dbo.Roles r WHERE r.RolID = u.RolID))
+        PRINT N'AVISO: hay usuarios con un RolID que no existe en Roles; no se creó FK_Users_Roles.';
+    ELSE
+    BEGIN
+        EXEC(N'ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Roles] FOREIGN KEY([RolID])
+    REFERENCES [dbo].[Roles] ([RolID])');
+        EXEC(N'ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Roles]');
+    END
+END
+GO
+
+/* ----------------------------------------------------------------------------
+   3d. BITÁCORA DE RESERVAS: nombres de las operaciones de cambio de habitación.
+       "Upgrade" pasa a ser "Cambio de habitación por huésped" y "Cambio
+       administrativo" pasa a ser "Cambio de habitación administrativo". En una base
+       que ya tenía la bitácora se agranda la columna Operacion, se renombran los
+       registros existentes (con el trigger de solo lectura deshabilitado mientras
+       tanto) y se vuelve a crear la restricción con los nombres nuevos.
+---------------------------------------------------------------------------- */
+IF COL_LENGTH(N'dbo.Bitacora_Reservas', N'Operacion') < 80
+   OR EXISTS (SELECT 1 FROM sys.check_constraints
+              WHERE name = N'CK_BitacoraReservas_Operacion' AND definition LIKE N'%Upgrade%')
+BEGIN
+    IF OBJECT_ID(N'dbo.CK_BitacoraReservas_Operacion', N'C') IS NOT NULL
+        ALTER TABLE dbo.Bitacora_Reservas DROP CONSTRAINT CK_BitacoraReservas_Operacion;
+    ALTER TABLE dbo.Bitacora_Reservas ALTER COLUMN Operacion NVARCHAR(40) NOT NULL;
+
+    IF OBJECT_ID(N'dbo.TR_BitacoraReservas_SoloLectura', N'TR') IS NOT NULL
+        EXEC(N'DISABLE TRIGGER dbo.TR_BitacoraReservas_SoloLectura ON dbo.Bitacora_Reservas');
+    EXEC(N'UPDATE dbo.Bitacora_Reservas
+          SET Operacion = CASE Operacion WHEN N''Upgrade'' THEN N''Cambio de habitación por huésped''
+                                         ELSE N''Cambio de habitación administrativo'' END
+          WHERE Operacion IN (N''Upgrade'', N''Cambio administrativo'')');
+    IF OBJECT_ID(N'dbo.TR_BitacoraReservas_SoloLectura', N'TR') IS NOT NULL
+        EXEC(N'ENABLE TRIGGER dbo.TR_BitacoraReservas_SoloLectura ON dbo.Bitacora_Reservas');
+
+    EXEC(N'ALTER TABLE [dbo].[Bitacora_Reservas]  WITH CHECK ADD  CONSTRAINT [CK_BitacoraReservas_Operacion] CHECK  (([Operacion]=N''Rollback'' OR [Operacion]=N''Cambio de habitación'' OR [Operacion]=N''Cambio de habitación administrativo'' OR [Operacion]=N''Cambio de habitación por huésped'' OR [Operacion]=N''Renovación'' OR [Operacion]=N''Check-out'' OR [Operacion]=N''Check-in'' OR [Operacion]=N''No-show'' OR [Operacion]=N''Cancelación'' OR [Operacion]=N''Modificación'' OR [Operacion]=N''Alta'' OR [Operacion]=N''Carga inicial''))');
+END
+GO
 
 /* ----------------------------------------------------------------------------
    4. FUNCIONES
    ---------------------------------------------------------------------------- */
 /* ============================================================================
-   3. TARIFA VIGENTE DE UNA RESERVA
+   TARIFA VIGENTE DE UNA RESERVA
    ============================================================================ */
--- La del último upgrade; si no hubo, la tarifa con la que se reservó.
--- (Un cambio administrativo no la modifica: el huésped sigue pagando lo mismo.)
+-- La del último registro del historial de habitaciones de la reserva (un upgrade la cambia; un cambio
+-- administrativo la mantiene); si la reserva nunca cambió de habitación, la tarifa con la que se reservó.
 CREATE OR ALTER FUNCTION [dbo].[fn_TarifaVigenteReserva] (@ReservaID INT)
 RETURNS DECIMAL(10,2)
 AS
 BEGIN
     DECLARE @Tarifa DECIMAL(10,2);
 
-    SELECT TOP (1) @Tarifa = h.TarifaNueva
+    SELECT TOP (1) @Tarifa = h.TarifaNoche
     FROM dbo.HistorialCambiosHabitacion h
-    WHERE h.ReservaID = @ReservaID AND h.Motivo = 0
-    ORDER BY h.CambioID DESC;
+    WHERE h.ReservaID = @ReservaID
+    ORDER BY h.FechaCambio DESC, h.CambioID DESC;
 
     IF @Tarifa IS NULL
         SELECT @Tarifa = r.TarifaNoche FROM dbo.Reservas r WHERE r.ReservaID = @ReservaID;
@@ -1630,11 +1710,23 @@ BEGIN
             SET @CargoID = CAST(SCOPE_IDENTITY() AS INT);
         END
 
+        -- Historial de habitaciones de la reserva: un registro por cada habitación que ocupa, con la tarifa
+        -- que paga desde ese momento. El primer cambio deja también el registro de la habitación con la
+        -- que se reservó (Motivo 2 = asignación inicial), así la habitación anterior de cada cambio es la
+        -- del registro previo y la tabla tiene una sola relación con Habitaciones.
+        IF NOT EXISTS (SELECT 1 FROM dbo.HistorialCambiosHabitacion WHERE ReservaID = @ReservaID)
+            INSERT INTO dbo.HistorialCambiosHabitacion
+                (ReservaID, HabitacionID, Motivo, Observacion, CargoID, TarifaNoche, NochesRestantes, FechaCambio)
+            SELECT r.ReservaID, @HabitacionAnterior, 2, NULL, NULL, @TarifaVigente,
+                   DATEDIFF(DAY, r.FechaIngreso, r.FechaEgreso), r.FechaRegistro
+            FROM dbo.Reservas r
+            WHERE r.ReservaID = @ReservaID;
+
+        -- Upgrade: desde ahora paga la tarifa nueva. Cambio administrativo: sigue pagando la misma.
         INSERT INTO dbo.HistorialCambiosHabitacion
-            (ReservaID, Motivo, Observacion, CargoID, HabitacionAnteriorID, HabitacionNuevaID,
-             TarifaAnterior, TarifaNueva, NochesRestantes, FechaCambio)
-        VALUES (@ReservaID, @Motivo, @Observacion, @CargoID, @HabitacionAnterior, @HabitacionNuevaID,
-                @TarifaVigente, @TarifaNueva, @NochesRestantes, GETDATE());
+            (ReservaID, HabitacionID, Motivo, Observacion, CargoID, TarifaNoche, NochesRestantes, FechaCambio)
+        VALUES (@ReservaID, @HabitacionNuevaID, @Motivo, @Observacion, @CargoID,
+                CASE WHEN @Motivo = 0 THEN @TarifaNueva ELSE @TarifaVigente END, @NochesRestantes, GETDATE());
         SET @CambioID = CAST(SCOPE_IDENTITY() AS INT);
 
         -- Datos para el trigger de la bitácora (usuario del sistema y cambio que origina el registro)
@@ -1861,15 +1953,22 @@ BEGIN
       AND (@Desde IS NULL OR c.FechaHora >= @Desde)
       AND (@HastaExcl IS NULL OR c.FechaHora < @HastaExcl);
 
-    -- Upgrades (la cantidad son las noches que se cobraron con la tarifa nueva)
+    -- Upgrades (la cantidad son las noches que se cobraron con la tarifa nueva).
+    -- La habitación y la tarifa anteriores son las del registro previo del historial de la reserva.
+    ;WITH hc AS (
+        SELECT h.CambioID, h.CargoID, h.NochesRestantes, h.HabitacionID, h.TarifaNoche,
+               LAG(h.HabitacionID) OVER (PARTITION BY h.ReservaID ORDER BY h.FechaCambio, h.CambioID) AS HabitacionAnteriorID,
+               LAG(h.TarifaNoche)  OVER (PARTITION BY h.ReservaID ORDER BY h.FechaCambio, h.CambioID) AS TarifaAnterior
+        FROM dbo.HistorialCambiosHabitacion h
+    )
     INSERT INTO #Servicios
     SELECT c.CargoID, c.ReservaID, c.Tipo, c.Descripcion, c.FechaHora, c.Monto, c.UsuarioRegistroDNI,
            2, NULL, NULL, hc.NochesRestantes, NULL,
-           ha.NroHabitacion, hn.NroHabitacion, tn.Nombre, hc.TarifaNueva - hc.TarifaAnterior
+           ha.NroHabitacion, hn.NroHabitacion, tn.Nombre, hc.TarifaNoche - hc.TarifaAnterior
     FROM dbo.CargosAdicionales c
-    INNER JOIN dbo.HistorialCambiosHabitacion hc ON hc.CargoID = c.CargoID
+    INNER JOIN hc                                ON hc.CargoID = c.CargoID
     INNER JOIN dbo.Habitaciones ha               ON ha.HabitacionID = hc.HabitacionAnteriorID
-    INNER JOIN dbo.Habitaciones hn               ON hn.HabitacionID = hc.HabitacionNuevaID
+    INNER JOIN dbo.Habitaciones hn               ON hn.HabitacionID = hc.HabitacionID
     INNER JOIN dbo.TiposHabitacion tn            ON tn.TipoHabitacionID = hn.TipoHabitacionID
     WHERE c.Tipo = 1
       AND (@Desde IS NULL OR c.FechaHora >= @Desde)
@@ -1890,12 +1989,12 @@ BEGIN
            s.FechaHoraEntrega, ISNULL(s.Cantidad, 0) AS Cantidad, s.Detalle, s.HabitacionAnterior, s.TipoNuevo, s.Diferencia,
            r.HuespedTitularID AS HuespedID, hu.Documento, hu.Nombre, hu.Apellido,
            COALESCE(s.HabitacionNueva,
-                    -- Habitación en el momento del servicio: la "anterior" del primer cambio posterior a esa hora
-                    (SELECT TOP 1 ha2.NroHabitacion
+                    -- Habitación en el momento del servicio: la del último registro del historial hasta esa hora
+                    (SELECT TOP 1 h2.NroHabitacion
                      FROM dbo.HistorialCambiosHabitacion hc2
-                     INNER JOIN dbo.Habitaciones ha2 ON ha2.HabitacionID = hc2.HabitacionAnteriorID
-                     WHERE hc2.ReservaID = s.ReservaID AND hc2.FechaCambio > s.FechaHora
-                     ORDER BY hc2.FechaCambio, hc2.CambioID),
+                     INNER JOIN dbo.Habitaciones h2 ON h2.HabitacionID = hc2.HabitacionID
+                     WHERE hc2.ReservaID = s.ReservaID AND hc2.FechaCambio <= s.FechaHora
+                     ORDER BY hc2.FechaCambio DESC, hc2.CambioID DESC),
                     hab.NroHabitacion) AS NroHabitacion,
            u.Nombre AS NombreUsuario, u.Apellido AS ApellidoUsuario
     FROM #Servicios s
@@ -1936,7 +2035,9 @@ GO
    - si la reserva estaba En curso y deja de estarlo o cambia de habitación, la habitación
      que ocupaba queda En limpieza;
    - si la foto restaurada está En curso, su habitación vuelve a quedar Ocupada.
-   Los cargos adicionales, los pagos y el historial de cambios de habitación no se tocan.
+   Los cargos adicionales y los pagos no se tocan. Si la foto vuelve a otra habitación y la reserva ya
+   tiene historial de habitaciones, se agrega el registro de esa habitación (sin cargo y con la misma
+   tarifa vigente), así la secuencia de habitaciones de la reserva sigue completa.
 
    @Resultado: 0 Ok
                1 El registro no existe
@@ -2008,6 +2109,20 @@ BEGIN
            AND EXISTS (SELECT 1 FROM dbo.Habitaciones WHERE HabitacionID = @HabitacionFoto AND Estado = 4)
         BEGIN
             SET @Resultado = 5; ROLLBACK TRANSACTION; RETURN;
+        END
+
+        -- Historial de habitaciones: la reserva vuelve a la habitación de la foto
+        IF @HabitacionFoto <> @HabitacionActual
+           AND EXISTS (SELECT 1 FROM dbo.HistorialCambiosHabitacion WHERE ReservaID = @ReservaID)
+        BEGIN
+            DECLARE @DesdeRollback DATE = CASE WHEN @Ingreso > CAST(GETDATE() AS DATE) THEN @Ingreso ELSE CAST(GETDATE() AS DATE) END;
+            INSERT INTO dbo.HistorialCambiosHabitacion
+                (ReservaID, HabitacionID, Motivo, Observacion, CargoID, TarifaNoche, NochesRestantes, FechaCambio)
+            VALUES (@ReservaID, @HabitacionFoto, 1,
+                    N'Rollback de la bitácora de reservas (registro ' + CAST(@BitacoraID AS NVARCHAR(10)) + N')',
+                    NULL, dbo.fn_TarifaVigenteReserva(@ReservaID),
+                    CASE WHEN DATEDIFF(DAY, @DesdeRollback, @Egreso) > 0 THEN DATEDIFF(DAY, @DesdeRollback, @Egreso) ELSE 0 END,
+                    GETDATE());
         END
 
         -- El trigger de Reservas lee estos valores para registrar la operación "Rollback"
@@ -2091,7 +2206,7 @@ BEGIN
     DECLARE @Cambios TABLE
     (
         ReservaID INT PRIMARY KEY,
-        Operacion NVARCHAR(30) NOT NULL,
+        Operacion NVARCHAR(40) NOT NULL,
         CambioID  INT NULL
     );
 
@@ -2101,9 +2216,10 @@ BEGIN
                WHEN d.ReservaID IS NULL THEN N'Alta'
                WHEN @Informada = N'Rollback' THEN N'Rollback'
                WHEN i.HabitacionID <> d.HabitacionID THEN
+                    -- Sin el cambio informado por sp_RegistrarCambioHabitacion: se cambió por fuera del sistema
                     CASE WHEN hc.CambioID IS NULL THEN N'Cambio de habitación'
-                         WHEN hc.Motivo = 0       THEN N'Upgrade'
-                         ELSE N'Cambio administrativo' END
+                         WHEN hc.Motivo = 0       THEN N'Cambio de habitación por huésped'
+                         ELSE N'Cambio de habitación administrativo' END
                WHEN @Informada IS NOT NULL THEN @Informada
                WHEN d.Estado <> 3 AND i.Estado = 3 THEN N'Cancelación'
                WHEN d.Estado <> 1 AND i.Estado = 1 THEN N'Check-in'
@@ -2117,7 +2233,7 @@ BEGIN
     LEFT JOIN deleted d ON d.ReservaID = i.ReservaID
     LEFT JOIN dbo.HistorialCambiosHabitacion hc ON hc.CambioID = @CambioID
                                                AND hc.ReservaID = i.ReservaID
-                                               AND hc.HabitacionNuevaID = i.HabitacionID
+                                               AND hc.HabitacionID = i.HabitacionID
     -- Un UPDATE que no cambia ningún valor no deja registro
     WHERE d.ReservaID IS NULL
        OR EXISTS (SELECT i.HuespedTitularID, i.HabitacionID, i.FechaIngreso, i.FechaEgreso, i.CheckIn, i.CheckOut,

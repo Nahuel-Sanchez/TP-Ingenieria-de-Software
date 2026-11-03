@@ -13,6 +13,7 @@ namespace BLL_08YS.Negocio
     /// <summary>
     /// Servicio a la habitación: la recepción carga el pedido a la cuenta de una estadía en curso
     /// y el personal de servicio confirma la entrega.
+    /// Solo usa su propio repositorio (pedidos): la carta la pide a CatalogoRoomServiceBLL_68SA.
     /// </summary>
     public class RoomServiceBLL_68SA
     {
@@ -21,18 +22,18 @@ namespace BLL_08YS.Negocio
         public const int MaximoPorItem = 20;
 
         private readonly IPedidoRoomServiceRepository_68SA _pedidoRepo;
-        private readonly ICatalogoRoomServiceRepository_68SA _catalogoRepo;
+        private readonly CatalogoRoomServiceBLL_68SA _catalogoBll;
         private readonly BitacoraBLL_08YS _bitacoraBll;
 
         #endregion
 
         #region Constructor
 
-        public RoomServiceBLL_68SA(IPedidoRoomServiceRepository_68SA pedidoRepo, ICatalogoRoomServiceRepository_68SA catalogoRepo,
+        public RoomServiceBLL_68SA(IPedidoRoomServiceRepository_68SA pedidoRepo, CatalogoRoomServiceBLL_68SA catalogoBll,
                                    BitacoraBLL_08YS bitacoraBll)
         {
             _pedidoRepo = pedidoRepo;
-            _catalogoRepo = catalogoRepo;
+            _catalogoBll = catalogoBll;
             _bitacoraBll = bitacoraBll;
         }
 
@@ -41,7 +42,7 @@ namespace BLL_08YS.Negocio
         #region Consultas
 
         /// <summary>Ítems que se pueden pedir (solo los activos).</summary>
-        public List<ItemRoomService_68SA> GetCarta() => _catalogoRepo.GetItems(incluirInactivos: false);
+        public List<ItemRoomService_68SA> GetCarta() => _catalogoBll.GetItems(incluirInactivos: false);
 
         public static decimal CalcularTotal(IEnumerable<DetallePedidoRoomService_68SA> renglones)
             => renglones?.Sum(r => r.Subtotal) ?? 0m;

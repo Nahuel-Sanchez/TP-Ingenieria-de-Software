@@ -247,14 +247,33 @@ end;
 
 // Ejecuta sqlcmd con autenticación de Windows. Entrada UTF-8 (los scripts tienen
 // acentos) y salida en ANSI para poder mostrarla. Toda la salida va a Log.
+// Con LocalDB se ejecuta con el usuario que abrió el instalador SIN elevar: si la instancia
+// la arranca un proceso elevado (el instalador corre como administrador), después ni el
+// sistema ni SSMS (que corren sin elevar) se pueden conectar ("SQL Server process failed
+// to start", error 50). Con una instancia de servicio (SQLEXPRESS, etc.) se ejecuta elevado,
+// porque el permiso sysadmin suele venir por el grupo Administradores.
 function EjecutarSqlcmd(const Instancia, Script, ArchivoLog: String; var Codigo: Integer): Boolean;
 var
-  Params: String;
+  Params, Salida: String;
 begin
-  Params := '/C ""' + RutaSqlcmd + '" -S "' + Instancia + '" -E -C -I -b -l 30 -f i:65001,o:1252 -i "' +
-            Script + '" > "' + ArchivoLog + '" 2>&1"';
   Log('sqlcmd ' + Script + ' en ' + Instancia);
-  Result := Exec(ExpandConstant('{cmd}'), Params, '', SW_HIDE, ewWaitUntilTerminated, Codigo) and (Codigo = 0);
+  if Pos('(localdb)', Lowercase(Trim(Instancia))) = 1 then
+  begin
+    // La salida va primero a {tmp} (el usuario sin elevar puede escribir ahí) y después se copia al log
+    Salida := ExpandConstant('{tmp}\sqlcmd_salida.log');
+    DeleteFile(Salida);
+    Params := '/C ""' + RutaSqlcmd + '" -S "' + Instancia + '" -E -C -I -b -l 30 -f i:65001,o:1252 -i "' +
+              Script + '" > "' + Salida + '" 2>&1"';
+    Result := ExecAsOriginalUser(ExpandConstant('{cmd}'), Params, '', SW_HIDE, ewWaitUntilTerminated, Codigo) and (Codigo = 0);
+    if FileExists(Salida) then
+      FileCopy(Salida, ArchivoLog, False);
+  end
+  else
+  begin
+    Params := '/C ""' + RutaSqlcmd + '" -S "' + Instancia + '" -E -C -I -b -l 30 -f i:65001,o:1252 -i "' +
+              Script + '" > "' + ArchivoLog + '" 2>&1"';
+    Result := Exec(ExpandConstant('{cmd}'), Params, '', SW_HIDE, ewWaitUntilTerminated, Codigo) and (Codigo = 0);
+  end;
 end;
 
 // -----------------------------------------------------------------------------

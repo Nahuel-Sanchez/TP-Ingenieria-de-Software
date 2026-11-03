@@ -301,7 +301,6 @@
     <Compile Include="Recepcionista\Reserva\UC_CalendarioReservas_68SA.Designer.cs">
       <DependentUpon>UC_CalendarioReservas_68SA.cs</DependentUpon>
     </Compile>
-    <Compile Include="Recepcionista\Reserva\TarjetaValidador_68SA.cs" />
     <Compile Include="UserControls\CrudEstilo_68SA.cs" />
     <Compile Include="UserControls\IconNumericUpDown.cs">
       <SubType>UserControl</SubType>

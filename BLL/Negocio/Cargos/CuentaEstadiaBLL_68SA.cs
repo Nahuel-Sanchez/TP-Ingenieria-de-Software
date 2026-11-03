@@ -9,25 +9,26 @@ namespace BLL_08YS.Negocio
     /// Cuenta de la estadía: alojamiento (reservado + renovaciones) + cargos adicionales (upgrades y room service) - facturas.
     /// El check-out, el detalle de la estadía, la factura y el comprobante toman el saldo de acá:
     /// la regla está en un solo lugar.
+    /// Solo usa su propio repositorio (cargos adicionales): la reserva y lo pagado los pide a ReservaBLL_68SA y FacturaBLL_68SA.
     /// </summary>
     public class CuentaEstadiaBLL_68SA
     {
         #region Campos
 
         private readonly ICargoAdicionalRepository_68SA _cargoRepo;
-        private readonly IFacturaRepository_68SA _facturaRepo;
-        private readonly IReservaRepository_68SA _reservaRepo;
+        private readonly FacturaBLL_68SA _facturaBll;
+        private readonly ReservaBLL_68SA _reservaBll;
 
         #endregion
 
         #region Constructor
 
-        public CuentaEstadiaBLL_68SA(ICargoAdicionalRepository_68SA cargoRepo, IFacturaRepository_68SA facturaRepo,
-                                     IReservaRepository_68SA reservaRepo)
+        public CuentaEstadiaBLL_68SA(ICargoAdicionalRepository_68SA cargoRepo, FacturaBLL_68SA facturaBll,
+                                     ReservaBLL_68SA reservaBll)
         {
             _cargoRepo = cargoRepo;
-            _facturaRepo = facturaRepo;
-            _reservaRepo = reservaRepo;
+            _facturaBll = facturaBll;
+            _reservaBll = reservaBll;
         }
 
         #endregion
@@ -44,7 +45,7 @@ namespace BLL_08YS.Negocio
         /// </summary>
         public EstadoCuentaReserva_68SA GetEstadoCuenta(int reservaId)
         {
-            var reserva = _reservaRepo.GetById(reservaId) ?? throw new ReservaNoEncontradaException_68SA();
+            var reserva = _reservaBll.GetById(reservaId);   // lanza ReservaNoEncontradaException_68SA si no existe
             bool cancelada = reserva.Estado == EstadoReserva.Cancelada;
 
             return new EstadoCuentaReserva_68SA
@@ -53,7 +54,7 @@ namespace BLL_08YS.Negocio
                 Alojamiento = cancelada ? 0 : reserva.MontoTotal,
                 AlojamientoReservado = cancelada ? 0 : reserva.MontoOriginal,
                 Cargos = _cargoRepo.GetByReserva(reserva.Id),
-                TotalPagado = _facturaRepo.GetTotalPagado(reserva.Id)
+                TotalPagado = _facturaBll.GetTotalPagado(reserva.Id)
             };
         }
 

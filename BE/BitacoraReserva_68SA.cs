@@ -15,9 +15,9 @@ namespace BE_08YS
         CheckIn,
         CheckOut,
         Renovacion,
-        Upgrade,
-        CambioAdministrativo,
-        CambioHabitacion,
+        CambioHabitacionHuesped,        // cambio de habitación pedido por el huésped (con cargo)
+        CambioHabitacionAdministrativo, // cambio de habitación decidido por el hotel (sin cargo)
+        CambioHabitacion,               // cambio de habitación hecho por fuera del sistema
         Rollback                // un registro histórico se volvió a poner como activo
     }
 
@@ -53,9 +53,9 @@ namespace BE_08YS
                 { OperacionBitacoraReserva.CheckIn,              "Check-in" },
                 { OperacionBitacoraReserva.CheckOut,             "Check-out" },
                 { OperacionBitacoraReserva.Renovacion,           "Renovación" },
-                { OperacionBitacoraReserva.Upgrade,              "Upgrade" },
-                { OperacionBitacoraReserva.CambioAdministrativo, "Cambio administrativo" },
-                { OperacionBitacoraReserva.CambioHabitacion,     "Cambio de habitación" },
+                { OperacionBitacoraReserva.CambioHabitacionHuesped,        "Cambio de habitación por huésped" },
+                { OperacionBitacoraReserva.CambioHabitacionAdministrativo, "Cambio de habitación administrativo" },
+                { OperacionBitacoraReserva.CambioHabitacion,               "Cambio de habitación" },
                 { OperacionBitacoraReserva.Rollback,             "Rollback" },
             };
 
@@ -65,7 +65,7 @@ namespace BE_08YS
 
         public int Id { get; set; }
         public OperacionBitacoraReserva Operacion { get; set; }
-        public int? CambioId { get; set; }          // upgrade o reubicación que lo originó (HistorialCambiosHabitacion)
+        public int? CambioId { get; set; }          // cambio de habitación que lo originó (HistorialCambiosHabitacion)
         public DateTime Fecha { get; set; }
         public TimeSpan Hora { get; set; }
         public string UsuarioDB { get; set; }       // login de SQL Server (no se muestra: en Windows incluye el nombre de la PC)

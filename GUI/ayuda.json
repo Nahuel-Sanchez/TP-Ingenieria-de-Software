@@ -3095,7 +3095,7 @@
        "pnlGrilla"
       ],
       "nombre": "Grilla de la bitácora",
-      "texto": "Un renglón por cada alta o cambio de cada reserva, del más nuevo al más viejo. La operación se colorea (verde alta y check-in, rojo cancelación y no-show, dorado upgrade y renovación, azul check-out y cambios de habitación, naranja modificación). El rollback se muestra en violeta."
+      "texto": "Un renglón por cada alta o cambio de cada reserva, del más nuevo al más viejo. La operación se colorea (verde alta y check-in, rojo cancelación y no-show, dorado cambio de habitación por huésped y renovación, azul check-out y los demás cambios de habitación, naranja modificación). El rollback se muestra en violeta."
      },
      {
       "controles": [
@@ -7054,7 +7054,7 @@
        "pnlGrilla"
       ],
       "nombre": "Log grid",
-      "texto": "One row for every new reservation or change, newest first. The operation is colored (green new reservation and check-in, red cancellation and no-show, gold upgrade and extension, blue check-out and room changes, orange modification). Rollback is shown in purple."
+      "texto": "One row for every new reservation or change, newest first. The operation is colored (green new reservation and check-in, red cancellation and no-show, gold room change requested by the guest and extension, blue check-out and the other room changes, orange modification). Rollback is shown in purple."
      },
      {
       "controles": [

@@ -38,9 +38,14 @@ namespace DAL_08YS.SQL.Negocio
            ISNULL(rc.Activas, 0) AS CantidadReservasActivas" + BaseFrom + @"
            LEFT JOIN (SELECT HabitacionID, COUNT(1) AS Total, SUM(CASE WHEN Estado IN (0, 1) THEN 1 ELSE 0 END) AS Activas
            FROM Reservas GROUP BY HabitacionID) rc ON rc.HabitacionID = h.HabitacionID
-           -- PN2: reservas que estuvieron en la habitación y se cambiaron a otra (quedan en su historial)
-           LEFT JOIN (SELECT HabitacionAnteriorID AS HabitacionID, COUNT(DISTINCT ReservaID) AS Total
-           FROM HistorialCambiosHabitacion GROUP BY HabitacionAnteriorID) rh ON rh.HabitacionID = h.HabitacionID";
+           -- PN2: reservas que estuvieron en la habitación y se cambiaron a otra (quedan en su historial:
+           -- un registro de la habitación seguido de otro registro de la misma reserva)
+           LEFT JOIN (SELECT x.HabitacionID, COUNT(DISTINCT x.ReservaID) AS Total
+                      FROM (SELECT hh.ReservaID, hh.HabitacionID,
+                                   LEAD(hh.CambioID) OVER (PARTITION BY hh.ReservaID ORDER BY hh.FechaCambio, hh.CambioID) AS Siguiente
+                            FROM HistorialCambiosHabitacion hh) x
+                      WHERE x.Siguiente IS NOT NULL
+                      GROUP BY x.HabitacionID) rh ON rh.HabitacionID = h.HabitacionID";
 
         #endregion
 
@@ -195,7 +200,7 @@ namespace DAL_08YS.SQL.Negocio
                 @"DELETE FROM Habitaciones
           WHERE HabitacionID = @Id
             AND NOT EXISTS (SELECT 1 FROM Reservas WHERE HabitacionID = @Id)
-            AND NOT EXISTS (SELECT 1 FROM HistorialCambiosHabitacion WHERE HabitacionAnteriorID = @Id OR HabitacionNuevaID = @Id)
+            AND NOT EXISTS (SELECT 1 FROM HistorialCambiosHabitacion WHERE HabitacionID = @Id)
             AND NOT EXISTS (SELECT 1 FROM Bitacora_Reservas WHERE HabitacionID = @Id)",
                 new[] { Param("@Id", habitacionId) });
         }

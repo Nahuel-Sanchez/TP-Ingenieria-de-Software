@@ -16,17 +16,19 @@ namespace BLL_08YS
 
         private readonly BitacoraBLL_08YS _bitacoraBll;
         private readonly IFamiliaRepository_08YS _familiaRepo;
-        private readonly IRolRepository_08YS _rolRepo;
+        // Los roles se piden a RolBLL_08YS (dueña del repositorio de roles). Se recibe como Func porque RolBLL_08YS
+        // también usa esta clase: se crea recién cuando hace falta y así no se arma un ciclo al construirlas.
+        private readonly Func<RolBLL_08YS> _rolBll;
 
         #endregion
 
         #region Constructor
 
-        public FamiliaBLL_08YS(IFamiliaRepository_08YS familiaRepo, IRolRepository_08YS rolRepo, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
+        public FamiliaBLL_08YS(IFamiliaRepository_08YS familiaRepo, Func<RolBLL_08YS> rolBll, IPermisoRepository_08YS permisoRepo, BitacoraBLL_08YS bitacoraBll) : base(permisoRepo)
         {
             _familiaRepo = familiaRepo;
             _bitacoraBll = bitacoraBll;
-            _rolRepo = rolRepo;
+            _rolBll = rolBll;
         }
 
         #endregion
@@ -137,7 +139,7 @@ namespace BLL_08YS
 
             if (rolIds.Any())
             {
-                var rolesAfectados = _rolRepo.GetAll(familiasDict)
+                var rolesAfectados = _rolBll().GetAll(familiasDict)
                     .Where(r => rolIds.Contains(r.RolID));
 
                 foreach (var r in rolesAfectados)
