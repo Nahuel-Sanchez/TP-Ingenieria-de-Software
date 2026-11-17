@@ -5,7 +5,4 @@
   <Project Path="GUI/GUI_08YS.csproj" Id="18f19568-1fb4-46d2-af70-82fc9d9e7300" />
   <Project Path="MPP/MPP_08YS.csproj" Id="4bca8705-9b28-4eb5-a8d6-7e366f3a58e9" />
   <Project Path="Service_08YS/Service_08YS.csproj" Id="6196a91d-881c-4563-b43c-5adcd13c0c14" />
-  <Project Path="Setup_08YS/Setup_08YS.vdproj" Type="Installer">
-    <Build />
-  </Project>
 </Solution>

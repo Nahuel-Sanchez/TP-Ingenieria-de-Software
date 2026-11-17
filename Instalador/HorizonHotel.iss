@@ -33,7 +33,7 @@
 #define RegKeyEmpresa "Software\TPIngSoftSanchezYapura"
 #define DbName       "TP_Ing_Soft"
 #define V2Bin        "..\GUI\bin\Release"
-; Instalación anterior hecha con el MSI de la versión 1 (Setup_08YS.vdproj)
+; Instalación anterior hecha con el MSI de la versión 1 (primer cuatrimestre)
 #define MsiV1Code    "{290683B0-A545-462C-B707-AE3BE5EB4043}"
 
 [Setup]

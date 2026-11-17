@@ -11,7 +11,7 @@ Instalador y reinstalador en **Inno Setup 6**, con una sola pantalla para elegir
 
 - `HorizonHotel.iss`: el instalador.
 - `Database/`: los dos scripts (UTF-8, idempotentes, cada uno en una sola transacción). La app también los usa si arranca sin base (`InstaladorBD_08YS`).
-- `Version1/`: binarios de la versión 1 entregada (extraídos del MSI `Setup_08YS/Release/Setup_08YS.msi`).
+- `Version1/`: binarios de la versión 1 entregada (extraídos del MSI del primer cuatrimestre, que ya no está en el repositorio).
 - `Imagenes/`: imágenes del asistente (azul y dorado de la marca) en todos los tamaños de DPI.
 - `Manual/`: poner acá `Manual_de_instalacion.pdf` para que se instale con el sistema.
 - `Salida/`: el `.exe` generado (no se sube al repositorio).
