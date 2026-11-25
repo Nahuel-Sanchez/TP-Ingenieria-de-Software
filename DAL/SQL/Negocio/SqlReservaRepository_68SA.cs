@@ -15,17 +15,15 @@ namespace DAL_08YS.SQL.Negocio
         private const string BaseColumnas = @"
             r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso,
             r.CheckIn, r.CheckOut, r.Estado, r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.MontoOriginal,
-            r.UsuarioRegistroDNI, r.FechaRegistro,
+            r.FechaRegistro,
             hab.NroHabitacion, tip.Nombre AS NombreTipoHabitacion,
-            hu.Documento AS DocumentoTitular, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular,
-            ureg.Nombre AS NombreUsuarioRegistro, ureg.Apellido AS ApellidoUsuarioRegistro";
+            hu.Documento AS DocumentoTitular, hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular";
 
         private const string BaseFrom = @"
             FROM Reservas r
             INNER JOIN Habitaciones hab ON r.HabitacionID = hab.HabitacionID
             INNER JOIN TiposHabitacion tip ON hab.TipoHabitacionID = tip.TipoHabitacionID
-            INNER JOIN Huespedes hu ON r.HuespedTitularID = hu.HuespedID
-            LEFT JOIN Users ureg ON r.UsuarioRegistroDNI = ureg.DNI";
+            INNER JOIN Huespedes hu ON r.HuespedTitularID = hu.HuespedID";
 
         private const string BaseSelect = "SELECT " + BaseColumnas + BaseFrom;
 
@@ -63,11 +61,6 @@ namespace DAL_08YS.SQL.Negocio
             {
                 where.Add("hab.NroHabitacion LIKE @Habitacion");
                 parametros.Add(Param("@Habitacion", $"%{filtro.Habitacion.Trim()}%"));
-            }
-            if (!string.IsNullOrWhiteSpace(filtro.Registro))
-            {
-                where.Add("(ureg.Nombre LIKE @Registro OR ureg.Apellido LIKE @Registro)");
-                parametros.Add(Param("@Registro", $"%{filtro.Registro.Trim()}%"));
             }
             if (filtro.Estado.HasValue)
             {
@@ -208,7 +201,6 @@ namespace DAL_08YS.SQL.Negocio
             Param("@CantidadNinos",    reserva.CantidadNinos),
             Param("@TarifaNoche",      reserva.TarifaNoche),
             Param("@MontoTotal",       reserva.MontoTotal),
-            Param("@UsuarioRegistroDNI", (object)reserva.UsuarioRegistroDni ?? DBNull.Value),
             idOutput,
             disponibleOutput
                 },

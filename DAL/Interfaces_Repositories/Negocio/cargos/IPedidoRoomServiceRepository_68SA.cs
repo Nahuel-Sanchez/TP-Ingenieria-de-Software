@@ -19,7 +19,7 @@ namespace DAL_08YS.Interfaces_Repositories.Negocio.cargos
         /// Valida (estadía En Curso, ítems activos) y registra pedido + detalle + cargo en una sola transacción
         /// (sp_RegistrarPedidoRoomService). La descripción del cargo la arma el SP con los nombres de la carta.
         /// </summary>
-        ResultadoPedidoRoomService Registrar(SolicitudPedidoRoomService_68SA solicitud, int? usuarioDni, out int pedidoId);
+        ResultadoPedidoRoomService Registrar(SolicitudPedidoRoomService_68SA solicitud, out int pedidoId);
 
         /// <summary>false si el pedido no existe o ya estaba entregado.</summary>
         bool ConfirmarEntrega(int pedidoId);

@@ -55,8 +55,6 @@ namespace MPP_08YS
                 TarifaNoche = Convert.ToDecimal(row[prefijo + "TarifaNoche"]),
                 MontoTotal = Convert.ToDecimal(row[prefijo + "MontoTotal"]),
                 MontoOriginal = Convert.ToDecimal(row[prefijo + "MontoOriginal"]),
-                UsuarioRegistroDni = Fila_68SA.Entero(row, prefijo + "UsuarioRegistroDNI"),
-                UsuarioRegistro = Fila_68SA.Texto(row, prefijo + "UsuarioRegistro"),
                 FechaRegistro = Convert.ToDateTime(row[prefijo + "FechaRegistro"])
             };
         }

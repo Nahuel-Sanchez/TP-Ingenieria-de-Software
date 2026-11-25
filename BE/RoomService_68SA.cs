@@ -57,7 +57,6 @@ namespace BE_08YS
         public decimal Monto { get; set; }
         public EstadoPedidoRoomService Estado { get; set; }
         public DateTime? FechaHoraEntrega { get; set; }
-        public string UsuarioRegistroNombre { get; set; }
 
         public List<DetallePedidoRoomService_68SA> Detalle { get; set; } = new List<DetallePedidoRoomService_68SA>();
 

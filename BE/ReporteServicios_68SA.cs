@@ -39,7 +39,6 @@ namespace BE_08YS
         public EstadoServicio Estado { get; set; }
         public DateTime? FechaEntrega { get; set; }
         public int? PedidoId { get; set; }
-        public string Usuario { get; set; }
 
         // Solo upgrade
         public string HabitacionAnterior { get; set; }

@@ -57,9 +57,7 @@ namespace MPP_08YS
                 Tipo = (TipoCargo)Convert.ToInt32(row["Tipo"]),
                 Descripcion = row["Descripcion"].ToString(),
                 FechaHora = Convert.ToDateTime(row["FechaHora"]),
-                Monto = Convert.ToDecimal(row["Monto"]),
-                UsuarioRegistroDni = Fila_68SA.Entero(row, "UsuarioRegistroDNI"),
-                UsuarioRegistroNombre = Fila_68SA.NombreCompleto(row, "NombreUsuario", "ApellidoUsuario")
+                Monto = Convert.ToDecimal(row["Monto"])
             };
         }
     }
@@ -100,8 +98,7 @@ namespace MPP_08YS
                 FechaHoraPedido = Convert.ToDateTime(row["FechaHora"]),
                 Monto = Convert.ToDecimal(row["Monto"]),
                 Estado = (EstadoPedidoRoomService)Convert.ToInt32(row["Estado"]),
-                FechaHoraEntrega = Fila_68SA.Fecha(row, "FechaHoraEntrega"),
-                UsuarioRegistroNombre = Fila_68SA.NombreCompleto(row, "NombreUsuario", "ApellidoUsuario")
+                FechaHoraEntrega = Fila_68SA.Fecha(row, "FechaHoraEntrega")
             };
         }
 
@@ -170,7 +167,6 @@ namespace MPP_08YS
                 Estado = (EstadoServicio)Convert.ToInt32(row["EstadoServicio"]),
                 FechaEntrega = Fila_68SA.Fecha(row, "FechaHoraEntrega"),
                 PedidoId = Fila_68SA.Entero(row, "PedidoID"),
-                Usuario = Fila_68SA.NombreCompleto(row, "NombreUsuario", "ApellidoUsuario"),
                 HabitacionAnterior = Fila_68SA.Texto(row, "HabitacionAnterior"),
                 TipoHabitacionNueva = Fila_68SA.Texto(row, "TipoNuevo"),
                 DiferenciaTarifa = Fila_68SA.Tiene(row, "Diferencia") ? Convert.ToDecimal(row["Diferencia"]) : (decimal?)null

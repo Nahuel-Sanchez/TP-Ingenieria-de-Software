@@ -234,8 +234,6 @@ namespace GUI_08YS.Recepcionista
                 texto.AppendLine($"{renglon.Cantidad} x {renglon.NombreItem}    {Moneda(renglon.Subtotal)}");
             texto.AppendLine();
             texto.AppendLine($"{T("PedidosRS_colMonto")}: {Moneda(pedido.Monto)}");
-            if (!string.IsNullOrEmpty(pedido.UsuarioRegistroNombre))
-                texto.AppendLine(string.Format(T("PedidosRS_txtCargadoPor"), pedido.UsuarioRegistroNombre, pedido.FechaHoraPedido.ToString("dd/MM/yyyy HH:mm")));
 
             Info(this, texto.ToString(), T("PedidosRS_tituloDetalle"));
         }

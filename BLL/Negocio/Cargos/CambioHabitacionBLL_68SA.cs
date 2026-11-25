@@ -76,8 +76,7 @@ namespace BLL_08YS.Negocio
             SessionManager_08YS.Instance.ValidatePermission(politica.PermisoRequerido);
             politica.ValidarSolicitud(solicitud);
 
-            var usuario = SessionManager_08YS.Instance.Current;
-            var resultado = _cambioRepo.Registrar(solicitud, usuario?.DNI, usuario?.Username);
+            var resultado = _cambioRepo.Registrar(solicitud);
             LanzarSiFallo(resultado.Resultado, politica);
 
             DVManager_08YS.Recalcular();

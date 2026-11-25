@@ -7,6 +7,8 @@
    - Tipos, función, procedimientos almacenados y triggers de la versión 2
      (los del sistema se actualizan con CREATE OR ALTER).
    - Bitácora de cambios de reservas (triggers que la escriben y la protegen).
+   - Las tablas de negocio no se relacionan con Users: en una base anterior se
+     quitan las claves foráneas a Users y la columna UsuarioRegistroDNI.
    - Seguridad: agrega por NOMBRE los permisos, familias y roles nuevos y sus
      relaciones. No toca usuarios, ni contraseñas, ni los roles y familias que el
      cliente haya modificado (solo les suma lo nuevo de la versión 2).
@@ -117,7 +119,6 @@ BEGIN
     	[CantidadNinos] [int] NOT NULL,
     	[TarifaNoche] [decimal](10, 2) NOT NULL,
     	[MontoTotal] [decimal](10, 2) NOT NULL,
-    	[UsuarioRegistroDNI] [int] NULL,
     	[FechaRegistro] [datetime] NOT NULL,
     	[MontoOriginal] [decimal](10, 2) NOT NULL,
     	[Operacion] [nvarchar](40) NOT NULL,
@@ -145,7 +146,6 @@ BEGIN
     	[Descripcion] [nvarchar](200) NOT NULL,
     	[FechaHora] [datetime] NOT NULL,
     	[Monto] [decimal](10, 2) NOT NULL,
-    	[UsuarioRegistroDNI] [int] NULL,
      CONSTRAINT [PK_CargosAdicionales] PRIMARY KEY CLUSTERED 
     (
     	[CargoID] ASC
@@ -317,7 +317,6 @@ BEGIN
     	[CantidadNinos] [int] NOT NULL,
     	[TarifaNoche] [decimal](10, 2) NOT NULL,
     	[MontoTotal] [decimal](10, 2) NOT NULL,
-    	[UsuarioRegistroDNI] [int] NULL,
     	[FechaRegistro] [datetime] NOT NULL,
     	[MontoOriginal] [decimal](10, 2) NOT NULL,
      CONSTRAINT [PK_Reservas] PRIMARY KEY CLUSTERED 
@@ -549,17 +548,6 @@ BEGIN
     EXEC(N'ALTER TABLE [dbo].[CargosAdicionales] CHECK CONSTRAINT [FK_CargosAdicionales_Reservas]');
 END
 GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'CargosAdicionales')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[CargosAdicionales]  WITH CHECK ADD  CONSTRAINT [FK_CargosAdicionales_Users] FOREIGN KEY([UsuarioRegistroDNI])
-    REFERENCES [dbo].[Users] ([DNI])');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'CargosAdicionales')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[CargosAdicionales] CHECK CONSTRAINT [FK_CargosAdicionales_Users]');
-END
-GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'DetallePedidoRoomService')
 BEGIN
     EXEC(N'ALTER TABLE [dbo].[DetallePedidoRoomService]  WITH CHECK ADD  CONSTRAINT [FK_DetallePedidoRoomService_Items] FOREIGN KEY([ItemID])
@@ -646,17 +634,6 @@ GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'Reservas')
 BEGIN
     EXEC(N'ALTER TABLE [dbo].[Reservas] CHECK CONSTRAINT [FK_Reservas_Huespedes]');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'Reservas')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[Reservas]  WITH CHECK ADD  CONSTRAINT [FK_Reservas_Users] FOREIGN KEY([UsuarioRegistroDNI])
-    REFERENCES [dbo].[Users] ([DNI])');
-END
-GO
-IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'Reservas')
-BEGIN
-    EXEC(N'ALTER TABLE [dbo].[Reservas] CHECK CONSTRAINT [FK_Reservas_Users]');
 END
 GO
 IF EXISTS (SELECT 1 FROM #TablasNuevas WHERE Tabla = N'Bitacora_Reservas')
@@ -951,6 +928,25 @@ END
 GO
 
 /* ----------------------------------------------------------------------------
+   3e. NEGOCIO SIN DATOS DE LOS USUARIOS DEL SISTEMA.
+       Las tablas de negocio no guardan quién registró la reserva o el cargo y no
+       se relacionan con Users. En una base que ya los tenía se quitan las claves
+       foráneas FK_Reservas_Users y FK_CargosAdicionales_Users y la columna
+       UsuarioRegistroDNI de Reservas, CargosAdicionales y Bitacora_Reservas.
+---------------------------------------------------------------------------- */
+IF OBJECT_ID(N'dbo.FK_Reservas_Users', N'F') IS NOT NULL
+    ALTER TABLE dbo.Reservas DROP CONSTRAINT FK_Reservas_Users;
+IF OBJECT_ID(N'dbo.FK_CargosAdicionales_Users', N'F') IS NOT NULL
+    ALTER TABLE dbo.CargosAdicionales DROP CONSTRAINT FK_CargosAdicionales_Users;
+IF COL_LENGTH(N'dbo.Reservas', N'UsuarioRegistroDNI') IS NOT NULL
+    EXEC(N'ALTER TABLE dbo.Reservas DROP COLUMN UsuarioRegistroDNI');
+IF COL_LENGTH(N'dbo.CargosAdicionales', N'UsuarioRegistroDNI') IS NOT NULL
+    EXEC(N'ALTER TABLE dbo.CargosAdicionales DROP COLUMN UsuarioRegistroDNI');
+IF COL_LENGTH(N'dbo.Bitacora_Reservas', N'UsuarioRegistroDNI') IS NOT NULL
+    EXEC(N'ALTER TABLE dbo.Bitacora_Reservas DROP COLUMN UsuarioRegistroDNI');
+GO
+
+/* ----------------------------------------------------------------------------
    4. FUNCIONES
    ---------------------------------------------------------------------------- */
 /* ============================================================================
@@ -1071,7 +1067,6 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_CrearReserva]
     @CantidadNinos INT,
     @TarifaNoche DECIMAL(10,2),
     @MontoTotal DECIMAL(10,2),
-    @UsuarioRegistroDNI INT,
     @NuevaReservaID INT OUTPUT,
     @Disponible BIT OUTPUT
 AS
@@ -1095,10 +1090,10 @@ BEGIN
 
         INSERT INTO Reservas (HuespedTitularID, HabitacionID, FechaIngreso, FechaEgreso, Estado,
                                CantidadAdultos, CantidadNinos, TarifaNoche, MontoTotal, MontoOriginal,
-                               UsuarioRegistroDNI, FechaRegistro)
+                               FechaRegistro)
         VALUES (@HuespedTitularID, @HabitacionID, @FechaIngreso, @FechaEgreso, 0,
                 @CantidadAdultos, @CantidadNinos, @TarifaNoche, @MontoTotal, @MontoTotal,
-                @UsuarioRegistroDNI, GETDATE());
+                GETDATE());
 
         SET @NuevaReservaID = CAST(SCOPE_IDENTITY() AS INT);
         SET @Disponible = 1;
@@ -1626,8 +1621,6 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarCambioHabitacion]
     @HabitacionNuevaID INT,
     @Motivo            INT,             -- 0 = Upgrade solicitado, 1 = Cambio administrativo
     @Observacion       NVARCHAR(200),
-    @UsuarioDNI        INT,
-    @UsuarioApp        NVARCHAR(50),
     @CambioID          INT OUTPUT,
     @Monto             DECIMAL(10,2) OUTPUT,
     @Resultado         INT OUTPUT
@@ -1705,8 +1698,8 @@ BEGIN
             IF LEN(@DescripcionCargo) > 200
                 SET @DescripcionCargo = LEFT(@DescripcionCargo, 199) + NCHAR(8230);   -- "…"
 
-            INSERT INTO dbo.CargosAdicionales (ReservaID, Tipo, Descripcion, FechaHora, Monto, UsuarioRegistroDNI)
-            VALUES (@ReservaID, 1, @DescripcionCargo, GETDATE(), @Monto, @UsuarioDNI);
+            INSERT INTO dbo.CargosAdicionales (ReservaID, Tipo, Descripcion, FechaHora, Monto)
+            VALUES (@ReservaID, 1, @DescripcionCargo, GETDATE(), @Monto);
             SET @CargoID = CAST(SCOPE_IDENTITY() AS INT);
         END
 
@@ -1729,14 +1722,13 @@ BEGIN
                 CASE WHEN @Motivo = 0 THEN @TarifaNueva ELSE @TarifaVigente END, @NochesRestantes, GETDATE());
         SET @CambioID = CAST(SCOPE_IDENTITY() AS INT);
 
-        -- Datos para el trigger de la bitácora (usuario del sistema y cambio que origina el registro)
-        EXEC sys.sp_set_session_context @key = N'UsuarioApp', @value = @UsuarioApp;
+        -- Dato para el trigger de la bitácora: el cambio que origina el registro
+        -- (el usuario del sistema ya lo informó la capa DAL en la conexión)
         EXEC sys.sp_set_session_context @key = N'CambioHabitacionID', @value = @CambioID;
 
         UPDATE dbo.Reservas SET HabitacionID = @HabitacionNuevaID WHERE ReservaID = @ReservaID;
 
         EXEC sys.sp_set_session_context @key = N'CambioHabitacionID', @value = NULL;
-        EXEC sys.sp_set_session_context @key = N'UsuarioApp', @value = NULL;
 
         -- Solo si el huésped ya está alojado se mueven los estados físicos.
         -- La anterior: si se está sacando de servicio (mantenimiento) queda así; si no, a limpieza.
@@ -1752,7 +1744,6 @@ BEGIN
     BEGIN CATCH
         IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
         EXEC sys.sp_set_session_context @key = N'CambioHabitacionID', @value = NULL;
-        EXEC sys.sp_set_session_context @key = N'UsuarioApp', @value = NULL;
         THROW;
     END CATCH
 END
@@ -1850,7 +1841,6 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarPedidoRoomService]
     @ReservaID   INT,
     @Items       dbo.ItemCantidadList READONLY,
-    @UsuarioDNI  INT,
     @PedidoID    INT OUTPUT,
     @Resultado   INT OUTPUT
 AS
@@ -1888,8 +1878,8 @@ BEGIN
         IF LEN(@Descripcion) > 200
             SET @Descripcion = LEFT(@Descripcion, 199) + NCHAR(8230);   -- "…"
 
-        INSERT INTO dbo.CargosAdicionales (ReservaID, Tipo, Descripcion, FechaHora, Monto, UsuarioRegistroDNI)
-        VALUES (@ReservaID, 0, @Descripcion, GETDATE(), @Monto, @UsuarioDNI);
+        INSERT INTO dbo.CargosAdicionales (ReservaID, Tipo, Descripcion, FechaHora, Monto)
+        VALUES (@ReservaID, 0, @Descripcion, GETDATE(), @Monto);
         DECLARE @CargoID INT = CAST(SCOPE_IDENTITY() AS INT);
 
         INSERT INTO dbo.PedidosRoomService (CargoID, Estado) VALUES (@CargoID, 0);
@@ -1929,7 +1919,7 @@ BEGIN
     (
         -- COLLATE DATABASE_DEFAULT: la tabla temporal vive en tempdb y puede tener otra intercalación
         CargoID INT PRIMARY KEY, ReservaID INT, Tipo INT, Descripcion NVARCHAR(200) COLLATE DATABASE_DEFAULT,
-        FechaHora DATETIME, Monto DECIMAL(10, 2), UsuarioRegistroDNI INT NULL, EstadoServicio INT, PedidoID INT NULL,
+        FechaHora DATETIME, Monto DECIMAL(10, 2), EstadoServicio INT, PedidoID INT NULL,
         FechaHoraEntrega DATETIME NULL, Cantidad INT NULL, Detalle NVARCHAR(MAX) COLLATE DATABASE_DEFAULT NULL,
         HabitacionAnterior NVARCHAR(10) COLLATE DATABASE_DEFAULT NULL, HabitacionNueva NVARCHAR(10) COLLATE DATABASE_DEFAULT NULL,
         TipoNuevo NVARCHAR(50) COLLATE DATABASE_DEFAULT NULL, Diferencia DECIMAL(10, 2) NULL
@@ -1937,7 +1927,7 @@ BEGIN
 
     -- Room service
     INSERT INTO #Servicios
-    SELECT c.CargoID, c.ReservaID, c.Tipo, c.Descripcion, c.FechaHora, c.Monto, c.UsuarioRegistroDNI,
+    SELECT c.CargoID, c.ReservaID, c.Tipo, c.Descripcion, c.FechaHora, c.Monto,
            CASE WHEN p.Estado = 0 THEN 0 ELSE 1 END, p.PedidoID, p.FechaHoraEntrega,
            (SELECT SUM(d.Cantidad) FROM dbo.DetallePedidoRoomService d WHERE d.PedidoID = p.PedidoID),
            STUFF((SELECT N', ' + CAST(d.Cantidad AS NVARCHAR(5)) + N' x ' + i.Nombre
@@ -1962,7 +1952,7 @@ BEGIN
         FROM dbo.HistorialCambiosHabitacion h
     )
     INSERT INTO #Servicios
-    SELECT c.CargoID, c.ReservaID, c.Tipo, c.Descripcion, c.FechaHora, c.Monto, c.UsuarioRegistroDNI,
+    SELECT c.CargoID, c.ReservaID, c.Tipo, c.Descripcion, c.FechaHora, c.Monto,
            2, NULL, NULL, hc.NochesRestantes, NULL,
            ha.NroHabitacion, hn.NroHabitacion, tn.Nombre, hc.TarifaNoche - hc.TarifaAnterior
     FROM dbo.CargosAdicionales c
@@ -1995,13 +1985,11 @@ BEGIN
                      INNER JOIN dbo.Habitaciones h2 ON h2.HabitacionID = hc2.HabitacionID
                      WHERE hc2.ReservaID = s.ReservaID AND hc2.FechaCambio <= s.FechaHora
                      ORDER BY hc2.FechaCambio DESC, hc2.CambioID DESC),
-                    hab.NroHabitacion) AS NroHabitacion,
-           u.Nombre AS NombreUsuario, u.Apellido AS ApellidoUsuario
+                    hab.NroHabitacion) AS NroHabitacion
     FROM #Servicios s
     INNER JOIN dbo.Reservas r     ON r.ReservaID = s.ReservaID
     INNER JOIN dbo.Huespedes hu   ON hu.HuespedID = r.HuespedTitularID
     INNER JOIN dbo.Habitaciones hab ON hab.HabitacionID = r.HabitacionID
-    LEFT  JOIN dbo.Users u        ON u.DNI = s.UsuarioRegistroDNI
     ORDER BY hu.Apellido, hu.Nombre, r.HuespedTitularID, s.FechaHora, s.CargoID;
 
     -- 2) Alojamiento facturado de las reservas que ingresan en el período (sin canceladas)
@@ -2080,12 +2068,12 @@ BEGIN
         -- Si la foto es igual a la reserva actual no hay nada que restaurar (y el trigger no registraría nada)
         IF NOT EXISTS (
             SELECT b.HuespedTitularID, b.HabitacionID, b.FechaIngreso, b.FechaEgreso, b.CheckIn, b.CheckOut, b.Estado,
-                   b.CantidadAdultos, b.CantidadNinos, b.TarifaNoche, b.MontoTotal, b.UsuarioRegistroDNI,
+                   b.CantidadAdultos, b.CantidadNinos, b.TarifaNoche, b.MontoTotal,
                    b.FechaRegistro, b.MontoOriginal
             FROM dbo.Bitacora_Reservas b WHERE b.BitacoraID = @BitacoraID
             EXCEPT
             SELECT r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso, r.CheckIn, r.CheckOut, r.Estado,
-                   r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.UsuarioRegistroDNI,
+                   r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal,
                    r.FechaRegistro, r.MontoOriginal
             FROM dbo.Reservas r WHERE r.ReservaID = @ReservaID)
         BEGIN
@@ -2141,7 +2129,6 @@ BEGIN
             CantidadNinos      = b.CantidadNinos,
             TarifaNoche        = b.TarifaNoche,
             MontoTotal         = b.MontoTotal,
-            UsuarioRegistroDNI = b.UsuarioRegistroDNI,
             FechaRegistro      = b.FechaRegistro,
             MontoOriginal      = b.MontoOriginal
         FROM dbo.Reservas r
@@ -2238,11 +2225,11 @@ BEGIN
     WHERE d.ReservaID IS NULL
        OR EXISTS (SELECT i.HuespedTitularID, i.HabitacionID, i.FechaIngreso, i.FechaEgreso, i.CheckIn, i.CheckOut,
                          i.Estado, i.CantidadAdultos, i.CantidadNinos, i.TarifaNoche, i.MontoTotal,
-                         i.UsuarioRegistroDNI, i.FechaRegistro, i.MontoOriginal
+                         i.FechaRegistro, i.MontoOriginal
                   EXCEPT
                   SELECT d.HuespedTitularID, d.HabitacionID, d.FechaIngreso, d.FechaEgreso, d.CheckIn, d.CheckOut,
                          d.Estado, d.CantidadAdultos, d.CantidadNinos, d.TarifaNoche, d.MontoTotal,
-                         d.UsuarioRegistroDNI, d.FechaRegistro, d.MontoOriginal);
+                         d.FechaRegistro, d.MontoOriginal);
 
     IF NOT EXISTS (SELECT 1 FROM @Cambios) RETURN;
 
@@ -2254,18 +2241,16 @@ BEGIN
 
     INSERT INTO dbo.Bitacora_Reservas
         (ReservaID, HuespedTitularID, HabitacionID, FechaIngreso, FechaEgreso, CheckIn, CheckOut, Estado,
-         CantidadAdultos, CantidadNinos, TarifaNoche, MontoTotal, UsuarioRegistroDNI, FechaRegistro, MontoOriginal,
+         CantidadAdultos, CantidadNinos, TarifaNoche, MontoTotal, FechaRegistro, MontoOriginal,
          Operacion, CambioID, Fecha, Hora, UsuarioDB, UsuarioApp, Act, RollbackDeID)
     SELECT i.ReservaID, i.HuespedTitularID, i.HabitacionID, i.FechaIngreso, i.FechaEgreso, i.CheckIn, i.CheckOut, i.Estado,
-           i.CantidadAdultos, i.CantidadNinos, i.TarifaNoche, i.MontoTotal, i.UsuarioRegistroDNI, i.FechaRegistro, i.MontoOriginal,
+           i.CantidadAdultos, i.CantidadNinos, i.TarifaNoche, i.MontoTotal, i.FechaRegistro, i.MontoOriginal,
            c.Operacion, c.CambioID, CAST(@Ahora AS DATE), CAST(DATEADD(MILLISECOND, -DATEPART(MILLISECOND, @Ahora), @Ahora) AS TIME(0)), SUSER_SNAME(),
-           -- En el alta, si el sistema no informó el usuario, se toma el que registró la reserva
-           COALESCE(@UsuarioApp, CASE WHEN c.Operacion = N'Alta' THEN u.Username END),
+           @UsuarioApp,
            1,
            CASE WHEN c.Operacion = N'Rollback' THEN @RollbackID END
     FROM inserted i
-    INNER JOIN @Cambios c ON c.ReservaID = i.ReservaID
-    LEFT  JOIN dbo.Users u ON u.DNI = i.UsuarioRegistroDNI;
+    INNER JOIN @Cambios c ON c.ReservaID = i.ReservaID;
 END
 GO
 -- No se elimina ningún registro
@@ -2290,7 +2275,7 @@ BEGIN
        OR UPDATE(ReservaID) OR UPDATE(HuespedTitularID) OR UPDATE(HabitacionID) OR UPDATE(FechaIngreso)
        OR UPDATE(FechaEgreso) OR UPDATE(CheckIn) OR UPDATE(CheckOut) OR UPDATE(Estado)
        OR UPDATE(CantidadAdultos) OR UPDATE(CantidadNinos) OR UPDATE(TarifaNoche) OR UPDATE(MontoTotal)
-       OR UPDATE(UsuarioRegistroDNI) OR UPDATE(FechaRegistro) OR UPDATE(MontoOriginal)
+       OR UPDATE(FechaRegistro) OR UPDATE(MontoOriginal)
        OR UPDATE(Operacion) OR UPDATE(CambioID) OR UPDATE(Fecha) OR UPDATE(Hora)
        OR UPDATE(UsuarioDB) OR UPDATE(UsuarioApp) OR UPDATE(RollbackDeID)
         THROW 50102, N'La bitácora de reservas es de solo lectura: sus registros los escribe el trigger de Reservas.', 1;
@@ -2538,10 +2523,10 @@ GO
 DECLARE @Ahora DATETIME = GETDATE();
 INSERT INTO dbo.Bitacora_Reservas
     (ReservaID, HuespedTitularID, HabitacionID, FechaIngreso, FechaEgreso, CheckIn, CheckOut, Estado,
-     CantidadAdultos, CantidadNinos, TarifaNoche, MontoTotal, UsuarioRegistroDNI, FechaRegistro, MontoOriginal,
+     CantidadAdultos, CantidadNinos, TarifaNoche, MontoTotal, FechaRegistro, MontoOriginal,
      Operacion, CambioID, Fecha, Hora, UsuarioDB, UsuarioApp, Act)
 SELECT r.ReservaID, r.HuespedTitularID, r.HabitacionID, r.FechaIngreso, r.FechaEgreso, r.CheckIn, r.CheckOut, r.Estado,
-       r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.UsuarioRegistroDNI, r.FechaRegistro, r.MontoOriginal,
+       r.CantidadAdultos, r.CantidadNinos, r.TarifaNoche, r.MontoTotal, r.FechaRegistro, r.MontoOriginal,
        N'Carga inicial', NULL, CAST(@Ahora AS DATE), CAST(DATEADD(MILLISECOND, -DATEPART(MILLISECOND, @Ahora), @Ahora) AS TIME(0)), SUSER_SNAME(), NULL, 1
 FROM dbo.Reservas r
 WHERE NOT EXISTS (SELECT 1 FROM dbo.Bitacora_Reservas b WHERE b.ReservaID = r.ReservaID);

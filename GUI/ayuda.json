@@ -1364,11 +1364,10 @@
       "controles": [
        "txtHuespedFiltro",
        "txtHabitacionFiltro",
-       "txtRegistroFiltro",
        "cmbEstadoFiltro"
       ],
       "nombre": "Filtros de texto y estado",
-      "texto": "Huésped (nombre, apellido o documento), número de habitación, recepcionista que la registró y estado."
+      "texto": "Huésped (nombre, apellido o documento), número de habitación y estado."
      },
      {
       "controles": [
@@ -5323,11 +5322,10 @@
       "controles": [
        "txtHuespedFiltro",
        "txtHabitacionFiltro",
-       "txtRegistroFiltro",
        "cmbEstadoFiltro"
       ],
       "nombre": "Text and status filters",
-      "texto": "Guest (first name, last name or document), room number, receptionist who registered it and status."
+      "texto": "Guest (first name, last name or document), room number and status."
      },
      {
       "controles": [

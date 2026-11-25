@@ -21,7 +21,7 @@ namespace DAL_08YS.SQL.Negocio
                        b.HabitacionID, h.NroHabitacion, t.Nombre AS TipoHabitacion,
                        b.FechaIngreso, b.FechaEgreso, b.CheckIn, b.CheckOut, b.Estado,
                        b.CantidadAdultos, b.CantidadNinos, b.TarifaNoche, b.MontoTotal, b.MontoOriginal,
-                       b.UsuarioRegistroDNI, u.Username AS UsuarioRegistro, b.FechaRegistro,
+                       b.FechaRegistro,
 
                        LAG(b.BitacoraID)         OVER (PARTITION BY b.ReservaID ORDER BY b.BitacoraID) AS Ant_BitacoraID,
                        LAG(b.HuespedTitularID)   OVER (PARTITION BY b.ReservaID ORDER BY b.BitacoraID) AS Ant_HuespedTitularID,
@@ -40,14 +40,11 @@ namespace DAL_08YS.SQL.Negocio
                        LAG(b.TarifaNoche)        OVER (PARTITION BY b.ReservaID ORDER BY b.BitacoraID) AS Ant_TarifaNoche,
                        LAG(b.MontoTotal)         OVER (PARTITION BY b.ReservaID ORDER BY b.BitacoraID) AS Ant_MontoTotal,
                        LAG(b.MontoOriginal)      OVER (PARTITION BY b.ReservaID ORDER BY b.BitacoraID) AS Ant_MontoOriginal,
-                       LAG(b.UsuarioRegistroDNI) OVER (PARTITION BY b.ReservaID ORDER BY b.BitacoraID) AS Ant_UsuarioRegistroDNI,
-                       LAG(u.Username)           OVER (PARTITION BY b.ReservaID ORDER BY b.BitacoraID) AS Ant_UsuarioRegistro,
                        LAG(b.FechaRegistro)      OVER (PARTITION BY b.ReservaID ORDER BY b.BitacoraID) AS Ant_FechaRegistro
                 FROM Bitacora_Reservas b
                 LEFT JOIN Huespedes hu       ON hu.HuespedID = b.HuespedTitularID
                 LEFT JOIN Habitaciones h     ON h.HabitacionID = b.HabitacionID
                 LEFT JOIN TiposHabitacion t  ON t.TipoHabitacionID = h.TipoHabitacionID
-                LEFT JOIN Users u            ON u.DNI = b.UsuarioRegistroDNI
             )
             SELECT * FROM Historia";
 

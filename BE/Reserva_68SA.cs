@@ -42,8 +42,6 @@ namespace BE_08YS
 
         public int Noches => (FechaEgreso - FechaIngreso).Days;
 
-        public int? UsuarioRegistroDni { get; set; }
-        public string UsuarioRegistroNombre { get; set; } // solo para mostrar (Nombre + Apellido)
         public DateTime FechaRegistro { get; set; }
 
         #endregion
@@ -55,7 +53,6 @@ namespace BE_08YS
 
         public string Huesped { get; set; }
         public string Habitacion { get; set; }
-        public string Registro { get; set; }
         public EstadoReserva? Estado { get; set; }
         public DateTime? FechaDesde { get; set; }
         public DateTime? FechaHasta { get; set; }

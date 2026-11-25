@@ -25,8 +25,6 @@ namespace BE_08YS
         public string Descripcion { get; set; }
         public DateTime FechaHora { get; set; }
         public decimal Monto { get; set; }
-        public int? UsuarioRegistroDni { get; set; }
-        public string UsuarioRegistroNombre { get; set; } // solo para mostrar (Nombre + Apellido)
 
         #endregion
     }

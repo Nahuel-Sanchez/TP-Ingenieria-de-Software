@@ -16,14 +16,12 @@ namespace DAL_08YS.SQL.Negocio
             SELECT p.PedidoID, p.CargoID, p.Estado, p.FechaHoraEntrega,
                    c.ReservaID, c.Descripcion, c.FechaHora, c.Monto,
                    hab.NroHabitacion,
-                   hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular,
-                   u.Nombre AS NombreUsuario, u.Apellido AS ApellidoUsuario
+                   hu.Nombre AS NombreTitular, hu.Apellido AS ApellidoTitular
             FROM PedidosRoomService p
             INNER JOIN CargosAdicionales c ON c.CargoID = p.CargoID
             INNER JOIN Reservas r          ON r.ReservaID = c.ReservaID
             INNER JOIN Habitaciones hab    ON hab.HabitacionID = r.HabitacionID
-            INNER JOIN Huespedes hu        ON hu.HuespedID = r.HuespedTitularID
-            LEFT  JOIN Users u             ON u.DNI = c.UsuarioRegistroDNI";
+            INNER JOIN Huespedes hu        ON hu.HuespedID = r.HuespedTitularID";
 
         #endregion
 
@@ -113,7 +111,7 @@ namespace DAL_08YS.SQL.Negocio
 
         #region Operaciones
 
-        public ResultadoPedidoRoomService Registrar(SolicitudPedidoRoomService_68SA solicitud, int? usuarioDni, out int pedidoId)
+        public ResultadoPedidoRoomService Registrar(SolicitudPedidoRoomService_68SA solicitud, out int pedidoId)
         {
             var items = new DataTable();
             items.Columns.Add("ItemID", typeof(int));
@@ -129,7 +127,6 @@ namespace DAL_08YS.SQL.Negocio
                 {
                     Param("@ReservaID", solicitud.ReservaId),
                     ParamTVP("@Items", items, "dbo.ItemCantidadList"),
-                    Param("@UsuarioDNI", (object)usuarioDni ?? DBNull.Value),
                     pedidoOutput,
                     resultadoOutput
                 },

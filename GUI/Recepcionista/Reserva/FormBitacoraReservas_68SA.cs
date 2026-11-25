@@ -472,7 +472,6 @@ namespace GUI_08YS.Recepcionista
                 case CampoReserva.TarifaNoche: return Moneda(foto.TarifaNoche);
                 case CampoReserva.MontoTotal: return Moneda(foto.MontoTotal);
                 case CampoReserva.MontoOriginal: return Moneda(foto.MontoOriginal);
-                case CampoReserva.UsuarioRegistro: return foto.UsuarioRegistro ?? "—";
                 case CampoReserva.FechaRegistro: return foto.FechaRegistro.ToString("dd/MM/yyyy HH:mm");
                 default: return string.Empty;
             }

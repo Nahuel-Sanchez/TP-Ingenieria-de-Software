@@ -19,10 +19,8 @@ namespace DAL_08YS.SQL.Negocio
         public List<CargoAdicional_68SA> GetByReserva(int reservaId)
         {
             DataTable dt = GetDataTable(@"
-                SELECT c.CargoID, c.ReservaID, c.Tipo, c.Descripcion, c.FechaHora, c.Monto, c.UsuarioRegistroDNI,
-                       u.Nombre AS NombreUsuario, u.Apellido AS ApellidoUsuario
+                SELECT c.CargoID, c.ReservaID, c.Tipo, c.Descripcion, c.FechaHora, c.Monto
                 FROM CargosAdicionales c
-                LEFT JOIN Users u ON u.DNI = c.UsuarioRegistroDNI
                 WHERE c.ReservaID = @ReservaID
                 ORDER BY c.FechaHora, c.CargoID",
                 new[] { Param("@ReservaID", reservaId) });

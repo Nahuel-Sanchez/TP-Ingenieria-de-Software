@@ -406,9 +406,7 @@ namespace GUI_08YS.Recepcionista
                     fila.Cells[ColEstado].Style.ForeColor = ReporteServiciosTextos_68SA.ColorEstado(servicio.Estado);
                     fila.Cells[ColEstado].Style.Font = FuenteNegrita;
                     fila.Cells[ColDetalle].ToolTipText = ReporteServiciosTextos_68SA.Detalle(servicio, Moneda);
-                    fila.Cells[ColDescripcion].ToolTipText = string.IsNullOrWhiteSpace(servicio.Usuario)
-                        ? servicio.Descripcion
-                        : string.Format(T("RepServ_txtRegistradoPor"), servicio.Descripcion, servicio.Usuario);
+                    fila.Cells[ColDescripcion].ToolTipText = servicio.Descripcion;
                 }
             }
 

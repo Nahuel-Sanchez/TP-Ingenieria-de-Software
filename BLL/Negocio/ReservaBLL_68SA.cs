@@ -90,7 +90,6 @@ namespace BLL_08YS.Negocio
 
             reserva.Titular = _huespedBLL.ObtenerOCrear(reserva.Titular);
             reserva.MontoTotal = reserva.TarifaNoche * reserva.Noches;
-            reserva.UsuarioRegistroDni = SessionManager_08YS.Instance.Current.DNI;
 
             int nuevoId = _reservaRepo.Crear(reserva);
             if (nuevoId == -1)

@@ -124,7 +124,6 @@ namespace BE_08YS
         TarifaNoche,
         MontoTotal,
         MontoOriginal,
-        UsuarioRegistro,
         FechaRegistro
     }
 
@@ -149,8 +148,6 @@ namespace BE_08YS
         public decimal TarifaNoche { get; set; }
         public decimal MontoTotal { get; set; }
         public decimal MontoOriginal { get; set; }
-        public int? UsuarioRegistroDni { get; set; }
-        public string UsuarioRegistro { get; set; }
         public DateTime FechaRegistro { get; set; }
 
         #endregion
@@ -174,7 +171,6 @@ namespace BE_08YS
                 case CampoReserva.TarifaNoche: return TarifaNoche;
                 case CampoReserva.MontoTotal: return MontoTotal;
                 case CampoReserva.MontoOriginal: return MontoOriginal;
-                case CampoReserva.UsuarioRegistro: return UsuarioRegistroDni;
                 case CampoReserva.FechaRegistro: return FechaRegistro;
                 default: return null;
             }

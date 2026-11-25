@@ -63,9 +63,6 @@
             this.pnlGrupoHabitacion = new System.Windows.Forms.Panel();
             this.lblEtiquetaHabitacionFiltro = new System.Windows.Forms.Label();
             this.txtHabitacionFiltro = new CustomControls.IconPlaceholderTextBox();
-            this.pnlGrupoRegistro = new System.Windows.Forms.Panel();
-            this.lblEtiquetaRegistroFiltro = new System.Windows.Forms.Label();
-            this.txtRegistroFiltro = new CustomControls.IconPlaceholderTextBox();
             this.pnlGrupoEstado = new System.Windows.Forms.Panel();
             this.lblEtiquetaEstadoFiltro = new System.Windows.Forms.Label();
             this.cmbEstadoFiltro = new CustomControls.IconComboBox();
@@ -111,7 +108,6 @@
             this.tblFiltros.SuspendLayout();
             this.pnlGrupoHuesped.SuspendLayout();
             this.pnlGrupoHabitacion.SuspendLayout();
-            this.pnlGrupoRegistro.SuspendLayout();
             this.pnlGrupoEstado.SuspendLayout();
             this.pnlGrupoIngreso.SuspendLayout();
             this.pnlGrupoEgreso.SuspendLayout();
@@ -780,8 +776,7 @@
             this.tblFiltros.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblFiltros.Controls.Add(this.pnlGrupoHuesped, 0, 0);
             this.tblFiltros.Controls.Add(this.pnlGrupoHabitacion, 1, 0);
-            this.tblFiltros.Controls.Add(this.pnlGrupoRegistro, 2, 0);
-            this.tblFiltros.Controls.Add(this.pnlGrupoEstado, 3, 0);
+            this.tblFiltros.Controls.Add(this.pnlGrupoEstado, 2, 0);
             this.tblFiltros.Controls.Add(this.pnlGrupoIngreso, 0, 1);
             this.tblFiltros.Controls.Add(this.pnlGrupoEgreso, 1, 1);
             this.tblFiltros.Controls.Add(this.pnlGrupoCosto, 2, 1);
@@ -883,50 +878,6 @@
             this.txtHabitacionFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtHabitacionFiltro.Size = new System.Drawing.Size(325, 38);
             this.txtHabitacionFiltro.TabIndex = 1;
-            // 
-            // pnlGrupoRegistro
-            // 
-            this.pnlGrupoRegistro.Controls.Add(this.txtRegistroFiltro);
-            this.pnlGrupoRegistro.Controls.Add(this.lblEtiquetaRegistroFiltro);
-            this.pnlGrupoRegistro.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlGrupoRegistro.Location = new System.Drawing.Point(701, 15);
-            this.pnlGrupoRegistro.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
-            this.pnlGrupoRegistro.Name = "pnlGrupoRegistro";
-            this.pnlGrupoRegistro.Size = new System.Drawing.Size(325, 71);
-            this.pnlGrupoRegistro.TabIndex = 2;
-            // 
-            // lblEtiquetaRegistroFiltro
-            // 
-            this.lblEtiquetaRegistroFiltro.AutoSize = true;
-            this.lblEtiquetaRegistroFiltro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(165)))), ((int)(((byte)(180)))));
-            this.lblEtiquetaRegistroFiltro.Location = new System.Drawing.Point(0, 2);
-            this.lblEtiquetaRegistroFiltro.Name = "lblEtiquetaRegistroFiltro";
-            this.lblEtiquetaRegistroFiltro.Tag = "Reservas_lblEtiquetaRegistroFiltro";
-            this.lblEtiquetaRegistroFiltro.Size = new System.Drawing.Size(100, 15);
-            this.lblEtiquetaRegistroFiltro.TabIndex = 0;
-            this.lblEtiquetaRegistroFiltro.Text = "Registrado por";
-            // 
-            // txtRegistroFiltro
-            // 
-            this.txtRegistroFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtRegistroFiltro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(15)))), ((int)(((byte)(45)))));
-            this.txtRegistroFiltro.BorderColor = System.Drawing.Color.Goldenrod;
-            this.txtRegistroFiltro.BorderFocusColor = System.Drawing.Color.Goldenrod;
-            this.txtRegistroFiltro.BorderWidth = 2;
-            this.txtRegistroFiltro.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRegistroFiltro.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.txtRegistroFiltro.IconChar = FontAwesome.Sharp.IconChar.IdBadge;
-            this.txtRegistroFiltro.IconColor = System.Drawing.Color.Goldenrod;
-            this.txtRegistroFiltro.IconPadding = 4;
-            this.txtRegistroFiltro.IconSize = 20;
-            this.txtRegistroFiltro.Location = new System.Drawing.Point(0, 26);
-            this.txtRegistroFiltro.Name = "txtRegistroFiltro";
-            this.txtRegistroFiltro.PlaceholderColor = System.Drawing.Color.LightGray;
-            this.txtRegistroFiltro.PlaceholderText = "Nombre del recepcionista";
-            this.txtRegistroFiltro.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtRegistroFiltro.Size = new System.Drawing.Size(325, 38);
-            this.txtRegistroFiltro.TabIndex = 1;
             // 
             // pnlGrupoEstado
             // 
@@ -1322,8 +1273,6 @@
             this.pnlGrupoHuesped.PerformLayout();
             this.pnlGrupoHabitacion.ResumeLayout(false);
             this.pnlGrupoHabitacion.PerformLayout();
-            this.pnlGrupoRegistro.ResumeLayout(false);
-            this.pnlGrupoRegistro.PerformLayout();
             this.pnlGrupoEstado.ResumeLayout(false);
             this.pnlGrupoEstado.PerformLayout();
             this.pnlGrupoIngreso.ResumeLayout(false);
@@ -1395,9 +1344,6 @@
         private System.Windows.Forms.Panel pnlGrupoHabitacion;
         private System.Windows.Forms.Label lblEtiquetaHabitacionFiltro;
         private CustomControls.IconPlaceholderTextBox txtHabitacionFiltro;
-        private System.Windows.Forms.Panel pnlGrupoRegistro;
-        private System.Windows.Forms.Label lblEtiquetaRegistroFiltro;
-        private CustomControls.IconPlaceholderTextBox txtRegistroFiltro;
         private System.Windows.Forms.Panel pnlGrupoEstado;
         private System.Windows.Forms.Label lblEtiquetaEstadoFiltro;
         private CustomControls.IconComboBox cmbEstadoFiltro;

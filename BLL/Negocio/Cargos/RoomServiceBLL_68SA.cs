@@ -84,7 +84,7 @@ namespace BLL_08YS.Negocio
             SessionManager_08YS.Instance.ValidatePermission(Permisos.RegistrarRoomService);
             ValidarSolicitud(solicitud);
 
-            var resultado = _pedidoRepo.Registrar(solicitud, SessionManager_08YS.Instance.Current?.DNI, out int pedidoId);
+            var resultado = _pedidoRepo.Registrar(solicitud, out int pedidoId);
             LanzarSiFallo(resultado);
 
             DVManager_08YS.Recalcular();

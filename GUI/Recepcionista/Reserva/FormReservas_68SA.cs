@@ -182,7 +182,7 @@ namespace GUI_08YS.Recepcionista
             Configurar("Saldo", t.GetTexto("Reservas_colSaldo"), 90, "$#,##0.00");
             Configurar("Estado", t.GetTexto("Reservas_colEstado"), 90);
 
-            foreach (var oculta in new[] { "Huesped", "Documento", "RegistradoPor", "FechaRegistro", "PuedeCancelar" })
+            foreach (var oculta in new[] { "Huesped", "Documento", "FechaRegistro", "PuedeCancelar" })
                 if (dgvReservas.Columns[oculta] != null)
                     dgvReservas.Columns[oculta].Visible = false;
 
@@ -304,7 +304,6 @@ namespace GUI_08YS.Recepcionista
 
             txtHuespedFiltro.PlaceholderText = t.GetTexto("Reservas_phHuespedFiltro");
             txtHabitacionFiltro.PlaceholderText = t.GetTexto("Reservas_phHabitacionFiltro");
-            txtRegistroFiltro.PlaceholderText = t.GetTexto("Reservas_phRegistroFiltro");
         }
 
         private void ActualizarVisibilidadCosto()
@@ -351,7 +350,6 @@ namespace GUI_08YS.Recepcionista
         {
             txtHuespedFiltro.Text = string.Empty;
             txtHabitacionFiltro.Text = string.Empty;
-            txtRegistroFiltro.Text = string.Empty;
             cmbEstadoFiltro.SelectedIndex = 0;
             dtpFechaDesde.Value = null;
             dtpFechaHasta.Value = null;
@@ -369,7 +367,6 @@ namespace GUI_08YS.Recepcionista
             {
                 Huesped = string.IsNullOrWhiteSpace(txtHuespedFiltro.RealText) ? null : txtHuespedFiltro.RealText.Trim(),
                 Habitacion = string.IsNullOrWhiteSpace(txtHabitacionFiltro.RealText) ? null : txtHabitacionFiltro.RealText.Trim(),
-                Registro = string.IsNullOrWhiteSpace(txtRegistroFiltro.RealText) ? null : txtRegistroFiltro.RealText.Trim(),
                 Estado = OpcionEnum_68SA.Seleccionado<EstadoReserva>(cmbEstadoFiltro),
                 FechaDesde = dtpFechaDesde.Value,
                 FechaHasta = dtpFechaHasta.Value,
@@ -424,7 +421,6 @@ namespace GUI_08YS.Recepcionista
                 Huesped = $"{r.Titular.Nombre} {r.Titular.Apellido}",
                 Documento = r.Titular.Documento,
                 Habitacion = r.Habitacion.NroHabitacion,
-                RegistradoPor = r.UsuarioRegistroNombre,
                 FechaRegistro = r.FechaRegistro,
                 FechaEntrada = r.FechaIngreso,
                 FechaSalida = r.FechaEgreso,
@@ -697,9 +693,8 @@ namespace GUI_08YS.Recepcionista
 
         public string Habitacion { get; set; }
 
-        public string RegistradoPor { get; set; }
         public DateTime FechaRegistro { get; set; }
-        public string RegistroDisplay => string.IsNullOrEmpty(RegistradoPor) ? "-" : $"{RegistradoPor}\n{FechaRegistro:dd/MM/yyyy HH:mm}";
+        public string RegistroDisplay => $"{FechaRegistro:dd/MM/yyyy}\n{FechaRegistro:HH:mm}";
 
         public DateTime FechaEntrada { get; set; }
         public DateTime FechaSalida { get; set; }
